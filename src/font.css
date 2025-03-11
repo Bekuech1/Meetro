@@ -2,37 +2,37 @@
 
 @font-face {
     font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-bold.otf') format('truetype');
+    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-extrabold.otf') format("opentype");
+    font-weight: 800; 
+  }
+@font-face {
+    font-family: 'visbycf';
+    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-bold.otf') format("opentype");
     font-weight: 700;
   }
 @font-face {
     font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-extrabold.otf') format('truetype');
-    font-weight: 800; 
-  }
-@font-face {
-    font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-heavy.otf') format('truetype');
+    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-heavy.otf') format("opentype");
     font-weight: 600; 
   }
+  @font-face {
+      font-family: 'visbycf';
+      src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-medium.otf') format("opentype");
+      font-weight: 500; 
+    }
 @font-face {
     font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-light.otf') format('truetype');
-    font-weight: 500; 
+    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-light.otf') format("opentype");
+    font-weight: 450; 
   }
 @font-face {
     font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-medium.otf') format('truetype');
-    font-weight: 800; 
-  }
-@font-face {
-    font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-regular.otf') format('truetype');
+    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-regular.otf') format("opentype");
     font-weight: 400; 
   }
 @font-face {
     font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-thin.otf') format('truetype');
+    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-thin.otf') format("opentype");
     font-weight: 300; 
   }
 
@@ -41,25 +41,21 @@
 
 @font-face {
     font-family: 'satoshi';
-    src: url('../src/assets/fonts/OTF/Satoshi-Black.otf') format('truetype');
+    src: url('../src/assets/fonts/OTF/Satoshi-Bold.otf') format("opentype");
+    font-weight: 700; 
   }
-@font-face {
-    font-family: 'satoshi';
-    src: url('../src/assets/fonts/OTF/Satoshi-Bold.otf') format('truetype');
-  }
-@font-face {
-    font-family: 'satoshi';
-    src: url('../src/assets/fonts/OTF/Satoshi-Italic.otf') format('truetype');
-  }
-@font-face {
-    font-family: 'satoshi';
-    src: url('../src/assets/fonts/OTF/Satoshi-Light.otf') format('truetype');
-  }
-@font-face {
-    font-family: 'satoshi';
-    src: url('../src/assets/fonts/OTF/Satoshi-Medium.otf') format('truetype');
-  }
-@font-face {
-    font-family: 'satoshi';
-    src: url('../src/assets/fonts/OTF/Satoshi-Regular.otf') format('truetype');
-  }
+  @font-face {
+      font-family: 'satoshi';
+      src: url('../src/assets/fonts/OTF/Satoshi-Medium.otf') format("opentype");
+      font-weight: 500; 
+    }
+    @font-face {
+        font-family: 'satoshi';
+        src: url('../src/assets/fonts/OTF/Satoshi-Regular.otf') format("opentype");
+        font-weight: 400; 
+    }
+    @font-face {
+        font-family: 'satoshi';
+        src: url('../src/assets/fonts/OTF/Satoshi-Light.otf') format("opentype");
+        font-weight: 300; 
+      }
