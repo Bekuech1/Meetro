@@ -1,6 +1,6 @@
-import Button from "./button"
+import Button from "./Button"
 
-const LandPage = () => {
+const Hero = () => {
   return (
     <div className="h-96 flex flex-col justify-center items-center px-2">
       <div className="md:hidden block bg-transparent small text-center paytone py-2"> 
@@ -22,4 +22,4 @@ const LandPage = () => {
   )
 }
 
-export default LandPage
+export default Hero
