@@ -9,8 +9,8 @@ const Hero = () => {
 
         <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto mt-[49vh] md:mt-[40vh] gap-10"> 
            <div className="grid gap-[10px]">
-                <div className="bg-white/10 backdrop-blur-[24px] flex paytone items-center justify-center gap-[10px] md:hidden fix px-3 py-[6px] w-fit mx-auto"> 
-                    <img src='mobile.svg' alt="phone" className="inline-block" />
+                <div className="bg-white/10 backdrop-blur-[24px] flex paytone items-center justify-center gap-[10px] md:hidden px-3 py-[6px] w-fit mx-auto rounded-4xl"> 
+                    <img src='mobileWhite.svg' alt="phone" />
                     <p className="font-[400] text-[12px] text-white">Meetro App</p>
                     <button className=" bg-linear-to-tr from-[#97DC37] to-[#055962] rounded-[60px] py-[6px] px-[10px] font-[400] text-white text-[8px] h-fit">Coming Soon</button> 
                 </div> 
