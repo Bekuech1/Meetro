@@ -1,24 +1,21 @@
-import React from 'react'
+import { useNavigate } from "react-router";
 import Layout from '../../components/Onboarding/Layout'
-import { useNavigate } from 'react-router'
+import OnboardingButton from "../../components/Onboarding/OnboardingButton";
 
 function Authentication() {
   const navigate = useNavigate()
   const text = "Hey there! Ready to explore amazing events around you?"
-  const handleClick1 = ()=>navigate("/authentication")
-  const handleClick2 = ()=>navigate("/authentication")
+  
   const buttons = [
     {
       title: "Log In",
-      handle: ()=>navigate("/signup"),
-      width: "w-25",
-      bg: "bg-white"
+      onclick: ()=>navigate("/signup"),
+      className: 'w-25 bg-white ',
     },
     {
       title: "Register",
-      handle: ()=>navigate("/signup"),
-      width: "w-27",
-      bg: "bg-[#AFFC41]"
+      onclick: ()=>navigate("/signup"),
+      className: 'w-27 bg-[#AFFC41] ',
     }
   ]
 
@@ -26,7 +23,13 @@ function Authentication() {
 
   return (
     <div>
-        <Layout text={text} buttons={buttons} dis={"flex"} handleClick1={handleClick1} handleClick2={handleClick2}/>  
+        <Layout text={text}  handleClick1={"/authentication"} handleClick2={"/authentication"}>
+          <div className="flex gap-5">
+            {buttons.map((btn, index)=>(
+             <OnboardingButton {...btn} key={index}/>
+            ))}
+          </div>
+        </Layout> 
     </div>
   )
 }
