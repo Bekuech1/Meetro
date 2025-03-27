@@ -1,20 +1,22 @@
-import Button from "./Button"
+import Button from "../Layout-conponents/Button"
 
 const Navbar = () => {
   return (
-    <div className=" w-full ">
-      <div className="w-11/12 mx-auto">
-        <div className=" bg-slate-200 flex justify-between items-center rounded-4xl px-5 py-2 md:mt-3">
+    <div className="pt-[17px] ">
+        <div className="bg-white/10 flex justify-between items-center rounded-4xl px-4 py-3 backdrop-blur-[24px] w-[96.7%] mx-auto">
           <div className="inline-flex gap-1">
-              <img src="Vector.png" alt="logo" /><img src="Meetro.png" alt="logo name" width={50}  />
+              <img src="meetroLogo.svg" alt="Meetro Logo" />
           </div>
-          <div className="hidden md:inline-flex gap-4 text-xs">
+          <div className="hidden md:inline-flex gap-4">
             <Button name="Create Event" color="bg-white"/>
-            <Button name="Discover Events" color="bg-lime-300"/>
+            <Button name="Discover Events" color="bg-[#AFFC41]"/>
+          </div>
+          <div className="md:hidden block gap-4 text-xs">
+            <img src="mobileMenu.svg" alt="" className=""/>
           </div>
         </div>
-      </div>
     </div>
+      
   )
 }
 

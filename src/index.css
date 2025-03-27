@@ -4,6 +4,10 @@
     font-size: 10px;
 }
 
+.fix{
+    border: 1px solid red;
+}
+
 .bg{
     background: url("/Background\ 1.svg");
 }
