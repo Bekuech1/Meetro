@@ -3,7 +3,7 @@ import React from 'react'
 import OnboardingButton from './OnboardingButton'
 
 
-function Layout({text, children, handleClick1='', handleClick2='' }) {
+function Layout({text, children, handleClick1, handleClick2}) {
   const navigate = useNavigate()
 
   return (

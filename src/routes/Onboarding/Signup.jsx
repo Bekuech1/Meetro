@@ -6,7 +6,7 @@ import Text from '../../components/Onboarding/Text';
 import OnboardingButton from "../../components/Onboarding/OnboardingButton";
 
 function Signup() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const text = "Join the Meetro in seconds!"
 
     const buttons= [
@@ -23,14 +23,14 @@ function Signup() {
                     txt: "Continue with Email",
                     icon: <IoMail />
                 },               
-                onclick: ()=>navigate("/signup"),
+                onclick: ()=>navigate("/sign"),
                 className: 'w-65 bg-[#AFFC41] ',
               }
     ]
   return (
     <div>
       <div>
-        <Layout text={text} handleClick1={"/authentication"} handleClick2={"/signup"}> 
+        <Layout text={text} handleClick1={"/authentication"} handleClick2={"/sign"}> 
         <div className="flex flex-col gap-4 mb-3">
           {buttons.map((btn, index)=>(
             <OnboardingButton key={index} {...btn}/>
