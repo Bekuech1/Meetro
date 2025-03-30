@@ -5,11 +5,12 @@ import SplineComponent from '../Layout-conponents/SplineComp'
 const FutureFeatures = ({ onClick }) => {
   return (
     <div className='bg-[#F3F0FB] xl:h-screen h-fit flex flex-col-reverse justify-center gap-[60px] items-center py-12 xl:flex-row'>
-        <div className='relative md:w-[660px] md:h-[562px] w-[90%] h-[300px] md:overflow-hidden overflow-visible flex justify-center items-center pointer-events-none mx-auto md:mx-0'>
+        <div className='relative md:w-[660px] md:h-[562px] w-[90%] h-[300px] md:overflow-hidden fix overflow-visible flex justify-center items-center pointer-events-none mx-auto md:mx-0'>
                 <iframe
                     src="https://my.spline.design/untitled-be2bbd8ec37ca2b1a1125ad742bd52aa/"
                     frameBorder="0"
-                    className="sm:w-[140%] sm:h-[140%] w-full h-full"
+                    width='120%'
+                    height='120%'
                 ></iframe>
         </div>
         {/* <SplineComponent /> */}
