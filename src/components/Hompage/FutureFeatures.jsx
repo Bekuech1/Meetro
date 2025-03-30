@@ -17,7 +17,7 @@ const FutureFeatures = ({ onClick }) => {
         <div className='grid gap-12 xl:w-fit w-[90%] mx-auto xl:mx-0'>
             <div className='grid gap-6'>
                 <button className=" bg-linear-to-tr from-[#97DC37] to-[#055962] rounded-[60px] py-[12px] px-[24px] font-[400] text-white text-[14px] leading-5 h-fit w-fit">Coming Soon</button>
-                <h5 className='capitalize text-[60px] font-[400] leading-[100%] text-[#4A3A74]'>future features</h5>
+                <h5 className='capitalize text-[60px] font-[400] leading-[100%] text-[#4A3A74]'>future feature</h5>
                 <div className='grid gap-2'>
                     <div className='flex gap-2'>
                         <img src="tick-square.svg" alt=""/>
