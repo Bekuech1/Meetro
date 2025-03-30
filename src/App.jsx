@@ -5,6 +5,7 @@ import Homepage from "./routes/homepage"
 import Signup2 from "./routes/Onboarding/Signup2"
 import Location from "./routes/Onboarding/Location"
 import Calender from "./routes/Onboarding/Calender"
+import Interest from "./routes/Onboarding/Interest"
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
       <Route path="/sign" element={<Signup2 />} />
       <Route path="/location" element={<Location />} />
       <Route path="/calender" element={<Calender />} />
+      <Route path="/interest" element={<Interest />} />
     </Routes>
     </BrowserRouter>
     </>

@@ -10,7 +10,7 @@ function Calender() {
         {
             title: "Skip for Now",
             className: "bg-white",
-            onclick: ()=> navigate('/location')
+            onclick: ()=> navigate('/interest')
         },
         {
             title: {

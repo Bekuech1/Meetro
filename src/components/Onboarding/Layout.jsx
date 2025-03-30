@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router'
 import React from 'react'
-import OnboardingButton from './OnboardingButton'
 
 
 function Layout({text, children, handleClick1, handleClick2}) {
