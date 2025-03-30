@@ -3,6 +3,8 @@ import Authentication from "./routes/Onboarding/Authentication"
 import Signup from "./routes/Onboarding/Signup"
 import Homepage from "./routes/homepage"
 import Signup2 from "./routes/Onboarding/Signup2"
+import Location from "./routes/Onboarding/Location"
+import Calender from "./routes/Onboarding/Calender"
 
 function App() {
 
@@ -14,6 +16,8 @@ function App() {
       <Route path="/authentication" element={<Authentication />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/sign" element={<Signup2 />} />
+      <Route path="/location" element={<Location />} />
+      <Route path="/calender" element={<Calender />} />
     </Routes>
     </BrowserRouter>
     </>
