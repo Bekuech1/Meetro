@@ -1,4 +1,5 @@
 import Hero from "../components/Hompage/Hero"
+import Navbar from "../components/Hompage/Navbar"
 import ComingSoon from "../components/Layout-conponents/ComingSoon"
 
 function Homepage() {

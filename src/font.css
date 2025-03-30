@@ -2,7 +2,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Paytone+One&display=swap');
 
-
 /* visbycf */
 
 @font-face {
@@ -67,8 +66,4 @@
 
 .paytone{
   font-family: 'Paytone', sans-serif;
-}
-
-.satoshi{
-  font-family: 'satoshi', sans-serif;
 }
