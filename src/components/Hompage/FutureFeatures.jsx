@@ -1,7 +1,8 @@
 import React from 'react'
 import Button from '../Layout-conponents/Button'
+import SplineComponent from '../Layout-conponents/SplineComp'
 
-const FutureFeatures = () => {
+const FutureFeatures = ({ onClick }) => {
   return (
     <div className='bg-[#F3F0FB] xl:h-screen h-fit flex flex-col-reverse justify-center gap-[60px] items-center py-12 xl:flex-row'>
         <div className='relative md:w-[660px] md:h-[562px] w-[90%] h-[300px] md:overflow-hidden overflow-visible flex justify-center items-center pointer-events-none mx-auto md:mx-0'>
@@ -11,6 +12,7 @@ const FutureFeatures = () => {
                     className="sm:w-[140%] sm:h-[140%] w-full h-full"
                 ></iframe>
         </div>
+        {/* <SplineComponent /> */}
         <div className='grid gap-12 xl:w-fit w-[90%] mx-auto xl:mx-0'>
             <div className='grid gap-6'>
                 <button className=" bg-linear-to-tr from-[#97DC37] to-[#055962] rounded-[60px] py-[12px] px-[24px] font-[400] text-white text-[14px] leading-5 h-fit w-fit">Coming Soon</button>
@@ -29,7 +31,7 @@ const FutureFeatures = () => {
             <div className='grid gap-4'>
                 <h6 className='font-[700] text-[16px] leading-6 text-black'>Stay tuned for more exciting updates!</h6>
                 <div className='flex gap-4 w-fit'>
-                    <Button name="Join Waitlist" color="bg-[#AFFC41]"/>
+                    <Button name="Join Waitlist" color="bg-[#AFFC41]" onClick={onClick}/>
                     <Button name="join community" color="bg-white"/>
                 </div>
             </div>

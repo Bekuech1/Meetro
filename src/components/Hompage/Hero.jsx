@@ -3,7 +3,14 @@ import Navbar from "./Navbar"
 
 const Hero = () => {
   return (
-    <div className="bg-[url('meetroHero.png')] bg-cover bg-center h-screen">
+      <div
+          style={{
+            backgroundImage: `url('meetroHero.png')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            height: '100vh',
+          }}
+      >
 
         <Navbar />
 

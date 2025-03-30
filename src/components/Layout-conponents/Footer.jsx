@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from './Button'
 
-const Footer = () => {
+const Footer = ( {onClick} ) => {
   return (
     <div className='bg-[#01160B] md:px-[60px] px-4 py-[64px]'>
         <div className='grid md:flex border-b border-white/10 pb-10 gap-[40px] md:justify-between'>
@@ -15,7 +15,7 @@ const Footer = () => {
             </div>
             <div className='w-fit h-fit flex gap-4 mx-auto md:mx-0'>
                 <Button name="Discover" color="bg-[#AFFC41]"/>
-                <Button name="Join waitlist" color="bg-white"/>
+                <Button name="Join waitlist" color="bg-white" onClick={onClick}/>
             </div>
         </div>
         <div className='grid md:flex md:justify-between py-10 gap-6'>
