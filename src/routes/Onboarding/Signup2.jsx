@@ -84,7 +84,7 @@ function Signup2() {
             setErrorMessages(error);
         
             if (Object.keys(error).length === 0) {
-                navigate('/lastPage');
+                navigate('/location');
             }
         }
         
@@ -92,7 +92,7 @@ function Signup2() {
   return (
     <div>
       <Layout text={text} handleClick1="/signup" handleClick2="/signUp">
-        <div>
+        <div className="mb-7">
             <form method="get" onSubmit={handleSubmit}>
                 {
                     forms.map((form, index)=>(
