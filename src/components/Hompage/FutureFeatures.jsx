@@ -1,26 +1,23 @@
 import React from 'react'
 import Button from '../Layout-conponents/Button'
-import SplineComponent from '../Layout-conponents/SplineComp'
 
 const FutureFeatures = () => {
   return (
-    <div className='bg-[#F3F0FB] h-screen flex justify-center gap-[60px] items-center'>
-        <div className='relative w-[660px] h-[562px] overflow-hidden flex justify-center items-center fix'>
+    <div className='bg-[#F3F0FB] xl:h-screen h-fit flex flex-col-reverse justify-center gap-[60px] items-center py-12 xl:flex-row'>
+        <div className='relative md:w-[660px] md:h-[562px] w-[90%] h-[300px] md:overflow-hidden overflow-visible flex justify-center items-center pointer-events-none mx-auto md:mx-0'>
                 <iframe
                     src="https://my.spline.design/untitled-be2bbd8ec37ca2b1a1125ad742bd52aa/"
                     frameBorder="0"
-                    width="100%"
-                    height="100%"
-                    title="Spline Scene"
+                    className="sm:w-[140%] sm:h-[140%] w-full h-full"
                 ></iframe>
         </div>
-        <div className='grid gap-12'>
+        <div className='grid gap-12 xl:w-fit w-[90%] mx-auto xl:mx-0'>
             <div className='grid gap-6'>
                 <button className=" bg-linear-to-tr from-[#97DC37] to-[#055962] rounded-[60px] py-[12px] px-[24px] font-[400] text-white text-[14px] leading-5 h-fit w-fit">Coming Soon</button>
                 <h5 className='capitalize text-[60px] font-[400] leading-[100%] text-[#4A3A74]'>future features</h5>
                 <div className='grid gap-2'>
                     <div className='flex gap-2'>
-                        <img src="tick-square.svg" alt="" />
+                        <img src="tick-square.svg" alt=""/>
                         <h6 className='font-[700] text-[16px] leading-6 text-[#4A3A7A]'>Join Communities: <span className='font-[500] text-[#8A9191]'>Find and engage with like-minded people.</span></h6>
                     </div>
                     <div className='flex gap-2'>

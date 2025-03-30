@@ -7,15 +7,15 @@ const Hero = () => {
 
         <Navbar />
 
-        <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto mt-[49vh] md:mt-[40vh] gap-10"> 
+        <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto mt-[40vh] gap-10"> 
            <div className="grid gap-[10px]">
                 <div className="bg-white/10 backdrop-blur-[24px] flex paytone items-center justify-center gap-[10px] md:hidden px-3 py-[6px] w-fit mx-auto rounded-4xl"> 
-                    <img src='mobileWhite.svg' alt="phone" />
+                    <img src='mobilew.svg' alt="phone" />
                     <p className="font-[400] text-[12px] text-white">Meetro App</p>
                     <button className=" bg-linear-to-tr from-[#97DC37] to-[#055962] rounded-[60px] py-[6px] px-[10px] font-[400] text-white text-[8px] h-fit">Coming Soon</button> 
                 </div> 
                 <div>
-                  <h1 className="capitalize text-[48px] md:text-[60px] font-[400] text-white text-center leading-[48px] md:leading-[100%]">Never Miss an <span className="text-[#AFFC41] paytone">Event</span> Around You Again</h1>
+                  <h1 className="capitalize text-[48px] md:text-[60px] font-[400] text-white text-center leading-[48px] md:leading-[100%]">Discover, Connect and Create <span className="text-[#AFFC41] paytone">Unforgettable </span>experiences</h1>
                 </div>
            </div>
            <div className="hidden md:flex gap-4 w-fit mx-auto">
