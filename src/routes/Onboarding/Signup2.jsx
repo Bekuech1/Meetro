@@ -20,7 +20,7 @@ function Signup2() {
 
     const button = {
         title: "Let's gooo!",
-        className: 'w-65 bg-[#AFFC41] ',
+        className: 'w-65 bg-[#AFFC41] text-[#095256] px-6',
         onclick: handleSubmit,
         type: "submit"
     }

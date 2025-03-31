@@ -9,7 +9,7 @@ function Calender() {
     const buttons = [
         {
             title: "Skip for Now",
-            className: "bg-white",
+            className: "bg-white px-6",
             onclick: ()=> navigate('/interest')
         },
         {
@@ -17,14 +17,14 @@ function Calender() {
                 txt: "Sync Gmail",
                 icon: img
             },
-            className: "bg-[#AFFC41]"
+            className: "bg-[#AFFC41] px-6"
         },
     ]
   return (
     <div>
       <div>
           <Layout text={text} handleClick1= '/location' handleClick2= "/location">
-          <div className="flex justify-between gap-4">
+          <div className="flex justify-between gap-1.5 sm:gap-4">
               {
                 buttons.map((btn, index)=>(
                     <OnboardingButton key={index} {...btn}/>
