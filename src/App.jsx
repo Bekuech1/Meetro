@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router"
 import Authentication from "./routes/Onboarding/Authentication"
 import Signup from "./routes/Onboarding/Signup"
-import Homepage from "./routes/homepage"
+import Homepage from "./routes/Homepage"
 import Signup2 from "./routes/Onboarding/Signup2"
 import Location from "./routes/Onboarding/Location"
 import Calender from "./routes/Onboarding/Calender"
