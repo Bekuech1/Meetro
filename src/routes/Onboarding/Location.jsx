@@ -10,11 +10,11 @@ function Location() {
     const buttons = [
         {
             title: "Skip for Now",
-            className: "bg-white"
+            className: "bg-white text-[#095256] px-6"
         },
         {
             title: "Continue",
-            className: "bg-[#AFFC41]",
+            className: "bg-[#AFFC41] text-[#095256] px-6",
             onclick: ()=>navigate('/calender')
         },
     ]
@@ -34,7 +34,7 @@ function Location() {
                   </select>
               </div>
           </div>
-          <div className="flex justify-between mb-3">
+          <div className="flex justify-between mt-8">
               {
                 buttons.map((btn, index)=>(
                     <OnboardingButton key={index} {...btn}/>
