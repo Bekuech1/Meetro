@@ -2,7 +2,7 @@
 function Text() {
   return (
     <div>
-      <h3>Already have an account? <span className="text-purple-400 text-center font-medium satoshi">Sign in here</span></h3>
+      <h3 className="text-xs text-center sm:text-sm font-medium">Already have an account? <span className="text-purple-400 satoshi">Sign in here</span></h3>
     </div>
   )
 }

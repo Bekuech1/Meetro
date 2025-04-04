@@ -10,12 +10,12 @@ function Authentication() {
     {
       title: "Log In",
       onclick: ()=>navigate("/signup"),
-      className: 'w-25 bg-white ',
+      className: 'sm:w-25 w-30 bg-white text-[#095256] px-6',
     },
     {
       title: "Register",
       onclick: ()=>navigate("/signup"),
-      className: 'w-27 bg-[#AFFC41] ',
+      className: 'sm:w-27 w-33 bg-[#AFFC41] text-[#095256] px-6',
     }
   ]
 

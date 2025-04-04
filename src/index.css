@@ -13,6 +13,7 @@
 
 .bg{
     background: url("/Background\ 1.svg");
+    background-repeat: no-repeat;
 }
 
 :root {
