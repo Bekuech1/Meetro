@@ -48,6 +48,11 @@
     --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
     --sidebar-border: oklch(0.929 0.013 255.508);
     --sidebar-ring: oklch(0.704 0.04 256.788);
+
+    /* custom meetro colors */
+    --meetro-green: oklch(0.87 0.294827 142.4953);
+    --meetro-dark: oklch(0.19 0.0636 142.5);
+    --meetro-secondary: oklch(0.25 0.0647 143.32);
 }
 
 .dark {
