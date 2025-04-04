@@ -68,18 +68,26 @@ function Signup2() {
             e.preventDefault();
             
             let error = {};
-            
-            if (!formData.name?.trim()) {
-                error.name = "Name is required";
+            if(! /^[A-Za-z]+$/.test(formData.name)){
+                error.name = "Enter a valid name format"
             }
             
-            if (!formData.email?.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
+            if (!formData?.name.trim()) {
+                error.name = "Name is required";
+            }
+
+            
+            if (!formData?.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
                 error.email = "Enter a valid email";
             }
         
-            if(!formData.password?.trim()){
+            if(!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password)){
+                error.password = "Password must exceed 8, include a number, capital and lowercase a special character"
+            }
+            if(!formData?.password.trim()){
                 error.password = "Enter your password"
             }
+
 
             setErrorMessages(error);
         
@@ -92,7 +100,7 @@ function Signup2() {
   return (
     <div>
       <Layout text={text} handleClick1="/signup" handleClick2="/signUp">
-        <div className="mb-7">
+        <div className="mb-10">
             <form method="get" onSubmit={handleSubmit}>
                 {
                     forms.map((form, index)=>(
