@@ -3,7 +3,7 @@ import Navbar from "./Navbar"
 
 const Hero = () => {
   return (
-    <div className="bg-[url('meetroHero.png')] bg-cover bg-center h-screen">
+    <div className="bg-[url('/meetroHero.png')] bg-cover bg-center h-screen">
 
         <Navbar />
 

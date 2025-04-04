@@ -5,7 +5,7 @@ import React from 'react'
 function Layout({text, children, handleClick1, handleClick2}) {
   const navigate = useNavigate()
   return (
-    <div className=' relative bg-[url("onboardingBg.svg bg-no-repeat")]'>
+    <div className=' relative bg-[url("/onboardingBg.svg bg-no-repeat")]'>
         <div className='h-screen flex justify-center items-center flex-col '>
             <div className='flex justify-between sm:w-1/2 w-full px-5 sm:px-0 mb-10'>
                 <img className='bg-purple-300 rounded-2xl p-1' src="arrow.png" alt="left arrow" onClick={()=>navigate(handleClick1)}/>
