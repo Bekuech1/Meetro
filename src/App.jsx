@@ -6,9 +6,11 @@ import Signup2 from "./routes/Onboarding/Signup2"
 import Location from "./routes/Onboarding/Location"
 import Calender from "./routes/Onboarding/Calender"
 import Interest from "./routes/Onboarding/Interest"
+import HomepageLayout from "./layouts/HomepageLayout";
+import Home from "./routes/home";
+
 
 function App() {
-
   return (
     <>
     <BrowserRouter>
@@ -22,8 +24,13 @@ function App() {
       <Route path="/interest" element={<Interest />} />
     </Routes>
     </BrowserRouter>
+
+          {/* Homepage Route */}
+          <Route path="/home" element={<HomepageLayout />}>
+            <Route index element={<Home />} />
+          </Route>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
