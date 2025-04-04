@@ -117,7 +117,8 @@ function Interest() {
                     key={ind}
                     title={btn.title}
                     onclick={() => handleSelectedbuttons(btn.title)}
-                    className={`px-0 text-xs font-bold satoshi ${btn.className} ${selectedButton.includes(btn.title) ? "bg-[#011C0E] text-[#AEFC40]" : "bg-white"} `
+                    className={`px-0 text-xs font-bold satoshi ${btn.className} 
+                    ${selectedButton.includes(btn.title) ? "bg-[#011C0E] text-[#AEFC40]" : "bg-white"} `
                 }
                   />
                 ))}
