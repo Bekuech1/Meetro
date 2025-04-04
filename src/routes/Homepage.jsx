@@ -6,6 +6,7 @@ function Homepage() {
     <div>
         <ComingSoon />
         <Hero />
+        
     </div>
   )
 }
