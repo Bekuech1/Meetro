@@ -22,13 +22,13 @@ function App() {
       <Route path="/location" element={<Location />} />
       <Route path="/calender" element={<Calender />} />
       <Route path="/interest" element={<Interest />} />
-    </Routes>
-    </BrowserRouter>
-
           {/* Homepage Route */}
           <Route path="/home" element={<HomepageLayout />}>
             <Route index element={<Home />} />
           </Route>
+    </Routes>
+    </BrowserRouter>
+
     </>
   );
 }
