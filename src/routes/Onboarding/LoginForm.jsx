@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import Layout from "../../components/Onboarding/Layout"
-import OnboardingButton from "../../components/Onboarding/OnboardingButton"
 import Form from "../../components/Onboarding/Form"
-import Text from "../../components/Onboarding/Text"
+import OnboardingButton from "../../components/Onboarding/OnboardingButton";
 import ShowOption from "@/components/Onboarding/ShowOption";
 
-
-function Signup2() {
+function LoginForm() {
     const [formData, setFormData] = useState(()=>{
-        const data = JSON.parse(sessionStorage.getItem("signup"))
+        const data = JSON.parse(sessionStorage.getItem("login"))
         if(!data){
             return  { name: '', password: '', email: ''}
         }else{
@@ -24,33 +22,22 @@ function Signup2() {
     const [errorMessages, setErrorMessages] = useState({})
     const [showOptions, setShowOptions] = useState(false) 
 
-    const navigate = useNavigate()
-
     useEffect(()=>{
         const newForm = {...formData}
-        sessionStorage.setItem("signup", JSON.stringify(newForm))
+        sessionStorage.setItem("login", JSON.stringify(newForm))
     }, [formData])
 
-    const text = "Join the Meetro in seconds!"
+    const navigate = useNavigate()
+    const text = <p>Welcome back! <br/> We saved you a spot.</p>
 
     const button = {
-        title: "Let's gooo!",
+        title: "Let Me In!",
         className: 'w-full bg-[#AFFC41] text-[#095256] px-6 rounded-[60px] h-[36px]',
         onclick: handleSubmit,
         type: "submit"
     }
 
     const forms = [
-        {
-            id: "name",
-            placeholder: "Fullname",
-            type: 'text',
-            label: "What's your name?",
-            src: "user.png",
-            value: formData?.name ?? "",
-            handleChange: handleChange,
-            error: errorMessages.name
-        },
         {
             id: "email",
             placeholder: "e.g. newman@gmail.com",
@@ -63,15 +50,14 @@ function Signup2() {
         },
         {
             id: "password",
-            placeholder: "Make it a good one!",
+            placeholder: "Enter your password",
             label: "Create a password",
             src: "lock.png",
             type: "password",
             value: formData?.password ?? "",
             handleChange: handleChange,
             error: errorMessages.password
-        },
-
+        }
 ]
 
         function handleChange(e){
@@ -83,15 +69,7 @@ function Signup2() {
             e.preventDefault();
             
             let error = {};
-            if(! /^[A-Za-z]+$/.test(formData.name)){
-                error.name = "Enter a valid name format"
-            }
-            
-            if (!formData?.name.trim()) {
-                error.name = "Name is required";
-            }
-
-            
+        
             if (!formData?.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
                 error.email = "Enter a valid email";
             }
@@ -103,7 +81,6 @@ function Signup2() {
                 error.password = "Enter your password"
             }
 
-
             setErrorMessages(error);
         
             if (Object.keys(error).length === 0) {
@@ -114,8 +91,8 @@ function Signup2() {
 
   return (
     <div>
-      <Layout text={text} width={'w-[255px]  sm:w-[450px]'} handleClick1="/signup" handleClick2={()=> setShowOptions(true)}>
-        <div className="sm:w-[312px] w-[343px] mb-12">
+      <Layout text={text} width={'w-[255px]  sm:w-[450px]'} handleClick1="/login" handleClick2={()=> setShowOptions(true)}>
+        <div className={`sm:w-[312px] w-[343px] mb-9` }>
             <form method="get" onSubmit={handleSubmit}>
                 {
                     forms.map((form, index)=>(
@@ -124,8 +101,11 @@ function Signup2() {
                 }
             </form>
         </div>
-        <OnboardingButton {...button}/>
-        <Text path={'/signin'}/>
+                <OnboardingButton {...button}/>
+        <div>
+            <h3 className="text-xs text-center sm:text-sm mt-6 font-medium">New to Meetro?
+                 <span className="text-purple-400 satoshi cursor-pointer" onClick={()=>navigate('/sign')}> Sign up here</span></h3>
+        </div>   
       </Layout>
       {showOptions && 
                 <ShowOption onclick1={()=>{setShowOptions(false); navigate('/'); setErrorMessages({})}} 
@@ -135,4 +115,4 @@ function Signup2() {
   )
 }
 
-export default Signup2
+export default LoginForm

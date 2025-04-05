@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "../../components/Onboarding/Layout"
 import OnboardingButton from "../../components/Onboarding/OnboardingButton";
+import ShowOption from "@/components/Onboarding/ShowOption";
 
 function Interest() {
     const text = <p className="tracking-tight">What are you into?🎭🎶⚽</p>;
@@ -9,7 +10,7 @@ function Interest() {
     const buttons = [
         {
             title: "Nightlife & Parties",
-            className: `text-[#011F0F] mr-4 ml-2`
+            className: `text-[#011F0F] mr-4 ml-2 `
         },
         {
             title: "Music & Concerts",
@@ -57,49 +58,14 @@ function Interest() {
         },
         {
             title: "Skip for Now",
-            className: `text-[#095256] bg-white px-6`,
-            onclick: ()=> setShowOptions(true)
+            className: `text-[#095256] bg-white px-6 w-[163.5px] rounded-[60px] sm:w-[148px] h-[36px]`,
         },
         {
             title: "Continue",
-            className: `text-[#095256] bg-[#AFFC41] px-6` 
+            className: `text-[#095256] bg-[#AFFC41] px-6 w-[163.5px] rounded-[60px] sm:w-[148px] h-[36px]` 
         },
     ]
 
-    function ShowOption(){
-        const mybtn =[
-            {
-                title: "Cancel onboarding",
-                className: "bg-white px-2 text-xs",
-                onclick: ()=>{setShowOptions(false); setSelectedButton([])}
-            },
-            {
-                title: "Continue onboarding",
-                className: "bg-[#AFFC41] px-2 text-xs",
-                onclick: ()=>setShowOptions(false)
-            }
-        ]
-        return (
-            <div className="  leading-12 w-full absolute top-5 h-screen">
-                <div className="flex flex-col justify-center items-center mx-auto sm:w-1/2
-                     h-screen backdrop-blur-xs">
-                    <div className="bg-[#efefee] shadow-2xl py-6 rounded-2xl w-full">
-                        <div>
-                            <h2 className="text-[#4A3A74] text-[20px] sm:text-3xl text-center paytone font-[850]">Cancel Onboarding?</h2>
-                            <p className="text-[#4A3A74] text-sm sm:text-[16px] text-center satoshi font-semibold">You will lose all your progress</p>
-                        </div>
-                        <div className="flex gap-3 sm:gap-4 mt-4 justify-center">
-                            {
-                                mybtn.map((btn, ind)=>(
-                                    <OnboardingButton {...btn} key={ind} />
-                                ))
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
 
     function handleSelectedbuttons(title) {
         setSelectedButton((prev)=>(
@@ -109,7 +75,7 @@ function Interest() {
 
   return (
     <div className="relative">
-      <Layout text={text}>
+      <Layout text={text} handleClick1="/calender" width={"sm:w-[450px] w-[335px] tracking-tighter text-nowrap"} handleClick2={()=> setShowOptions(true)}>
         <div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {buttons.slice(0,12).map((btn, ind) => (
@@ -117,27 +83,23 @@ function Interest() {
                     key={ind}
                     title={btn.title}
                     onclick={() => handleSelectedbuttons(btn.title)}
-                    className={`px-0 text-xs font-bold satoshi ${btn.className} 
+                    className={`h-[34px] text-xs  satoshi ${btn.className} font-extrabold rounded-[20px]
                     ${selectedButton.includes(btn.title) ? "bg-[#011C0E] text-[#AEFC40]" : "bg-white"} `
                 }
                   />
                 ))}
           </div>
         </div>
-        <div className="flex justify-center gap-6 mt-6  mb-10">
+        <div className="flex justify-center gap-4 mt-8 ">
             {buttons.slice(12, 14).map((btn, ind)=>(
                 <OnboardingButton key={ind + 12} {...btn}/>
             ))}
         </div>
       </Layout>
-      <div>
             {showOptions && 
-            <>
-                <div className="absolute bg-red-500 top-0 left-0 w-full h-100vh"> </div>
-                <ShowOption />
-            </>
+                    <ShowOption onclick1={()=>{setShowOptions(false); setSelectedButton([])}} 
+                        onclick2={ ()=>setShowOptions(false)}/>
             }
-        </div>
     </div>
   )
 }

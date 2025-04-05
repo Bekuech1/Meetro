@@ -8,6 +8,8 @@ import Calender from "./routes/Onboarding/Calender"
 import Interest from "./routes/Onboarding/Interest"
 import HomepageLayout from "./layouts/HomepageLayout";
 import Home from "./routes/home";
+import Login from "./routes/Onboarding/Login"
+import LoginForm from "./routes/Onboarding/LoginForm"
 
 
 function App() {
@@ -16,9 +18,12 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path="/" element= {<Homepage />}/>
+      {/* Onboarding Routes */}
       <Route path="/authentication" element={<Authentication />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/sign" element={<Signup2 />} />
+      <Route path="/login"  element={<Login />}/>
+      <Route path="/signin" element={<LoginForm />}/>
       <Route path="/location" element={<Location />} />
       <Route path="/calender" element={<Calender />} />
       <Route path="/interest" element={<Interest />} />
