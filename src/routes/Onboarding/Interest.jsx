@@ -68,7 +68,7 @@ function Interest() {
             title: "Continue",
             className: `text-[#095256] bg-[#AFFC41] px-6 w-[163.5px] rounded-[60px] sm:w-[148px] h-[36px]`,
             onclick: ()=> navigate('/home')
-        },
+        }
     ]
 
 
@@ -104,6 +104,7 @@ function Interest() {
             {showOptions && 
                     <ShowOption onclick1={()=>{setShowOptions(false); setSelectedButton([]); navigate('/')}} 
                         onclick2={()=>setShowOptions(false)}/>
+
             }
     </div>
   )
