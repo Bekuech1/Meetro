@@ -13,7 +13,8 @@ function Location() {
     const buttons = [
         {
             title: "Skip for Now",
-            className: "bg-white text-[#095256] px-6 w-[163.5] sm:w-[148px] h-[36px] rounded-[60px]"
+            className: "bg-white text-[#095256] px-6 w-[163.5] sm:w-[148px] h-[36px] rounded-[60px]",
+            onclick: ()=>navigate('/calender')
         },
         {
             title: "Continue",

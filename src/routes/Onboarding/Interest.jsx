@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import Layout from "../../components/Onboarding/Layout"
 import OnboardingButton from "../../components/Onboarding/OnboardingButton";
 import ShowOption from "@/components/Onboarding/ShowOption";
 
 function Interest() {
-    const text = <p className="tracking-tight">What are you into?🎭🎶⚽</p>;
     const [selectedButton, setSelectedButton] = useState([])
     const [showOptions, setShowOptions] = useState(false) 
+    const navigate = useNavigate()
+
+    const text = <p className="tracking-tight">What are you into?🎭🎶⚽</p>;
     const buttons = [
         {
             title: "Nightlife & Parties",
@@ -59,11 +62,13 @@ function Interest() {
         {
             title: "Skip for Now",
             className: `text-[#095256] bg-white px-6 w-[163.5px] rounded-[60px] sm:w-[148px] h-[36px]`,
+            onclick: ()=> setShowOptions(true)
         },
         {
             title: "Continue",
-            className: `text-[#095256] bg-[#AFFC41] px-6 w-[163.5px] rounded-[60px] sm:w-[148px] h-[36px]` 
-        },
+            className: `text-[#095256] bg-[#AFFC41] px-6 w-[163.5px] rounded-[60px] sm:w-[148px] h-[36px]`,
+            onclick: ()=> navigate('/home')
+        }
     ]
 
 
@@ -77,7 +82,7 @@ function Interest() {
     <div className="relative">
       <Layout text={text} handleClick1="/calender" width={"sm:w-[450px] w-[335px] tracking-tighter text-nowrap"} handleClick2={()=> setShowOptions(true)}>
         <div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {buttons.slice(0,12).map((btn, ind) => (
                   <OnboardingButton
                     key={ind}
@@ -97,8 +102,9 @@ function Interest() {
         </div>
       </Layout>
             {showOptions && 
-                    <ShowOption onclick1={()=>{setShowOptions(false); setSelectedButton([])}} 
-                        onclick2={ ()=>setShowOptions(false)}/>
+                    <ShowOption onclick1={()=>{setShowOptions(false); setSelectedButton([]); navigate('/')}} 
+                        onclick2={()=>setShowOptions(false)}/>
+
             }
     </div>
   )
