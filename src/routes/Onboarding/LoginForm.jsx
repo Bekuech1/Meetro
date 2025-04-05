@@ -84,7 +84,7 @@ function LoginForm() {
             setErrorMessages(error);
         
             if (Object.keys(error).length === 0) {
-                navigate('/location');
+                navigate('/home');
             }
         }
         
