@@ -12,6 +12,7 @@
   "dependencies": {
     "@splinetool/react-spline": "^4.0.0",
     "@tailwindcss/postcss": "^4.0.13",
+    "aos": "^2.3.4",
     "lottie-react": "^2.4.1",
     "postcss": "^8.5.3",
     "react": "^19.0.0",

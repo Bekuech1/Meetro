@@ -25,7 +25,7 @@ const Seamless = ( {onClick} ) => {
             </div>
             <div className='flex gap-4 w-fit'>
                 <Button name="Join Waitlist" color="bg-[#AFFC41]" onClick={onClick}/>
-                <Button name="join community" color="bg-white"/>
+                <Button name="join community" color="bg-white" />
             </div>
         </div>
         <div>

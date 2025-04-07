@@ -8,14 +8,14 @@ const Footer = ( {onClick} ) => {
             <div className='grid gap-6 h-fit w-fit mx-auto md:mx-0'>
                 <img src="meetroLogo.svg" alt="" className='mx-auto md:mx-0' />
                 <a 
-                    href="http://" 
+                    href="mailto:connect@meetro.live" 
                     className='font-[500] md:text-[18px] md:leading-[28px] text-[14px] leading-5 text-[#B0B5B5]'
                 >
-                    support@Meetro.com</a>
+                    connect@Meetro.live</a>
             </div>
             <div className='w-fit h-fit flex gap-4 mx-auto md:mx-0'>
-                <Button name="Discover" color="bg-[#AFFC41]"/>
-                <Button name="Join waitlist" color="bg-white" onClick={onClick}/>
+                <Button name="Join community" color="bg-white" onClick={onClick}/>
+                <Button name="Join waitlist" color="bg-[#AFFC41]"/>
             </div>
         </div>
         <div className='grid md:flex md:justify-between py-10 gap-6'>

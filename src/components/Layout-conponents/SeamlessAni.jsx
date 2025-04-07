@@ -4,7 +4,7 @@ import Lottie from 'react-lottie';
 
 const SeamlessAni = () => {
   const defaultOptions = {
-    loop: true,
+    loop: false,
     autoplay: true,
     animationData: animationData,
     rendererSettings: {

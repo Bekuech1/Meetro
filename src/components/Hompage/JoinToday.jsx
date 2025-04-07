@@ -1,9 +1,9 @@
 import React from 'react'
 import Button from '../Layout-conponents/Button'
 import Lottie from 'react-lottie';
-import animationData from '../Layout-conponents/Background.json';
+import animationData from '../Layout-conponents/bgmove.json';
 
-const JoinToday = () => {
+const JoinToday = ( {onClick} ) => {
 
   const defaultOptions = {
     loop: true,
@@ -23,11 +23,11 @@ const JoinToday = () => {
 
             <div className='grid gap-12 w-fit h-screen items-center m-auto relative z-10'>
                 <div className='grid gap-6 justify-center text-center w-fit h-fit'>
-                    <h4 className='capitalize text-[#4A3A74] text-[36px] md:text-[60px] leading-[100%] font-[400]'>join metro today!</h4>
+                    <h4 className='capitalize text-[#4A3A74] text-[36px] md:text-[60px] leading-[100%] font-[400]'>join meetro today!</h4>
                     <p className='text-[14px] md:text-[16px] font-[700] leading-5 md:leading-[24px] text-[#B0B5B5] max-w-[90%] mx-auto'>Start discovering exciting events in your area and never miss out.</p>
                     <div className='flex gap-4 mx-auto w-fit mt-6'>
-                        <Button name="Register" color="bg-[#AFFC41]"/>
-                        <Button name="Join community" color="bg-white"/>
+                        <Button name="join waitlist" color="bg-[#AFFC41]" onClick={onClick}/>
+                        <Button name="Join community" color="bg-white" />
                     </div>
                 </div>
                 
