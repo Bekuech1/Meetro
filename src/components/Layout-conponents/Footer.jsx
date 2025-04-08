@@ -14,8 +14,8 @@ const Footer = ( {onClick} ) => {
                     connect@Meetro.live</a>
             </div>
             <div className='w-fit h-fit flex gap-4 mx-auto md:mx-0'>
-                <Button name="Join community" color="bg-white" onClick={onClick}/>
-                <Button name="Join waitlist" color="bg-[#AFFC41]"/>
+                <Button name="Join community" color="bg-white"/>
+                <Button name="Join waitlist" color="bg-[#AFFC41]" onClick={onClick}/>
             </div>
         </div>
         <div className='grid md:flex md:justify-between py-10 gap-6'>
