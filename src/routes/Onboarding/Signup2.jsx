@@ -46,7 +46,7 @@ function Signup2() {
             placeholder: "Fullname",
             type: 'text',
             label: "What's your name?",
-            src: "user.png",
+            src: "user.svg",
             value: formData?.name ?? "",
             handleChange: handleChange,
             error: errorMessages.name
@@ -55,7 +55,7 @@ function Signup2() {
             id: "email",
             placeholder: "e.g. newman@gmail.com",
             label: "Drop your email here",
-            src: "sms.png",
+            src: "sms.svg",
             type: "email",
             value: formData?.email ?? "",
             handleChange: handleChange,
@@ -65,7 +65,7 @@ function Signup2() {
             id: "password",
             placeholder: "Make it a good one!",
             label: "Create a password",
-            src: "lock.png",
+            src: "lock.svg",
             type: "password",
             value: formData?.password ?? "",
             handleChange: handleChange,
@@ -83,7 +83,7 @@ function Signup2() {
             e.preventDefault();
             
             let error = {};
-            if(! /^[A-Za-z]+$/.test(formData.name)){
+            if(! /^[A-Za-z]+(?:[-' ][A-Za-z]+)*$/.test(formData.name)){
                 error.name = "Enter a valid name format"
             }
             
