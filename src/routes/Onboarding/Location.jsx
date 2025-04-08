@@ -26,16 +26,19 @@ function Location() {
     <div>
       <div>
           <Layout text={text} handleClick1= '/sign' handleClick2={()=> setShowOptions(true)} width={'sm:w-[450px] w-[255px]'}>
-          <div >
-              <label htmlFor="location" className="satoshi font-bold align-middle text-[10px] pl-0.5 ">Where do you stay?</label>
-              <div className="bg-white py-1.5 px-4 rounded-2xl border-slate-600 width relative">
-              <img src={'location.png'} alt={`location-image`} className="h-5 absolute  top-1.5"/>
+          <div>
+              <label htmlFor="location" className="satoshi font-bold align-middle text-[12px] leading-[18px]">Where do you stay?</label>
+              <div className="py-1.5 rounded-2xl w-[330px] relative">
+              <img src={'location.svg'} alt={`location-image`} className=" absolute top-3 h-6 rounded-[60px] left-1.5 bg-white z-10"/>
 
-                  <select name="location" id="location" className="block w-68 pl-6 text-sm text-slate-600 satoshi font-medium outline-0"
-                  onChange={(e)=>setLocation(e.target.value)} value={located}>
-                    <option value="FCT">FCT</option>
-                    <option value="dan">DSY</option>
-                  </select>
+                  <div className="bg-[#FFFFFE] opacity-40 rounded-lg px-3">
+                    <select name="location" id="location" className="block pl-5 w-full text-sm text-slate-600 satoshi font-medium
+                     outline-0  py-2"
+                    onChange={(e)=>setLocation(e.target.value)} value={located}>
+                      <option value="FCT">FCT</option>
+                      <option value="dan">DSY</option>
+                    </select>
+                  </div>
               </div>
           </div>
           <div className="flex justify-between mt-8 gap-4">
