@@ -83,8 +83,8 @@ function Signup2() {
             e.preventDefault();
             
             let error = {};
-            if(! /^[A-Za-z]+(?: [A-Za-z]+)*$/.test(formData.name)){
-                error.name = "Enter your full name"
+            if(!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(formData.name) ){
+                error.name = "Enter a valid name";
             }
             
             if (!formData?.name.trim()) {
