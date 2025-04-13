@@ -1,35 +1,69 @@
-import Button from "../Layout-conponents/Button"
-import Navbar from "./Navbar"
+import { useState } from "react";
+import Button from "../Layout-conponents/Button";
+import Navbar from "./Navbar";
 
-const Hero = () => {
+const Hero = ( {onClick} ) => {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
   return (
-    <div className="bg-[url('/meetroHero.png')] bg-cover bg-center h-screen">
+    <div
+      id="heroSection"
+      className="h-screen w-full relative"
+      style={{
+        backgroundImage: !videoLoaded ? "url('meetroHero.png')" : "none",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Video Background */}
+      <video
+        className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500 ${
+          videoLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        src="meetrovid.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        onLoadedData={() => setVideoLoaded(true)}
+      />
 
-        <Navbar />
 
-        <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto mt-[49vh] md:mt-[40vh] gap-10"> 
-           <div className="grid gap-[10px]">
-                <div className="bg-white/10 backdrop-blur-[24px] flex paytone items-center justify-center gap-[10px] md:hidden fix px-3 py-[6px] w-fit mx-auto"> 
-                    <img src='mobile.svg' alt="phone" className="inline-block" />
-                    <p className="font-[400] text-[12px] text-white">Meetro App</p>
-                    <button className=" bg-linear-to-tr from-[#97DC37] to-[#055962] rounded-[60px] py-[6px] px-[10px] font-[400] text-white text-[8px] h-fit">Coming Soon</button> 
-                </div> 
-                <div>
-                  <h1 className="capitalize text-[48px] md:text-[60px] font-[400] text-white text-center leading-[48px] md:leading-[100%]">Never Miss an <span className="text-[#AFFC41] paytone">Event</span> Around You Again</h1>
-                </div>
-           </div>
-           <div className="hidden md:flex gap-4 w-fit mx-auto">
-                <Button name="Create Event" color="bg-white"/>
-                <Button name="Discover Events" color="bg-[#AFFC41]"/>
-            </div>
-           <div className="md:hidden inline-flex gap-4 mx-auto">
-                <Button name="Join Community" color="bg-white"/>
-                <Button name="Discover" color="bg-[#AFFC41]"/>
-            </div>
+      <Navbar visibility='invisible' />
+
+      {/* Content */}
+      <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto mt-[30vh] gap-10 relative z-10">
+        {/* Mobile App Banner */}
+        <div className="grid gap-[10px]">
+          <div className="bg-white/10 backdrop-blur-[24px] flex paytone items-center justify-center gap-[10px] md:hidden px-3 py-[6px] w-fit mx-auto rounded-4xl">
+            <img src="mobilew.svg" alt="phone" />
+            <p className="font-[400] text-[12px] text-white">Meetro App</p>
+            <button className="bg-gradient-to-tr from-[#97DC37] to-[#055962] rounded-[60px] py-[6px] px-[10px] font-[400] text-white text-[8px] h-fit">
+              Coming Soon
+            </button>
+          </div>
+
+          {/* Heading */}
+          <h1 className="capitalize text-[48px] md:text-[60px] font-[400] text-white text-center leading-[48px] md:leading-[100%]">
+            Discover, Connect and Create{" "}
+            <span className="text-[#AFFC41] paytone">Unforgettable</span> experiences
+          </h1>
         </div>
-    </div>    
-    
-  )
-}
 
-export default Hero
+        {/* Desktop Buttons */}
+        <div className="hidden md:flex gap-4 w-fit mx-auto">
+          <Button name="join community" color="bg-white" onClick={onClick}/>
+          <Button name="join waitlist" color="bg-[#AFFC41]" onClick={onClick}/>
+        </div>
+
+        {/* Mobile Buttons */}
+        <div className="md:hidden flex gap-4 mx-auto">
+          <Button name="Join Community" color="bg-white"/>
+          <Button name="join waitlist" color="bg-[#AFFC41]" onClick={onClick}/>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Hero;
