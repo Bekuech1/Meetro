@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router";
 import Hero from "../components/Hompage/Hero";
 import JoinToday from "../components/Hompage/JoinToday";
 import ComingSoon from "../components/Layout-conponents/ComingSoon";
@@ -8,6 +9,9 @@ import Seamless from "../components/Hompage/Seamless";
 import Navbar from "../components/Hompage/Navbar";
 
 function Homepage() {
+  
+  const navigate = useNavigate()
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [email, setEmail] = useState("");
@@ -84,16 +88,17 @@ function Homepage() {
       <ComingSoon />
       <div className="top-0 sticky z-20 justify-center items-center flex">
         <Navbar
-          onClick={openPopup}
+          onAuth={() => navigate('/authentication')}
+          onclick={openPopup}
           absolute="absolute top-[17px]"
           typeS={isScrolled ? "bg-[#011F0F] shadow-md transition-all duration-300 ease-in-out" : "bg-white/10"}
         />
       </div>
-      <Hero onClick={openPopup} />
-      <Seamless onClick={openPopup} />
-      <FutureFeatures onClick={openPopup} />
-      <JoinToday onClick={openPopup} />
-      <Footer onClick={openPopup} />
+      <Hero onclick={openPopup} />
+      <Seamless onclick={openPopup} />
+      <FutureFeatures onclick={openPopup} />
+      <JoinToday onclick={openPopup} />
+      <Footer onclick={openPopup} />
 
       {/* Popup */}
       {isPopupOpen && (
@@ -127,7 +132,7 @@ function Homepage() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col justify-center items-center h-full gap-4">
+              <div className="flex flex-col justify-center items-center h-full gap-4 fix">
                 <h2 className="text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
                 🚀 Email Submitted Successfully!
                 </h2>

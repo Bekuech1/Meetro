@@ -50,8 +50,8 @@ function LoginForm() {
         },
         {
             id: "password",
-            placeholder: "Enter your password",
-            label: "Create a password",
+            placeholder: "your password",
+            label: "Enter your password",
             src: "lock.svg",
             type: "password",
             value: formData?.password ?? "",

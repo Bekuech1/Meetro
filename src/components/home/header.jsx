@@ -1,89 +1,148 @@
-import { Search, Globe, Bell, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Link } from "react-router";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import SiteBtn from "../Layout-conponents/SiteBtn";
 
-export default function Header() {
+const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  const dropdownItems = [
+    {
+      text: "my profile",
+      image: "user.svg",
+      className: "",
+      onClick: () => navigate("/home"),
+    },
+    {
+      text: "settings",
+      image: "support.svg",
+      className: "",
+      onClick: () => navigate("/profile"),
+    },
+    {
+      text: "contact us",
+      image: "header-contact.svg",
+      className: "border-b border-gray-300",
+      onClick: () => navigate("/settings"),
+    },
+    {
+      text: "Logout",
+      image: "logout.svg",
+      className: "text-[#DB2863]",
+      onClick: () => console.log("Logout clicked"),
+    },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-[#0A2A0A] text-white">
-      <div className="container flex h-14 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#8AE637"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 2a9 9 0 0 0-9 9c0 3.6 3.96 7.814 9 12 5.04-4.186 9-8.4 9-12a9 9 0 0 0-9-9zm0 11a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
-            </svg>
-            <span className="text-[#8AE637] font-medium">Meetro</span>
-          </Link>
+    <header className="flex px-8 py-3 justify-between bg-[#011F0F] items-center z-20 sticky top-0 shadow-md w-full">
+      {/* Logo and My Events */}
+      <section className="flex items-center gap-6">
+        <img src="Logo.svg" alt="Logo" />
+        <div className="flex gap-1 py-1 px-2 h-fit w-fit">
+          <img src="ticket-star.svg" alt="My Events Icon" />
+          <h6 className="satoshi text-[12px] font-[500] leading-[18px] text-white capitalize my-auto">
+            My Events
+          </h6>
+        </div>
+      </section>
 
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="#"
-              className="flex items-center gap-1 text-sm font-medium opacity-70 hover:opacity-100"
-            >
-              <Search className="h-4 w-4" />
-              Discover
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-1 text-sm font-medium opacity-70 hover:opacity-100"
-            >
-              <Globe className="h-4 w-4" />
-              Communities
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-1 text-sm font-medium opacity-70 hover:opacity-100"
-            >
-              <Bell className="h-4 w-4" />
-              Connect
-            </Link>
-          </nav>
+      {/* Location Section */}
+      {/* <section className="w-[251px] h-8 flex items-center gap-2 pr-2 pl-1 bg-[#344C3F] rounded-full">
+        <div className="w-fit h-fit rounded-full p-1 bg-[#55695E]">
+          <img src="location-home.svg" alt="Location" />
+        </div>
+        <div className="satoshi text-[14px] font-[500] leading-[20px] text-white uppercase w-full">
+          FCT
+        </div>
+        <img src="arrow-down.svg" alt="Arrow Down" />
+      </section> */}
+
+      {/* Actions Section */}
+      <section className="flex items-center gap-4">
+        {/* Notification */}
+        <button className="h-fit w-fit p-1 rounded-[24px] bg-[#344C3F]">
+          <img src="notification-bing.svg" alt="Notification" />
+        </button>
+
+        {/* User Dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={toggleDropdown}
+            className={`h-fit w-fit p-1 rounded-[24px] flex items-center gap-2 transition-all duration-300 ease-in-out ${
+              isOpen ? "bg-[#496A1B]" : "bg-[#344C3F]"
+            }`}
+          >
+            <div className="rounded-full w-6 h-6 flex items-center justify-center bg-[#077D8A] text-white uppercase satoshi text-[10px] font-[700] leading-[18px]">
+              NO
+            </div>
+            <img src="arrow-down.svg" alt="Arrow Down" className={`w-3 h-3 transition-all duration-300 ease-in-out ${isOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {isOpen && (
+            <ul className="absolute right-0 mt-3 pb-2 px-4 bg-white rounded-[16px] shadow-lg w-[264px] transform transition-transform duration-300 ease-in-out satoshi z-20">
+              {/* User Info */}
+              <li className="py-4 grid items-center gap-4 ">
+                <div className="bg-[#077D8A] text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
+                  NO
+                </div>
+                <div>
+                  <h4 className="satoshi text-[12px] font-[500] leading-[18px] capitalize">
+                    Newman Ogbo
+                  </h4>
+                  <div className="flex gap-2 text-[12px]">
+                    <span>
+                      2 <span className="text-[#8A9191]">Hosted</span>
+                    </span>
+                    <span>
+                      2 <span className="text-[#8A9191]">Attended</span>
+                    </span>
+                  </div>
+                </div>
+              </li>
+              {/* Dropdown Items */}
+              {dropdownItems.map((item, index) => (
+                <li
+                  key={index}
+                  className={`cursor-pointer flex w-full gap-1 py-2 capitalize satoshi text-[12px] font-[500] leading-[18px] items-center ${ item.className }`}
+                  onClick={item.onClick}
+                >
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.text}
+                      className="my-auto w-4 h-4"
+                    />
+                  )}
+                  {item.text}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="relative w-full max-w-[200px]">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
-            <Input
-              type="search"
-              placeholder="FCT"
-              className="w-full rounded-full bg-[#1A3A1A] pl-8 pr-4 text-sm text-white placeholder:text-gray-400 focus-visible:ring-[#8AE637]"
-            />
-            <ChevronDown className="absolute right-2.5 top-2.5 h-4 w-4 text-gray-400" />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Globe className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <Avatar className="h-8 w-8 border border-white/20">
-              <AvatarFallback className="bg-[#1A3A1A] text-white">
-                NO
-              </AvatarFallback>
-            </Avatar>
-            <Button
-              variant="outline"
-              size="sm"
-              className="ml-2 rounded-full bg-[#8AE637] text-black hover:bg-[#7AD627] hover:text-black"
-            >
-              Create Event
-            </Button>
-          </div>
-        </div>
-      </div>
+        {/* Create Event Button */}
+        <SiteBtn
+          name="Create Event"
+          colorPadding="bg-[#AEFC40] py-[6px] px-[10px]"
+          onclick={() => navigate("/create-event")}
+        />
+      </section>
     </header>
   );
-}
+};
+
+export default Header;

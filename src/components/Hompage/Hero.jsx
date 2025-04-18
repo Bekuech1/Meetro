@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "../Layout-conponents/Button";
 import Navbar from "./Navbar";
 
-const Hero = ( {onClick} ) => {
+const Hero = ( {onclick} ) => {
   const [videoLoaded, setVideoLoaded] = useState(false);
 
   return (
@@ -32,7 +32,7 @@ const Hero = ( {onClick} ) => {
       <Navbar visibility='invisible' />
 
       {/* Content */}
-      <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto mt-[30vh] gap-10 relative z-10">
+      <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto md:mt-[30vh] mt-[45vh] gap-10 relative z-10">
         {/* Mobile App Banner */}
         <div className="grid gap-[10px]">
           <div className="bg-white/10 backdrop-blur-[24px] flex paytone items-center justify-center gap-[10px] md:hidden px-3 py-[6px] w-fit mx-auto rounded-4xl">
@@ -44,22 +44,22 @@ const Hero = ( {onClick} ) => {
           </div>
 
           {/* Heading */}
-          <h1 className="capitalize text-[48px] md:text-[60px] font-[400] text-white text-center leading-[48px] md:leading-[100%]">
+          <h1 className="capitalize text-[48px] md:text-[60px] paytone font-[400] text-white text-center leading-[48px] md:leading-[100%]">
             Discover, Connect and Create{" "}
-            <span className="text-[#AFFC41] paytone">Unforgettable</span> experiences
+            <span className="text-[#AFFC41]">Unforgettable</span> experiences
           </h1>
         </div>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex gap-4 w-fit mx-auto">
-          <Button name="join community" color="bg-white" onClick={onClick}/>
-          <Button name="join waitlist" color="bg-[#AFFC41]" onClick={onClick}/>
+          <Button name="join community" color="bg-white"/>
+          <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick}/>
         </div>
 
         {/* Mobile Buttons */}
         <div className="md:hidden flex gap-4 mx-auto">
           <Button name="Join Community" color="bg-white"/>
-          <Button name="join waitlist" color="bg-[#AFFC41]" onClick={onClick}/>
+          <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick}/>
         </div>
       </div>
     </div>

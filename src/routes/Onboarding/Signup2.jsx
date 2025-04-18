@@ -43,7 +43,7 @@ function Signup2() {
     const forms = [
         {
             id: "name",
-            placeholder: "Fullname",
+            placeholder: "Full Name",
             type: 'text',
             label: "What's your name?",
             src: "user.svg",

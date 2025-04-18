@@ -33,7 +33,7 @@ function Login() {
     <div>
         <div>
         <Layout text={text} width={'w-[255px] sm:w-[430px]'} handleClick1="/authentication" handleClick2={()=> setShowOptions(true)}> 
-        <div className="flex flex-col gap-4 ">
+        <div className="flex flex-col gap-4">
             {buttons.map((btn, index)=>(
             <OnboardingButton key={index} {...btn}/>
             ))}
