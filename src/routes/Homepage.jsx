@@ -106,14 +106,14 @@ function Homepage() {
           <div className="md:w-[714px] w-[90%] h-[466px] p-12 rounded-3xl flex flex-col justify-between bg-gray-50 backdrop-blur-[32px] text-center relative m-auto">
             {!isSuccess ? (
               <div className="grid gap-8">
-                <h1 className="text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
+                <h1 className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
                   🚀 Be the First to Experience Meetro!
                 </h1>
-                <p className="text-[#011F0F] md:leading-[24px] leading-5 text-[12px] md:text-[16px] font-[500]">
+                <p className="satoshi text-[#011F0F] md:leading-[24px] leading-5 text-[12px] md:text-[16px] font-[500]">
                   Tired of missing out on the best events? Meetro is your all-access pass to discovering and creating amazing experiences around you! 🎉
                 </p>
                 <div className="flex flex-col items-start gap-1">
-                  <label htmlFor="email" className="text-[#001010] text-[10px] leading-[14px] font-[700]">
+                  <label htmlFor="email" className="satoshi text-[#001010] text-[10px] leading-[14px] font-[700]">
                     Email Address
                   </label>
                   <div className="relative w-full flex gap-2">
@@ -133,10 +133,10 @@ function Homepage() {
               </div>
             ) : (
               <div className="flex flex-col justify-center items-center h-full gap-4 fix">
-                <h2 className="text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
+                <h2 className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
                 🚀 Email Submitted Successfully!
                 </h2>
-                <p className="text-[#011F0F] text-[14px] md:text-[16px] font-[500] max-w-[400px] Paytone">
+                <p className="satoshi text-[#011F0F] text-[14px] md:text-[16px] font-[500] max-w-[400px] Paytone">
                   Thank you for joining the waitlist. We'll keep you posted on the next big thing!
                 </p>
               </div>
@@ -146,7 +146,7 @@ function Homepage() {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className={`w-full md:text-[14px] text-[12px] rounded-[60px] capitalize px-6 py-3 paytone md:leading-5 leading-[16px] font-[400] ${
+                className={`paytone w-full md:text-[14px] text-[12px] rounded-[60px] capitalize px-6 py-3 paytone md:leading-5 leading-[16px] font-[400] ${
                   isSubmitting ? "bg-[#011F0F]/60 cursor-not-allowed" : "bg-[#011F0F] cursor-pointer"
                 } text-[#AEFC40] flex items-center justify-center gap-2 transition-all`}
               >
