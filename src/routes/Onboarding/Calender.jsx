@@ -13,7 +13,7 @@ function Calender() {
         {
             title: "Skip for Now",
             className: "bg-white px-6 sm:w-[148px] w-[163.5] h-[36px] text-[#095256]",
-            onclick: ()=> navigate('/interest')
+            onclick: ()=> navigate('/home')
         },
         {
             title: {
@@ -26,8 +26,8 @@ function Calender() {
   return (
     <div>
       <div>
-          <Layout text={text} width={'sm:w-[450px] w-[255px]'} handleClick1= '/location' handleClick2= {()=> setShowOptions(true)}>
-          <div className="flex justify-between gap-4">
+          <Layout text={text} width={'sm:w-[450px] w-[255px]'} handleClick1= '/sign' handleClick2= {()=> setShowOptions(true)}>
+          <div className="flex justify-between sm:gap-4">
               {
                 buttons.map((btn, index)=>(
                     <OnboardingButton key={index} {...btn}/>

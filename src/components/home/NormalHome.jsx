@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import EventsBtn from './EventsBtn';
 import SiteBtn from '../Layout-conponents/SiteBtn';
+import EventModal from './EventModal';
 
 const NormalHome = () => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     const homeBtn = [
         {
@@ -42,48 +48,63 @@ const NormalHome = () => {
                     <h5 className='satoshi capitalize text-black h-fit text-[16px] font-[900] leading-[24px]'>mar 1</h5>
                     <p className='satoshi capitalize text-[#8A9191] h-fit text-[14px] font-[700] leading-[20px]'>saturday</p>
                 </div>
-                <section className='bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white'>
+                <section 
+                    className='bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer'
+                    onClick={openModal}
+                >
 
-                    <img src="events-img.png" alt="" className='rounded-[8px] w-[114px] h-[104px]' />
+                    <img src="events-img.png" alt="" className='rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]' />
 
-                    <ul className='w-full h-fit grid gap-1'>
+                    <ul className='w-full h-fit grid sm:gap-1 gap-2'>
 
-                        <li className='satoshi capitalize text-black h-fit w-full sm:text-[16px] sm:font-[500] sm:leading-[100%] text-[20px] font-[400] leading-[30px]'>tech unwind</li>
+                        <li className='items-center flex justify-between satoshi text-black h-fit w-full sm:text-[16px] sm:font-[500] sm:leading-[100%] text-[14px] font-[700] leading-[20px]'>
+                            <h4 className='w-full capitalize'>tech unwind</h4>
+                            <h6 className='satoshi text-[#8A9191] h-fit sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px] w-[40px] text-end sm:hidden grid'>12 h</h6>
+                        </li>
 
                         <li className='flex gap-1 justify-center items-center'>
-                            <h6 className='satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[20px] font-[400] leading-[30px]'>host</h6>
+                            <h6 className='satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[10px]'>host</h6>
                             <img src="" alt="" className='w-4 h-4 rounded-2xl'/>
-                            <h6 className='satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[20px] font-[400] leading-[30px]'>chubby igboanugo</h6>
+                            <h6 className='satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]'>chubby igboanugo</h6>
                         </li>
 
                         <li className='flex gap-1 justify-center items-center'>
                             <img src="" alt="" className='w-4 h-4 rounded-2xl'/>
-                            <h6 className='satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[20px] font-[400] leading-[30px]'>5 mabushi way, abuja</h6>
+                            <h6 className='satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]'>5 mabushi way, abuja</h6>
                         </li>
 
                         <li className='flex gap-1 justify-center items-center'>
                             <img src="" alt="" className='w-4 h-4 rounded-2xl'/>
-                            <h6 className='satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[20px] font-[400] leading-[30px]'>16:40 <span>pm</span></h6>
+                            <h6 className='satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]'>16:40 <span>pm</span></h6>
                         </li>
 
                         <li className='flex gap-1 justify-center items-center'>
-                            <h6 className='satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[20px] font-[400] leading-[30px]'>going</h6>
+                            <h6 className='satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[14px]'>going</h6>
                             <img src="" alt="" className='w-4 h-4 rounded-2xl'/>
-                            <h6 className='satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[20px] font-[400] leading-[30px]'>newman, victory,<span>+200 others</span></h6>
+                            <h6 className='satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]'>newman, victory,<span>+200 others</span></h6>
+                        </li>
+
+                        <li>
+                            <SiteBtn 
+                                name="manage"
+                                colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full sm:hidden "
+                                onclick={() => navigate("/create-event")}
+                            />
                         </li>
 
                     </ul>
-                    <section className='w-fit max-h-full h-[100px] justify-between flex flex-col text-end'>
+                    <section className='w-fit max-h-full h-[100px] justify-between sm:flex flex-col text-end hidden'>
                         <h6 className='satoshi text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[20px] font-[400] leading-[30px]'>12 hours ago</h6>
                         <SiteBtn 
                             name="manage"
-                            colorPadding="bg-[#AEFC40] py-[10px] px-[16px]"
+                            colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
                             onclick={() => navigate("/create-event")}
                         />
                     </section>
                 </section>
             </section>
         </div>
+        {isModalOpen && <EventModal closeModal={closeModal} />}
     </main>
   )
 }

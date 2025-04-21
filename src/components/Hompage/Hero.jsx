@@ -8,7 +8,7 @@ const Hero = ( {onclick} ) => {
   return (
     <div
       id="heroSection"
-      className="h-screen w-full relative"
+      className="h-screen w-full relative min-h-[700px]"
       style={{
         backgroundImage: !videoLoaded ? "url('meetroHero.png')" : "none",
         backgroundSize: "cover",
@@ -32,7 +32,7 @@ const Hero = ( {onclick} ) => {
       <Navbar visibility='invisible' />
 
       {/* Content */}
-      <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto md:mt-[30vh] mt-[45vh] gap-10 relative z-10">
+      <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto md:mt-[30vh] mt-[40vh] gap-10 relative z-10">
         {/* Mobile App Banner */}
         <div className="grid gap-[10px]">
           <div className="bg-white/10 backdrop-blur-[24px] flex paytone items-center justify-center gap-[10px] md:hidden px-3 py-[6px] w-fit mx-auto rounded-4xl">

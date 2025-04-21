@@ -132,7 +132,7 @@ function Homepage() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col justify-center items-center h-full gap-4 fix">
+              <div className="flex flex-col justify-center items-center h-full gap-4">
                 <h2 className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
                 🚀 Email Submitted Successfully!
                 </h2>

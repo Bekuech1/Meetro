@@ -15,6 +15,16 @@ button{
     cursor: pointer;
 }
 
+.scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  
+
 :root {
     --radius: 0.625rem;
     --background: oklch(1 0 0);
