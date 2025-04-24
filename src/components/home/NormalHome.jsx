@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import EventsBtn from './EventsBtn';
 import SiteBtn from '../Layout-conponents/SiteBtn';
 import EventModal from './EventModal';
 
 const NormalHome = () => {
+
+    const navigate = useNavigate();
+
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -88,7 +92,7 @@ const NormalHome = () => {
                             <SiteBtn 
                                 name="manage"
                                 colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full sm:hidden "
-                                onclick={() => navigate("/create-event")}
+                                onclick={() => navigate("/")}
                             />
                         </li>
 

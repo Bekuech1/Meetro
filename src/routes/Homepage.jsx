@@ -9,25 +9,27 @@ import Seamless from "../components/Hompage/Seamless";
 import Navbar from "../components/Hompage/Navbar";
 
 function Homepage() {
-  
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
   const openPopup = useCallback(() => {
     setIsPopupOpen(true);
     setIsSuccess(false);
     setEmail("");
+    setErrorText("");
   }, []);
 
   const closePopup = useCallback(() => {
     setIsPopupOpen(false);
     setEmail("");
     setIsSuccess(false);
+    setErrorText("");
   }, []);
 
   useEffect(() => {
@@ -44,8 +46,10 @@ function Homepage() {
       setIsScrolled(heroBottom <= 100);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const debounceScroll = () => setTimeout(handleScroll, 100);
+    window.addEventListener("scroll", debounceScroll);
+
+    return () => window.removeEventListener("scroll", debounceScroll);
   }, []);
 
   const validateEmail = (email) => {
@@ -53,9 +57,17 @@ function Homepage() {
     return pattern.test(email.toLowerCase());
   };
 
+  useEffect(() => {
+    if (email && !validateEmail(email)) {
+      setErrorText("Invalid email format");
+    } else {
+      setErrorText("");
+    }
+  }, [email]);
+
   const handleSubmit = async () => {
     if (!email || !validateEmail(email)) {
-      alert("❌ Please enter a valid email address.");
+      setErrorText("Please enter a valid email address");
       return;
     }
 
@@ -66,7 +78,7 @@ function Homepage() {
       formData.append("email", email);
 
       await fetch(
-        "https://script.google.com/macros/s/AKfycbyXi-wQGRppR3OYqB5tkYU8jXdHKCZ3TCW98FWgPeip4OKau8XAj955j1CAaLGBoUYu/exec",
+        "https://script.google.com/macros/s/AKfycbwQWNorUrpbkL76mDiI02Y3oeQm7dxwZNQY4Jd45cpPgGr1CgjWjxTutFRIEwLUmUa6/exec",
         {
           method: "POST",
           body: formData,
@@ -88,10 +100,14 @@ function Homepage() {
       <ComingSoon />
       <div className="top-0 sticky z-20 justify-center items-center flex">
         <Navbar
-          onAuth={() => navigate('/authentication')}
+          onAuth={() => navigate("/authentication")}
           onclick={openPopup}
           absolute="absolute top-[17px]"
-          typeS={isScrolled ? "bg-[#011F0F] shadow-md transition-all duration-300 ease-in-out" : "bg-white/10"}
+          typeS={
+            isScrolled
+              ? "bg-[#011F0F] shadow-md transition-all duration-300 ease-in-out"
+              : "bg-white/10"
+          }
         />
       </div>
       <Hero onclick={openPopup} />
@@ -102,18 +118,34 @@ function Homepage() {
 
       {/* Popup */}
       {isPopupOpen && (
-        <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
+        <div
+          role="dialog"
+          aria-labelledby="popup-title"
+          aria-describedby="popup-desc"
+          className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]"
+        >
           <div className="md:w-[714px] w-[90%] h-[466px] p-12 rounded-3xl flex flex-col justify-between bg-gray-50 backdrop-blur-[32px] text-center relative m-auto">
             {!isSuccess ? (
               <div className="grid gap-8">
-                <h1 className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
+                <h1
+                  id="popup-title"
+                  className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone"
+                >
                   🚀 Be the First to Experience Meetro!
                 </h1>
-                <p className="satoshi text-[#011F0F] md:leading-[24px] leading-5 text-[12px] md:text-[16px] font-[500]">
-                  Tired of missing out on the best events? Meetro is your all-access pass to discovering and creating amazing experiences around you! 🎉
+                <p
+                  id="popup-desc"
+                  className="satoshi text-[#011F0F] md:leading-[24px] leading-5 text-[12px] md:text-[16px] font-[500]"
+                >
+                  Tired of missing out on the best events? Meetro is your
+                  all-access pass to discovering and creating amazing
+                  experiences around you! 🎉
                 </p>
                 <div className="flex flex-col items-start gap-1">
-                  <label htmlFor="email" className="satoshi text-[#001010] text-[10px] leading-[14px] font-[700]">
+                  <label
+                    htmlFor="email"
+                    className="satoshi text-[#001010] text-[10px] leading-[14px] font-[700]"
+                  >
                     Email Address
                   </label>
                   <div className="relative w-full flex gap-2">
@@ -129,15 +161,19 @@ function Homepage() {
                       className="w-full pl-10 p-[6px] border rounded-lg border-white bg-gray-100 placeholder:text-[#B0B5B5] placeholder:text-sm placeholder:font-medium placeholder:leading-5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
+                  {errorText && (
+                    <h2 className="text-red-500 text-sm">{errorText}</h2>
+                  )}
                 </div>
               </div>
             ) : (
               <div className="flex flex-col justify-center items-center h-full gap-4">
                 <h2 className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
-                🚀 Email Submitted Successfully!
+                  🚀 Email Submitted Successfully!
                 </h2>
                 <p className="satoshi text-[#011F0F] text-[14px] md:text-[16px] font-[500] max-w-[400px] Paytone">
-                  Thank you for joining the waitlist. We'll keep you posted on the next big thing!
+                  Thank you for joining the waitlist. We'll keep you posted on
+                  the next big thing!
                 </p>
               </div>
             )}
@@ -147,7 +183,9 @@ function Homepage() {
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 className={`paytone w-full md:text-[14px] text-[12px] rounded-[60px] capitalize px-6 py-3 paytone md:leading-5 leading-[16px] font-[400] ${
-                  isSubmitting ? "bg-[#011F0F]/60 cursor-not-allowed" : "bg-[#011F0F] cursor-pointer"
+                  isSubmitting
+                    ? "bg-[#011F0F]/60 cursor-not-allowed"
+                    : "bg-[#011F0F] cursor-pointer"
                 } text-[#AEFC40] flex items-center justify-center gap-2 transition-all`}
               >
                 {isSubmitting && (
@@ -190,5 +228,3 @@ function Homepage() {
 }
 
 export default Homepage;
-
-

@@ -20,18 +20,18 @@ const EventModal = ( { closeModal } ) => {
       }, []);
 
   return (
-    <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
-        <div className='flex flex-col-reverse gap-4 w-fit h-fit'>
-        <div className="md:mx-14 mx-0 w-fit h-[75vh] max-h-[670px] p-8 rounded-3xl flex gap-8 bg-gray-50 text-center overflow-hidden">
+    <div className="fixed inset-0 lg:h-screen h-full flex fix lg:items-center lg:justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
+        <div className='flex flex-col-reverse gap-4 lg:w-fit w-full h-fit fix'>
+        <div className="lg:mx-14 mx-auto w-fit lg:h-[75vh] lg:max-h-[670px] h-full p-8 rounded-3xl lg:flex grid gap-8 bg-gray-50 text-center lg:overflow-hidden">
         {/* Left Section */}
-        <section className="w-fit h-full grid gap-8 relative overflow-y-auto scrollbar-hide">
+        <section className="w-fit lg:h-full h-fit grid gap-8 lg:relative lg:overflow-y-auto scrollbar-hide">
           <div className="relative">
             <img
               src="events-modal.png"
               alt="Event"
-              className="rounded-3xl w-[349px] h-[349px]"
+              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[333px] h-[306px]"
             />
-            <div className="absolute top-[303px] left-[302px] rounded-full flex items-center justify-center h-8 w-8 bg-white">
+            <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
               <img src="image.svg" className="z-10" alt="" />
             </div>
           </div>
@@ -64,7 +64,7 @@ const EventModal = ( { closeModal } ) => {
         </section>
 
         {/* Right Section */}
-        <section className="w-[567px] h-full overflow-y-auto scrollbar-hide grid gap-6">
+        <section className="w-[567px] sm:h-full h-fit sm:overflow-y-auto scrollbar-hide grid gap-6">
             <div className='flex w-full h-fit gap-2'>
                 <div className='grid w-full h-fit gap-2 text-start'>
                     <h1 className='paytone capitalize text-black font-[400] text-[30px] leading-[38px]'>tech unwind</h1>
@@ -128,6 +128,12 @@ const EventModal = ( { closeModal } ) => {
                         <h6 className='satoshi font-[500] text-[16px] leading-[24px]'>$1000</h6>
                     </div>
                 </div>
+            </div>
+
+            <section className='w-full h-fit flex gap-2'>
+                  <Attendance text='not sure' img='timer-modal.svg' textcolor='#7A60BF' />
+                  <Attendance text='not sure' img='tick-circle-green.svg' textcolor='#61B42D' />
+                </section>
 
                 <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
                   <div className='w-full h-fit flex justify-between'>
@@ -155,7 +161,7 @@ const EventModal = ( { closeModal } ) => {
                     />
                   </div>
                 </div>
-            </div>
+
             <div className='grid gap-2 w-full h-fit'>
               <ModalText 
                 img='dress.svg'
@@ -229,7 +235,7 @@ const EventModal = ( { closeModal } ) => {
       <img
         src="closePopup.svg"
         alt=""
-        className="h-12 w-12 cursor-pointer ml-auto"
+        className="h-12 w-12 cursor-pointer ml-auto fix lg:flex hidden"
         onClick={closeModal}
       />
  
@@ -272,5 +278,18 @@ const ModalBtn = ( {onClick, bgcolor, image, textcolor, text} ) => {
     </div>
   )
 }
+
+const Attendance = ( { img, text, textcolor, onclick } ) => {
+  return (
+                  <div 
+                    className='cursor-pointer w-full h-fit rounded-[60px] py-3 px-8 gap-2 bg-white flex flex-col paytone items-center justify-center'
+                    onClick={onclick}
+                  >
+                    <img src={img} alt="" className='size-8' />
+                    <h6 className={`text-[${textcolor}] font-[400] text-[12px] leading-[18px] capitalize`}>{text}</h6>
+                  </div>
+  )
+}
+
 
 
