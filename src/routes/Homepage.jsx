@@ -9,8 +9,6 @@ import Seamless from "../components/Hompage/Seamless";
 import Navbar from "../components/Hompage/Navbar";
 
 function Homepage() {
-  const navigate = useNavigate();
-
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [email, setEmail] = useState("");
@@ -78,7 +76,7 @@ function Homepage() {
       formData.append("email", email);
 
       await fetch(
-        "https://script.google.com/macros/s/AKfycbwQWNorUrpbkL76mDiI02Y3oeQm7dxwZNQY4Jd45cpPgGr1CgjWjxTutFRIEwLUmUa6/exec",
+        "https://script.google.com/macros/s/AKfycbyXi-wQGRppR3OYqB5tkYU8jXdHKCZ3TCW98FWgPeip4OKau8XAj955j1CAaLGBoUYu/exec",
         {
           method: "POST",
           body: formData,
@@ -93,7 +91,9 @@ function Homepage() {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  };  const navigate = useNavigate();
+
+
 
   return (
     <div className={`scroll-smooth relative ${isPopupOpen ? "shadow-lg" : ""}`}>
