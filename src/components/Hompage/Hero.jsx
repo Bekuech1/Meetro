@@ -35,18 +35,10 @@ const Hero = ( {onclick} ) => {
       <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto md:mt-[30vh] mt-[40vh] gap-10 relative z-10">
         {/* Mobile App Banner */}
         <div className="grid gap-[10px]">
-          <div className="bg-white/10 backdrop-blur-[24px] flex paytone items-center justify-center gap-[10px] md:hidden px-3 py-[6px] w-fit mx-auto rounded-4xl">
-            <img src="mobilew.svg" alt="phone" />
-            <p className="font-[400] text-[12px] text-white">Meetro App</p>
-            <button className="bg-gradient-to-tr from-[#97DC37] to-[#055962] rounded-[60px] py-[6px] px-[10px] font-[400] text-white text-[8px] h-fit">
-              Coming Soon
-            </button>
-          </div>
-
           {/* Heading */}
           <h1 className="capitalize text-[48px] md:text-[60px] paytone font-[400] text-white text-center leading-[48px] md:leading-[100%]">
             Discover, Connect and Create{" "}
-            <span className="text-[#AFFC41]">Unforgettable</span> experiences
+            <span className="text-[#AFFC41]">Unforgettable experiences</span>
           </h1>
         </div>
 

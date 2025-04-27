@@ -20,12 +20,23 @@ const FutureFeatures = ({ onclick }) => {
                 <h5 className='capitalize text-[60px] font-[400] leading-[100%] text-[#4A3A74] paytone'>future features</h5>
                 <div className='grid gap-2'>
                     <div className='flex gap-2'>
+                        <h6 className='font-[700] text-[16px] leading-6 text-[#4A3A7A] satoshi'>Soon, you’ll be able to:</h6>
+                    </div>
+                    <div className='flex gap-2'>
                         <img src="tick-square.svg" alt=""/>
-                        <h6 className='font-[700] text-[16px] leading-6 text-[#4A3A7A] satoshi'>Join Communities: <span className='font-[500] text-[#8A9191]'>Find and engage with like-minded people.</span></h6>
+                        <h6 className='font-[700] text-[16px] leading-6 text-[#4A3A7A] satoshi'>Discover local events</h6>
                     </div>
                     <div className='flex gap-2'>
                         <img src="tick-square.svg" alt="" />
-                        <h6 className='font-[700] text-[16px] leading-6 text-[#4A3A7A] satoshi'>Match & Connect: <span className='font-[500] text-[#8A9191]'>Meet others attending the same events.</span></h6>
+                        <h6 className='font-[700] text-[16px] leading-6 text-[#4A3A7A] satoshi'>Match with people attending</h6>
+                    </div>
+                    <div className='flex gap-2'>
+                        <img src="tick-square.svg" alt="" />
+                        <h6 className='font-[700] text-[16px] leading-6 text-[#4A3A7A] satoshi'>Join communities you vibe with</h6>
+                    </div>
+                    <div className='flex gap-2'>
+                        <img src="tick-square.svg" alt="" />
+                        <h6 className='font-[700] text-[16px] leading-6 text-[#4A3A7A] satoshi'>Create public events & grow your tribe</h6>
                     </div>
                 </div>
             </div>
