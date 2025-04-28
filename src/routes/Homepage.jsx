@@ -98,7 +98,6 @@ function Homepage() {
 
   return (
     <div className={`scroll-smooth relative ${isPopupOpen ? "shadow-lg" : ""}`}>
-      <ComingSoon />
       <div className="top-0 sticky z-20 justify-center items-center flex">
         <Navbar
           onAuth={() => navigate("/authentication")}

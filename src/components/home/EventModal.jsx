@@ -24,7 +24,7 @@ const EventModal = ({ closeModal }) => {
         <div className="flex flex-col-reverse gap-2 lg:w-fit w-full h-fit">
           <div className="lg:mx-14 mx-auto w-fit lg:h-[85vh] lg:max-h-[670px] h-full p-8 rounded-3xl lg:flex grid gap-8 bg-[#E8E8E8] text-center lg:overflow-hidden">
             {/* Left Section */}
-            <section className="w-fit lg:h-full h-fit grid gap-8 lg:relative lg:overflow-y-auto scrollbar-hide">
+            <section className="w-fit h-full grid gap-8 relative overflow-y-auto scrollbar-hide">
               <div className="relative">
                 <img
                   src="events-modal.png"

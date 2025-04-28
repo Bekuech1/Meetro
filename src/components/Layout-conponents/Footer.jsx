@@ -4,10 +4,10 @@ import Legal from "./Legal";
 
 const Footer = ({ onclick }) => {
   const [isLegalOpen, setIsLegalOpen] = useState(false);
-  const [label, setLabel] = useState("");  // Set label to be a string
+  const [label, setLabel] = useState(""); // Set label to be a string
 
   const openLegal = useCallback((component) => {
-    setLabel(component);  // Set the label to the current component name
+    setLabel(component); // Set the label to the current component name
     setIsLegalOpen(true);
   }, []);
 
@@ -35,7 +35,13 @@ const Footer = ({ onclick }) => {
           </a>
         </div>
         <div className="w-fit h-fit flex gap-4 mx-auto md:mx-0">
-          <Button name="Join community" color="bg-white" />
+          <a
+            href="https://chat.whatsapp.com/FLUaeqHc6oAIXNJeHilDhQ"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button name="Join Community" color="bg-white" />
+          </a>
           <Button name="Join waitlist" color="bg-[#AFFC41]" onclick={onclick} />
         </div>
       </div>

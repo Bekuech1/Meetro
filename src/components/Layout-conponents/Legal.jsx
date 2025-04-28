@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const Legal = ({ closeLegal, label }) => {
-  const [activeComponent, setActiveComponent] = useState({label}); // Initialize with label passed as a string
+  const [activeComponent, setActiveComponent] = useState({ label }); // Initialize with label passed as a string
 
   useEffect(() => {
     setActiveComponent(label); // Update activeComponent when label changes
@@ -42,42 +42,42 @@ const Legal = ({ closeLegal, label }) => {
       <img
         src="closePopup.svg"
         className="size-12 cursor-pointer mr-[18px]"
-        onClick={() => {closeLegal(); }}
+        onClick={() => {
+          closeLegal();
+        }}
       />
-      <div className="w-full h-[90vh] max-h-[700px] flex flex-col justify-between rounded-t-4xl bg-white/90 backdrop-blur-[32px] text-center">
+      <div className="w-full h-[600px] flex flex-col justify-between rounded-t-4xl bg-white/90 backdrop-blur-[32px] text-center">
         <div className="w-full h-fit rounded-t-4xl bg-[#FFFFFF] text-black text-left py-3 px-6">
           <h4 className="satoshi text-[20px] font-[700] capitalize">
             {getLabel(activeComponent)}
           </h4>
         </div>
-        <div className="size-full bg-white/85 pt-1 pb-6 2xl:px-[30%] sm:[20%] px-[15%] text-left grid grid-rows-[1fr_auto]">
-          <div className="w-full h-fit grid gap-2">{renderContent()}</div>
+        <div className="w-full h-full bg-white/85 pt-3 pb-6 xl:px-[35%] md:px-[20%] px-[5%] text-left flex flex-col justify-between">
+          {/* Content Section */}
+          <div className="">
+            <div className="w-full h-[500px] max-h-[65vh] overflow-y-auto scrollbar-hide">
+             {renderContent()}
+            </div>
+          </div>
 
-          <div className="w-full h-fit flex items-center justify-between">
-            <p
-              className={`text-[#8A9191] text-[12px] font-[500] capitalize cursor-pointer transition-all duration-150 ease-in-out ${activeComponent === "Terms" ? "text-black" : "text-[#8A9191]"}`}
-              onClick={() => setActiveComponent("Terms")}
-            >
-              terms of service
-            </p>
-            <p
-              className={`text-[#8A9191] text-[12px] font-[500] capitalize cursor-pointer transition-all duration-150 ease-in-out ${activeComponent === "Privacy" ? "text-black" : "text-[#8A9191]"}`}
-              onClick={() => setActiveComponent("Privacy")}
-            >
-              privacy policy
-            </p>
-            <p
-              className={`text-[#8A9191] text-[12px] font-[500] capitalize cursor-pointer transition-all duration-150 ease-in-out ${activeComponent === "Data" ? "text-black" : "text-[#8A9191]"}`}
-              onClick={() => setActiveComponent("Data")}
-            >
-              data policy
-            </p>
-            <p
-              className={`text-[#8A9191] text-[12px] font-[500] capitalize cursor-pointer transition-all duration-150 ease-in-out ${activeComponent === "Cookies" ? "text-black" : "text-[#8A9191]"}`}
-              onClick={() => setActiveComponent("Cookies")}
-            >
-              cookies
-            </p>
+          {/* Footer Links */}
+          <div className="w-full h-fit flex items-center justify-between py-2">
+            {[
+              { key: "Terms", label: "Terms of Service" },
+              { key: "Privacy", label: "Privacy Policy" },
+              { key: "Data", label: "Data Policy" },
+              { key: "Cookies", label: "Cookies" },
+            ].map(({ key, label }) => (
+              <p
+                key={key}
+                className={`text-[14px] font-[500] capitalize cursor-pointer transition-all duration-150 ease-in-out ${
+                  activeComponent === key ? "text-black" : "text-[#8A9191]"
+                }`}
+                onClick={() => setActiveComponent(key)}
+              >
+                {label}
+              </p>
+            ))}
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@ export default Legal;
 
 const Privacy = () => {
   return (
-    <>
+    <div className="grid gap-2">
       <Heading text="Effective Date: Launch date" />
 
       <Paragraph text="At Meetro, we respect your privacy and are committed to protecting your personal data. This policy explains how we collect, use, and protect your information when you use our services." />
@@ -140,15 +140,15 @@ const Privacy = () => {
           ]}
         />
       </Container>
-    </>
+    </div>
   );
 };
 
 const Data = () => {
   return (
-    <>
-    <Heading text="Effective Date: Launch date" />
-    <Paragraph text="We use your data to personalize your experience and improve Meetro’s features." />
+    <div className="grid gap-2">
+      <Heading text="Effective Date: Launch date" />
+      <Paragraph text="We use your data to personalize your experience and improve Meetro’s features." />
 
       <Container>
         <Heading text="security" />
@@ -164,77 +164,77 @@ const Data = () => {
         <Heading text="children" />
         <Paragraph text="Meetro is not intended for children under 13. We do not knowingly collect data from them." />
       </Container>
-    </>
+    </div>
   );
 };
 
 const Terms = () => {
   return (
-    <>
-    <Heading text="Effective Date: Launch date" />
+    <div className="grid gap-2">
+      <Heading text="Effective Date: Launch date" />
 
-<Paragraph text="Welcome to Meetro! By using our app or website, you agree to these terms:" />
+      <Paragraph text="Welcome to Meetro! By using our app or website, you agree to these terms:" />
 
-<Container>
-  <Heading text="your responsibilities" />
-  <DynamicList
-    items={[
-      "Provide accurate information",
-      "Don't spam or harass others",
-      "Only post content you own or have rights to share",
-    ]}
-  />
-</Container>
+      <Container>
+        <Heading text="your responsibilities" />
+        <DynamicList
+          items={[
+            "Provide accurate information",
+            "Don't spam or harass others",
+            "Only post content you own or have rights to share",
+          ]}
+        />
+      </Container>
 
-<Container>
-  <Heading text="event creation" />
-  <DynamicList
-    items={[
-      "You are responsible for any event you create",
-      "Meetro does not host or guarantee the quality of any event",
-    ]}
-  />
-</Container>
+      <Container>
+        <Heading text="event creation" />
+        <DynamicList
+          items={[
+            "You are responsible for any event you create",
+            "Meetro does not host or guarantee the quality of any event",
+          ]}
+        />
+      </Container>
 
-<Container>
-  <Heading text="paid features" />
-  <DynamicList
-    items={[
-      "Some features may be paid (e.g., ticketing, advanced insights)",
-      "Subscription terms will be clearly stated before payment",
-    ]}
-  />
-</Container>
+      <Container>
+        <Heading text="paid features" />
+        <DynamicList
+          items={[
+            "Some features may be paid (e.g., ticketing, advanced insights)",
+            "Subscription terms will be clearly stated before payment",
+          ]}
+        />
+      </Container>
 
-<Container>
-  <Heading text="termination" />
-  <Paragraph text="We can suspend or remove accounts that violate our terms." />
-</Container>
-</>
+      <Container>
+        <Heading text="termination" />
+        <Paragraph text="We can suspend or remove accounts that violate our terms." />
+      </Container>
+    </div>
   );
 };
 
 const Cookies = () => {
   return (
-    <>
-    <Container>
-  <Heading text="we use cookies to:" />
-  <DynamicList
-    items={[
-      "Remember you when you log in",
-      "Analyze traffic and usage trends",
-      "Personalize your experience",
-    ]}
-  />
-</Container>
-</>
+    <div className="grid gap-2">
+      <Container>
+        <Heading text="we use cookies to:" />
+        <DynamicList
+          items={[
+            "Remember you when you log in",
+            "Analyze traffic and usage trends",
+            "Personalize your experience",
+          ]}
+        />
+      </Container>
+    </div>
   );
 };
 
 const Heading = ({ text, className }) => {
   return (
     <h6
-      className={`satoshi font-[700] text-[12px] text-[#8A9191] capitalize ${className}`}
+      className={`satoshi font-[700] text-[14px] text-[#8A9191] capitalize ${className}`}
     >
       {text}
     </h6>
@@ -243,7 +243,7 @@ const Heading = ({ text, className }) => {
 
 const DynamicList = ({ items = [], className }) => {
   return (
-    <ul className={`satoshi font-[500] text-[12px] text-black ${className}`}>
+    <ul className={`satoshi font-[500] text-[14px] text-black ${className}`}>
       {items.map((item, index) => (
         <li key={index}>{item}</li>
       ))}
@@ -253,12 +253,12 @@ const DynamicList = ({ items = [], className }) => {
 
 const Paragraph = ({ text, className }) => {
   return (
-    <p className={`satoshi font-[500] text-[12px] text-black ${className}`}>
+    <p className={`satoshi font-[500] text-[14px] text-black ${className}`}>
       {text}
     </p>
   );
 };
 
 const Container = ({ children }) => {
-  return <div className="grid w-full h-fit gap-1">{children}</div>;
+  return <div className="grid w-full h-fit gap-2">{children}</div>;
 };

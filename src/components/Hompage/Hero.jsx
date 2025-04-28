@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "../Layout-conponents/Button";
 import Navbar from "./Navbar";
 
-const Hero = ( {onclick} ) => {
+const Hero = ({ onclick }) => {
   const [videoLoaded, setVideoLoaded] = useState(false);
 
   return (
@@ -28,8 +28,7 @@ const Hero = ( {onclick} ) => {
         onLoadedData={() => setVideoLoaded(true)}
       />
 
-
-      <Navbar visibility='invisible' />
+      <Navbar visibility="invisible" />
 
       {/* Content */}
       <div className="h-fit grid justify-center items-center w-[91.4%] md:w-[687px] mx-auto md:mt-[30vh] mt-[40vh] gap-10 relative z-10">
@@ -44,14 +43,28 @@ const Hero = ( {onclick} ) => {
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex gap-4 w-fit mx-auto">
-          <Button name="join community" color="bg-white"/>
-          <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick}/>
+          <a
+            href="https://chat.whatsapp.com/FLUaeqHc6oAIXNJeHilDhQ"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button name="Join Community" color="bg-white" />
+          </a>
+
+          <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick} />
         </div>
 
         {/* Mobile Buttons */}
         <div className="md:hidden flex gap-4 mx-auto">
-          <Button name="Join Community" color="bg-white"/>
-          <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick}/>
+          <a
+            href="https://chat.whatsapp.com/FLUaeqHc6oAIXNJeHilDhQ"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button name="Join Community" color="bg-white" />
+          </a>
+
+          <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick} />
         </div>
       </div>
     </div>
