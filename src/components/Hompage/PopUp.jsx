@@ -29,7 +29,7 @@ const Popup = ({
     >
       <div className="md:w-[714px] w-[90%] h-[520px] p-12 rounded-3xl bg-gray-50 backdrop-blur-[32px] text-center relative m-auto grid gap-6 md:gap-8">
         {!isSuccess ? (
-          <div className="grid gap-6 md:gap-8 fix">
+          <div className="grid gap-6 md:gap-8">
             <h1
               id="popup-title"
               className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone"
@@ -125,7 +125,7 @@ const Popup = ({
           <button
             onClick={handleFormSubmit}
             disabled={isSubmitting}
-            className={`fix paytone w-full md:text-[14px] text-[12px] rounded-[60px] capitalize px-6 py-3 paytone md:leading-5 leading-[16px] font-[400] ${
+            className={`paytone w-full md:text-[14px] text-[12px] rounded-[60px] capitalize px-6 py-3 paytone md:leading-5 leading-[16px] font-[400] ${
               isSubmitting
                 ? "bg-[#011F0F]/60 cursor-not-allowed"
                 : "bg-[#011F0F] cursor-pointer"
