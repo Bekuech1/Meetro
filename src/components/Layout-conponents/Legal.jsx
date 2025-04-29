@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 const Legal = ({ closeLegal, label }) => {
-  const [activeComponent, setActiveComponent] = useState({ label }); // Initialize with label passed as a string
+  const [activeComponent, setActiveComponent] = useState(label);
 
   useEffect(() => {
-    setActiveComponent(label); // Update activeComponent when label changes
+    setActiveComponent(label);
   }, [label]);
 
-  const renderContent = () => {
+  const renderContent = useCallback(() => {
     switch (activeComponent) {
       case "Privacy":
         return <Privacy />;
@@ -18,56 +18,52 @@ const Legal = ({ closeLegal, label }) => {
       case "Cookies":
         return <Cookies />;
       default:
-        return null;
+        return <div>Content not available.</div>;
     }
-  };
+  }, [activeComponent]);
 
-  const getLabel = (component) => {
-    switch (component) {
-      case "Privacy":
-        return "Privacy Policy";
-      case "Data":
-        return "Data Policy";
-      case "Terms":
-        return "Terms of Service";
-      case "Cookies":
-        return "Cookies Policy";
-      default:
-        return "Legal Information";
-    }
-  };
+  const getLabel = useCallback((component) => {
+    const labels = {
+      Privacy: "Privacy Policy",
+      Data: "Data Policy",
+      Terms: "Terms of Service",
+      Cookies: "Cookies Policy",
+    };
+    return labels[component] || "Legal Information";
+  }, []);
+
+  const footerLinks = [
+    { key: "Terms", label: "Terms of Service" },
+    { key: "Privacy", label: "Privacy Policy" },
+    { key: "Data", label: "Data Policy" },
+    { key: "Cookies", label: "Cookies" },
+  ];
 
   return (
-    <div className="fixed inset-0 h-screen flex flex-col gap-4 items-end justify-end z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
+    <div className="fixed inset-0 h-screen flex flex-col  gap-[10px] items-end justify-end z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
       <img
         src="closePopup.svg"
+        alt="Close"
         className="size-12 cursor-pointer mr-[18px]"
-        onClick={() => {
-          closeLegal();
-        }}
+        onClick={closeLegal}
       />
       <div className="w-full h-[600px] flex flex-col justify-between rounded-t-4xl bg-white/90 backdrop-blur-[32px] text-center">
+        {/* Header */}
         <div className="w-full h-fit rounded-t-4xl bg-[#FFFFFF] text-black text-left py-3 px-6">
           <h4 className="satoshi text-[20px] font-[700] capitalize">
             {getLabel(activeComponent)}
           </h4>
         </div>
+
+        {/* Content */}
         <div className="w-full h-full bg-white/85 pt-3 pb-6 xl:px-[35%] md:px-[20%] px-[5%] text-left flex flex-col justify-between">
-          {/* Content Section */}
-          <div className="">
-            <div className="w-full h-[500px] max-h-[65vh] overflow-y-auto scrollbar-hide">
-             {renderContent()}
-            </div>
+          <div className="w-full h-[480px] max-h-[65vh] overflow-y-auto scrollbar-hide">
+            {renderContent()}
           </div>
 
           {/* Footer Links */}
-          <div className="w-full h-fit flex items-center justify-between py-2">
-            {[
-              { key: "Terms", label: "Terms of Service" },
-              { key: "Privacy", label: "Privacy Policy" },
-              { key: "Data", label: "Data Policy" },
-              { key: "Cookies", label: "Cookies" },
-            ].map(({ key, label }) => (
+          <div className="w-full h-fit flex items-center justify-between pt-3 pb-4">
+            {footerLinks.map(({ key, label }) => (
               <p
                 key={key}
                 className={`text-[14px] font-[500] capitalize cursor-pointer transition-all duration-150 ease-in-out ${
@@ -86,6 +82,7 @@ const Legal = ({ closeLegal, label }) => {
 };
 
 export default Legal;
+
 
 const Privacy = () => {
   return (

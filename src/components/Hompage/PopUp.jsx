@@ -1,16 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Popup = ({
   isOpen,
   isSuccess,
   email,
   setEmail,
+  firstName,
+  setFirstName,
+  lastName,
+  setLastName,
   handleSubmit,
   closePopup,
   isSubmitting,
   errorText,
 }) => {
   if (!isOpen) return null;
+
+  const handleFormSubmit = () => {
+    handleSubmit(); // Calls the parent `handleSubmit` with the necessary values
+  };
 
   return (
     <div
@@ -19,7 +27,7 @@ const Popup = ({
       aria-describedby="popup-desc"
       className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]"
     >
-      <div className="md:w-[714px] w-[90%] h-[466px] p-12 rounded-3xl flex flex-col justify-between bg-gray-50 backdrop-blur-[32px] text-center relative m-auto">
+      <div className="md:w-[714px] w-[90%] h-[500px] p-12 rounded-3xl flex flex-col justify-between bg-gray-50 backdrop-blur-[32px] text-center relative m-auto">
         {!isSuccess ? (
           <div className="grid gap-8">
             <h1
@@ -35,6 +43,44 @@ const Popup = ({
               Tired of missing out on the best events? Meetro is your all-access
               pass to discovering and creating amazing experiences around you! 🎉
             </p>
+
+            {/* First Name and Last Name Inputs */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col items-start">
+                <label
+                  htmlFor="firstName"
+                  className="satoshi text-[#001010] text-[10px] leading-[14px] font-[700]"
+                >
+                  First Name
+                </label>
+                <input
+                  id="firstName"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="First Name"
+                  className="w-full p-[6px] border rounded-lg border-white bg-gray-100 placeholder:text-[#B0B5B5] placeholder:text-sm placeholder:font-medium placeholder:leading-5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex flex-col items-start">
+                <label
+                  htmlFor="lastName"
+                  className="satoshi text-[#001010] text-[10px] leading-[14px] font-[700]"
+                >
+                  Last Name
+                </label>
+                <input
+                  id="lastName"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Last Name"
+                  className="w-full p-[6px] border rounded-lg border-white bg-gray-100 placeholder:text-[#B0B5B5] placeholder:text-sm placeholder:font-medium placeholder:leading-5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            {/* Email Input */}
             <div className="flex flex-col items-start gap-1">
               <label
                 htmlFor="email"
@@ -56,7 +102,7 @@ const Popup = ({
                 />
               </div>
               {errorText && (
-                <h2 className="text-red-500 text-sm">{errorText}</h2>
+                <h2 className="text-red-500 text-[12px] mt-1 mb-5">{errorText}</h2>
               )}
             </div>
           </div>
@@ -72,9 +118,10 @@ const Popup = ({
           </div>
         )}
 
+        {/* Submit Button */}
         {!isSuccess && (
           <button
-            onClick={handleSubmit}
+            onClick={handleFormSubmit}
             disabled={isSubmitting}
             className={`paytone w-full md:text-[14px] text-[12px] rounded-[60px] capitalize px-6 py-3 paytone md:leading-5 leading-[16px] font-[400] ${
               isSubmitting
@@ -108,6 +155,7 @@ const Popup = ({
           </button>
         )}
 
+        {/* Close Button */}
         <img
           src="closePopup.svg"
           alt="close popup"

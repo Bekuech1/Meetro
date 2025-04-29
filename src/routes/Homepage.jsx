@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import Hero from "../components/Hompage/Hero";
 import JoinToday from "../components/Hompage/JoinToday";
-import ComingSoon from "../components/Layout-conponents/ComingSoon";
 import Footer from "../components/Layout-conponents/Footer";
 import FutureFeatures from "../components/Hompage/FutureFeatures";
 import Seamless from "../components/Hompage/Seamless";
@@ -12,6 +11,8 @@ import Popup from "../components/Hompage/PopUp";
 function Homepage() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [firstName, setFirstName] = useState(""); // First name state
+  const [lastName, setLastName] = useState(""); // Last name state
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -20,12 +21,16 @@ function Homepage() {
   const openPopup = useCallback(() => {
     setIsPopupOpen(true);
     setIsSuccess(false);
+    setFirstName("");
+    setLastName("");
     setEmail("");
     setErrorText("");
   }, []);
 
   const closePopup = useCallback(() => {
     setIsPopupOpen(false);
+    setFirstName("");
+    setLastName("");
     setEmail("");
     setIsSuccess(false);
     setErrorText("");
@@ -56,17 +61,14 @@ function Homepage() {
     return pattern.test(email.toLowerCase());
   };
 
-  useEffect(() => {
-    if (email && !validateEmail(email)) {
-      setErrorText("Invalid email format");
-    } else {
-      setErrorText("");
-    }
-  }, [email]);
-
   const handleSubmit = async () => {
-    if (!email || !validateEmail(email)) {
-      setErrorText("Please enter a valid email address");
+    if (
+      !firstName.trim() || 
+      !lastName.trim() || 
+      !email.trim() || 
+      !validateEmail(email)
+    ) {
+      setErrorText("Please fill in all fields with valid information.");
       return;
     }
 
@@ -74,17 +76,22 @@ function Homepage() {
 
     try {
       const formData = new FormData();
-      formData.append("email", email);
+      formData.append("firstName", firstName.trim());
+      formData.append("lastName", lastName.trim());
+      formData.append("email", email.trim());
 
       await fetch(
-        "https://script.google.com/macros/s/AKfycbyXi-wQGRppR3OYqB5tkYU8jXdHKCZ3TCW98FWgPeip4OKau8XAj955j1CAaLGBoUYu/exec",
+        "https://script.google.com/macros/s/AKfycby_CaXmx7uMsRCct59wYaPAtoiYkyq2Y_N9fDN3C6h1hFOfwEA2eFBJUwSw4nVZ79W0/exec",
         {
           method: "POST",
           body: formData,
         }
       );
+      
 
       setIsSuccess(true);
+      setFirstName("");
+      setLastName("");
       setEmail("");
     } catch (err) {
       console.error(err);
@@ -122,6 +129,10 @@ function Homepage() {
         isSuccess={isSuccess}
         email={email}
         setEmail={setEmail}
+        firstName={firstName}
+        setFirstName={setFirstName}
+        lastName={lastName}
+        setLastName={setLastName}
         handleSubmit={handleSubmit}
         closePopup={closePopup}
         isSubmitting={isSubmitting}
