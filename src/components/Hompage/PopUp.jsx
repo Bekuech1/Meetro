@@ -27,9 +27,9 @@ const Popup = ({
       aria-describedby="popup-desc"
       className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]"
     >
-      <div className="md:w-[714px] w-[90%] h-[500px] p-12 rounded-3xl flex flex-col justify-between bg-gray-50 backdrop-blur-[32px] text-center relative m-auto">
+      <div className="md:w-[714px] w-[90%] h-[520px] p-12 rounded-3xl bg-gray-50 backdrop-blur-[32px] text-center relative m-auto grid gap-6 md:gap-8">
         {!isSuccess ? (
-          <div className="grid gap-8">
+          <div className="grid gap-6 md:gap-8 fix">
             <h1
               id="popup-title"
               className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone"
@@ -44,12 +44,13 @@ const Popup = ({
               pass to discovering and creating amazing experiences around you! 🎉
             </p>
 
-            {/* First Name and Last Name Inputs */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-4">
+              {/* First Name and Last Name Inputs */}
+            <div className="grid md:grid-cols-2 gap-4">
               <div className="flex flex-col items-start">
                 <label
                   htmlFor="firstName"
-                  className="satoshi text-[#001010] text-[10px] leading-[14px] font-[700]"
+                  className="satoshi text-[#001010] text-[12px] leading-[14px] font-[700]"
                 >
                   First Name
                 </label>
@@ -65,7 +66,7 @@ const Popup = ({
               <div className="flex flex-col items-start">
                 <label
                   htmlFor="lastName"
-                  className="satoshi text-[#001010] text-[10px] leading-[14px] font-[700]"
+                  className="satoshi text-[#001010] text-[12px] leading-[14px] font-[700]"
                 >
                   Last Name
                 </label>
@@ -84,12 +85,12 @@ const Popup = ({
             <div className="flex flex-col items-start gap-1">
               <label
                 htmlFor="email"
-                className="satoshi text-[#001010] text-[10px] leading-[14px] font-[700]"
+                className="satoshi text-[#001010] text-[12px] leading-[14px] font-[700]"
               >
                 Email Address
               </label>
               <div className="relative w-full flex gap-2">
-                <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                <span className="absolute inset-y-0 left-2 flex items-center text-gray-400">
                   <img src="smss.svg" alt="email icon" />
                 </span>
                 <input
@@ -98,14 +99,15 @@ const Popup = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="e.g. newman@gmail.com"
-                  className="w-full pl-10 p-[6px] border rounded-lg border-white bg-gray-100 placeholder:text-[#B0B5B5] placeholder:text-sm placeholder:font-medium placeholder:leading-5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-8 p-[6px] border rounded-lg border-white bg-gray-100 placeholder:text-[#B0B5B5] placeholder:text-sm placeholder:font-medium placeholder:leading-5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               {errorText && (
-                <h2 className="text-red-500 text-[12px] mt-1 mb-5">{errorText}</h2>
+                <h2 className="text-red-500 text-[12px] mt-1">{errorText}</h2>
               )}
             </div>
           </div>
+            </div>
         ) : (
           <div className="flex flex-col justify-center items-center h-full gap-4">
             <h2 className="paytone text-[#001010] leading-[100%] text-[32px] md:text-[48px] font-[400] Paytone">
@@ -123,7 +125,7 @@ const Popup = ({
           <button
             onClick={handleFormSubmit}
             disabled={isSubmitting}
-            className={`paytone w-full md:text-[14px] text-[12px] rounded-[60px] capitalize px-6 py-3 paytone md:leading-5 leading-[16px] font-[400] ${
+            className={`fix paytone w-full md:text-[14px] text-[12px] rounded-[60px] capitalize px-6 py-3 paytone md:leading-5 leading-[16px] font-[400] ${
               isSubmitting
                 ? "bg-[#011F0F]/60 cursor-not-allowed"
                 : "bg-[#011F0F] cursor-pointer"
