@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
+import { useLocation } from "react-router-dom";
 import Hero from "../components/Hompage/Hero";
 import JoinToday from "../components/Hompage/JoinToday";
 import Footer from "../components/Layout-conponents/Footer";
@@ -17,6 +18,17 @@ function Homepage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorText, setErrorText] = useState("");
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location.hash]);
 
   const openPopup = useCallback(() => {
     setIsPopupOpen(true);
@@ -121,7 +133,7 @@ function Homepage() {
       <Seamless onclick={openPopup} />
       <FutureFeatures onclick={openPopup} />
       <JoinToday onclick={openPopup} />
-      <Footer onclick={openPopup} />
+      <Footer onclick={openPopup}/>
 
       {/* Popup */}
       <Popup
