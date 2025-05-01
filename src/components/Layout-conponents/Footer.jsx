@@ -23,7 +23,7 @@ const Footer = ({ onclick }) => {
   }, [isLegalOpen]);
 
   return (
-    <div className="bg-[#01160B] md:px-[60px] px-4 py-[64px]">
+    <div className="bg-[#01160B] md:px-[60px] px-4 py-[64px]" id="footer">
       <div className="grid md:flex border-b border-white/10 pb-10 gap-[40px] md:justify-between">
         <div className="grid gap-6 h-fit w-fit mx-auto md:mx-0">
           <img src="meetroLogo.svg" alt="" className="mx-auto md:mx-0" />
