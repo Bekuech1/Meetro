@@ -1,7 +1,7 @@
 import Button from "../Layout-conponents/Button";
 import { useNavigate } from "react-router";
 
-const Navbar = ({ visibility, absolute, typeS, onclick }) => {
+const Navbar = ({ visibility, absolute, typeS, onclick, onAuth }) => {
   const navigate = useNavigate();
 
   return (
@@ -18,7 +18,7 @@ const Navbar = ({ visibility, absolute, typeS, onclick }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button name="Join Community" color="bg-white" />
+            <Button name="Join Community" color="bg-white" onclick={onAuth}/>
           </a>
           <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick} />
         </div>
