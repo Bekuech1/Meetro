@@ -13,13 +13,7 @@ const Navbar = ({ visibility, absolute, typeS, onclick, onAuth }) => {
           <img src="meetroLogo.svg" alt="" />
         </div>
         <div className="hidden md:inline-flex gap-4">
-          <a
-            href="https://chat.whatsapp.com/FLUaeqHc6oAIXNJeHilDhQ"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button name="Join Community" color="bg-white" onclick={onAuth}/>
-          </a>
+          <Button name="Join Community" color="bg-white" onclick={onAuth}/>
           <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick} />
         </div>
         <div className="md:hidden block gap-4 text-xs">
