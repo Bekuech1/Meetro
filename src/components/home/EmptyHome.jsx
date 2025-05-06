@@ -16,7 +16,7 @@ const EmptyHome = () => {
   ];
 
   return (
-    <main className="bg-gradient-to-r from-[#FFF5FA] to-[#F8E8F0] flex flex-col px-20 py-10 gap-[43px] h-[90vh] max-h-[760px]">
+    <main className="bg-[#F0F0F0] flex flex-col px-20 py-10 gap-[43px] h-[90vh] max-h-[760px] relative">
       <div className="flex gap-4 justify-center w-full h-fit">
         {homeBtn.map((item, index) => (
           <EventsBtn
@@ -34,6 +34,17 @@ const EmptyHome = () => {
           <br /> create an event?
         </h1>
       </div>
+      <div class=" absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
+        {/* <!-- Left Ellipse --> */}
+        <div class="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
+
+        {/* <!-- Middle Ellipse --> */}
+        <div class="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
+
+        {/* <!-- Right Ellipse --> */}
+        <div class="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
+      </div>
+       
     </main>
   );
 };

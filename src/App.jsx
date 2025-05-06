@@ -12,6 +12,8 @@ import Login from "./routes/Onboarding/Login"
 import LoginForm from "./routes/Onboarding/LoginForm"
 import ReserveSpot from "./components/home/ReserveSpot"
 import Payment from "./components/home/Payment"
+import CreateEventsLayout from "./layouts/CreateEventsLayout"
+import CreateEvent from "./routes/CreateEvent"
 
 
 function App() {
@@ -38,6 +40,11 @@ function App() {
 
       {/* Test Routes */}
       <Route path="/test" element={<Payment />} />
+
+      {/* Create Event Routes */}
+      <Route path="/create-event" element={<CreateEventsLayout />}>
+        <Route index element={<CreateEvent />} />
+      </Route>
     </Routes>
     </BrowserRouter>
 
