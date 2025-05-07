@@ -68,7 +68,7 @@ const Header = () => {
         <div className="satoshi text-[14px] font-[500] leading-[20px] text-white uppercase w-full">
           FCT
         </div>
-        <img src="arrow-down.svg" alt="Arrow Down" />
+        <img src="arrow-down.svg" alt="" />
       </section> */}
 
       {/* Actions Section */}
