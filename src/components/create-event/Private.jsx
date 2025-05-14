@@ -1,7 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CreateEventBtn from "../Layout-conponents/CreateEventBtn";
+import When from "./PopUps/When";
+import Where from "./PopUps/Where";
+import Host from "./PopUps/Host";
+import Description from "./PopUps/Description";
+import DressCode from "./PopUps/DressCode";
+import ChipIn from "./PopUps/ChipIn";
 
 const Private = ({ onPublic }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [eventName, setEventName] = useState("");
+  const [eventImage, setEventImage] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = isModalVisible ? "hidden" : "";
+    return () => (document.body.style.overflow = "");
+  }, [isModalVisible]);
+
+  const openModal = (content) => {
+    setIsModalVisible(true);
+    setModalContent(content);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setModalContent(null);
+  };
+
   // States to manage two separate lists of added inputs
   const [addedInputsListOne, setAddedInputsListOne] = useState([]);
   const [addedInputsListTwo, setAddedInputsListTwo] = useState([]);
@@ -23,6 +49,61 @@ const Private = ({ onPublic }) => {
   // Check if a specific item is added to list two
   const isAddedToListTwo = (title) =>
     addedInputsListTwo.some((item) => item.title === title);
+
+  const renderContent = (type) => {
+    switch (type) {
+      case "when":
+        return (
+          <When
+            isVisible={isModalVisible}
+            onClose={closeModal}
+            onSave={() => console.log("when")}
+          />
+        );
+      case "where":
+        return (
+          <Where
+            isVisible={isModalVisible}
+            onClose={closeModal}
+            onSave={() => console.log("where")}
+          />
+        );
+      case "host":
+        return (
+          <Host
+            isVisible={isModalVisible}
+            onClose={closeModal}
+            onSave={() => console.log("host")}
+          />
+        );
+      case "description":
+        return (
+          <Description
+            isVisible={isModalVisible}
+            onClose={closeModal}
+            onSave={() => console.log("host")}
+          />
+        );
+      case "dress code":
+        return (
+          <DressCode
+            isVisible={isModalVisible}
+            onClose={closeModal}
+            onSave={() => console.log("host")}
+          />
+        );
+      case "chip in":
+        return (
+          <ChipIn
+            isVisible={isModalVisible}
+            onClose={closeModal}
+            onSave={() => console.log("host")}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <main className="bg-[#F0F0F0] min-h-[90vh] h-fit w-full grid gap-[43px] px-20 py-10">
@@ -83,7 +164,6 @@ const Private = ({ onPublic }) => {
                   public
                 </h5>
               </div>
-              <div></div>
             </div>
             <p className="text-[#8A9191] text-[12px] font-[500] leading-[18px] satoshi capitalize">
               Shh... it’s exclusive! Only those with the magic link can RSVP.
@@ -93,6 +173,8 @@ const Private = ({ onPublic }) => {
             <input
               type="text"
               placeholder="Event name"
+              onChange={(e) => setEventName(e.target.value)}
+              value={eventName}
               class="appearance-none bg-transparent border-none text-2xl font-[400] leading-[32px] text-black placeholder-[#8A9191] focus:outline-none paytone"
             />
           </div>
@@ -106,7 +188,8 @@ const Private = ({ onPublic }) => {
                     onOptionClick={() =>
                       handleAddToListOne(
                         "dress code",
-                        <Input leftImgSrc="dress.svg" text="Enter dress code" />
+                        <Input leftImgSrc="dress.svg" text="Enter dress code"   
+                        onClickRight={() => openModal("dress code")} />
                       )
                     }
                   />
@@ -120,6 +203,7 @@ const Private = ({ onPublic }) => {
                         <Input
                           leftImgSrc="money-add.svg"
                           text="Enter chip in details"
+                          onClickRight={() => openModal("chip in")}
                         />
                       )
                     }
@@ -133,21 +217,25 @@ const Private = ({ onPublic }) => {
                 leftImgSrc="timer.svg"
                 text="When is your event?"
                 key="timer"
+                onClickRight={() => openModal(renderContent("when"))}
               />,
               <Input
                 leftImgSrc="location.svg"
                 text="Where is your event?"
                 key="location"
+                onClickRight={() => openModal(renderContent("where"))}
               />,
               <Input
                 leftImgSrc="crown.svg"
                 text="Who is the host?"
                 key="host"
+                onClickRight={() => openModal(renderContent("host"))}
               />,
               <Input
                 leftImgSrc="note-text.svg"
                 text="Event description"
                 key="description"
+                onClickRight={() => openModal(renderContent("description"))}
               />,
               ...addedInputsListOne.map((item, index) => (
                 <React.Fragment key={index}>{item.input}</React.Fragment>
@@ -156,7 +244,7 @@ const Private = ({ onPublic }) => {
           </Grid>
 
           {/* Second Grid */}
-          <Grid
+          {/* <Grid
             title="RSVP Settings"
             buttom={
               <>
@@ -211,7 +299,7 @@ const Private = ({ onPublic }) => {
                 <React.Fragment key={index}>{item.input}</React.Fragment>
               )),
             ]}
-          </Grid>
+          </Grid> */}
 
           {/* Create Event Buttons */}
           <section className="h-fit w-full flex justify-between gap-4">
@@ -230,6 +318,7 @@ const Private = ({ onPublic }) => {
           </section>
         </section>
       </div>
+      {modalContent}
     </main>
   );
 };

@@ -1,8 +1,6 @@
-import Button from "../Layout-conponents/Button";
-import { useNavigate } from "react-router";
+import Button from "../Layout-conponents/Button"; 
 
 const Navbar = ({ visibility, absolute, typeS, onclick, onAuth }) => {
-  const navigate = useNavigate();
 
   return (
     <div className={`h-fit z-20 ${visibility} ${absolute}`}>
