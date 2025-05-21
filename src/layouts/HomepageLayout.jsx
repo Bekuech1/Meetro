@@ -1,4 +1,4 @@
-import Header from "@/components/home/header";
+import Header from "@/components/home/Header";
 import Footer from "@/components/Layout-conponents/Footer";
 import { Outlet } from "react-router-dom";
 

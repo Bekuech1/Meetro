@@ -29,7 +29,7 @@ const Legal = ({ closeLegal, label }) => {
       Terms: "Terms of Service",
       Cookies: "Cookies Policy",
     };
-    return labels[component] || "Legal Information";
+    return labels[component];
   }, []);
 
   const footerLinks = [

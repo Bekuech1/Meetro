@@ -27,8 +27,8 @@ const NormalHome = () => {
   ];
 
   return (
-    <main className="bg-gradient-to-r from-[#FFF5FA] to-[#F8E8F0] min-h-[90vh] h-fit w-full grid gap-[43px] px-20 py-10">
-      <div className="grid md:w-[680px] w-full mx-auto gap-6 h-fit">
+    <main className="bg-[#F0F0F0] relative min-h-[90vh] h-fit w-full grid gap-[43px] px-20 py-10">
+      <div className="grid md:w-[680px] w-full mx-auto gap-6 h-fit z-10">
         <section className="h-fit w-full justify-between flex items-center">
           <h1 className="paytone capitalize text-[#055962] h-fit sm:text-[30px] sm:font-[400] sm:leading-[38px] text-[20px] font-[400] leading-[30px]">
             my events
@@ -75,21 +75,33 @@ const NormalHome = () => {
                 <h6 className="satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[10px]">
                   host
                 </h6>
-                <img src="" alt="" className="w-4 h-4 rounded-2xl" />
+                <img
+                  src="tiny-profile.png"
+                  alt=""
+                  className="w-4 h-4 rounded-2xl"
+                />
                 <h6 className="satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]">
                   chubby igboanugo
                 </h6>
               </li>
 
               <li className="flex gap-1 justify-center items-center">
-                <img src="" alt="" className="w-4 h-4 rounded-2xl" />
+                <img
+                  src="tiny-profile.png"
+                  alt=""
+                  className="w-4 h-4 rounded-2xl"
+                />
                 <h6 className="satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]">
                   5 mabushi way, abuja
                 </h6>
               </li>
 
               <li className="flex gap-1 justify-center items-center">
-                <img src="" alt="" className="w-4 h-4 rounded-2xl" />
+                <img
+                  src="tiny-profile.png"
+                  alt=""
+                  className="w-4 h-4 rounded-2xl"
+                />
                 <h6 className="satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]">
                   16:40 <span>pm</span>
                 </h6>
@@ -99,7 +111,11 @@ const NormalHome = () => {
                 <h6 className="satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[14px]">
                   going
                 </h6>
-                <img src="" alt="" className="w-4 h-4 rounded-2xl" />
+                <img
+                  src="tiny-profile.png"
+                  alt=""
+                  className="w-4 h-4 rounded-2xl"
+                />
                 <h6 className="satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]">
                   newman, victory,<span>+200 others</span>
                 </h6>
@@ -127,6 +143,17 @@ const NormalHome = () => {
         </section>
       </div>
       {isModalOpen && <EventModal closeModal={closeModal} />}
+      {/* <img src="gradient-home.png" className="absolute -top-[10px] fix h-[90vh] w-screen " /> */}
+      <div class=" absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
+        {/* <!-- Left Ellipse --> */}
+        <div class="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
+
+        {/* <!-- Middle Ellipse --> */}
+        <div class="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
+
+        {/* <!-- Right Ellipse --> */}
+        <div class="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
+      </div>
     </main>
   );
 };

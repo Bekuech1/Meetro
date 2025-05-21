@@ -220,7 +220,7 @@ const EventModal = ({ closeModal }) => {
                 <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="tiny-profile.png"
+                      src="large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -230,7 +230,7 @@ const EventModal = ({ closeModal }) => {
                   </div>
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="tiny-profile.png"
+                      src="large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -240,7 +240,7 @@ const EventModal = ({ closeModal }) => {
                   </div>
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="tiny-profile.png"
+                      src="large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -250,7 +250,7 @@ const EventModal = ({ closeModal }) => {
                   </div>
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="tiny-profile.png"
+                      src="large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -260,7 +260,7 @@ const EventModal = ({ closeModal }) => {
                   </div>
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="tiny-profile.png"
+                      src="large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -470,7 +470,7 @@ const EventModal = ({ closeModal }) => {
           <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="tiny-profile.png"
+                src="large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />
@@ -480,7 +480,7 @@ const EventModal = ({ closeModal }) => {
             </div>
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="tiny-profile.png"
+                src="large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />
@@ -490,7 +490,7 @@ const EventModal = ({ closeModal }) => {
             </div>
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="tiny-profile.png"
+                src="large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />
@@ -500,7 +500,7 @@ const EventModal = ({ closeModal }) => {
             </div>
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="tiny-profile.png"
+                src="large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />
@@ -510,7 +510,7 @@ const EventModal = ({ closeModal }) => {
             </div>
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="tiny-profile.png"
+                src="large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />
