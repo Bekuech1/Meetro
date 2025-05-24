@@ -48,7 +48,7 @@ const Calender = ({ value, onChange, label }) => {
 
       <PopUpInput
         value={formattedDate}
-        onIconClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(!isOpen)}
         isOpen={isOpen}
         leftIcon="calendar.svg" // Use a custom left icon
         rightIcon="arrow-down-gray.svg" // Use a custom right icon
