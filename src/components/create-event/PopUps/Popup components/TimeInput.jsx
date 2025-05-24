@@ -36,7 +36,7 @@ const TimeInput = ({ value, onTimeSelect }) => {
 
       <PopUpInput
         value={value}
-        onIconClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(!isOpen)}
         isOpen={isOpen}
         leftIcon="timer.svg" // Use a custom left icon
         rightIcon="arrow-down-gray.svg" // Use a custom right icon

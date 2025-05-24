@@ -90,7 +90,7 @@ const Where = ({ isVisible, onClose, onSave }) => {
           />
             <PopUpInput
               value={stateLocation} // Display the selected state
-              onIconClick={() => setIsOpen(!isOpen)}
+              onClick={() => setIsOpen(!isOpen)}
               isOpen={isOpen}
               leftIcon="calendar.svg"
               rightIcon="arrow-down-gray.svg"

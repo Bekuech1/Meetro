@@ -13,6 +13,7 @@ const When = ({ isVisible, onClose, onSave }) => {
   const [frequency, setFrequency] = useState(""); // Frequency for recurring events
   const [occuringDate, setOccuringDate] = useState(null);
   const [occuringTime, setOccuringTime] = useState("");
+  const [activeTab, setActiveTab] = useState(0); // Track which tab is active: 0 for Single, 1 for Recurring
 
   const handleStartDateChange = (date) => setStartDate(date);
   const handleEndDateChange = (date) => setEndDate(date);
@@ -48,24 +49,51 @@ const When = ({ isVisible, onClose, onSave }) => {
   };
 
   const handleSave = () => {
-    if (onSave) {
-      const formattedStartDate = startDate
-        ? startDate.toISOString().split("T")[0]
-        : null;
-      const formattedEndDate = endDate
-        ? endDate.toISOString().split("T")[0]
-        : null;
+    // Format the dates for consistent data structure
+    const formattedStartDate = startDate
+      ? startDate.toISOString().split("T")[0]
+      : null;
+    const formattedEndDate = endDate
+      ? endDate.toISOString().split("T")[0]
+      : null;
+    const formattedOccuringDate = occuringDate
+      ? occuringDate.toISOString().split("T")[0]
+      : null;
 
-      console.log("Save Result:", {
-        formattedStartDate,
+    let eventData;
+    
+    // Structure the data based on which tab is active
+    if (activeTab === 0) {
+      // Single event data
+      eventData = {
+        type: "single",
+        startDate: formattedStartDate,
         startTime,
-        formattedEndDate,
-        endTime,
+        endDate: formattedEndDate,
+        endTime
+      };
+    } else {
+      // Recurring event data
+      eventData = {
+        type: "recurring",
+        startDate: formattedOccuringDate,
+        startTime: occuringTime,
         frequency,
-        occuringDate,
-      });
+        recurrencePattern: formatOccurringText()
+      };
     }
-    onClose();
+
+    // Pass the structured data to parent component via onSave
+    if (onSave) {
+      onSave(eventData);
+    }
+    
+    // No need to call onClose here as the parent component will handle it with closeModal()
+  };
+
+  // Handler for tab changes
+  const handleTabChange = (tabIndex) => {
+    setActiveTab(tabIndex);
   };
 
   return (
@@ -77,6 +105,7 @@ const When = ({ isVisible, onClose, onSave }) => {
       hidden3="hidden"
       text1="Single"
       text2="Reoccurring"
+      onTabChange={handleTabChange} // Add this prop to InputModals component
     >
       {[
         // Single Event
@@ -115,7 +144,7 @@ const When = ({ isVisible, onClose, onSave }) => {
           <div className="relative w-full h-fit">
             <PopUpInput
               value={formatOccurringText()} // Show formatted frequency text
-              onIconClick={() => setIsOpen(!isOpen)}
+              onClick={() => setIsOpen(!isOpen)}
               isOpen={isOpen}
               leftIcon="calendar.svg"
               rightIcon="arrow-down-gray.svg"
@@ -134,7 +163,9 @@ const When = ({ isVisible, onClose, onSave }) => {
                     onClick={() => handleFrequencySelect(option)}
                   >
                     <div
-                      className={`w-4 h-4 mr-3 flex items-center justify-center rounded-full border-2`}
+                      className={`w-4 h-4 mr-3 flex items-center justify-center rounded-full border ${
+                        frequency === option ? "border-[#BEFD66]" : "border-gray-300"
+                      }`}
                     >
                       {frequency === option && (
                         <div

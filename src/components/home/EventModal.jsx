@@ -39,7 +39,7 @@ const EventModal = ({ closeModal }) => {
                 <div className="gap-1 grid">
                   {/* Modal Text Component */}
                   <ModalText img="crown.svg" text="hosts" />
-                  <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70">
+                  <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70 justify-center items-center">
                     <img
                       src="tiny-profile.png"
                       alt=""
