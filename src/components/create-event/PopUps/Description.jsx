@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import InputModals from "../InputModals";
-import TextOnlyInput from "../PopUps/Popup components/TextOnlyInput";
 
 const Description = ({ isVisible, onClose, onSave }) => {
-  const [description, setDescription] = useState("");
+  const [descriptionText, setDescriptionText] = useState("");
 
   const handleDescriptionChange = (value) => {
-    setDescription(value);
+    setDescriptionText(value);
   };
 
   const handleSave = () => {
@@ -14,6 +13,55 @@ const Description = ({ isVisible, onClose, onSave }) => {
       onSave(hostName); // Pass the host name to the parent component
     }
     onClose(); // Close the modal after saving
+  };
+
+  const textareaRef = useRef(null);
+
+  const wrapSelectedText = (prefix, suffix = prefix) => {
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = value.substring(start, end);
+
+    if (selectedText) {
+      const newText =
+        value.substring(0, start) +
+        prefix +
+        selectedText +
+        suffix +
+        value.substring(end);
+
+      onChange(newText);
+
+      // Restore selection
+      setTimeout(() => {
+        textarea.selectionStart = start + prefix.length;
+        textarea.selectionEnd = end + prefix.length;
+        textarea.focus();
+      }, 0);
+    }
+  };
+
+  const insertLink = () => {
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = value.substring(start, end);
+
+    const linkText = selectedText || "Link text";
+    const linkMarkdown = `[${linkText}](URL)`;
+
+    const newText =
+      value.substring(0, start) + linkMarkdown + value.substring(end);
+    onChange(newText);
+
+    // Position cursor at URL part
+    setTimeout(() => {
+      const urlStart = start + linkText.length + 3; // After ']('
+      textarea.selectionStart = urlStart;
+      textarea.selectionEnd = urlStart + 3; // Select 'URL'
+      textarea.focus();
+    }, 0);
   };
 
   return (
@@ -24,8 +72,40 @@ const Description = ({ isVisible, onClose, onSave }) => {
       onSave={handleSave}
       hidden="hidden"
     >
-      <div className="w-full h-fit grid gap-4 fix">
-        <div className="w-full h-fit flex gap-4"></div>
+      <div className="w-full h-fit grid gap-4">
+        <div className="w-full h-fit flex gap-4 satoshi">
+          <div
+            className="size-fit p-1 rounded-4xl bg-white cursor-pointer"
+            onClick={() => wrapSelectedText("**")}
+          >
+            <img src="text-bold.svg" alt="" />
+          </div>
+          <div
+            className="size-fit p-1 rounded-4xl bg-white cursor-pointer"
+            onClick={() => wrapSelectedText("*")}
+          >
+            <img src="text-italic.svg" alt="" />
+          </div>
+          <div
+            className="size-fit p-1 rounded-4xl bg-white cursor-pointer"
+            onClick={() => wrapSelectedText("<u>", "</u>")}
+          >
+            <img src="text-underline.svg" alt="" />
+          </div>
+          <div
+            className="size-fit p-1 rounded-4xl bg-white cursor-pointer"
+            onClick={insertLink}
+          >
+            <img src="link.svg" alt="" />
+          </div>
+        </div>
+        <textarea
+          ref={textareaRef}
+          value={descriptionText}
+          onChange={(e) => handleDescriptionChange(e.target.value)}
+          placeholder="Enter your event description"
+          className="focus:outline-none text-[14px] font-bold text-black placeholder:text-[#8A96A3] w-full h-[224px] satoshi"
+        />
       </div>
       <div></div>
     </InputModals>

@@ -11,6 +11,7 @@ const PopUpInput = ({
   rounded = "rounded-l-[12px]", // Default rounded corners
   placeholder = "Select a date", // Placeholder text
   label, // Dynamic label text
+  onClick
 }) => {
   return (
     <div className="flex flex-col gap-1">
@@ -26,6 +27,7 @@ const PopUpInput = ({
       {/* Input Container */}
       <div
         className={`flex items-center border border-white p-2 bg-[#FFFFFE]/50 text-black cursor-pointer satoshi ${rounded}`}
+        onClick={onClick}
       >
         {/* Left Icon */}
         {showLeftIcon && (
