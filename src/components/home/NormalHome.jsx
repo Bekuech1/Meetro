@@ -144,15 +144,15 @@ const NormalHome = () => {
       </div>
       {isModalOpen && <EventModal closeModal={closeModal} />}
       {/* <img src="gradient-home.png" className="absolute -top-[10px] fix h-[90vh] w-screen " /> */}
-      <div class=" absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
+      <div className="absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
         {/* <!-- Left Ellipse --> */}
-        <div class="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
+        <div className="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
 
         {/* <!-- Middle Ellipse --> */}
-        <div class="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
+        <div className="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
 
         {/* <!-- Right Ellipse --> */}
-        <div class="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
+        <div className="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
       </div>
     </main>
   );

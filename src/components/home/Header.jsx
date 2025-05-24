@@ -72,7 +72,7 @@ const Header = () => {
       {/* Actions Section */}
       <section className="flex items-center gap-4">
         {/* Notification */}
-        <div className="" ref={notificationRef}>
+        <div ref={notificationRef}>
           <button
             onClick={toggleNotification}
             className={` h-fit w-fit p-1 rounded-[24px] bg-[#344C3F] ${
