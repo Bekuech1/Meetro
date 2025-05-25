@@ -56,8 +56,7 @@ const NormalHome = () => {
           </div>
           <section
             className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
-            onClick={openModal}
-          >
+            onClick={openModal}>
             <img
               src="events-img.png"
               alt=""
@@ -76,21 +75,33 @@ const NormalHome = () => {
                 <h6 className="satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[10px]">
                   host
                 </h6>
-                <img src="tiny-profile.png" alt="" className="w-4 h-4 rounded-2xl" />
+                <img
+                  src="tiny-profile.png"
+                  alt=""
+                  className="w-4 h-4 rounded-2xl"
+                />
                 <h6 className="satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]">
                   chubby igboanugo
                 </h6>
               </li>
 
               <li className="flex gap-1 justify-center items-center">
-                <img src="tiny-profile.png" alt="" className="w-4 h-4 rounded-2xl" />
+                <img
+                  src="tiny-profile.png"
+                  alt=""
+                  className="w-4 h-4 rounded-2xl"
+                />
                 <h6 className="satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]">
                   5 mabushi way, abuja
                 </h6>
               </li>
 
               <li className="flex gap-1 justify-center items-center">
-                <img src="tiny-profile.png" alt="" className="w-4 h-4 rounded-2xl" />
+                <img
+                  src="tiny-profile.png"
+                  alt=""
+                  className="w-4 h-4 rounded-2xl"
+                />
                 <h6 className="satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]">
                   16:40 <span>pm</span>
                 </h6>
@@ -100,7 +111,11 @@ const NormalHome = () => {
                 <h6 className="satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[14px]">
                   going
                 </h6>
-                <img src="tiny-profile.png" alt="" className="w-4 h-4 rounded-2xl" />
+                <img
+                  src="tiny-profile.png"
+                  alt=""
+                  className="w-4 h-4 rounded-2xl"
+                />
                 <h6 className="satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]">
                   newman, victory,<span>+200 others</span>
                 </h6>
@@ -129,15 +144,15 @@ const NormalHome = () => {
       </div>
       {isModalOpen && <EventModal closeModal={closeModal} />}
       {/* <img src="gradient-home.png" className="absolute -top-[10px] fix h-[90vh] w-screen " /> */}
-      <div class=" absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
+      <div className="absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
         {/* <!-- Left Ellipse --> */}
-        <div class="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
+        <div className="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
 
         {/* <!-- Middle Ellipse --> */}
-        <div class="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
+        <div className="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
 
         {/* <!-- Right Ellipse --> */}
-        <div class="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
+        <div className="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
       </div>
     </main>
   );
