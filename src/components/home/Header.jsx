@@ -34,19 +34,19 @@ const Header = () => {
       text: "my profile",
       image: "user.svg",
       className: "",
-      onClick: () => navigate("/home"),
+      onClick: () => navigate("/profile"),
     },
     {
       text: "settings",
       image: "support.svg",
       className: "",
-      onClick: () => navigate("/profile"),
+      onClick: () => navigate("/settings"),
     },
     {
       text: "contact us",
       image: "header-contact.svg",
       className: "border-b border-gray-300",
-      onClick: () => navigate("/settings"),
+      onClick: () => navigate("/"),
     },
     {
       text: "sign out",

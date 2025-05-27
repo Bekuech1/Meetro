@@ -1,0 +1,130 @@
+import React from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+
+const Account = () => {
+  return (
+    <div className="satoshi flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-[#001010] text-[14px] font-bold">
+            Profile picture
+          </h2>
+          <p className="text-[#8A9191] text-[14px] font-medium">
+            Upload a JPEG or PNG file with a size of 2mb or less
+          </p>
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-center gap-4 md:w-[426px]">
+          <img
+            src="/profileimg.png"
+            alt="user-profile-picture"
+            className="w-[83px] h-[83px] md:w-[154px] md:h-[154px]"
+          />
+
+          <div className="flex flex-col gap-4 w-full md:w-[300px]">
+            <p className="bg-[#F3F0FB] md:w-[256px] p-2 rounded-2xl text-[#7A60BF] text-[12px] font-medium">
+              Images with a 1:1 ratio (a square) work best
+            </p>
+
+            <div className="flex items-center gap-4">
+              <button className="w-full p-2 bg-[#FFFFFE] text-[#095256] paytone rounded-[60px]">
+                Upload image
+              </button>
+              <button className="w-[36px] h-[36px] bg-[#FFFFFE] rounded-[60px] flex items-center justify-center">
+                <img src="trash.svg" alt="del-icon" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* basic user profile data */}
+      <div className="flex flex-col gap-2">
+        <div>
+          <h2 className="text-[#001010] text-[14px] font-bold">Your Profile</h2>
+          <p className="text-[#8A9191] text-[14px] font-medium">
+            Choose how you want to be displayed as a Host or Guest
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="" className="text-[12px] font-bold text-[#8A9191]">
+            Name
+          </label>
+          <div className="flex gap-1">
+            <div className="relative flex items-center w-1/2">
+              <img
+                src="/user.svg"
+                alt=""
+                className="rounded-full absolute ml-2"
+              />
+              <input
+                type="text"
+                placeholder="First name"
+                className="pl-10 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-l-[12px] py-3 text-[#8A9191] text-[14px] font-medium w-full"
+              />
+            </div>
+            <input
+              type="text"
+              placeholder="Last name"
+              className="py-3 px-2 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-r-[12px] text-[14px] text-[#8A9191] font-medium w-1/2"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="" className="text-[12px] font-bold text-[#8A9191]">
+            Email
+          </label>
+          <div className="relative flex items-center w-full">
+            <img src="/sms.svg" alt="" className="absolute ml-2 rounded-full" />
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className="py-3 pl-10 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-[12px] w-full text-[#8A9191] text-[14px] font-medium"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="" className="font-bold text-[12px] text-[#8A9191]">
+            Location
+          </label>
+          <div className="flex gap-1 w-full">
+            <div className="flex relative items-center w-1/2">
+              <img
+                src="/location.svg"
+                alt=""
+                className="rounded-full absolute ml-2"
+              />
+              <input
+                type="text"
+                placeholder="Type in offline loaction"
+                className="pl-10 bg-[#FFFFFE80] py-3 rounded-l-[12px] border border-[#FFFFFE] w-full text-[14px] font-medium text-[#8A9191]"
+              />
+            </div>
+
+            <Select className="">
+              <SelectTrigger className="w-1/2 bg-[#FFFFFE80] p-0 px-2 py-3 h-9  border border-[#FFFFFE] rounded-none rounded-r-[12px]  text-[#8A9191] text-[14px] font-medium">
+                <SelectValue placeholder="State" className="text-[#8A9191]" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="system">System</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Account;

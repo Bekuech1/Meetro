@@ -15,6 +15,7 @@ import Payment from "./components/home/Payment";
 import CreateEventsLayout from "./layouts/CreateEventsLayout";
 import CreateEvent from "./routes/CreateEvent";
 import UserProfile from "./routes/UserProfile";
+import Settings from "./routes/Settings";
 
 function App() {
   return (
@@ -35,10 +36,15 @@ function App() {
 
           {/* Profile Routes */}
           <Route path="/profile" element={<UserProfile />} />
+          {/* <Route path="/settings" element={<Settings />} /> */}
 
           {/* Homepage Route */}
           <Route path="/home" element={<HomepageLayout />}>
             <Route index element={<Home />} />
+          </Route>
+
+          <Route path="/settings" element={<HomepageLayout />}>
+            <Route index element={<Settings />} />
           </Route>
 
           {/* Test Routes */}
