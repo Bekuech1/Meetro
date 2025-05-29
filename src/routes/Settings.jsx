@@ -1,4 +1,6 @@
-import Account from "@/components/Serttings/Account";
+import Account from "@/components/Settings/Account";
+import Payments from "@/components/Settings/Payments";
+import Preference from "@/components/Settings/Preference";
 import React, { useState } from "react";
 
 const Settings = () => {
@@ -18,7 +20,7 @@ const Settings = () => {
         <div className="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
       </div>
 
-      <div className="relative z-10 w-full md:w-[680px] md:min-h-[700px] py-10 mx-auto px-4">
+      <div className="relative z-10 w-full md:w-[680px] md:min-h-[700px] py-10 pb-12 mx-auto px-4">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-[17px] justify-between">
           <h2 className="text-[30px] paytone text-[#055962]">Settings</h2>
 
@@ -57,21 +59,9 @@ const Settings = () => {
         <div className="mt-8">
           {activeTab === "accounts" && <Account />}
 
-          {activeTab === "preferences" && (
-            <div className="p-4 bg-white rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold">Preferences</h3>
-              <p>Set your preferences for notifications and themes.</p>
-              {/* Add preferences form or options here */}
-            </div>
-          )}
+          {activeTab === "preferences" && <Preference />}
 
-          {activeTab === "payments" && (
-            <div className="p-4 bg-white rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold">Payment Settings</h3>
-              <p>Manage your payment methods and billing information.</p>
-              {/* Add payment settings form or options here */}
-            </div>
-          )}
+          {activeTab === "payments" && <Payments />}
         </div>
 
         {/* Save changes button */}

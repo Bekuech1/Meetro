@@ -9,7 +9,8 @@ import {
 
 const Account = () => {
   return (
-    <div className="satoshi flex flex-col gap-8">
+    <div className="satoshi flex flex-col gap-8 mb-8">
+      {/* users profile image update section */}
       <div className="flex flex-col gap-4">
         <div>
           <h2 className="text-[#001010] text-[14px] font-bold">
@@ -112,7 +113,7 @@ const Account = () => {
 
             <Select className="">
               <SelectTrigger className="w-1/2 bg-[#FFFFFE80] p-0 px-2 py-3 h-9  border border-[#FFFFFE] rounded-none rounded-r-[12px]  text-[#8A9191] text-[14px] font-medium">
-                <SelectValue placeholder="State" className="text-[#8A9191]" />
+                <SelectValue placeholder="State"  className="text-[#8A9191]" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="light">Light</SelectItem>
@@ -122,6 +123,55 @@ const Account = () => {
             </Select>
           </div>
         </div>
+      </div>
+
+      {/* 3rd party accounts */}
+      <div>
+        <div>
+          <h2 className="text-[#001010] text-[14px] font-bold">
+            Third Party Account Syncing
+          </h2>
+          <p className="text-[#8A9191] text-[14px] font-medium">
+            Link your accounts to meetro for convenience
+          </p>
+        </div>
+
+        <div className="flex justify-between items-center gap-4 bg-[#FFFFFE80] border border-[#FFFFFE] backdrop-blur-[4px] p-4 rounded-[12px] mt-4">
+          <div className="flex gap-2 items-center">
+            <img src="/icons/google.svg" alt="" />
+
+            <div>
+              <p className="text-[#001010] font-bold text-[14px]">
+                Google Account
+              </p>
+              <p className="text-[#8A9191] font-medium text-[14px]">
+                newman@gmail.com
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <img src="/tick-circle-green.svg" alt="" />
+            <p className="text-[#61B42D]">Synced</p>
+          </div>
+        </div>
+      </div>
+
+      {/* account deletion confirmation */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-[#001010] font-bold text-[14px]">
+            Account Deletion
+          </h2>
+          <p className="text-[#8A9191] text-[14px] font-medium">
+            If you no longer wish to use Meetro you can permanently delete your
+            account
+          </p>
+        </div>
+
+        <button className="bg-[#C7245A] text-[12px] font-bold text-[#FFFFFE] py-2 px-3 rounded-3xl text-nowrap">
+          Delete Account
+        </button>
       </div>
     </div>
   );
