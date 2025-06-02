@@ -10,7 +10,10 @@ const Description = ({ isVisible, onClose, onSave }) => {
 
   const handleSave = () => {
     if (onSave) {
-      onSave(hostName); // Pass the host name to the parent component
+      onSave({
+        data: descriptionText,
+        displayText: descriptionText.substring(0, 50) + (descriptionText.length > 50 ? "..." : "")
+      }); // Pass the description data in the expected format
     }
     onClose(); // Close the modal after saving
   };
@@ -21,17 +24,17 @@ const Description = ({ isVisible, onClose, onSave }) => {
     const textarea = textareaRef.current;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = value.substring(start, end);
+    const selectedText = descriptionText.substring(start, end); // Use descriptionText instead of value
 
     if (selectedText) {
       const newText =
-        value.substring(0, start) +
+        descriptionText.substring(0, start) +
         prefix +
         selectedText +
         suffix +
-        value.substring(end);
+        descriptionText.substring(end);
 
-      onChange(newText);
+      handleDescriptionChange(newText); // Use handleDescriptionChange instead of onChange
 
       // Restore selection
       setTimeout(() => {
@@ -46,14 +49,14 @@ const Description = ({ isVisible, onClose, onSave }) => {
     const textarea = textareaRef.current;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = value.substring(start, end);
+    const selectedText = descriptionText.substring(start, end); // Use descriptionText instead of value
 
     const linkText = selectedText || "Link text";
     const linkMarkdown = `[${linkText}](URL)`;
 
     const newText =
-      value.substring(0, start) + linkMarkdown + value.substring(end);
-    onChange(newText);
+      descriptionText.substring(0, start) + linkMarkdown + descriptionText.substring(end);
+    handleDescriptionChange(newText); // Use handleDescriptionChange instead of onChange
 
     // Position cursor at URL part
     setTimeout(() => {

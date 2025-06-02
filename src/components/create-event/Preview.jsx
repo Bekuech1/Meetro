@@ -9,7 +9,17 @@ const profiles = [
   { id: 5, image: "large-profile.jpg", name: "Chubby Igboanugo" },
 ];
 
-const Preview = ({ closeModal, eventImg, eventName }) => {
+const Preview = ({
+  closeModal,
+  eventImg,
+  eventName,
+  hostName,
+  description,
+  dressCode,
+  state,
+  offline,
+  online,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleReadMore = () => {
@@ -63,7 +73,7 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                       className="w-6 h-6 rounded-full border border-white"
                     />
                     <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                      Newman, Victory, Beko
+                      {hostName || "..."}
                     </h6>
                   </div>
                 </div>
@@ -109,34 +119,31 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                 </div>
               </div>
 
-              <div className="w-full h-fit grid gap-2">
-                {/* ModalText Component */}
-                <ModalText img="note-text.svg" text="about event" />
+              {description && (
+                <div className="w-full h-fit grid gap-2">
+                  {/* ModalText Component */}
+                  <ModalText img="note-text.svg" text="about event" />
 
-                {/* H4 Element */}
-                <h4
-                  className={`${
-                    isExpanded ? "" : "line-clamp-3"
-                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-                >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
-                  volutpat. Sed id ligula sit amet libero pulvinar egestas.
-                  Morbi scelerisque euismod justo nec scelerisque. Nam ultricies
-                  nulla quis nunc facilisis, in commodo augue placerat. Vivamus
-                  feugiat, lorem eget varius sollicitudin, lorem mauris
-                  tristique metus, id cursus odio nisi nec nunc. Fusce nec arcu
-                  vel neque consectetur auctor.
-                </h4>
+                  {/* H4 Element */}
+                  <h4
+                    className={`${
+                      isExpanded ? "" : "line-clamp-3"
+                    } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+                  >
+                    {description}
+                  </h4>
 
-                {/* Read More Button */}
-                <button
-                  onClick={toggleReadMore}
-                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-                >
-                  {isExpanded ? "Show less" : "Read more"}
-                </button>
-              </div>
+                  {/* Read More Button */}
+                  {isExpanded && (
+                    <button
+                      onClick={toggleReadMore}
+                      className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                    >
+                      {isExpanded ? "Show less" : "Read more"}
+                    </button>
+                  )}
+                </div>
+              )}
 
               <div className="w-full h-fit grid gap-2">
                 <ModalText img="money-add.svg" text="chip in" />
@@ -215,22 +222,29 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                 </div>
               </div>
 
-              <div className="grid gap-2 w-full h-fit">
-                <ModalText img="dress.svg" text="dress code" />
-                <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  casual
-                </h6>
-              </div>
-              <div className="grid gap-2 w-full h-fit">
-                <ModalText img="modal-location.svg" text="location" />
-                <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  CCHub
-                </h6>
-                <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                  294 Herbert Macaulay Wy, Sabo yaba, Lagos 101245, Lagos,
-                  Nigeria
-                </p>
-              </div>
+              {dressCode && (
+                <div className="grid gap-2 w-full h-fit">
+                  <ModalText img="dress.svg" text="dress code" />
+                  <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                    {dressCode}
+                  </h6>
+                </div>
+              )}
+              {offline ||
+                (online && (
+                  <div className="grid gap-2 w-full h-fit">
+                    <ModalText img="modal-location.svg" text="location" />
+                    <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                      CCHub
+                    </h6>
+                    {offline && (
+                      <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
+                        {offline}, {state}, Nigeria
+                      </p>
+                    )}
+                    {online && <a href={online}>{online}</a>}
+                  </div>
+                ))}
 
               {/* have to map attendees */}
               <div className="grid gap-2 w-full h-fit">
@@ -301,7 +315,7 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                     className="w-6 h-6 rounded-full border border-white"
                   />
                   <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                    Newman, Victory, Beko
+                    {hostName}
                   </h6>
                 </div>
               </div>
@@ -316,34 +330,30 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                 />
               </div>
             </section>
-            <section className="mt-4 grid gap-2 w-full h-fit">
-              {/* ModalText Component */}
-              <ModalText img="note-text.svg" text="about event" />
+            {description && (
+              <section className="mt-4 grid gap-2 w-full h-fit fix">
+                {/* ModalText Component */}
+                <ModalText img="note-text.svg" text="about event" />
 
-              {/* H4 Element */}
-              <h4
-                className={`${
-                  isExpanded ? "" : "line-clamp-3"
-                } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
-                volutpat. Sed id ligula sit amet libero pulvinar egestas. Morbi
-                scelerisque euismod justo nec scelerisque. Nam ultricies nulla
-                quis nunc facilisis, in commodo augue placerat. Vivamus feugiat,
-                lorem eget varius sollicitudin, lorem mauris tristique metus, id
-                cursus odio nisi nec nunc. Fusce nec arcu vel neque consectetur
-                auctor.
-              </h4>
+                {/* H4 Element */}
 
-              {/* Read More Button */}
-              <button
-                onClick={toggleReadMore}
-                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-              >
-                {isExpanded ? "Show less" : "Read more"}
-              </button>
-            </section>
+                <h4
+                  className={`${
+                    isExpanded ? "" : "line-clamp-3"
+                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+                >
+                  {description}
+                </h4>
+
+                {/* Read More Button */}
+                <button
+                  onClick={toggleReadMore}
+                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                >
+                  {isExpanded ? "Show less" : "Read more"}
+                </button>
+              </section>
+            )}
           </div>
 
           <div className="w-full h-fit grid gap-2">
@@ -420,12 +430,14 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
             </div>
           </div>
 
-          <div className="grid gap-2 w-full h-fit">
-            <ModalText img="dress.svg" text="dress code" />
-            <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-              casual
-            </h6>
-          </div>
+          {dressCode && (
+            <div className="grid gap-2 w-full h-fit">
+              <ModalText img="dress.svg" text="dress code" />
+              <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                {dressCode}
+              </h6>
+            </div>
+          )}
           <div className="grid gap-2 w-full h-fit">
             <ModalText img="modal-location.svg" text="location" />
             <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
