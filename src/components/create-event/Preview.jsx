@@ -134,7 +134,7 @@ const Preview = ({
                   </h4>
 
                   {/* Read More Button */}
-                  {isExpanded && (
+                  {description.length > 140 && (
                     <button
                       onClick={toggleReadMore}
                       className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
@@ -247,26 +247,31 @@ const Preview = ({
                 ))}
 
               {/* have to map attendees */}
-              <div className="grid gap-2 w-full h-fit">
-                <ModalText img="crown.svg" text="going (280)" />
-                <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
-                  {profiles.map((profile) => (
-                    <div
-                      key={profile.id}
-                      className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
-                    >
-                      <img
-                        src={profile.image}
-                        alt=""
-                        className="size-[66px] rounded-full"
-                      />
-                      <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                        {profile.name}
-                      </h6>
-                    </div>
-                  ))}
+              {profiles.length > 0 && (
+                <div className="grid gap-2 w-full h-fit">
+                  <ModalText
+                    img="crown.svg"
+                    text={profiles.length + " people are going"}
+                  />
+                  <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
+                    {profiles.map((profile) => (
+                      <div
+                        key={profile.id}
+                        className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
+                      >
+                        <img
+                          src={profile.image}
+                          alt=""
+                          className="size-[66px] rounded-full"
+                        />
+                        <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                          {profile.name}
+                        </h6>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </section>
           </div>
         </div>
@@ -315,7 +320,7 @@ const Preview = ({
                     className="w-6 h-6 rounded-full border border-white"
                   />
                   <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                    {hostName}
+                    {hostName || "..."}
                   </h6>
                 </div>
               </div>
@@ -346,12 +351,14 @@ const Preview = ({
                 </h4>
 
                 {/* Read More Button */}
-                <button
-                  onClick={toggleReadMore}
-                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-                >
-                  {isExpanded ? "Show less" : "Read more"}
-                </button>
+                {description.length > 140 && (
+                  <button
+                    onClick={toggleReadMore}
+                    className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                  >
+                    {isExpanded ? "Show less" : "Read more"}
+                  </button>
+                )}
               </section>
             )}
           </div>
@@ -438,37 +445,48 @@ const Preview = ({
               </h6>
             </div>
           )}
-          <div className="grid gap-2 w-full h-fit">
-            <ModalText img="modal-location.svg" text="location" />
-            <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-              CCHub
-            </h6>
-            <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-              294 Herbert Macaulay Wy, Sabo yaba, Lagos 101245, Lagos, Nigeria
-            </p>
-          </div>
+          {offline ||
+            (online && (
+              <div className="grid gap-2 w-full h-fit">
+                <ModalText img="modal-location.svg" text="location" />
+                <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                  CCHub
+                </h6>
+                {offline && (
+                  <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
+                    {offline}, {state}, Nigeria
+                  </p>
+                )}
+                {online && <a href={online}>{online}</a>}
+              </div>
+            ))}
 
           {/* have to map attendees */}
-          <div className="grid gap-2 w-full h-fit">
-            <ModalText img="crown.svg" text="going (280)" />
-            <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
-              {profiles.map((profile) => (
-                <div
-                  key={profile.id}
-                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
-                >
-                  <img
-                    src={profile.image}
-                    alt=""
-                    className="size-[66px] rounded-full"
-                  />
-                  <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                    {profile.name}
-                  </h6>
-                </div>
-              ))}
+          {profiles.length > 0 && (
+            <div className="grid gap-2 w-full h-fit">
+              <ModalText
+                img="crown.svg"
+                text={profiles.length + " people are going"}
+              />
+              <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
+                {profiles.map((profile) => (
+                  <div
+                    key={profile.id}
+                    className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
+                  >
+                    <img
+                      src={profile.image}
+                      alt=""
+                      className="size-[66px] rounded-full"
+                    />
+                    <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                      {profile.name}
+                    </h6>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

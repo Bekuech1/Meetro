@@ -277,14 +277,14 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
 
   if (showBank) {
     return (
-      <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
-        <div className="md:w-[432px] h-fit flex flex-col justify-center items-center relative rounded-4xl">
+      <div className="fixed inset-0 h-screen flex sm:items-center items-end justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
+        <div className="sm:w-[432px] w-full sm:h-fit h-[70vh] flex flex-col justify-center items-center relative rounded-4xl fix">
           <div className="bg-white px-6 py-3 text-left w-full h-fit rounded-t-4xl">
             <h1 className="satoshi font-[700] text-[20px] capitalize text-black">
               add bank details
             </h1>
           </div>
-          <div className="w-full px-6 py-3 rounded-b-4xl bg-gray-100">
+          <div className="w-full sm:h-fit h-full px-6 py-3 sm:rounded-b-4xl fix  bg-gray-100">
             <div className="grid gap-4 mb-8">
               <div className="w-full h-fit satoshi grid gap-1 relative">
                 <label className="text-[10px] font-bold text-[#8A9191] capitalize">
@@ -327,9 +327,9 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                 </div>
                 {showBankList && (
                   <ul className="absolute bg-white border rounded-[12px] shadow-lg top-[68px] -right-0 w-full z-10 text-center max-h-[164px] h-fit py-1 overflow-y-auto scrollbar-hide scroll-smooth">
-                    {filteredBanks.map(({ name, code }) => (
+                    {filteredBanks.map(({ name, code}) => (
                       <li
-                        key={code}
+                        key={name}
                         className="flex items-center px-4 py-2 cursor-pointer hover:scale-105 transition-transform justify-center font-medium text-[14px] capitalize"
                         onClick={() => handleBankSelect(name)}
                       >
