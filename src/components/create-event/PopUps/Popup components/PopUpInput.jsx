@@ -11,15 +11,14 @@ const PopUpInput = ({
   rounded = "rounded-l-[12px]", // Default rounded corners
   placeholder = "Select a date", // Placeholder text
   label, // Dynamic label text
-  onClick
+  onClick,
+  secondary
 }) => {
   return (
     <div className="flex flex-col gap-1">
       {/* Label */}
       {label && (
-        <label
-          className='text-[10px] font-[700] text-[#8A9191] capitalize satoshi'
-        >
+        <label className="text-[10px] font-[700] text-[#8A9191] capitalize satoshi">
           {label}
         </label>
       )}
@@ -39,12 +38,15 @@ const PopUpInput = ({
         )}
 
         {/* Input */}
-        <input
-          type="text"
-          value={value || placeholder}
-          readOnly
-          className="w-full px-2 outline-none cursor-pointer text-left text-[#8A9191] font-medium text-[14px] capitalize satoshi"
-        />
+        <div className="grid w-full">
+          <input
+            type="text"
+            value={value || placeholder}
+            readOnly
+            className="w-full px-2 outline-none cursor-pointer text-left text-[#8A9191] font-medium text-[14px] capitalize satoshi"
+          />
+          <p className="px-2 text-[#8A9191] text-[10px] font-medium">{secondary}</p>
+        </div>
 
         {/* Right Icon */}
         {showRightIcon && (

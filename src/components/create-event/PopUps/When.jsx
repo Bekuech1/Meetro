@@ -28,7 +28,7 @@ const When = ({ isVisible, onClose, onSave }) => {
   };
 
   const formatOccurringText = () => {
-    if (!occuringDate || !frequency) return "Pick a frequency"; 
+    if (!occuringDate || !frequency) return "Pick a frequency";
 
     const day = occuringDate.getDate();
     const month = occuringDate.toLocaleString("default", { month: "long" });
@@ -60,35 +60,34 @@ const When = ({ isVisible, onClose, onSave }) => {
       ? occuringDate.toISOString().split("T")[0]
       : null;
 
-    let eventData;
-    
+    let TimeData;
+
     // Structure the data based on which tab is active
     if (activeTab === 0) {
       // Single event data
-      eventData = {
+      TimeData = {
         type: "single",
         startDate: formattedStartDate,
         startTime,
         endDate: formattedEndDate,
-        endTime
+        endTime,
       };
     } else {
       // Recurring event data
-      eventData = {
+      TimeData = {
         type: "recurring",
-        startDate: formattedOccuringDate,
-        startTime: occuringTime,
+        recurringDate: formattedOccuringDate,
+        recurringTime: occuringTime,
         frequency,
-        recurrencePattern: formatOccurringText()
+        recurrencePattern: formatOccurringText(),
       };
     }
 
     // Pass the structured data to parent component via onSave
     if (onSave) {
-      onSave(eventData);
+      onSave(TimeData);
     }
-    
-    // No need to call onClose here as the parent component will handle it with closeModal()
+    onClose();
   };
 
   // Handler for tab changes
@@ -164,7 +163,9 @@ const When = ({ isVisible, onClose, onSave }) => {
                   >
                     <div
                       className={`w-4 h-4 mr-3 flex items-center justify-center rounded-full border ${
-                        frequency === option ? "border-[#BEFD66]" : "border-gray-300"
+                        frequency === option
+                          ? "border-[#BEFD66]"
+                          : "border-gray-300"
                       }`}
                     >
                       {frequency === option && (
@@ -181,7 +182,7 @@ const When = ({ isVisible, onClose, onSave }) => {
               </ul>
             )}
           </div>
-        </div>,
+        </div>
       ]}
     </InputModals>
   );
