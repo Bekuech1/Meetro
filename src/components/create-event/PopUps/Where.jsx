@@ -58,14 +58,16 @@ const Where = ({ isVisible, onClose, onSave }) => {
 
   const handleSave = () => {
     if (onSave) {
-      console.log("Save Result:", {
-        offlineLocation,
-        onlineLocation,
-        stateLocation,
+      onSave({
+        offline: offlineLocation,
+        online: onlineLocation,
+        state: stateLocation,
       });
     }
     onClose();
   };
+
+
 
   return (
     <InputModals

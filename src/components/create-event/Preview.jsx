@@ -9,7 +9,17 @@ const profiles = [
   { id: 5, image: "large-profile.jpg", name: "Chubby Igboanugo" },
 ];
 
-const Preview = ({ closeModal, eventImg, eventName }) => {
+const Preview = ({
+  closeModal,
+  eventImg,
+  eventName,
+  hostName,
+  description,
+  dressCode,
+  state,
+  offline,
+  online,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleReadMore = () => {
@@ -63,7 +73,7 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                       className="w-6 h-6 rounded-full border border-white"
                     />
                     <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                      Newman, Victory, Beko
+                      {hostName || "..."}
                     </h6>
                   </div>
                 </div>
@@ -109,34 +119,31 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                 </div>
               </div>
 
-              <div className="w-full h-fit grid gap-2">
-                {/* ModalText Component */}
-                <ModalText img="note-text.svg" text="about event" />
+              {description && (
+                <div className="w-full h-fit grid gap-2">
+                  {/* ModalText Component */}
+                  <ModalText img="note-text.svg" text="about event" />
 
-                {/* H4 Element */}
-                <h4
-                  className={`${
-                    isExpanded ? "" : "line-clamp-3"
-                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-                >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
-                  volutpat. Sed id ligula sit amet libero pulvinar egestas.
-                  Morbi scelerisque euismod justo nec scelerisque. Nam ultricies
-                  nulla quis nunc facilisis, in commodo augue placerat. Vivamus
-                  feugiat, lorem eget varius sollicitudin, lorem mauris
-                  tristique metus, id cursus odio nisi nec nunc. Fusce nec arcu
-                  vel neque consectetur auctor.
-                </h4>
+                  {/* H4 Element */}
+                  <h4
+                    className={`${
+                      isExpanded ? "" : "line-clamp-3"
+                    } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+                  >
+                    {description}
+                  </h4>
 
-                {/* Read More Button */}
-                <button
-                  onClick={toggleReadMore}
-                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-                >
-                  {isExpanded ? "Show less" : "Read more"}
-                </button>
-              </div>
+                  {/* Read More Button */}
+                  {description.length > 140 && (
+                    <button
+                      onClick={toggleReadMore}
+                      className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                    >
+                      {isExpanded ? "Show less" : "Read more"}
+                    </button>
+                  )}
+                </div>
+              )}
 
               <div className="w-full h-fit grid gap-2">
                 <ModalText img="money-add.svg" text="chip in" />
@@ -215,44 +222,56 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                 </div>
               </div>
 
-              <div className="grid gap-2 w-full h-fit">
-                <ModalText img="dress.svg" text="dress code" />
-                <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  casual
-                </h6>
-              </div>
-              <div className="grid gap-2 w-full h-fit">
-                <ModalText img="modal-location.svg" text="location" />
-                <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  CCHub
-                </h6>
-                <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                  294 Herbert Macaulay Wy, Sabo yaba, Lagos 101245, Lagos,
-                  Nigeria
-                </p>
-              </div>
+              {dressCode && (
+                <div className="grid gap-2 w-full h-fit">
+                  <ModalText img="dress.svg" text="dress code" />
+                  <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                    {dressCode}
+                  </h6>
+                </div>
+              )}
+              {offline ||
+                (online && (
+                  <div className="grid gap-2 w-full h-fit">
+                    <ModalText img="modal-location.svg" text="location" />
+                    <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                      CCHub
+                    </h6>
+                    {offline && (
+                      <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
+                        {offline}, {state}, Nigeria
+                      </p>
+                    )}
+                    {online && <a href={online}>{online}</a>}
+                  </div>
+                ))}
 
               {/* have to map attendees */}
-              <div className="grid gap-2 w-full h-fit">
-                <ModalText img="crown.svg" text="going (280)" />
-                <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
-                  {profiles.map((profile) => (
-                    <div
-                      key={profile.id}
-                      className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
-                    >
-                      <img
-                        src={profile.image}
-                        alt=""
-                        className="size-[66px] rounded-full"
-                      />
-                      <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                        {profile.name}
-                      </h6>
-                    </div>
-                  ))}
+              {profiles.length > 0 && (
+                <div className="grid gap-2 w-full h-fit">
+                  <ModalText
+                    img="crown.svg"
+                    text={profiles.length + " people are going"}
+                  />
+                  <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
+                    {profiles.map((profile) => (
+                      <div
+                        key={profile.id}
+                        className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
+                      >
+                        <img
+                          src={profile.image}
+                          alt=""
+                          className="size-[66px] rounded-full"
+                        />
+                        <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                          {profile.name}
+                        </h6>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </section>
           </div>
         </div>
@@ -288,7 +307,7 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
             <img
               src={eventImg}
               alt="Event"
-              className="rounded-3xl min-w-[333px] min-h-[306px] sm:size-[349px] mx-auto"
+              className="rounded-3xl min-w-[300px] min-h-[300px] sm:size-[350px] mx-auto"
             />
             <section className="grid gap-4">
               <div className="gap-1 grid">
@@ -301,7 +320,7 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                     className="w-6 h-6 rounded-full border border-white"
                   />
                   <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                    Newman, Victory, Beko
+                    {hostName || "..."}
                   </h6>
                 </div>
               </div>
@@ -316,146 +335,159 @@ const Preview = ({ closeModal, eventImg, eventName }) => {
                 />
               </div>
             </section>
-            <section className="mt-4 grid gap-2 w-full h-fit">
-              {/* ModalText Component */}
-              <ModalText img="note-text.svg" text="about event" />
+            {description && (
+              <section className="mt-4 grid gap-2 w-full h-fit fix">
+                {/* ModalText Component */}
+                <ModalText img="note-text.svg" text="about event" />
 
-              {/* H4 Element */}
-              <h4
-                className={`${
-                  isExpanded ? "" : "line-clamp-3"
-                } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
-                volutpat. Sed id ligula sit amet libero pulvinar egestas. Morbi
-                scelerisque euismod justo nec scelerisque. Nam ultricies nulla
-                quis nunc facilisis, in commodo augue placerat. Vivamus feugiat,
-                lorem eget varius sollicitudin, lorem mauris tristique metus, id
-                cursus odio nisi nec nunc. Fusce nec arcu vel neque consectetur
-                auctor.
-              </h4>
+                {/* H4 Element */}
 
-              {/* Read More Button */}
-              <button
-                onClick={toggleReadMore}
-                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-              >
-                {isExpanded ? "Show less" : "Read more"}
-              </button>
-            </section>
-          </div>
-
-          <div className="w-full h-fit grid gap-2">
-            <ModalText img="money-add.svg" text="chip in" />
-
-            <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-              <div className="h-fit w-full grid">
-                <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi ">
-                  Target goal
-                </p>
-                <h6 className="capitalize text-black font-[700] text-[24px] satoshi ">
-                  ₦ 1000
-                </h6>
-              </div>
-              <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
-                <div className="h-2 w-[40%] rounded-[10px] bg-[#61B42D]"></div>{" "}
-                {/* Fixed */}
-              </div>
-              <div className="h-fit w-full flex justify-between">
-                <h6 className="satoshi font-[500] text-[16px]">₦ 1000</h6>
-                <h6 className="satoshi font-[500] text-[16px]">₦ 1000</h6>
-              </div>
-            </div>
-          </div>
-          <section className="w-full h-fit flex gap-2">
-            <Attendance
-              text="not sure"
-              img="timer-modal.svg"
-              textcolor="#7A60BF"
-              onclick={() => console.log("Attendance clicked")} // Fixed
-            />
-            <Attendance
-              text="not sure"
-              img="tick-circle-green.svg"
-              textcolor="#61B42D"
-            />
-          </section>
-
-          <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-            <div className="w-full h-fit flex justify-between">
-              <div className="w-full h-fit grid gap-1 satoshi">
-                <h5 className="text-[16px] font-[700] leading-[24px] text-black">
-                  ✅ You’re going!
-                </h5>
-                <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
-                  We'll send you reminders and updates so you don’t miss a
-                  thing.
-                </p>
-              </div>
-              <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-                Starting in <span className="text-[#866AD2]">6d 8h</span>
-              </div>
-            </div>
-            <div className="satoshi w-full h-fit grid gap-[10px] items-center">
-              <h5 className="text-[14px] font-[700] leading-[20px] text-black flex">
-                Invite a friend too 👉
-              </h5>
-              <div className="w-full grid gap-4">
-                <ModalBtn
-                  onClick=""
-                  bgcolor="bg-[#E6F2F3]"
-                  image="send.svg"
-                  textcolor="text-black"
-                  text="Invite a Friend"
-                />
-                <ModalBtn
-                  onClick=""
-                  bgcolor="bg-[#011F0F]"
-                  image="tick-circle-green.svg"
-                  textcolor="text-[#61B42D]"
-                  text="Change to Going"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-2 w-full h-fit">
-            <ModalText img="dress.svg" text="dress code" />
-            <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-              casual
-            </h6>
-          </div>
-          <div className="grid gap-2 w-full h-fit">
-            <ModalText img="modal-location.svg" text="location" />
-            <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-              CCHub
-            </h6>
-            <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-              294 Herbert Macaulay Wy, Sabo yaba, Lagos 101245, Lagos, Nigeria
-            </p>
-          </div>
-
-          {/* have to map attendees */}
-          <div className="grid gap-2 w-full h-fit">
-            <ModalText img="crown.svg" text="going (280)" />
-            <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
-              {profiles.map((profile) => (
-                <div
-                  key={profile.id}
-                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
+                <h4
+                  className={`${
+                    isExpanded ? "" : "line-clamp-3"
+                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
                 >
-                  <img
-                    src={profile.image}
-                    alt=""
-                    className="size-[66px] rounded-full"
-                  />
-                  <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                    {profile.name}
+                  {description}
+                </h4>
+
+                {/* Read More Button */}
+                {description.length > 140 && (
+                  <button
+                    onClick={toggleReadMore}
+                    className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                  >
+                    {isExpanded ? "Show less" : "Read more"}
+                  </button>
+                )}
+              </section>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-4 w-full max-w-[350px] mx-auto">
+            <div className="w-full h-fit grid gap-2">
+              <ModalText img="money-add.svg" text="chip in" />
+
+              <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                <div className="h-fit w-full grid">
+                  <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi ">
+                    Target goal
+                  </p>
+                  <h6 className="capitalize text-black font-[700] text-[24px] satoshi ">
+                    ₦ 1000
                   </h6>
                 </div>
-              ))}
+                <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
+                  <div className="h-2 w-[40%] rounded-[10px] bg-[#61B42D]"></div>{" "}
+                  {/* Fixed */}
+                </div>
+                <div className="h-fit w-full flex justify-between">
+                  <h6 className="satoshi font-[500] text-[16px]">₦ 1000</h6>
+                  <h6 className="satoshi font-[500] text-[16px]">₦ 1000</h6>
+                </div>
+              </div>
             </div>
+            <section className="w-full h-fit flex gap-2">
+              <Attendance
+                text="not sure"
+                img="timer-modal.svg"
+                textcolor="#7A60BF"
+                onclick={() => console.log("Attendance clicked")} // Fixed
+              />
+              <Attendance
+                text="not sure"
+                img="tick-circle-green.svg"
+                textcolor="#61B42D"
+              />
+            </section>
+
+            <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+              <div className="w-full h-fit flex justify-between">
+                <div className="w-full h-fit grid gap-1 satoshi">
+                  <h5 className="text-[16px] font-[700] leading-[24px] text-black">
+                    ✅ You’re going!
+                  </h5>
+                  <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                    We'll send you reminders and updates so you don’t miss a
+                    thing.
+                  </p>
+                </div>
+                <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
+                  Starting in <span className="text-[#866AD2]">6d 8h</span>
+                </div>
+              </div>
+              <div className="satoshi w-full h-fit grid gap-[10px] items-center">
+                <h5 className="text-[14px] font-[700] leading-[20px] text-black flex">
+                  Invite a friend too 👉
+                </h5>
+                <div className="w-full grid gap-4">
+                  <ModalBtn
+                    onClick=""
+                    bgcolor="bg-[#E6F2F3]"
+                    image="send.svg"
+                    textcolor="text-black"
+                    text="Invite a Friend"
+                  />
+                  <ModalBtn
+                    onClick=""
+                    bgcolor="bg-[#011F0F]"
+                    image="tick-circle-green.svg"
+                    textcolor="text-[#61B42D]"
+                    text="Change to Going"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {dressCode && (
+              <div className="grid gap-2 w-full h-fit">
+                <ModalText img="dress.svg" text="dress code" />
+                <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                  {dressCode}
+                </h6>
+              </div>
+            )}
+            {offline ||
+              (online && (
+                <div className="grid gap-2 w-full h-fit">
+                  <ModalText img="modal-location.svg" text="location" />
+                  <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                    CCHub
+                  </h6>
+                  {offline && (
+                    <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
+                      {offline}, {state}, Nigeria
+                    </p>
+                  )}
+                  {online && <a href={online}>{online}</a>}
+                </div>
+              ))}
+
+            {/* have to map attendees */}
+            {profiles.length > 0 && (
+              <div className="grid gap-2 w-full h-fit">
+                <ModalText
+                  img="crown.svg"
+                  text={profiles.length + " people are going"}
+                />
+                <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
+                  {profiles.map((profile) => (
+                    <div
+                      key={profile.id}
+                      className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
+                    >
+                      <img
+                        src={profile.image}
+                        alt=""
+                        className="size-[66px] rounded-full"
+                      />
+                      <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                        {profile.name}
+                      </h6>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -16,6 +16,8 @@ const Host = ({ isVisible, onClose, onSave }) => {
     onClose(); // Close the modal after saving
   };
 
+
+
   return (
     <InputModals
       isVisible={isVisible}
@@ -26,17 +28,27 @@ const Host = ({ isVisible, onClose, onSave }) => {
     >
       <div className="w-full h-fit flex gap-4">
         <div className="flex gap-1 items-center justify-center"> 
-          <img src="crown.svg" alt="" className='size-4' />
+          <img 
+            src="crown.svg" 
+            alt="Crown icon" 
+            className="size-4"
+            onError={(e) => {
+              // Fallback if crown.svg fails to load
+              e.target.style.display = 'none';
+            }}
+          />
           <p className="text-[16px] font-bold satoshi text-[#8A9191]">Host</p>
         </div>
-        <TextOnlyInput
-          value={hostName}
-          onChange={handleHostNameChange}
-          placeholder="Enter your name"
-          showLeftIcon={false}
-          showRightIcon={false}
-          rounded="rounded-[12px]"
-        />
+        <div className="flex-1">
+          <TextOnlyInput
+            value={hostName}
+            onChange={handleHostNameChange}
+            placeholder="Enter your name"
+            showLeftIcon={false}
+            showRightIcon={false}
+            rounded="rounded-[12px]"
+          />
+        </div>
       </div>
       <div></div>
     </InputModals>

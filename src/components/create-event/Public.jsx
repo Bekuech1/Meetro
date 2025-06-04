@@ -3,11 +3,11 @@ import CreateEventBtn from "../Layout-conponents/CreateEventBtn";
 
 const Public = ({ onPrivate }) => {
   return (
-    <main className="bg-[#F0F0F0] min-h-[90vh] h-fit w-full grid gap-[43px] px-20 py-10">
-      <div className="flex justify-center gap-12">
+    <main className="bg-[#F0F0F0] min-h-[90vh] h-fit w-full grid gap-[43px] lg:pb-10 pt-10">
+      <div className="lg:flex-row flex lg:gap-12 gap-8 flex-col sm:w-fit w-[95%] mx-auto">
         {/* left section */}
-        <section className="w-fit h-fit grid gap-4">
-          <div className="grid h-fit">
+        <section className="sm:w-fit w-full h-fit flex flex-col gap-4 mx-auto">
+          <div className="grid h-fit w-full">
             <h5 className="text-black text-[14px] font-[700] leading-[20px] satoshi capitalize">
               event image
             </h5>
@@ -19,9 +19,9 @@ const Public = ({ onPrivate }) => {
             <img
               src="private.png"
               alt="Event-img"
-              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[333px] h-[306px] backdrop-blur-[12px]"
+              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[95vw] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer justify-center"
             />
-            <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
+            <div className="hidden absolute cursor-pointer top-[303px] left-[302px] rounded-full xl:flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors">
               <img src="image.svg" className="z-10" alt="" />
             </div>
           </div>
@@ -39,16 +39,16 @@ const Public = ({ onPrivate }) => {
         </section>
 
         {/* right section */}
-        <section className="grid gap-6 items-start w-fit h-fit">
-          <div className="grid gap-2">
+        <section className="gap-6 items-start flex flex-col w-full lg:w-[553px] h-fit mx-auto">
+          <div className="grid gap-2 w-full">
             <div
               style={{
                 boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
                 backdropFilter: "blur(16px)",
               }}
-              className="flex p-[4px] rounded-[20px] bg-white w-fit h-fit"
+              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
             >
-              <div className="items-center py-1 px-[10px] rounded-3xl bg-white cursor-pointer">
+              <div className="items-center py-1 px-[10px] rounded-3xl bg-white cursor-pointer w-full text-center">
                 <h5
                   className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize"
                   onClick={onPrivate}
@@ -56,14 +56,14 @@ const Public = ({ onPrivate }) => {
                   private
                 </h5>
               </div>
-              <div className="items-center py-1 px-[10px] rounded-3xl bg-[#BEFD66]  cursor-pointer">
+              <div className="items-center py-1 px-[10px] rounded-3xl bg-[#BEFD66] cursor-pointer w-full text-center">
                 <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
                   public
                 </h5>
               </div>
               <div></div>
             </div>
-            <p className="text-[#8A9191] text-[12px] font-[500] leading-[18px] satoshi capitalize">
+            <p className="text-[#8A9191] text-[12px] font-[500] leading-[18px] satoshi capitalize sm:w-full w-[323px] text-center lg:text-left">
               Open to all! Let the world (or at least your city) know what’s
               happening!
             </p>
@@ -86,16 +86,16 @@ const Public = ({ onPrivate }) => {
             <Input leftImgSrc="note-text.svg" text="enter bank details" />
             <Input leftImgSrc="note-text.svg" text="reminders" />
           </Grid> */}
-          <div className="w-full h-[553px] flex flex-col justify-center align-center text-center gap-2 px-20">
+          <div className="w-full md:h-[553px] h-[400px] flex flex-col justify-center align-center text-center gap-2 px-20">
             <h1 className="text-black font-bold text-[18px] capitalize satoshi">
               coming soon
             </h1>
             <p className="text-[#8A9191] font-medium text-[16px] capitalize satoshi">
-              Soon, you’ll be able to create tickets and host events <br /> for
+              Soon, you’ll be able to create tickets and host events <br className="sm:block hidden"/> for
               everyone to discover and join.
             </p>
           </div>
-          <section className="h-fit w-full flex justify-between gap-4">
+          {/* <section className="h-fit w-full flex justify-between gap-4">
             <CreateEventBtn
               text="view preview"
               bgcolor="bg-[#E6F2F3]"
@@ -108,7 +108,7 @@ const Public = ({ onPrivate }) => {
               bgcolor="bg-[#B0BAB5]"
               onClick=""
             />
-          </section>
+          </section> */}
         </section>
       </div>
     </main>
