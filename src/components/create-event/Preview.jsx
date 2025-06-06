@@ -17,8 +17,9 @@ const Preview = ({
   description,
   dressCode,
   state,
-  offline,
-  online,
+  location,
+  locationType,
+  amount,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -97,7 +98,7 @@ const Preview = ({
                   <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
                     {eventName || "..."}
                   </h1>
-                  <ModalText img="timer.svg" text="Sat, Mar 1, 16:30pm" />
+                  <ModalText img="timer.svg" text='heyyyy' />
                   <div className="w-full min-w-[100px] h-fit flex gap-2">
                     <EventCategories
                       borderBgColor="text-[#9B1C46] border-[#9B1C46]"
@@ -154,7 +155,7 @@ const Preview = ({
                       Target goal
                     </p>
                     <h6 className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi ">
-                      ₦ 1000
+                      ₦ {amount}
                     </h6>
                   </div>
                   <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
@@ -163,10 +164,10 @@ const Preview = ({
                   </div>
                   <div className="h-fit w-full flex justify-between">
                     <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      ₦ 1000
+                      ₦ {amount}
                     </h6>
                     <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      ₦ 1000
+                      ₦ {amount}
                     </h6>
                   </div>
                 </div>
@@ -230,21 +231,21 @@ const Preview = ({
                   </h6>
                 </div>
               )}
-              {offline ||
-                (online && (
-                  <div className="grid gap-2 w-full h-fit">
-                    <ModalText img="modal-location.svg" text="location" />
-                    <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                      CCHub
-                    </h6>
-                    {offline && (
-                      <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                        {offline}, {state}, Nigeria
-                      </p>
-                    )}
-                    {online && <a href={online}>{online}</a>}
-                  </div>
-                ))}
+              {location && (
+                <div className="grid gap-2 w-full h-fit">
+                  <ModalText img="modal-location.svg" text="location" />
+                  <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                    CCHub
+                  </h6>
+                  {location && (
+                    <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
+                      {location}
+                      Nigeria
+                    </p>
+                  )}
+                  {online && <a href={online}>{online}</a>}
+                </div>
+              )}
 
               {/* have to map attendees */}
               {profiles.length > 0 && (
@@ -363,7 +364,7 @@ const Preview = ({
             )}
           </div>
 
-          <div className="flex flex-col gap-4 w-full max-w-[350px] mx-auto">
+          <div className="flex flex-col gap-4 w-full mx-auto">
             <div className="w-full h-fit grid gap-2">
               <ModalText img="money-add.svg" text="chip in" />
 
@@ -373,16 +374,16 @@ const Preview = ({
                     Target goal
                   </p>
                   <h6 className="capitalize text-black font-[700] text-[24px] satoshi ">
-                    ₦ 1000
+                    ₦ {amount}
                   </h6>
                 </div>
                 <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
-                  <div className="h-2 w-[40%] rounded-[10px] bg-[#61B42D]"></div>{" "}
+                  <div className="h-2 w-[10%] rounded-[10px] bg-[#61B42D]"></div>
                   {/* Fixed */}
                 </div>
                 <div className="h-fit w-full flex justify-between">
-                  <h6 className="satoshi font-[500] text-[16px]">₦ 1000</h6>
-                  <h6 className="satoshi font-[500] text-[16px]">₦ 1000</h6>
+                  <h6 className="satoshi font-[500] text-[16px]">₦ {amount}</h6>
+                  <h6 className="satoshi font-[500] text-[16px]">₦ {amount}</h6>
                 </div>
               </div>
             </div>
@@ -446,21 +447,19 @@ const Preview = ({
                 </h6>
               </div>
             )}
-            {offline ||
-              (online && (
-                <div className="grid gap-2 w-full h-fit">
-                  <ModalText img="modal-location.svg" text="location" />
-                  <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                    CCHub
-                  </h6>
-                  {offline && (
-                    <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                      {offline}, {state}, Nigeria
-                    </p>
-                  )}
-                  {online && <a href={online}>{online}</a>}
-                </div>
-              ))}
+            {location && (
+              <div className="grid gap-2 w-full h-fit">
+                <ModalText img="modal-location.svg" text="location" />
+                <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+                  CCHub
+                </h6>
+                {offline && (
+                  <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
+                    {location}, {locationType},
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* have to map attendees */}
             {profiles.length > 0 && (
