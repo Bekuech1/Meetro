@@ -137,7 +137,6 @@ const Private = ({ onPublic }) => {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
 
-
   // Modal states
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [imageModal, setImageModal] = useState(false);
@@ -311,7 +310,12 @@ const Private = ({ onPublic }) => {
     setStartTime(TimeData.startTime);
     setEndDate(TimeData.endDate);
     setEndTime(TimeData.endDate);
-  }
+  };
+
+  const fullDateTimeRange =
+    startDate
+      ? `${startDate}, ${startTime} - ${endDate}, ${endTime}`
+      : "when is your event?";
 
   const handleLocationSave = (LocationData) => {
     setLocation(LocationData.venue);
@@ -419,7 +423,7 @@ const Private = ({ onPublic }) => {
           <Grid title="event details">
             <Input
               leftImgSrc="timer.svg"
-              text={startDate ? `${startDate}, ${startTime} - ${endDate}, ${endTime}` : "when is your event"}
+              text={fullDateTimeRange}
               onClick={openWhen}
               className={startDate || endDate ? "text-black" : "text-[#8A9191]"}
             />
@@ -525,7 +529,7 @@ const Private = ({ onPublic }) => {
       </section>
 
       {/* All Modals */}
-      <When isVisible={when} onClose={closeWhen} onSave={handleTimeSave}/>
+      <When isVisible={when} onClose={closeWhen} onSave={handleTimeSave} />
       <Where
         isVisible={where}
         onClose={closeWhere}

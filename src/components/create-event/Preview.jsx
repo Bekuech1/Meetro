@@ -98,7 +98,7 @@ const Preview = ({
                   <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
                     {eventName || "..."}
                   </h1>
-                  <ModalText img="timer.svg" text='heyyyy' />
+                  <ModalText img="timer.svg" text={location} />
                   <div className="w-full min-w-[100px] h-fit flex gap-2">
                     <EventCategories
                       borderBgColor="text-[#9B1C46] border-[#9B1C46]"
