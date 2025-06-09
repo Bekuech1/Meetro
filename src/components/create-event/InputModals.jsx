@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CreateEventBtn from "../Layout-conponents/CreateEventBtn";
 
 const InputModals = ({
@@ -12,11 +12,25 @@ const InputModals = ({
   text3,
   hidden = "",
   hidden3 = "",
+  activeTab, // Accept activeTab from parent
+  onTabChange, // Accept onTabChange callback from parent
 }) => {
   const [activeOption, setActiveOption] = useState("1"); // Track the active option
 
+  // Sync with parent's activeTab when it changes
+  useEffect(() => {
+    if (activeTab !== undefined) {
+      setActiveOption(String(activeTab + 1)); // Convert 0-based to 1-based
+    }
+  }, [activeTab]);
+
   const handleOptionClick = (id) => {
     setActiveOption(id); // Update the active option state
+    
+    // Notify parent component about tab change
+    if (onTabChange) {
+      onTabChange(parseInt(id) - 1); // Convert 1-based to 0-based
+    }
   };
 
   if (!isVisible) return null;
@@ -69,6 +83,7 @@ const InputModals = ({
               </h5>
             </div>
           </div>
+
           {/* Render content based on the active option */}
           <div className="h-full items-start">{children[activeOption - 1]}</div>
 
