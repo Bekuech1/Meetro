@@ -8,6 +8,7 @@ import DressCode from "./PopUps/DressCode";
 import ChipIn from "./PopUps/ChipIn";
 import ImageModal from "./PopUps/ImageModal";
 import Preview from "./Preview";
+import EventType from "./PopUps/EventType";
 
 // Default image sources array (should match the one in ImageModal)
 const imageSources = [
@@ -103,7 +104,7 @@ const Input = ({
 const Add = ({ title, onOptionClick }) => {
   return (
     <div
-      className="py-2 px-3 flex md:gap-2 gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer"
+      className="py-2 px-3 flex md:gap-2 gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer mr-4 mb-2 "
       onClick={onOptionClick}
     >
       <img src="add.svg" alt="" className="size-4" />
@@ -136,6 +137,7 @@ const Private = ({ onPublic }) => {
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState([]);
 
   // Modal states
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -146,16 +148,19 @@ const Private = ({ onPublic }) => {
   const [where, setWhere] = useState(false);
   const [dress, setDress] = useState(false);
   const [chipin, setChipIn] = useState(false);
+  const [eventType, setEventType] = useState(false);
 
   // Add to List states
   const [addDressCode, setAddDressCode] = useState(false);
   const [addDescription, setAddDescription] = useState(false);
   const [addChipIn, setAddChipIn] = useState(false);
+  const [addEventType, setAddEventType] = useState(false);
 
   // Dropdown visibility states
   const [showDressDropdown, setShowDressDropdown] = useState(false);
   const [showDescriptionDropdown, setShowDescriptionDropdown] = useState(false);
   const [showChipInDropdown, setShowChipInDropdown] = useState(false);
+  const [showEventTypeDropdown, setShowEventTypeDropdown] = useState(false);
 
   // Set default image on component mount
   useEffect(() => {
@@ -174,6 +179,7 @@ const Private = ({ onPublic }) => {
       setShowDressDropdown(false);
       setShowDescriptionDropdown(false);
       setShowChipInDropdown(false);
+      setShowEventTypeDropdown(false);
     };
 
     document.addEventListener("click", handleClickOutside);
@@ -206,6 +212,9 @@ const Private = ({ onPublic }) => {
 
   const openChipIn = () => setChipIn(true);
   const closeChipIn = () => setChipIn(false);
+
+  const openEventType = () => setEventType(true);
+  const closeEventType = () => setEventType(false);
 
   // Add List control functions
   const putDress = () => {
@@ -256,12 +265,23 @@ const Private = ({ onPublic }) => {
     });
   };
 
+  const putEventType = () => {
+    setAddEventType(true);
+    openEventType(); // Open modal immediately when adding
+  };
+
+  const removeEventType = () => {
+    setAddEventType(false);
+    setShowEventTypeDropdown(false);
+  };
+
   // Dropdown toggle functions
   const toggleDressDropdown = (e) => {
     e.stopPropagation();
     setShowDressDropdown(!showDressDropdown);
     setShowDescriptionDropdown(false);
     setShowChipInDropdown(false);
+    setShowEventTypeDropdown(false);
   };
 
   const toggleDescriptionDropdown = (e) => {
@@ -269,11 +289,21 @@ const Private = ({ onPublic }) => {
     setShowDescriptionDropdown(!showDescriptionDropdown);
     setShowDressDropdown(false);
     setShowChipInDropdown(false);
+    setShowEventTypeDropdown(false);
   };
 
   const toggleChipInDropdown = (e) => {
     e.stopPropagation();
     setShowChipInDropdown(!showChipInDropdown);
+    setShowDressDropdown(false);
+    setShowDescriptionDropdown(false);
+    setShowEventTypeDropdown(false);
+  };
+
+  const toggleEventTypeDropdown = (e) => {
+    e.stopPropagation();
+    setShowEventTypeDropdown(!showEventTypeDropdown);
+    setShowChipInDropdown(false);
     setShowDressDropdown(false);
     setShowDescriptionDropdown(false);
   };
@@ -312,15 +342,38 @@ const Private = ({ onPublic }) => {
     setEndTime(TimeData.endDate);
   };
 
-  const fullDateTimeRange =
-    startDate
-      ? `${startDate}, ${startTime} - ${endDate}, ${endTime}`
-      : "when is your event?";
+  const fullDateTimeRange = startDate
+    ? `${startDate}, ${startTime} - ${endDate}, ${endTime}`
+    : "when is your event?";
 
   const handleLocationSave = (LocationData) => {
     setLocation(LocationData.venue);
     setLocationType(LocationData.locationType);
     setState(LocationData.state);
+  };
+
+  const handleEventTypeSave = (selectedEventType) => {
+    if (selectedEventType) {
+      // selectedData is an array of objects with title and className
+      setSelectedTypes(selectedEventType.data);
+    }
+  };
+
+  const eventTypes = () => {
+    return selectedTypes.length > 0 ? (
+      <div className="flex flex-wrap gap-2">
+        {selectedTypes.map((event, index) => (
+          <span
+            key={index}
+            className={`px-2 py-1 rounded-full border text-[10px] ${event.className}`}
+          >
+            {event.title}
+          </span>
+        ))}
+      </div>
+    ) : (
+      <p>What type of event is this?</p>
+    );
   };
 
   // Get the location display text based on the current state
@@ -478,8 +531,21 @@ const Private = ({ onPublic }) => {
                 className={amount ? "text-black" : "text-[#8A9191]"}
               />
             )}
+            {addEventType && (
+              <Input
+                leftImgSrc="category-2.svg"
+                text={eventTypes()}
+                onClick={openEventType}
+                rightImg="more-circle.svg"
+                onClickRight={toggleEventTypeDropdown}
+                showDropdown={showEventTypeDropdown}
+                edit={openEventType}
+                remove={removeEventType}
+                className="text-[#8A9191]"
+              />
+            )}
 
-            <div className="flex w-full h-fit gap-4">
+            <div className="">
               {!addDressCode && (
                 <Add title="dress code" onOptionClick={putDress} />
               )}
@@ -487,6 +553,9 @@ const Private = ({ onPublic }) => {
                 <Add title="description" onOptionClick={putDescription} />
               )}
               {!addChipIn && <Add title="chip-in" onOptionClick={putChipIn} />}
+              {!addEventType && (
+                <Add title="event type" onOptionClick={putEventType} />
+              )}
             </div>
           </Grid>
 
@@ -555,6 +624,11 @@ const Private = ({ onPublic }) => {
         isVisible={chipin}
         onClose={closeChipIn}
         onSave={handleChipInSave}
+      />
+      <EventType
+        isVisible={eventType}
+        onClose={closeEventType}
+        onSave={handleEventTypeSave}
       />
       {isPreviewOpen && (
         <Preview
