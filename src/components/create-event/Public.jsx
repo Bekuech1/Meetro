@@ -63,7 +63,7 @@ const Public = ({ onPrivate }) => {
               </div>
               <div></div>
             </div>
-            <p className="text-[#8A9191] text-[12px] font-[500] leading-[18px] satoshi capitalize sm:w-full w-[323px] text-center lg:text-left">
+            <p className="text-[#8A9191] text-[12px] font-[500] leading-[18px] satoshi capitalize w-full text-center lg:text-left">
               Open to all! Let the world (or at least your city) know what’s
               happening!
             </p>

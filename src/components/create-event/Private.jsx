@@ -8,6 +8,7 @@ import DressCode from "./PopUps/DressCode";
 import ChipIn from "./PopUps/ChipIn";
 import ImageModal from "./PopUps/ImageModal";
 import Preview from "./Preview";
+import EventType from "./PopUps/EventType";
 
 // Default image sources array (should match the one in ImageModal)
 const imageSources = [
@@ -103,7 +104,7 @@ const Input = ({
 const Add = ({ title, onOptionClick }) => {
   return (
     <div
-      className="py-2 px-3 flex md:gap-2 gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer"
+      className="py-2 px-3 flex md:gap-2 gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer mr-4 mb-2 "
       onClick={onOptionClick}
     >
       <img src="add.svg" alt="" className="size-4" />
@@ -123,19 +124,20 @@ const Private = ({ onPublic }) => {
   const [descriptionText, setDescriptionText] = useState("");
   const [descriptionDisplay, setDescriptionDisplay] = useState("");
   const [dressCode, setDressCode] = useState("");
-  const [offlineLocation, setOfflineLocation] = useState("");
-  const [onlineLocation, setOnlineLocation] = useState("");
+  const [location, setLocation] = useState("");
+  const [locationType, setLocationType] = useState("");
   const [state, setState] = useState("");
-  const [timeType, setTimeType] = useState("");
+  const [amount, setAmount] = useState("");
+  const [chipInType, setChipInType] = useState("");
+  const [bankCode, setBankCode] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [accountName, setAccountName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [recurringDate, setRecurringDate] = useState("");
-  const [recurringTime, setRecurringTime] = useState("");
-  const [timeFrequency, setTimeFrequency] = useState("");
-  const [reoccurrance, setReoccurrance] = useState("");
-  const [timeData, setTimeData] = useState(null);
+  const [selectedTypes, setSelectedTypes] = useState([]);
 
   // Modal states
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -146,16 +148,19 @@ const Private = ({ onPublic }) => {
   const [where, setWhere] = useState(false);
   const [dress, setDress] = useState(false);
   const [chipin, setChipIn] = useState(false);
+  const [eventType, setEventType] = useState(false);
 
   // Add to List states
   const [addDressCode, setAddDressCode] = useState(false);
   const [addDescription, setAddDescription] = useState(false);
   const [addChipIn, setAddChipIn] = useState(false);
+  const [addEventType, setAddEventType] = useState(false);
 
   // Dropdown visibility states
   const [showDressDropdown, setShowDressDropdown] = useState(false);
   const [showDescriptionDropdown, setShowDescriptionDropdown] = useState(false);
   const [showChipInDropdown, setShowChipInDropdown] = useState(false);
+  const [showEventTypeDropdown, setShowEventTypeDropdown] = useState(false);
 
   // Set default image on component mount
   useEffect(() => {
@@ -174,6 +179,7 @@ const Private = ({ onPublic }) => {
       setShowDressDropdown(false);
       setShowDescriptionDropdown(false);
       setShowChipInDropdown(false);
+      setShowEventTypeDropdown(false);
     };
 
     document.addEventListener("click", handleClickOutside);
@@ -206,6 +212,9 @@ const Private = ({ onPublic }) => {
 
   const openChipIn = () => setChipIn(true);
   const closeChipIn = () => setChipIn(false);
+
+  const openEventType = () => setEventType(true);
+  const closeEventType = () => setEventType(false);
 
   // Add List control functions
   const putDress = () => {
@@ -256,12 +265,23 @@ const Private = ({ onPublic }) => {
     });
   };
 
+  const putEventType = () => {
+    setAddEventType(true);
+    openEventType(); // Open modal immediately when adding
+  };
+
+  const removeEventType = () => {
+    setAddEventType(false);
+    setShowEventTypeDropdown(false);
+  };
+
   // Dropdown toggle functions
   const toggleDressDropdown = (e) => {
     e.stopPropagation();
     setShowDressDropdown(!showDressDropdown);
     setShowDescriptionDropdown(false);
     setShowChipInDropdown(false);
+    setShowEventTypeDropdown(false);
   };
 
   const toggleDescriptionDropdown = (e) => {
@@ -269,6 +289,7 @@ const Private = ({ onPublic }) => {
     setShowDescriptionDropdown(!showDescriptionDropdown);
     setShowDressDropdown(false);
     setShowChipInDropdown(false);
+    setShowEventTypeDropdown(false);
   };
 
   const toggleChipInDropdown = (e) => {
@@ -276,22 +297,15 @@ const Private = ({ onPublic }) => {
     setShowChipInDropdown(!showChipInDropdown);
     setShowDressDropdown(false);
     setShowDescriptionDropdown(false);
+    setShowEventTypeDropdown(false);
   };
 
-  // Handle saving data from modals
-  const handleSaveModalData = (data) => {
-    console.log("Modal data saved:", data);
-
-    // Store event data
-    setEventData((prev) => ({
-      ...prev,
-      [data.type || "data"]: data.data,
-    }));
-
-    // Special handling for host to also update hostName state
-    if (data.type === "host") {
-      setHostName(data.data || data.displayText || "");
-    }
+  const toggleEventTypeDropdown = (e) => {
+    e.stopPropagation();
+    setShowEventTypeDropdown(!showEventTypeDropdown);
+    setShowChipInDropdown(false);
+    setShowDressDropdown(false);
+    setShowDescriptionDropdown(false);
   };
 
   const handleImageSave = (imageData) => {
@@ -312,124 +326,66 @@ const Private = ({ onPublic }) => {
     setDescriptionDisplay(descriptionData.displayText);
   };
 
+  const handleChipInSave = (chipInData) => {
+    setAmount(chipInData.amount);
+    setChipInType(chipInData.chipInType);
+    setBankCode(chipInData.selectedBankCode);
+    setBankName(chipInData.selectedBankName);
+    setAccountNumber(chipInData.accountNumber);
+    setAccountName(chipInData.accountName);
+  };
+
+  const handleTimeSave = (TimeData) => {
+    setStartDate(TimeData.startDate);
+    setStartTime(TimeData.startTime);
+    setEndDate(TimeData.endDate);
+    setEndTime(TimeData.endDate);
+  };
+
+  const fullDateTimeRange = startDate
+    ? `${startDate}, ${startTime} - ${endDate}, ${endTime}`
+    : "when is your event?";
+
   const handleLocationSave = (LocationData) => {
-    setOfflineLocation(LocationData.offline);
-    setOnlineLocation(LocationData.online);
+    setLocation(LocationData.venue);
+    setLocationType(LocationData.locationType);
     setState(LocationData.state);
+  };
+
+  const handleEventTypeSave = (selectedEventType) => {
+    if (selectedEventType) {
+      // selectedData is an array of objects with title and className
+      setSelectedTypes(selectedEventType.data);
+    }
+  };
+
+  const eventTypes = () => {
+    return selectedTypes.length > 0 ? (
+      <div className="flex flex-wrap gap-2">
+        {selectedTypes.map((event, index) => (
+          <span
+            key={index}
+            className={`px-2 py-1 rounded-full border text-[10px] ${event.className}`}
+          >
+            {event.title}
+          </span>
+        ))}
+      </div>
+    ) : (
+      <p>What type of event is this?</p>
+    );
   };
 
   // Get the location display text based on the current state
   const getLocationDisplayText = () => {
-    if (offlineLocation && onlineLocation) {
-      return `${offlineLocation}, ${state} + Online`;
-    } else if (offlineLocation) {
-      return `${offlineLocation}, ${state}`;
-    } else if (onlineLocation) {
-      return `Online Event - ${onlineLocation}`;
+    switch (locationType) {
+      case "online":
+        return `Online - ${location}`;
+      case "offline":
+        return `${location}, ${state}`;
+      default:
+        return "Where is your event?";
     }
-    return "Where is your event?";
-  };
-
-  const handleTimeSave = (timeData) => {
-    setTimeData(timeData);
-
-    // Also update individual states if needed
-    setTimeType(timeData.type);
-
-    if (timeData.type === "single") {
-      setStartDate(timeData.startDate);
-      setStartTime(timeData.startTime);
-      setEndDate(timeData.endDate);
-      setEndTime(timeData.endTime);
-    } else if (timeData.type === "recurring") {
-      setRecurringDate(timeData.recurringDate);
-      setRecurringTime(timeData.recurringTime);
-      setTimeFrequency(timeData.frequency);
-      setReoccurrance(timeData.recurrencePattern);
-    }
-  };
-
-  const formatDateRange = (startDate, startTime, endDate, endTime) => {
-    // Handle empty inputs
-    if (!startDate || !startTime) {
-      return "when is your event?";
-    }
-
-    // Create full datetime strings
-    const startDateTime = new Date(`${startDate} ${startTime}`);
-    const endDateTime =
-      endDate && endTime ? new Date(`${endDate} ${endTime}`) : null;
-
-    // Options for formatting
-    const dayOptions = { weekday: "long" };
-    const monthOptions = { month: "long" };
-    const timeOptions = {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    };
-
-    // Helper function to get ordinal suffix
-    const getOrdinalSuffix = (day) => {
-      if (day > 3 && day < 21) return "th";
-      switch (day % 10) {
-        case 1:
-          return "st";
-        case 2:
-          return "nd";
-        case 3:
-          return "rd";
-        default:
-          return "th";
-      }
-    };
-
-    // Helper function to format a single date
-    const formatSingleDate = (date, includeYear = true) => {
-      const dayName = date
-        .toLocaleDateString("en-US", dayOptions)
-        .toLowerCase();
-      const monthName = date
-        .toLocaleDateString("en-US", monthOptions)
-        .toLowerCase();
-      const day = date.getDate();
-      const year = date.getFullYear();
-
-      const formattedDate = `${dayName}, ${monthName} ${day}${getOrdinalSuffix(
-        day
-      )}`;
-      return includeYear ? `${formattedDate}, ${year}` : formattedDate;
-    };
-
-    // Format start time
-    const startTimeFormatted = startDateTime
-      .toLocaleTimeString("en-US", timeOptions)
-      .toLowerCase();
-
-    // If no end date/time, just show start
-    if (!endDateTime) {
-      const startDateFormatted = formatSingleDate(startDateTime);
-      return `${startDateFormatted} ${startTimeFormatted}`;
-    }
-
-    // Check if same date (ignoring time)
-    const isSameDate =
-      startDateTime.toDateString() === endDateTime.toDateString();
-
-    if (isSameDate) {
-      // Same date: "monday, march 3rd, 2023 4:30pm-7:30pm"
-      const dateStr = formatSingleDate(startDateTime);
-      return `${dateStr}          ${startTime}    -    ${endTime}`;
-    } else {
-      // Different dates: "monday, march 3rd 5:00pm - wednesday, march 5th, 2025 12:00pm"
-      const startDateStr = formatSingleDate(startDateTime, false);
-      const endDateStr = formatSingleDate(endDateTime);
-      return `${startDateStr} ${startTime} - ${endDateStr} ${endTime}`;
-    }
-  };
-
-  const getTimeDisplayText = () => {
-    return formatDateRange(startDate, startTime, endDate, endTime);
   };
 
   // Get the current image URL - fallback to default if eventImage is null
@@ -504,7 +460,7 @@ const Private = ({ onPublic }) => {
                 </h5>
               </div>
             </div>
-            <p className="text-[#8A9191] text-[12px] font-[500] leading-[18px] satoshi capitalize sm:w-full w-[323px] text-center lg:text-left">
+            <p className="text-[#8A9191] text-[12px] font-[500] leading-[18px] satoshi capitalize w-full text-center lg:text-left">
               Shh... it's exclusive! Only those with the magic link can RSVP.
             </p>
           </div>
@@ -520,7 +476,7 @@ const Private = ({ onPublic }) => {
           <Grid title="event details">
             <Input
               leftImgSrc="timer.svg"
-              text={timeType}
+              text={fullDateTimeRange}
               onClick={openWhen}
               className={startDate || endDate ? "text-black" : "text-[#8A9191]"}
             />
@@ -528,11 +484,7 @@ const Private = ({ onPublic }) => {
               leftImgSrc="location-try.svg"
               text={getLocationDisplayText()}
               onClick={openWhere}
-              className={
-                offlineLocation || onlineLocation
-                  ? "text-black"
-                  : "text-[#8A9191]"
-              }
+              className={location ? "text-black" : "text-[#8A9191]"}
             />
             <Input
               leftImgSrc="crown.svg"
@@ -569,17 +521,31 @@ const Private = ({ onPublic }) => {
             {addChipIn && (
               <Input
                 leftImgSrc="money-add.svg"
-                text="enter chip-in details"
+                text={amount ? `${chipInType} - ₦${amount}` : "chip-in"}
                 onClick={openChipIn}
                 rightImg="more-circle.svg"
                 onClickRight={toggleChipInDropdown}
                 showDropdown={showChipInDropdown}
                 edit={openChipIn}
                 remove={removeChipIn}
+                className={amount ? "text-black" : "text-[#8A9191]"}
+              />
+            )}
+            {addEventType && (
+              <Input
+                leftImgSrc="category-2.svg"
+                text={eventTypes()}
+                onClick={openEventType}
+                rightImg="more-circle.svg"
+                onClickRight={toggleEventTypeDropdown}
+                showDropdown={showEventTypeDropdown}
+                edit={openEventType}
+                remove={removeEventType}
+                className="text-[#8A9191]"
               />
             )}
 
-            <div className="flex w-full h-fit gap-4">
+            <div className="">
               {!addDressCode && (
                 <Add title="dress code" onOptionClick={putDress} />
               )}
@@ -587,6 +553,9 @@ const Private = ({ onPublic }) => {
                 <Add title="description" onOptionClick={putDescription} />
               )}
               {!addChipIn && <Add title="chip-in" onOptionClick={putChipIn} />}
+              {!addEventType && (
+                <Add title="event type" onOptionClick={putEventType} />
+              )}
             </div>
           </Grid>
 
@@ -602,13 +571,6 @@ const Private = ({ onPublic }) => {
               text="Create Event"
               textcolor="text-[#095256]"
               bgcolor="bg-[#aefc40]"
-              onClick={() =>
-                console.log("Create Event Clicked", {
-                  eventName,
-                  eventImage,
-                  eventData,
-                })
-              }
             />
           </section>
         </section>
@@ -631,13 +593,6 @@ const Private = ({ onPublic }) => {
             text="Create Event"
             textcolor="text-[#095256]"
             bgcolor="bg-[#aefc40]"
-            onClick={() =>
-              console.log("Create Event Clicked", {
-                eventName,
-                eventImage,
-                eventData,
-              })
-            }
           />
         </section>
       </section>
@@ -668,7 +623,12 @@ const Private = ({ onPublic }) => {
       <ChipIn
         isVisible={chipin}
         onClose={closeChipIn}
-        onSave={handleSaveModalData}
+        onSave={handleChipInSave}
+      />
+      <EventType
+        isVisible={eventType}
+        onClose={closeEventType}
+        onSave={handleEventTypeSave}
       />
       {isPreviewOpen && (
         <Preview
@@ -679,8 +639,9 @@ const Private = ({ onPublic }) => {
           description={descriptionText}
           dressCode={dressCode}
           state={state}
-          offline={offlineLocation}
-          online={onlineLocation}
+          location={location}
+          locationType={locationType}
+          amount={amount}
         />
       )}
     </main>

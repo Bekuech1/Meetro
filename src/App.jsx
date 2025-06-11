@@ -16,6 +16,8 @@ import CreateEventsLayout from "./layouts/CreateEventsLayout";
 import CreateEvent from "./routes/CreateEvent";
 import UserProfile from "./routes/UserProfile";
 import Settings from "./routes/Settings";
+import ProtectedRoute from "./components/(appState)/ProtectedRoute";
+import ManageEvents from "./routes/ManageEvents";
 
 function App() {
   return (
@@ -40,11 +42,22 @@ function App() {
 
           {/* Homepage Route */}
           <Route path="/home" element={<HomepageLayout />}>
-            <Route index element={<Home />} />
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           <Route path="/settings" element={<HomepageLayout />}>
             <Route index element={<Settings />} />
+          </Route>
+
+          <Route path="/manage-events" element={<HomepageLayout />}>
+            <Route index element={<ManageEvents />} />
           </Route>
 
           {/* Test Routes */}
