@@ -136,7 +136,7 @@ const NormalHome = () => {
               <SiteBtn
                 name="manage"
                 colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
-                onclick={() => navigate("/create-event")}
+                onclick={() => navigate("/manage-events")}
               />
             </section>
           </section>

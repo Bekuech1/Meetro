@@ -1,8 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SiteBtn from "../Layout-conponents/SiteBtn";
+import { useAuthStore } from "@/stores/useAuthStore";
+import dayjs from "dayjs";
+import API from "@/lib/axios"; // Adjust the import based on your API utility file path
+import { Navigate } from "react-router";
 
 const PersonalProfile = () => {
   const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
+  const idToken = useAuthStore((state) => state.idToken);
+  const setUser = useAuthStore((state) => state.setUser); // Zustand action to set user info
+  const user = useAuthStore((state) => state.user);
+  const formattedDate = dayjs(user?.createdAt).format("D MMMM, YYYY");
+
+  useEffect(() => {
+    if (idToken) {
+      API.get("/profile")
+        .then((res) => {
+          setUser(res.data); // Save user info to Zustand
+        })
+        .catch((err) => {
+          console.error("Failed to load profile:", err);
+        });
+    }
+  }, [idToken]);
 
   return (
     <div className="w-full md:w-[680px] md:h-[470px] px-4 pt-6 pb-12 md:p-0 flex flex-col gap-6 satoshi">
@@ -15,30 +35,32 @@ const PersonalProfile = () => {
             <SiteBtn
               name="Edit Profile"
               colorPadding="bg-[#fffffe] py-[6px] px-[10px]"
-              // onclick={() => navigate("/create-event")}
+              onclick={() => Navigate("/settings")}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <h2 className="text-[20px] font-bold ">Newman Ogbo</h2>
+            <h2 className="text-[20px] font-bold ">
+              {user?.firstName} {user?.lastName}
+            </h2>
 
             <div className="">
               <span className="flex items-center gap-2">
                 <img src="/mail.svg" alt="mail-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">
-                  newman@gmail.com
+                  {user?.email}
                 </p>
               </span>
               <span className="flex items-center gap-2">
                 <img src="/icons/location.svg" alt="location-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">
-                  FCT, Abuja
+                  {user?.location ? user?.location : "No location"}
                 </p>
               </span>
               <span className="flex items-center gap-2">
                 <img src="/calendar.svg" alt="calendar-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">
-                  6 Semptember, 2024
+                  {formattedDate}
                 </p>
               </span>
             </div>

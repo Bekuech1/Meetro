@@ -9,8 +9,7 @@ function Text({ path }) {
         Already have an account?
         <span
           className="text-purple-400 satoshi cursor-pointer"
-          onClick={() => navigate(path)}
-        >
+          onClick={() => navigate(path)}>
           {" "}
           Sign in here
         </span>

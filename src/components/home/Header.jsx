@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SiteBtn from "../Layout-conponents/SiteBtn";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,6 +9,7 @@ const Header = () => {
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
   const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
   const toggleNotification = () => setIsNotificationOpen((prev) => !prev);
@@ -34,25 +36,31 @@ const Header = () => {
       text: "my profile",
       image: "user.svg",
       className: "",
-      onClick: () => navigate("/home"),
+      onClick: () => navigate("/profile"),
     },
     {
       text: "settings",
       image: "support.svg",
       className: "",
-      onClick: () => navigate("/profile"),
+      onClick: () => navigate("/settings"),
     },
     {
       text: "contact us",
       image: "header-contact.svg",
       className: "border-b border-gray-300",
-      onClick: () => navigate("/settings"),
+      onClick: () => navigate("/"),
     },
     {
       text: "sign out",
       image: "logout.svg",
       className: "text-[#DB2863]",
-      onClick: () => console.log("Logout clicked"),
+      onClick: () => {
+        useAuthStore.getState().setUser(null);
+        useAuthStore.getState().setAccessToken(null);
+        useAuthStore.getState().setRefreshToken(null);
+        useAuthStore.getState().setIdToken(null);
+        navigate("/");
+      },
     },
   ];
 
@@ -60,7 +68,14 @@ const Header = () => {
     <header className="flex sm:px-8 sm:py-3 p-4 justify-between bg-[#011F0F] items-center z-20 sticky top-0 shadow-md w-full">
       {/* Logo and My Events */}
       <section className="flex items-center sm:gap-6 gap-2">
-        <img src="Logo.svg" alt="Logo" className="sm:w-[30px] sm:h-8 w-5 h-4" />
+        <button onClick={() => navigate("/home")}>
+          <img
+            src="Logo.svg"
+            alt="Logo"
+            className="sm:w-[30px] sm:h-8 w-5 h-4"
+          />
+        </button>
+
         <div className="flex gap-1 py-1 px-2 h-fit w-fit">
           <img src="ticket-star.svg" alt="My Events Icon" />
           <h6 className="satoshi text-[12px] font-[500] leading-[18px] text-white capitalize my-auto">
@@ -151,7 +166,8 @@ const Header = () => {
               isOpen ? "bg-[#496A1B]" : "bg-[#344C3F]"
             }`}>
             <div className="rounded-full sm:w-6 sm:h-6 w-[18px] h-[18px] flex items-center justify-center bg-[#077D8A] text-white uppercase satoshi text-[8px] sm:text-[10px] font-[700] leading-[18px]">
-              NO
+              {user?.firstName?.charAt(0)}
+              {user?.lastName?.charAt(0)}
             </div>
             <img
               src="arrow-down.svg"
@@ -168,11 +184,12 @@ const Header = () => {
               {/* User Info */}
               <li className="py-4 grid items-center gap-4">
                 <div className="bg-[#077D8A] text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
-                  NO
+                  {user?.firstName?.charAt(0)}
+                  {user?.lastName?.charAt(0)}
                 </div>
                 <div>
                   <h4 className="satoshi text-[12px] font-[500] leading-[18px] capitalize">
-                    Newman Ogbo
+                    {user?.firstName} {user?.lastName}
                   </h4>
                   <div className="flex gap-2 text-[12px] satoshi font-[500]">
                     <span>
@@ -212,11 +229,12 @@ const Header = () => {
                 <li className="py-4 flex justify-between gap-4 items-start">
                   <div className="grid items-center gap-4">
                     <div className="bg-[#077D8A] text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
-                      NO
+                      {user?.firstName?.charAt(0)}
+                      {user?.lastName?.charAt(0)}
                     </div>
                     <div>
                       <h4 className="satoshi text-[12px] font-[500] leading-[18px] capitalize">
-                        Newman Ogbo
+                        {user?.firstName} {user?.lastName}
                       </h4>
                       <div className="flex gap-2 text-[12px] satoshi font-[500]">
                         <span>

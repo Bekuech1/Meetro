@@ -5,8 +5,13 @@ import Form from "../../components/Onboarding/Form";
 import OnboardingButton from "../../components/Onboarding/OnboardingButton";
 import ShowOption from "@/components/Onboarding/ShowOption";
 import API from "@/lib/axios";
+import { useAuthStore } from "@/stores/useAuthStore";
+// import {jwtDecode} from "jwt-decode";
+
 
 function LoginForm() {
+  const { setAccessToken, setUser, setRefreshToken, setIdToken } = useAuthStore();
+
   const [formData, setFormData] = useState(() => {
     const data = JSON.parse(sessionStorage.getItem("login"));
     if (!data) {
@@ -102,10 +107,21 @@ function LoginForm() {
 
       try {
         const response = await API.post("/login", payload); // 🔁 Replace with real endpoint
-        const token = response.data.token;
+        const { accessToken, refreshToken, idToken } = response.data;
 
-        localStorage.setItem("token", token); // Save token
-        navigate("/home"); // Success
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setIdToken(idToken);
+
+        // const user = jwtDecode(idToken);
+        // setUser(user);
+        // console.log(user);
+
+        const userResponse = await API.get("/profile");
+        setUser(userResponse.data);
+        console.log(userResponse.data);
+
+        navigate("/home");
       } catch (err) {
         const msg = err.response?.data?.message || "Login failed";
         setErrorMessages((prev) => ({ ...prev, email: msg }));
@@ -121,7 +137,7 @@ function LoginForm() {
         handleClick1="/login"
         handleClick2={() => setShowOptions(true)}>
         <div className={`sm:w-[312px] w-[343px] mb-9`}>
-          <form method="get" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             {forms.map((form, index) => (
               <Form key={index} {...form} />
             ))}

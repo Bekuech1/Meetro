@@ -16,8 +16,7 @@ function Form({
     <div className={`w-full ${error ? "mb-4" : "mb-1"}`}>
       <label
         htmlFor={id}
-        className="satoshi font-bold align-middle text-[12px] leading-[18px]"
-      >
+        className="satoshi font-bold align-middle text-[12px] leading-[18px]">
         {label}
       </label>
       <div className="relative flex items-center mt-1 ">
@@ -49,8 +48,7 @@ function Form({
         {error && (
           <span
             className="text-red-400 text-xs absolute left-0
-           max-w-full"
-          >
+           max-w-full">
             {error}
           </span>
         )}

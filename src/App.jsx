@@ -15,6 +15,9 @@ import Payment from "./components/home/Payment";
 import CreateEventsLayout from "./layouts/CreateEventsLayout";
 import CreateEvent from "./routes/CreateEvent";
 import UserProfile from "./routes/UserProfile";
+import Settings from "./routes/Settings";
+import ProtectedRoute from "./components/(appState)/ProtectedRoute";
+import ManageEvents from "./routes/ManageEvents";
 
 function App() {
   return (
@@ -35,10 +38,26 @@ function App() {
 
           {/* Profile Routes */}
           <Route path="/profile" element={<UserProfile />} />
+          {/* <Route path="/settings" element={<Settings />} /> */}
 
           {/* Homepage Route */}
           <Route path="/home" element={<HomepageLayout />}>
-            <Route index element={<Home />} />
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+
+          <Route path="/settings" element={<HomepageLayout />}>
+            <Route index element={<Settings />} />
+          </Route>
+
+          <Route path="/manage-events" element={<HomepageLayout />}>
+            <Route index element={<ManageEvents />} />
           </Route>
 
           {/* Test Routes */}

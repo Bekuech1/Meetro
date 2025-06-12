@@ -6,8 +6,12 @@ import Form from "../../components/Onboarding/Form";
 import Text from "../../components/Onboarding/Text";
 import ShowOption from "@/components/Onboarding/ShowOption";
 import API from "@/lib/axios";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 function Signup2() {
+  const setToken = useAuthStore((state) => state.setToken);
+  const setUser = useAuthStore((state) => state.setUser);
+
   const [formData, setFormData] = useState(() => {
     const data = JSON.parse(sessionStorage.getItem("signup"));
     if (!data) {
@@ -118,18 +122,13 @@ function Signup2() {
       error.email = "Enter a valid email";
     }
 
-    if (
-      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(
-        formData.password
-      )
-    ) {
-      error.password =
-        "Password must exceed 8, include a number, capital and lowercase a special character";
-    }
     if (!formData?.password.trim()) {
       error.password = "Enter your password";
+    } else if (
+      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password)
+    ) {
+      error.password = "Password must exceed 8, include a number, capital and lowercase a special character";
     }
-
     setErrorMessages(error);
 
     if (Object.keys(error).length === 0) {
@@ -143,9 +142,17 @@ function Signup2() {
       try {
         const response = await API.post("/signup", payload);
         const token = response.data.token;
-
+        setToken(token);
         localStorage.setItem("token", token);
-        navigate("/calendar");
+
+
+        const userResponse = await API.get("/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        setUser(userResponse.data)
+        navigate("/home")
       } catch (err) {
         const msg = err.response?.data?.message || "Signup failed";
         setErrorMessages((prev) => ({ ...prev, email: msg }));
