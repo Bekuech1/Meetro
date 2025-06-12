@@ -32,13 +32,13 @@ function Form({
             className="absolute right-6 z-10 cursor-pointer"
           />
         )}
-        <div className="bg-[#FFFFFE] opacity-45 w-full rounded-lg">
+        <div className="bg-[#FFFFFE]/45 w-full rounded-lg">
           <input
             type={`${open && id === "password" ? "text" : type}`}
             name={id}
             id={id}
             placeholder={placeholder}
-            className="border-2 border-white outline-white rounded-lg pl-10 py-1.5 w-full font-medium text-[#989c9c] text-sm "
+            className="border-1 border-white outline-none rounded-lg pl-10 py-1.5 w-full font-medium placeholder:text-[#989c9c] text-black text-sm "
             value={value}
             onChange={handleChange}
           />
