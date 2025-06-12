@@ -12,13 +12,13 @@ import EventType from "./PopUps/EventType";
 
 // Default image sources array (should match the one in ImageModal)
 const imageSources = [
-  "event-ph1.png",
-  "event-ph2.jpg",
-  "event-ph3.jpg",
-  "event-ph4.jpg",
-  "event-ph5.jpg",
-  "event-ph6.jpg",
-  "event-ph7.jpg",
+  "/event-ph1.png",
+  "/event-ph2.jpg",
+  "/event-ph3.jpg",
+  "/event-ph4.jpg",
+  "/event-ph5.jpg",
+  "/event-ph6.jpg",
+  "/event-ph7.jpg",
 ];
 
 const Grid = ({ children, title, buttom }) => {
@@ -104,7 +104,7 @@ const Input = ({
 const Add = ({ title, onOptionClick }) => {
   return (
     <div
-      className="py-2 px-3 flex md:gap-2 gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer mr-4 mb-2 "
+      className="py-2 px-3 flex md:gap-2 w-fit gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer"
       onClick={onOptionClick}
     >
       <img src="/add.svg" alt="" className="size-4" />
@@ -442,13 +442,13 @@ const Private = ({ onPublic }) => {
               }}
               className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
             >
-              <div className="items-center py-1 px-[10px] rounded-3xl bg-[#BEFD66] cursor-pointer w-full text-center">
+              <div className="items-center py-2 px-[10px] rounded-3xl bg-[#BEFD66] cursor-pointer w-full text-center">
                 <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
                   private
                 </h5>
               </div>
               <div
-                className="items-center py-1 px-[10px] rounded-3xl bg-white cursor-pointer w-full text-center"
+                className="items-center py-2 px-[10px] rounded-3xl bg-white cursor-pointer w-full text-center"
                 onClick={onPublic}
               >
                 <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
@@ -490,7 +490,7 @@ const Private = ({ onPublic }) => {
             />
             {addDressCode && (
               <Input
-                leftImgSrc="dress.svg"
+                leftImgSrc="/dress.svg"
                 text={dressCode || "enter dress code"}
                 onClick={openDress}
                 rightImg="/more-circle.svg"
@@ -503,7 +503,7 @@ const Private = ({ onPublic }) => {
             )}
             {addDescription && (
               <Input
-                leftImgSrc="note-text.svg"
+                leftImgSrc="/note-text.svg"
                 text={descriptionDisplay || "event description"}
                 onClick={openDescription}
                 rightImg="/more-circle.svg"
@@ -541,7 +541,7 @@ const Private = ({ onPublic }) => {
               />
             )}
 
-            <div className="">
+            <div className="flex flex-wrap gap-2 w-full">
               {!addDressCode && (
                 <Add title="dress code" onOptionClick={putDress} />
               )}

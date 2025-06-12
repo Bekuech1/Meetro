@@ -38,7 +38,7 @@ const Account = () => {
                 Upload image
               </button>
               <button className="w-[36px] h-[36px] bg-[#FFFFFE] rounded-[60px] flex items-center justify-center">
-                <img src="trash.svg" alt="del-icon" />
+                <img src="/trash.svg" alt="del-icon" />
               </button>
             </div>
           </div>

@@ -64,7 +64,7 @@ const Eventdetails = () => {
             <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
               tech unwind
             </h1>
-            <ModalText img="timer.svg" text="Sat, Mar 1, 16:30pm" />
+            <ModalText img="/timer.svg" text="Sat, Mar 1, 16:30pm" />
             <div className="w-full min-w-[100px] h-fit flex gap-2">
               <EventCategories
                 borderBgColor="text-[#9B1C46] border-[#9B1C46]"

@@ -96,7 +96,7 @@ const Header = () => {
             <img
               src="/notification-bing.svg"
               alt="Notification"
-              className="sm:w-6 sm:h-6 w-4 h-4"
+              className="sm:w-6 sm:h-6 size-[22px]"
             />
           </button>
 
@@ -165,7 +165,7 @@ const Header = () => {
             className={`h-fit w-fit p-1 rounded-[24px] flex items-center gap-2 transition-all duration-300 ease-in-out ${
               isOpen ? "bg-[#496A1B]" : "bg-[#344C3F]"
             }`}>
-            <div className="rounded-full sm:w-6 sm:h-6 w-[18px] h-[18px] flex items-center justify-center bg-[#077D8A] text-white uppercase satoshi text-[8px] sm:text-[10px] font-[700] leading-[18px]">
+            <div className="rounded-full sm:w-6 sm:h-6 size-[22px] flex items-center justify-center bg-[#077D8A] text-white uppercase satoshi text-[8px] sm:text-[10px] font-[700] leading-[18px]">
               {user?.firstName?.charAt(0)}
               {user?.lastName?.charAt(0)}
             </div>
@@ -280,7 +280,7 @@ const Header = () => {
         {/* Create Event Button */}
         <SiteBtn
           name="Create Event"
-          colorPadding="bg-[#AEFC40] py-[6px] px-[10px]"
+          colorPadding="bg-[#AEFC40] py-[9px] px-[10px]"
           onclick={() => navigate("/create-event")}
         />
       </section>

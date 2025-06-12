@@ -48,7 +48,7 @@ const Public = ({ onPrivate }) => {
               }}
               className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
             >
-              <div className="items-center py-1 px-[10px] rounded-3xl bg-white cursor-pointer w-full text-center">
+              <div className="items-center py-2 px-[10px] rounded-3xl bg-white cursor-pointer w-full text-center">
                 <h5
                   className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize"
                   onClick={onPrivate}
@@ -56,7 +56,7 @@ const Public = ({ onPrivate }) => {
                   private
                 </h5>
               </div>
-              <div className="items-center py-1 px-[10px] rounded-3xl bg-[#BEFD66] cursor-pointer w-full text-center">
+              <div className="items-center py-2 px-[10px] rounded-3xl bg-[#BEFD66] cursor-pointer w-full text-center">
                 <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
                   public
                 </h5>

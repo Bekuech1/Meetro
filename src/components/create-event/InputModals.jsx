@@ -42,7 +42,7 @@ const InputModals = ({
           <h1 className="satoshi font-[700] sm:text-[20px] text-sm capitalize text-black w-full">
             {title}
           </h1>
-          <img src="/close-circle.svg" className="size-6 sm:hidden flex" onClick={onClose} />
+          <img src="/close-circle.svg" className="size-6 sm:hidden flex cursor-pointer" onClick={onClose} />
         </div>
         <div className="sm:rounded-b-4xl w-full sm:h-fit h-full p-6 pt-3 flex flex-col gap-4 bg-gray-100">
           <div
@@ -53,7 +53,7 @@ const InputModals = ({
             className={`flex p-[4px] rounded-[20px] bg-white w-full h-fit justify-center text-center ${hidden}`}
           >
             <div
-              className={`flex items-center py-1 px-2 w-full rounded-3xl cursor-pointer justify-center ${
+              className={`flex items-center py-2 px-2 w-full rounded-3xl cursor-pointer justify-center ${
                 activeOption === "1" ? "bg-[#BEFD66]" : "bg-white"
               }`}
               onClick={() => handleOptionClick("1")}
@@ -63,7 +63,7 @@ const InputModals = ({
               </h5>
             </div>
             <div
-              className={`flex items-center py-1 px-2 w-full rounded-3xl cursor-pointer justify-center ${
+              className={`flex items-center py-2 px-2 w-full rounded-3xl cursor-pointer justify-center ${
                 activeOption === "2" ? "bg-[#BEFD66]" : "bg-white"
               }`}
               onClick={() => handleOptionClick("2")}
@@ -73,7 +73,7 @@ const InputModals = ({
               </h5>
             </div>
             <div
-              className={`flex items-center py-1 px-2 w-full rounded-3xl cursor-pointer justify-center ${hidden3} ${
+              className={`flex items-center py-2 px-2 w-full rounded-3xl cursor-pointer justify-center ${hidden3} ${
                 activeOption === "3" ? "bg-[#BEFD66]" : "bg-white"
               }`}
               onClick={() => handleOptionClick("3")}
