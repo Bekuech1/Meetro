@@ -17,12 +17,12 @@ const Public = ({ onPrivate }) => {
           </div>
           <div className="relative">
             <img
-              src="private.png"
+              src="/private.png"
               alt="Event-img"
               className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[95vw] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer justify-center"
             />
             <div className="hidden absolute cursor-pointer top-[303px] left-[302px] rounded-full xl:flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors">
-              <img src="image.svg" className="z-10" alt="" />
+              <img src="/image.svg" className="z-10" alt="" />
             </div>
           </div>
           <div className="flex justify-center p-2 items-start bg-[#F3F0FB]">
@@ -144,7 +144,7 @@ const Input = ({ leftImgSrc, text, onClickRight }) => {
 
       {/* Right Image */}
       <img
-        src="more-circle.svg"
+        src="/more-circle.svg"
         alt="Right Icon"
         className="size-4 cursor-pointer"
         onClick={onClickRight}

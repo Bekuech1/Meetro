@@ -42,7 +42,7 @@ const InputModals = ({
           <h1 className="satoshi font-[700] sm:text-[20px] text-sm capitalize text-black w-full">
             {title}
           </h1>
-          <img src="close-circle.svg" className="size-6 sm:hidden flex" onClick={onClose} />
+          <img src="/close-circle.svg" className="size-6 sm:hidden flex" onClick={onClose} />
         </div>
         <div className="sm:rounded-b-4xl w-full sm:h-fit h-full p-6 pt-3 flex flex-col gap-4 bg-gray-100">
           <div
@@ -104,7 +104,7 @@ const InputModals = ({
           </div>
         </div>
         <img
-          src="closePopup.svg"
+          src="/closePopup.svg"
           alt="close popup"
           className="h-12 w-12 absolute sm:flex hidden -top-10 left-[99%] cursor-pointer"
           onClick={onClose}

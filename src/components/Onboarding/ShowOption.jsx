@@ -31,7 +31,7 @@ function ShowOption({ onclick1, onclick2 }) {
             mybtn?.map((btn, ind) => <OnboardingButton {...btn} key={ind} />)}
         </div>
         <img
-          src="Vector.svg"
+          src="/Vector.svg"
           alt="cancel"
           className="absolute bg-[#fffffe8b] sm:-top-7 -top-12 sm:-right-9 -right-3 block
                       size-10 p-2 rounded-3xl opacity-80 cursor-pointer"

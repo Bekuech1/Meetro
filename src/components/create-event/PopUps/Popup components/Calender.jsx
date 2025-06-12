@@ -50,8 +50,8 @@ const Calender = ({ value, onChange, label }) => {
         value={formattedDate}
         onClick={() => setIsOpen(!isOpen)}
         isOpen={isOpen}
-        leftIcon="calendar.svg" // Use a custom left icon
-        rightIcon="arrow-down-gray.svg" // Use a custom right icon
+        leftIcon="/calendar.svg" // Use a custom left icon
+        rightIcon="/arrow-down-gray.svg" // Use a custom right icon
         showLeftIcon={true} // Show or hide the left icon
         showRightIcon={true} // Show or hide the right icon
         rounded="rounded-l-[12px]" // Fully rounded corners
@@ -69,7 +69,7 @@ const Calender = ({ value, onChange, label }) => {
               className="p-2 active:scale-75 transition-transform duration-300"
             >
               <img
-                src="arrow-down-gray.svg"
+                src="/arrow-down-gray.svg"
                 className="w-5 h-4 rotate-90 hover:scale-150 transition-transform duration-200"
               />
             </button>
@@ -82,7 +82,7 @@ const Calender = ({ value, onChange, label }) => {
               className="p-2 active:scale-75 transition-transform duration-300"
             >
               <img
-                src="arrow-down-gray.svg"
+                src="/arrow-down-gray.svg"
                 className="w-5 h-4 rotate-270 hover:scale-150 transition-transform duration-200"
               />
             </button>

@@ -5,12 +5,12 @@ const EmptyHome = () => {
   const homeBtn = [
     {
       text: "all events",
-      image: "home-arrow-down.svg",
+      image: "/home-arrow-down.svg",
       onClick: () => navigate("/home"),
     },
     {
       text: "march, 2025",
-      image: "home-arrow-down.svg",
+      image: "/home-arrow-down.svg",
       onClick: () => navigate("/home"),
     },
   ];

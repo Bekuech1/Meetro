@@ -107,7 +107,7 @@ const Add = ({ title, onOptionClick }) => {
       className="py-2 px-3 flex md:gap-2 gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer mr-4 mb-2 "
       onClick={onOptionClick}
     >
-      <img src="add.svg" alt="" className="size-4" />
+      <img src="/add.svg" alt="" className="size-4" />
       <h6 className="font-bold text-black text-[12px] capitalize satoshi">
         {title}
       </h6>
@@ -219,7 +219,6 @@ const Private = ({ onPublic }) => {
   // Add List control functions
   const putDress = () => {
     setAddDressCode(true);
-    openDress(); // Open modal immediately when adding
   };
 
   const removeDress = () => {
@@ -235,7 +234,6 @@ const Private = ({ onPublic }) => {
 
   const putDescription = () => {
     setAddDescription(true);
-    openDescription(); // Open modal immediately when adding
   };
 
   const removeDescription = () => {
@@ -251,7 +249,6 @@ const Private = ({ onPublic }) => {
 
   const putChipIn = () => {
     setAddChipIn(true);
-    openChipIn(); // Open modal immediately when adding
   };
 
   const removeChipIn = () => {
@@ -267,7 +264,6 @@ const Private = ({ onPublic }) => {
 
   const putEventType = () => {
     setAddEventType(true);
-    openEventType(); // Open modal immediately when adding
   };
 
   const removeEventType = () => {
@@ -420,7 +416,7 @@ const Private = ({ onPublic }) => {
               className="hidden absolute cursor-pointer top-[303px] left-[302px] rounded-full xl:flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors"
               onClick={openImageModal}
             >
-              <img src="image.svg" className="z-10" alt="" />
+              <img src="/image.svg" className="z-10" alt="" />
             </div>
           </div>
           <div className="flex justify-center p-2 items-start bg-[#F3F0FB]">
@@ -475,19 +471,19 @@ const Private = ({ onPublic }) => {
           </div>
           <Grid title="event details">
             <Input
-              leftImgSrc="timer.svg"
+              leftImgSrc="/timer.svg"
               text={fullDateTimeRange}
               onClick={openWhen}
               className={startDate || endDate ? "text-black" : "text-[#8A9191]"}
             />
             <Input
-              leftImgSrc="location-try.svg"
+              leftImgSrc="/location-try.svg"
               text={getLocationDisplayText()}
               onClick={openWhere}
               className={location ? "text-black" : "text-[#8A9191]"}
             />
             <Input
-              leftImgSrc="crown.svg"
+              leftImgSrc="/crown.svg"
               text={hostName || "who is the host?"}
               onClick={openHost}
               className={hostName ? "text-black" : "text-[#8A9191]"}
@@ -497,7 +493,7 @@ const Private = ({ onPublic }) => {
                 leftImgSrc="dress.svg"
                 text={dressCode || "enter dress code"}
                 onClick={openDress}
-                rightImg="more-circle.svg"
+                rightImg="/more-circle.svg"
                 onClickRight={toggleDressDropdown}
                 showDropdown={showDressDropdown}
                 edit={openDress}
@@ -510,7 +506,7 @@ const Private = ({ onPublic }) => {
                 leftImgSrc="note-text.svg"
                 text={descriptionDisplay || "event description"}
                 onClick={openDescription}
-                rightImg="more-circle.svg"
+                rightImg="/more-circle.svg"
                 onClickRight={toggleDescriptionDropdown}
                 showDropdown={showDescriptionDropdown}
                 edit={openDescription}
@@ -520,10 +516,10 @@ const Private = ({ onPublic }) => {
             )}
             {addChipIn && (
               <Input
-                leftImgSrc="money-add.svg"
+                leftImgSrc="/money-add.svg"
                 text={amount ? `${chipInType} - ₦${amount}` : "chip-in"}
                 onClick={openChipIn}
-                rightImg="more-circle.svg"
+                rightImg="/more-circle.svg"
                 onClickRight={toggleChipInDropdown}
                 showDropdown={showChipInDropdown}
                 edit={openChipIn}
@@ -533,10 +529,10 @@ const Private = ({ onPublic }) => {
             )}
             {addEventType && (
               <Input
-                leftImgSrc="category-2.svg"
+                leftImgSrc="/category-2.svg"
                 text={eventTypes()}
                 onClick={openEventType}
-                rightImg="more-circle.svg"
+                rightImg="/more-circle.svg"
                 onClickRight={toggleEventTypeDropdown}
                 showDropdown={showEventTypeDropdown}
                 edit={openEventType}

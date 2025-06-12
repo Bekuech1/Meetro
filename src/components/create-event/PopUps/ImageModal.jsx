@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 
 // Sample image sources - replace with your actual image URLs
 const imageSources = [
-  "event-ph1.png",
-  "event-ph2.jpg",
-  "event-ph3.jpg",
-  "event-ph4.jpg",
-  "event-ph5.jpg",
-  "event-ph6.jpg",
-  "event-ph7.jpg",
+  "/event-ph1.png",
+  "/event-ph2.jpg",
+  "/event-ph3.jpg",
+  "/event-ph4.jpg",
+  "/event-ph5.jpg",
+  "/event-ph6.jpg",
+  "/event-ph7.jpg",
 ];
 
 const ImageModal = ({ onClose, isOpen, onSave }) => {
@@ -75,7 +75,7 @@ const ImageModal = ({ onClose, isOpen, onSave }) => {
           <div className="xl:size-[248px] md:size-[180px] size-[135px] rounded-2xl flex items-center justify-center bg-[#E6E9E7] shadow-md cursor-pointer relative">
             <label className="flex flex-col justify-center items-center gap-4 size-fit cursor-pointer">
               <div className="rounded-full flex items-center justify-center size-12 bg-white">
-                <img src="image.svg" alt="" className="size-6" />
+                <img src="/image.svg" alt="" className="size-6" />
               </div>
               <div className="md:text-sm text-[10px] font-[400] size-fit rounded-[60px] py-3 px-6 capitalize text-[#077D8A] bg-white paytone">
                 upload image
@@ -107,7 +107,7 @@ const ImageModal = ({ onClose, isOpen, onSave }) => {
 
         {/* Close Button */}
         <img
-          src="closePopup.svg"
+          src="/closePopup.svg"
           alt="close popup"
           className="h-12 w-12 absolute md:-top-10 -top-14 md:left-[99%] left-[90%] cursor-pointer"
           onClick={onClose}

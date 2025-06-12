@@ -205,7 +205,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
           </div>
         </div>
         <img
-          src="closePopup.svg"
+          src="/closePopup.svg"
           alt="close popup"
           className="h-12 w-12 absolute md:-top-10 -top-14 md:left-[99%] left-[90%] cursor-pointer"
           onClick={onClose}

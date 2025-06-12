@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 
 const profiles = [
-  { id: 1, image: "large-profile.jpg", name: "Chubby Igboanugo" },
-  { id: 2, image: "large-profile.jpg", name: "Chubby Igboanugo" },
-  { id: 3, image: "large-profile.jpg", name: "Chubby Igboanugo" },
-  { id: 4, image: "large-profile.jpg", name: "Chubby Igboanugo" },
-  { id: 5, image: "large-profile.jpg", name: "Chubby Igboanugo" },
+  { id: 1, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
+  { id: 2, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
+  { id: 3, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
+  { id: 4, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
+  { id: 5, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
 ];
 
 const Preview = ({
@@ -61,7 +61,7 @@ const Preview = ({
           {/* Close Button */}
           <div className="w-full h-fit">
             <img
-              src="arrow-left.svg"
+              src="/arrow-left.svg"
               alt="Close modal"
               className="h-12 w-12 cursor-pointer"
               onClick={closeModal}
@@ -77,15 +77,15 @@ const Preview = ({
                   className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[333px] h-[306px] object-cover"
                 />
                 <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
-                  <img src="image.svg" className="z-10" alt="Image icon" />
+                  <img src="/image.svg" className="z-10" alt="Image icon" />
                 </div>
               </div>
               <section className="grid gap-4">
                 <div className="gap-1 grid">
-                  <ModalText img="crown.svg" text="hosts" />
+                  <ModalText img="/crown.svg" text="hosts" />
                   <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70 justify-center items-center">
                     <img
-                      src="tiny-profile.png"
+                      src="/tiny-profile.png"
                       alt="Host profile"
                       className="w-6 h-6 rounded-full border border-white"
                     />
@@ -114,7 +114,7 @@ const Preview = ({
                   <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
                     {eventName || "..."}
                   </h1>
-                  <ModalText img="timer.svg" text="no" />
+                  <ModalText img="/timer.svg" text="no" />
                   <div className="w-full min-w-[100px] h-fit flex gap-2">
                     <EventCategories
                       borderBgColor="text-[#9B1C46] border-[#9B1C46]"
@@ -128,17 +128,17 @@ const Preview = ({
                 </div>
                 <div className="h-fit w-fit flex gap-4 justify-items-start">
                   <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
-                    <img src="send.svg" alt="Send" />
+                    <img src="/send.svg" alt="Send" />
                   </div>
                   <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
-                    <img src="download.svg" alt="Download" />
+                    <img src="/download.svg" alt="Download" />
                   </div>
                 </div>
               </div>
 
               {description && (
                 <div className="w-full h-fit grid gap-2">
-                  <ModalText img="note-text.svg" text="about event" />
+                  <ModalText img="/note-text.svg" text="about event" />
                   <h4
                     className={`${
                       isExpanded ? "" : "line-clamp-3"
@@ -158,7 +158,7 @@ const Preview = ({
               )}
 
               <div className="w-full h-fit grid gap-2">
-                <ModalText img="money-add.svg" text="chip in" />
+                <ModalText img="/money-add.svg" text="chip in" />
                 <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
                   <div className="h-fit w-full grid">
                     <p className="capitalize text-[#8A9191] font-[500] text-[14px] leading-[20px] satoshi">
@@ -185,13 +185,13 @@ const Preview = ({
               <section className="w-full h-fit flex gap-2">
                 <Attendance
                   text="not sure"
-                  img="timer-modal.svg"
+                  img="/timer-modal.svg"
                   textcolor="#7A60BF"
                   onclick={handleAttendanceClick}
                 />
                 <Attendance
                   text="not sure"
-                  img="tick-circle-green.svg"
+                  img="/tick-circle-green.svg"
                   textcolor="#61B42D"
                 />
               </section>
@@ -217,14 +217,14 @@ const Preview = ({
                   <ModalBtn
                     onClick={handleInviteClick}
                     bgcolor="bg-[#E6F2F3]"
-                    image="send.svg"
+                    image="/send.svg"
                     textcolor="text-black"
                     text="Invite a Friend"
                   />
                   <ModalBtn
                     onClick={handleChangeToGoingClick}
                     bgcolor="bg-[#011F0F]"
-                    image="tick-circle-green.svg"
+                    image="/tick-circle-green.svg"
                     textcolor="text-[#61B42D]"
                     text="Change to Going"
                   />
@@ -233,7 +233,7 @@ const Preview = ({
 
               {dressCode && (
                 <div className="grid gap-2 w-full h-fit">
-                  <ModalText img="dress.svg" text="dress code" />
+                  <ModalText img="/dress.svg" text="dress code" />
                   <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
                     {dressCode}
                   </h6>
@@ -242,7 +242,7 @@ const Preview = ({
 
               {location && (
                 <div className="grid gap-2 w-full h-fit">
-                  <ModalText img="modal-location.svg" text="location" />
+                  <ModalText img="/modal-location.svg" text="location" />
                   <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
                     CCHub
                   </h6>
@@ -255,7 +255,7 @@ const Preview = ({
               {profiles.length > 0 && (
                 <div className="grid gap-2 w-full h-fit">
                   <ModalText
-                    img="crown.svg"
+                    img="/crown.svg"
                     text={`${profiles.length} people are going`}
                   />
                   <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
@@ -287,13 +287,13 @@ const Preview = ({
         <div className="w-full h-[calc(100vh-64px)] absolute left-0 top-[64px] px-4 pt-4 pb-12 bg-[#E8E8E8] z-40 grid gap-4 lg:hidden overflow-y-auto scrollbar-hide">
           <div className="w-full h-fit flex justify-between items-center">
             <img
-              src="arrow-left.svg"
+              src="/arrow-left.svg"
               className="size-8 cursor-pointer"
               onClick={closeModal}
               alt="Close modal"
             />
             <div className="size-fit p-[6px] rounded-full bg-white flex justify-center items-center cursor-pointer">
-              <img src="send.svg" className="size-4" alt="Send" />
+              <img src="/send.svg" className="size-4" alt="Send" />
             </div>
           </div>
 
@@ -304,10 +304,10 @@ const Preview = ({
               </h1>
               <div className="flex gap-[6px]">
                 <ModalText
-                  img="modal-location.svg"
+                  img="/modal-location.svg"
                   text="5 Mabushi way, Abuja."
                 />
-                <ModalText img="timer.svg" text="6:30pm" />
+                <ModalText img="/timer.svg" text="6:30pm" />
               </div>
             </section>
             <img
@@ -317,10 +317,10 @@ const Preview = ({
             />
             <section className="grid gap-4">
               <div className="gap-1 grid">
-                <ModalText img="crown.svg" text="hosts" />
+                <ModalText img="/crown.svg" text="hosts" />
                 <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70">
                   <img
-                    src="tiny-profile.png"
+                    src="/tiny-profile.png"
                     alt="Host profile"
                     className="w-6 h-6 rounded-full border border-white"
                   />
@@ -343,7 +343,7 @@ const Preview = ({
 
             {description && (
               <section className="mt-4 grid gap-2 w-full h-fit">
-                <ModalText img="note-text.svg" text="about event" />
+                <ModalText img="/note-text.svg" text="about event" />
                 <h4
                   className={`${
                     isExpanded ? "" : "line-clamp-3"
@@ -365,7 +365,7 @@ const Preview = ({
 
           <div className="flex flex-col gap-4 w-full mx-auto">
             <div className="w-full h-fit grid gap-2">
-              <ModalText img="money-add.svg" text="chip in" />
+              <ModalText img="/money-add.svg" text="chip in" />
               <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
                 <div className="h-fit w-full grid">
                   <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi">
@@ -388,7 +388,7 @@ const Preview = ({
             <section className="w-full h-fit flex gap-2">
               <Attendance
                 text="not sure"
-                img="timer-modal.svg"
+                img="/timer-modal.svg"
                 textcolor="#7A60BF"
                 onclick={handleAttendanceClick}
               />
@@ -421,14 +421,14 @@ const Preview = ({
                   <ModalBtn
                     onClick={handleInviteClick}
                     bgcolor="bg-[#E6F2F3]"
-                    image="send.svg"
+                    image="/send.svg"
                     textcolor="text-black"
                     text="Invite a Friend"
                   />
                   <ModalBtn
                     onClick={handleChangeToGoingClick}
                     bgcolor="bg-[#011F0F]"
-                    image="tick-circle-green.svg"
+                    image="/tick-circle-green.svg"
                     textcolor="text-[#61B42D]"
                     text="Change to Going"
                   />
@@ -438,7 +438,7 @@ const Preview = ({
 
             {dressCode && (
               <div className="grid gap-2 w-full h-fit">
-                <ModalText img="dress.svg" text="dress code" />
+                <ModalText img="/dress.svg" text="dress code" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
                   {dressCode}
                 </h6>
@@ -447,7 +447,7 @@ const Preview = ({
 
             {location && (
               <div className="grid gap-2 w-full h-fit">
-                <ModalText img="modal-location.svg" text="location" />
+                <ModalText img="/modal-location.svg" text="location" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
                   CCHub
                 </h6>
@@ -460,7 +460,7 @@ const Preview = ({
             {profiles.length > 0 && (
               <div className="grid gap-2 w-full h-fit">
                 <ModalText
-                  img="crown.svg"
+                  img="/crown.svg"
                   text={`${profiles.length} people are going`}
                 />
                 <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">

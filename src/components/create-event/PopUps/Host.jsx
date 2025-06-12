@@ -29,7 +29,7 @@ const Host = ({ isVisible, onClose, onSave }) => {
       <div className="w-full h-fit flex gap-4">
         <div className="flex gap-1 items-center justify-center"> 
           <img 
-            src="crown.svg" 
+            src="/crown.svg" 
             alt="Crown icon" 
             className="size-4"
             onError={(e) => {

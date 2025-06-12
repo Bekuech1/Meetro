@@ -42,7 +42,7 @@ const Legal = ({ closeLegal, label }) => {
   return (
     <div className="fixed inset-0 h-screen flex flex-col  gap-[10px] items-end justify-end z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
       <img
-        src="closePopup.svg"
+        src="/closePopup.svg"
         alt="Close"
         className="size-12 cursor-pointer mr-[18px]"
         onClick={closeLegal}

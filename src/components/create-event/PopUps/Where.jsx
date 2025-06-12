@@ -101,8 +101,8 @@ const Where = ({ isVisible, onClose, onSave }) => {
             value={stateLocation} // Display the selected state
             onClick={() => setIsOpen(!isOpen)}
             isOpen={isOpen}
-            leftIcon="calendar.svg"
-            rightIcon="arrow-down-gray.svg"
+            leftIcon="/calendar.svg"
+            rightIcon="/arrow-down-gray.svg"
             showLeftIcon={true}
             showRightIcon={true}
             rounded="rounded-r-[12px]"
@@ -138,7 +138,7 @@ const Where = ({ isVisible, onClose, onSave }) => {
             onChange={handleLocationChange}
             label="Online Location"
             placeholder="virtual event link like Zoom, Google Meet, etc."
-            leftIcon="video.svg"
+            leftIcon="/video.svg"
             showRightIcon={false}
             rounded="rounded-[12px]"
           />

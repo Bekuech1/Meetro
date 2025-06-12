@@ -38,8 +38,8 @@ const TimeInput = ({ value, onTimeSelect }) => {
         value={value}
         onClick={() => setIsOpen(!isOpen)}
         isOpen={isOpen}
-        leftIcon="timer.svg" // Use a custom left icon
-        rightIcon="arrow-down-gray.svg" // Use a custom right icon
+        leftIcon="/timer.svg" // Use a custom left icon
+        rightIcon="/arrow-down-gray.svg" // Use a custom right icon
         showLeftIcon={true} // Show or hide the left icon
         showRightIcon={true} // Show or hide the right icon
         rounded="rounded-r-[12px]" // Fully rounded corners

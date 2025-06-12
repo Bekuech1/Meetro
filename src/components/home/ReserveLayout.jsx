@@ -18,7 +18,7 @@ const ReserveLayout = ({ children, toClose, color, header, subText }) => {
         {children}
         <Text path={"/signin"} />
         <img
-          src="closePopup.svg"
+          src="/closePopup.svg"
           alt="close popup"
           className="h-12 w-12 absolute md:-top-10 -top-14 md:left-full left-[90%] cursor-pointer"
           onClick={toClose}

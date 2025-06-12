@@ -27,21 +27,21 @@ const EventModal = ({ closeModal }) => {
             <section className="w-fit h-full grid gap-8 relative overflow-y-auto scrollbar-hide">
               <div className="relative">
                 <img
-                  src="events-modal.png"
+                  src="/events-modal.png"
                   alt="Event"
                   className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[333px] h-[306px]"
                 />
                 <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
-                  <img src="image.svg" className="z-10" alt="" />
+                  <img src="/image.svg" className="z-10" alt="" />
                 </div>
               </div>
               <section className="grid gap-4">
                 <div className="gap-1 grid">
                   {/* Modal Text Component */}
-                  <ModalText img="crown.svg" text="hosts" />
+                  <ModalText img="/crown.svg" text="hosts" />
                   <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70 justify-center items-center">
                     <img
-                      src="tiny-profile.png"
+                      src="/tiny-profile.png"
                       alt=""
                       className="w-6 h-6 rounded-full border border-white"
                     />
@@ -84,23 +84,24 @@ const EventModal = ({ closeModal }) => {
                 </div>
                 <div className="h-fit w-fit flex gap-4 justify-items-start">
                   <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
-                    <img src="send.svg" alt="" />
+                    <img src="/send.svg" alt="" />
                   </div>
                   <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
-                    <img src="download.svg" alt="" />
+                    <img src="/download.svg" alt="" />
                   </div>
                 </div>
               </div>
 
               <div className="w-full h-fit grid gap-2">
                 {/* ModalText Component */}
-                <ModalText img="note-text.svg" text="about event" />
+                <ModalText img="/note-text.svg" text="about event" />
 
                 {/* H4 Element */}
                 <h4
                   className={`${
                     isExpanded ? "" : "line-clamp-3"
-                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
+                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+                >
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
                   volutpat. Sed id ligula sit amet libero pulvinar egestas.
@@ -114,13 +115,14 @@ const EventModal = ({ closeModal }) => {
                 {/* Read More Button */}
                 <button
                   onClick={toggleReadMore}
-                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
+                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                >
                   {isExpanded ? "Show less" : "Read more"}
                 </button>
               </div>
 
               <div className="w-full h-fit grid gap-2">
-                <ModalText img="money-add.svg" text="chip in" />
+                <ModalText img="/money-add.svg" text="chip in" />
 
                 <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
                   <div className="h-fit w-full grid">
@@ -149,13 +151,13 @@ const EventModal = ({ closeModal }) => {
               <section className="w-full h-fit flex gap-2">
                 <Attendance
                   text="not sure"
-                  img="timer-modal.svg"
+                  img="/timer-modal.svg"
                   textcolor="#7A60BF"
                   onclick={() => console.log("Attendance clicked")} // Fixed
                 />
                 <Attendance
                   text="not sure"
-                  img="tick-circle-green.svg"
+                  img="/tick-circle-green.svg"
                   textcolor="#61B42D"
                 />
               </section>
@@ -182,14 +184,14 @@ const EventModal = ({ closeModal }) => {
                   <ModalBtn
                     onClick=""
                     bgcolor="bg-[#E6F2F3]"
-                    image="send.svg"
+                    image="/send.svg"
                     textcolor="text-black"
                     text="Invite a Friend"
                   />
                   <ModalBtn
                     onClick=""
                     bgcolor="bg-[#011F0F]"
-                    image="tick-circle-green.svg"
+                    image="/tick-circle-green.svg"
                     textcolor="text-[#61B42D]"
                     text="Change to Going"
                   />
@@ -197,13 +199,13 @@ const EventModal = ({ closeModal }) => {
               </div>
 
               <div className="grid gap-2 w-full h-fit">
-                <ModalText img="dress.svg" text="dress code" />
+                <ModalText img="/dress.svg" text="dress code" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
                   casual
                 </h6>
               </div>
               <div className="grid gap-2 w-full h-fit">
-                <ModalText img="modal-location.svg" text="location" />
+                <ModalText img="/modal-location.svg" text="location" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
                   CCHub
                 </h6>
@@ -215,11 +217,11 @@ const EventModal = ({ closeModal }) => {
 
               {/* have to map attendees */}
               <div className="grid gap-2 w-full h-fit">
-                <ModalText img="crown.svg" text="going (280)" />
+                <ModalText img="/crown.svg" text="going (280)" />
                 <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="large-profile.jpg"
+                      src="/large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -229,7 +231,7 @@ const EventModal = ({ closeModal }) => {
                   </div>
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="large-profile.jpg"
+                      src="/large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -239,7 +241,7 @@ const EventModal = ({ closeModal }) => {
                   </div>
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="large-profile.jpg"
+                      src="/large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -249,7 +251,7 @@ const EventModal = ({ closeModal }) => {
                   </div>
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="large-profile.jpg"
+                      src="/large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -259,7 +261,7 @@ const EventModal = ({ closeModal }) => {
                   </div>
                   <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                     <img
-                      src="large-profile.jpg"
+                      src="/large-profile.jpg"
                       alt=""
                       className="size-[66px] rounded-full"
                     />
@@ -274,7 +276,7 @@ const EventModal = ({ closeModal }) => {
 
           {/* Close Button */}
           <img
-            src="closePopup.svg"
+            src="/closePopup.svg"
             alt=""
             className="h-12 w-12 cursor-pointer ml-auto"
             onClick={closeModal}
@@ -287,12 +289,12 @@ const EventModal = ({ closeModal }) => {
         <div className="w-full h-[calc(100vh-64px)] absolute left-0 top-[64px] px-4 pt-4 pb-12 bg-[#E8E8E8] z-40 grid gap-4 lg:hidden overflow-y-auto scrollbar-hide">
           <div className="w-full h-fit flex justify-between items-center">
             <img
-              src="arrow-left.svg"
+              src="/arrow-left.svg"
               className="size-8 cursor-pointer"
               onClick={closeModal}
             />
             <div className="size-fit p-[6px] rounded-full bg-white flex justify-center items-center cursor-pointer">
-              <img src="send.svg" className="size-4" />
+              <img src="/send.svg" className="size-4" />
             </div>
           </div>
 
@@ -303,24 +305,24 @@ const EventModal = ({ closeModal }) => {
               </h1>
               <div className="flex gap-[6px]">
                 <ModalText
-                  img="modal-location.svg"
+                  img="/modal-location.svg"
                   text="5 Mabushi way, Abuja."
                 />
-                <ModalText img="timer.svg" text="6:30pm" />
+                <ModalText img="/timer.svg" text="6:30pm" />
               </div>
             </section>
             <img
-              src="events-modal.png"
+              src="/events-modal.png"
               alt="Event"
               className="rounded-3xl min-w-[333px] min-h-[306px] sm:size-[349px] mx-auto"
             />
             <section className="grid gap-4">
               <div className="gap-1 grid">
                 {/* Modal Text Component */}
-                <ModalText img="crown.svg" text="hosts" />
+                <ModalText img="/crown.svg" text="hosts" />
                 <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70">
                   <img
-                    src="tiny-profile.png"
+                    src="/tiny-profile.png"
                     alt=""
                     className="w-6 h-6 rounded-full border border-white"
                   />
@@ -342,13 +344,14 @@ const EventModal = ({ closeModal }) => {
             </section>
             <section className="mt-4 grid gap-2 w-full h-fit">
               {/* ModalText Component */}
-              <ModalText img="note-text.svg" text="about event" />
+              <ModalText img="/note-text.svg" text="about event" />
 
               {/* H4 Element */}
               <h4
                 className={`${
                   isExpanded ? "" : "line-clamp-3"
-                } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
+                } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+              >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
                 volutpat. Sed id ligula sit amet libero pulvinar egestas. Morbi
@@ -362,14 +365,15 @@ const EventModal = ({ closeModal }) => {
               {/* Read More Button */}
               <button
                 onClick={toggleReadMore}
-                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
+                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+              >
                 {isExpanded ? "Show less" : "Read more"}
               </button>
             </section>
           </div>
 
           <div className="w-full h-fit grid gap-2">
-            <ModalText img="money-add.svg" text="chip in" />
+            <ModalText img="/money-add.svg" text="chip in" />
 
             <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
               <div className="h-fit w-full grid">
@@ -393,13 +397,13 @@ const EventModal = ({ closeModal }) => {
           <section className="w-full h-fit flex gap-2">
             <Attendance
               text="not sure"
-              img="timer-modal.svg"
+              img="/timer-modal.svg"
               textcolor="#7A60BF"
               onclick={() => console.log("Attendance clicked")} // Fixed
             />
             <Attendance
               text="not sure"
-              img="tick-circle-green.svg"
+              img="/tick-circle-green.svg"
               textcolor="#61B42D"
             />
           </section>
@@ -427,14 +431,14 @@ const EventModal = ({ closeModal }) => {
                 <ModalBtn
                   onClick=""
                   bgcolor="bg-[#E6F2F3]"
-                  image="send.svg"
+                  image="/send.svg"
                   textcolor="text-black"
                   text="Invite a Friend"
                 />
                 <ModalBtn
                   onClick=""
                   bgcolor="bg-[#011F0F]"
-                  image="tick-circle-green.svg"
+                  image="/tick-circle-green.svg"
                   textcolor="text-[#61B42D]"
                   text="Change to Going"
                 />
@@ -443,13 +447,13 @@ const EventModal = ({ closeModal }) => {
           </div>
 
           <div className="grid gap-2 w-full h-fit">
-            <ModalText img="dress.svg" text="dress code" />
+            <ModalText img="/dress.svg" text="dress code" />
             <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
               casual
             </h6>
           </div>
           <div className="grid gap-2 w-full h-fit">
-            <ModalText img="modal-location.svg" text="location" />
+            <ModalText img="/modal-location.svg" text="location" />
             <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
               CCHub
             </h6>
@@ -460,11 +464,11 @@ const EventModal = ({ closeModal }) => {
 
           {/* have to map attendees */}
           <div className="grid gap-2 w-full h-fit">
-            <ModalText img="crown.svg" text="going (280)" />
+            <ModalText img="/crown.svg" text="going (280)" />
             <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
               <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                 <img
-                  src="large-profile.jpg"
+                  src="/large-profile.jpg"
                   alt=""
                   className="size-[66px] rounded-full"
                 />
@@ -474,7 +478,7 @@ const EventModal = ({ closeModal }) => {
               </div>
               <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                 <img
-                  src="large-profile.jpg"
+                  src="/large-profile.jpg"
                   alt=""
                   className="size-[66px] rounded-full"
                 />
@@ -484,7 +488,7 @@ const EventModal = ({ closeModal }) => {
               </div>
               <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                 <img
-                  src="large-profile.jpg"
+                  src="/large-profile.jpg"
                   alt=""
                   className="size-[66px] rounded-full"
                 />
@@ -494,7 +498,7 @@ const EventModal = ({ closeModal }) => {
               </div>
               <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                 <img
-                  src="large-profile.jpg"
+                  src="/large-profile.jpg"
                   alt=""
                   className="size-[66px] rounded-full"
                 />
@@ -504,7 +508,7 @@ const EventModal = ({ closeModal }) => {
               </div>
               <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                 <img
-                  src="large-profile.jpg"
+                  src="/large-profile.jpg"
                   alt=""
                   className="size-[66px] rounded-full"
                 />
@@ -549,10 +553,12 @@ export const ModalBtn = ({ onClick, bgcolor, image, textcolor, text }) => {
   return (
     <div
       className={`lg:w-fit w-full h-fit rounded-[60px] flex gap-2 p-[10px] justify-center items-center cursor-pointer ${bgcolor}`}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       <img src={image} className="size-[22px]" />
       <h6
-        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}>
+        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}
+      >
         {text}
       </h6>
     </div>
@@ -563,10 +569,12 @@ export const Attendance = ({ img, text, textcolor, onclick }) => {
   return (
     <div
       className="cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center"
-      onClick={onclick}>
+      onClick={onclick}
+    >
       <img src={img} alt="" className="size-8" />
       <h6
-        className={`text-[${textcolor}] font-[400] text-[12px] lg:leading-[18px] capitalize`}>
+        className={`text-[${textcolor}] font-[400] text-[12px] lg:leading-[18px] capitalize`}
+      >
         {text}
       </h6>
     </div>

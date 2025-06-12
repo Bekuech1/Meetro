@@ -5,8 +5,8 @@ const TextOnlyInput = ({
   onChange, // Callback for handling input changes
   onIconClick,
   isOpen,
-  leftIcon = "calendar.svg", // Default left icon
-  rightIcon = "arrow-down-gray.svg", // Default right icon
+  leftIcon = "/calendar.svg", // Default left icon
+  rightIcon = "/arrow-down-gray.svg", // Default right icon
   showLeftIcon = true, // Toggle left icon
   showRightIcon = true, // Toggle right icon
   rounded = "rounded-l-[12px]", // Default rounded corners

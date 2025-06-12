@@ -15,19 +15,19 @@ const NormalHome = () => {
   const homeBtn = [
     {
       text: "all events",
-      image: "home-arrow-down.svg",
+      image: "/home-arrow-down.svg",
       onClick: () => navigate("/home"),
     },
     {
       text: "march, 2025",
-      image: "home-arrow-down.svg",
+      image: "/home-arrow-down.svg",
       onClick: () => navigate("/home"),
       style: "md:flex hidden",
     },
   ];
 
   return (
-    <main className="bg-[#F0F0F0] relative min-h-[90vh] h-fit w-full grid gap-[43px] md:px-20 px-8 py-10">
+    <main className="bg-[#F0F0F0] relative min-h-[90vh] h-fit w-full grid gap-[43px] md:px-20 px-4 py-10">
       <div className="grid md:w-[680px] w-full mx-auto gap-6 h-fit z-10">
         <section className="h-fit w-full justify-between flex items-center">
           <h1 className="paytone capitalize text-[#055962] h-fit sm:text-[30px] sm:font-[400] sm:leading-[38px] text-[20px] font-[400] leading-[30px]">
@@ -58,7 +58,7 @@ const NormalHome = () => {
             className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
             onClick={openModal}>
             <img
-              src="events-img.png"
+              src="/events-img.png"
               alt=""
               className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
             />
@@ -76,7 +76,7 @@ const NormalHome = () => {
                   host
                 </h6>
                 <img
-                  src="tiny-profile.png"
+                  src="/tiny-profile.png"
                   alt=""
                   className="w-4 h-4 rounded-2xl"
                 />
@@ -87,7 +87,7 @@ const NormalHome = () => {
 
               <li className="flex gap-1 justify-center items-center">
                 <img
-                  src="tiny-profile.png"
+                  src="/tiny-profile.png"
                   alt=""
                   className="w-4 h-4 rounded-2xl"
                 />
@@ -98,7 +98,7 @@ const NormalHome = () => {
 
               <li className="flex gap-1 justify-center items-center">
                 <img
-                  src="tiny-profile.png"
+                  src="/tiny-profile.png"
                   alt=""
                   className="w-4 h-4 rounded-2xl"
                 />
@@ -112,7 +112,7 @@ const NormalHome = () => {
                   going
                 </h6>
                 <img
-                  src="tiny-profile.png"
+                  src="/tiny-profile.png"
                   alt=""
                   className="w-4 h-4 rounded-2xl"
                 />

@@ -3,10 +3,10 @@ import Button from "./Button";
 import Legal from "./Legal";
 
 const SOCIAL_LINKS = [
-  { name: 'instagram', icon: 'ig', label: 'Instagram', url: 'https://instagram.com/meetro' },
-  { name: 'twitter', icon: 'x', label: 'Twitter', url: 'https://twitter.com/meetro' },
-  { name: 'facebook', icon: 'fb', label: 'Facebook', url: 'https://facebook.com/meetro' },
-  { name: 'linkedin', icon: 'in', label: 'LinkedIn', url: 'https://linkedin.com/company/meetro' }
+  { name: 'instagram', icon: '/ig', label: 'Instagram', url: 'https://instagram.com/meetro' },
+  { name: 'twitter', icon: '/x', label: 'Twitter', url: 'https://twitter.com/meetro' },
+  { name: 'facebook', icon: '/fb', label: 'Facebook', url: 'https://facebook.com/meetro' },
+  { name: 'linkedin', icon: '/in', label: 'LinkedIn', url: 'https://linkedin.com/company/meetro' }
 ];
 
 const LEGAL_LINKS = [
@@ -80,7 +80,7 @@ const Footer = ({ onclick }) => {
         {/* Brand Section */}
         <div className="grid gap-6 h-fit w-fit mx-auto md:mx-0">
           <img 
-            src="meetroLogo.svg" 
+            src="/meetroLogo.svg" 
             alt="Meetro Logo" 
             className="mx-auto md:mx-0"
             width="120"
@@ -163,7 +163,7 @@ const Footer = ({ onclick }) => {
       </div>
       
       <img 
-        src="meetroFooter.svg" 
+        src="/meetroFooter.svg" 
         alt="Meetro footer decoration" 
         className="w-full"
         loading="lazy"

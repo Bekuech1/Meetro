@@ -21,12 +21,12 @@ const Eventdetails = () => {
       <section className="w-full lg:w-[349px] h-full grid gap-8 relative overflow-y-auto scrollbar-hide">
         <div className="relative">
           <img
-            src="events-modal.png"
+            src="/events-modal.png"
             alt="Event"
             className="rounded-3xl w-full lg:w-[393px] h-[318px] lg:h-[349px]"
           />
           <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
-            <img src="image.svg" className="z-10" alt="" />
+            <img src="/image.svg" className="z-10" alt="" />
           </div>
         </div>
         <section className="grid gap-4">
@@ -35,7 +35,7 @@ const Eventdetails = () => {
             <ModalText img="crown.svg" text="hosts" />
             <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70 justify-center items-center">
               <img
-                src="tiny-profile.png"
+                src="/tiny-profile.png"
                 alt=""
                 className="w-6 h-6 rounded-full border border-white"
               />
@@ -76,7 +76,7 @@ const Eventdetails = () => {
               />
             </div>
           </div>
-          <div className="hidden md:block md:flex flex-row gap-2">
+          <div className="hidden md:flex flex-row gap-2">
             <ShareEvent />
             <DownloadEvent />
           </div>
@@ -84,7 +84,7 @@ const Eventdetails = () => {
 
         <div className="w-full h-fit grid gap-2">
           {/* ModalText Component */}
-          <ModalText img="note-text.svg" text="about event" />
+          <ModalText img="/note-text.svg" text="about event" />
 
           {/* H4 Element */}
           <h4
@@ -170,14 +170,14 @@ const Eventdetails = () => {
             <ModalBtn
               onClick=""
               bgcolor="bg-[#E6F2F3]"
-              image="send.svg"
+              image="/send.svg"
               textcolor="text-black"
               text="Invite a Friend"
             />
             <ModalBtn
               onClick=""
               bgcolor="bg-[#011F0F]"
-              image="tick-circle-green.svg"
+              image="/tick-circle-green.svg"
               textcolor="text-[#61B42D]"
               text="Change to Going"
             />
@@ -185,13 +185,13 @@ const Eventdetails = () => {
         </div>
 
         <div className="grid gap-2 w-full h-fit">
-          <ModalText img="dress.svg" text="dress code" />
+          <ModalText img="/dress.svg" text="dress code" />
           <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
             casual
           </h6>
         </div>
         <div className="grid gap-2 w-full h-fit">
-          <ModalText img="modal-location.svg" text="location" />
+          <ModalText img="/modal-location.svg" text="location" />
           <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
             CCHub
           </h6>
@@ -202,7 +202,7 @@ const Eventdetails = () => {
 
         {/* have to map attendees */}
         <div className="grid gap-2 w-full h-fit">
-          <ModalText img="crown.svg" text="going (280)" />
+          <ModalText img="/crown.svg" text="going (280)" />
           <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
@@ -216,7 +216,7 @@ const Eventdetails = () => {
             </div>
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="large-profile.jpg"
+                src="/large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />
@@ -226,7 +226,7 @@ const Eventdetails = () => {
             </div>
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="large-profile.jpg"
+                src="/large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />
@@ -236,7 +236,7 @@ const Eventdetails = () => {
             </div>
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="large-profile.jpg"
+                src="/large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />
@@ -246,7 +246,7 @@ const Eventdetails = () => {
             </div>
             <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
               <img
-                src="large-profile.jpg"
+                src="/large-profile.jpg"
                 alt=""
                 className="size-[66px] rounded-full"
               />

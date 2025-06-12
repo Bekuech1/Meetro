@@ -70,7 +70,7 @@ const Header = () => {
       <section className="flex items-center sm:gap-6 gap-2">
         <button onClick={() => navigate("/home")}>
           <img
-            src="Logo.svg"
+            src="/Logo.svg"
             alt="Logo"
             className="sm:w-[30px] sm:h-8 w-5 h-4"
           />
@@ -94,7 +94,7 @@ const Header = () => {
               isNotificationOpen ? "bg-[#496A1B]" : ""
             }`}>
             <img
-              src="notification-bing.svg"
+              src="/notification-bing.svg"
               alt="Notification"
               className="sm:w-6 sm:h-6 w-4 h-4"
             />

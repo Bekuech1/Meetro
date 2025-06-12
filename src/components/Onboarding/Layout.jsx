@@ -8,13 +8,13 @@ function Layout({ text, children, handleClick1, handleClick2, width }) {
       <div className="relative h-screen flex justify-center items-center flex-col mx-4">
         <div className="flex justify-between sm:w-[450px] w-full px-5 sm:px-0 mb-10">
           <img
-            src="arrow-left.svg"
+            src="/arrow-left.svg"
             alt="left arrow"
             onClick={() => navigate(handleClick1)}
             className="cursor-pointer"
           />
           <img
-            src="close-circle.svg"
+            src="/close-circle.svg"
             alt="cancel"
             onClick={handleClick2}
             className="cursor-pointer"

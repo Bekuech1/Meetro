@@ -50,7 +50,7 @@ const ShareEvent = () => {
                       <p className="font-bold text-[12px] text-[#011F0F]">
                         Copy Link
                       </p>{" "}
-                      <img src="link.svg" alt="" className="w-4 h-4" />
+                      <img src="/link.svg" alt="" className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -59,7 +59,7 @@ const ShareEvent = () => {
 
             {/* Close Button */}
             <img
-              src="closePopup.svg"
+              src="/closePopup.svg"
               alt=""
               className="h-12 hidden md:block w-12 relative top-36 right-2 cursor-pointer"
               onClick={() => setIsOpen(false)}

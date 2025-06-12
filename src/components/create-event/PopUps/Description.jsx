@@ -76,7 +76,7 @@ const Description = ({ isVisible, onClose, onSave }) => {
       hidden="hidden"
     >
       <div className="w-full h-fit grid gap-4">
-        <div className="w-full h-fit flex gap-4 satoshi">
+        {/* <div className="w-full h-fit flex gap-4 satoshi">
           <div
             className="size-fit p-1 rounded-4xl bg-white cursor-pointer"
             onClick={() => wrapSelectedText("**")}
@@ -101,7 +101,7 @@ const Description = ({ isVisible, onClose, onSave }) => {
           >
             <img src="link.svg" alt="" />
           </div>
-        </div>
+        </div> */}
         <textarea
           ref={textareaRef}
           value={descriptionText}
