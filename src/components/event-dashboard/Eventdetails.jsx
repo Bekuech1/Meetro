@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ShareEvent from "./shareEvent";
+import ShareEvent from "./ShareEvent";
 import DownloadEvent from "./DownloadEvent";
 import {
   Attendance,
