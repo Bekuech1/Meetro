@@ -23,25 +23,25 @@ const Header = () => {
   const dropdownItems = [
     {
       text: "my profile",
-      image: "user.svg",
+      image: "/user.svg",
       className: "",
       onClick: () => navigate("/home"),
     },
     {
       text: "settings",
-      image: "support.svg",
+      image: "/support.svg",
       className: "",
       onClick: () => navigate("/profile"),
     },
     {
       text: "contact us",
-      image: "header-contact.svg",
+      image: "/header-contact.svg",
       className: "border-b border-gray-300",
       onClick: () => navigate("/settings"),
     },
     {
       text: "sign out",
-      image: "logout.svg",
+      image: "/logout.svg",
       className: "text-[#DB2863]",
       onClick: () => console.log("Logout clicked"),
     },
@@ -53,7 +53,7 @@ const Header = () => {
       <section className="flex items-center sm:gap-6 gap-2">
         <img src="Logo.svg" alt="Logo" className="sm:w-[30px] sm:h-8 w-5 h-4" />
         <div className="flex gap-1 py-1 px-2 h-fit w-fit">
-          <img src="ticket-star.svg" alt="My Events Icon" />
+          <img src="/ticket-star.svg" alt="My Events Icon" />
           <h6 className="satoshi text-[12px] font-[500] leading-[18px] text-white capitalize my-auto">
             My Events
           </h6>
@@ -79,7 +79,7 @@ const Header = () => {
               NO
             </div>
             <img
-              src="arrow-down.svg"
+              src="/arrow-down.svg"
               alt="Arrow Down"
               className={`w-3 h-3 transition-all duration-300 ease-in-out ${isOpen ? "rotate-180" : ""}`}
             />
@@ -148,7 +148,7 @@ const Header = () => {
                     </div>
                   </div>
                   <img
-                    src="close-circle.svg"
+                    src="/close-circle.svg"
                     alt="Close Dropdown"
                     className="cursor-pointer"
                     onClick={toggleDropdown}

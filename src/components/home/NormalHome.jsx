@@ -27,7 +27,7 @@ const NormalHome = () => {
   ];
 
   return (
-    <main className="bg-[#F0F0F0] relative min-h-[90vh] h-fit w-full grid gap-[43px] px-20 py-10">
+    <main className="bg-[#F0F0F0] relative min-h-[90vh] h-fit w-full grid gap-[43px] md:px-20 px-8 py-10">
       <div className="grid md:w-[680px] w-full mx-auto gap-6 h-fit z-10">
         <section className="h-fit w-full justify-between flex items-center">
           <h1 className="paytone capitalize text-[#055962] h-fit sm:text-[30px] sm:font-[400] sm:leading-[38px] text-[20px] font-[400] leading-[30px]">
@@ -45,7 +45,7 @@ const NormalHome = () => {
             ))}
           </div>
         </section>
-        <section className="grid gap-4 h-fit w-full">
+        <section className="grid gap-4 h-fit w-full ">
           <div className="w-full h-fit grid">
             <h5 className="satoshi capitalize text-black h-fit text-[16px] font-[900] leading-[24px]">
               mar 1
@@ -110,7 +110,6 @@ const NormalHome = () => {
                 <SiteBtn
                   name="manage"
                   colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full sm:hidden "
-                  onclick={() => navigate("/")}
                 />
               </li>
             </ul>
