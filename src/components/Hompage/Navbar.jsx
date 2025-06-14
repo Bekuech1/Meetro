@@ -1,8 +1,6 @@
-import Button from "../Layout-conponents/Button";
-import { useNavigate } from "react-router";
+import Button from "../Layout-conponents/Button"; 
 
-const Navbar = ({ visibility, absolute, typeS, onclick }) => {
-  const navigate = useNavigate();
+const Navbar = ({ visibility, absolute, typeS, onclick, onAuth }) => {
 
   return (
     <div className={`h-fit z-20 ${visibility} ${absolute}`}>
@@ -10,20 +8,14 @@ const Navbar = ({ visibility, absolute, typeS, onclick }) => {
         className={`flex justify-between items-center rounded-4xl px-4 py-3 backdrop-blur-[24px] w-[95vw] mx-auto ${typeS}`}
       >
         <div className="inline-flex gap-1">
-          <img src="meetroLogo.svg" alt="" />
+          <img src="/meetroLogo.svg" alt="" />
         </div>
         <div className="hidden md:inline-flex gap-4">
-          <a
-            href="https://chat.whatsapp.com/FLUaeqHc6oAIXNJeHilDhQ"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button name="Join Community" color="bg-white" />
-          </a>
+          <Button name="Join Community" color="bg-white" onclick={onAuth}/>
           <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick} />
         </div>
         <div className="md:hidden block gap-4 text-xs">
-          <img src="mobileMenu.svg" alt="" className="" />
+          <img src="/mobileMenu.svg" alt="" className="" />
         </div>
       </div>
     </div>

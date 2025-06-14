@@ -1,24 +1,23 @@
-import { useNavigate } from 'react-router'
-import React from 'react'
+import { useNavigate } from "react-router";
+import React from "react";
 
-
-function Layout({text, children, handleClick1, handleClick2, width}) {
-  const navigate = useNavigate()
+function Layout({ text, children, handleClick1, handleClick2, width }) {
+  const navigate = useNavigate();
   return (
     <div className='relative bg-[url("/joinToday.png")] bg-no-repeat h-screen w-full bg-cover'>
-      <div className='relative h-screen flex justify-center items-center flex-col mx-4'>
-        <div className='flex justify-between sm:w-[450px] w-full px-5 sm:px-0 mb-10'>
+      <div className="relative h-screen flex justify-center items-center flex-col mx-4">
+        <div className="flex justify-between sm:w-[450px] w-full px-5 sm:px-0 mb-10">
           <img
-            src="arrow-left.svg"
+            src="/arrow-left.svg"
             alt="left arrow"
             onClick={() => navigate(handleClick1)}
-            className='cursor-pointer'
+            className="cursor-pointer"
           />
           <img
-            src="close-circle.svg"
+            src="/close-circle.svg"
             alt="cancel"
             onClick={handleClick2}
-            className='cursor-pointer'
+            className="cursor-pointer"
           />
         </div>
         <h2
@@ -29,7 +28,7 @@ function Layout({text, children, handleClick1, handleClick2, width}) {
         <div>{children}</div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Layout
+export default Layout;

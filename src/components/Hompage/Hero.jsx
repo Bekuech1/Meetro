@@ -10,7 +10,7 @@ const Hero = ({ onclick }) => {
       id="heroSection"
       className="h-screen w-full relative min-h-[700px]"
       style={{
-        backgroundImage: !videoLoaded ? "url('meetroHero.png')" : "none",
+        backgroundImage: !videoLoaded ? "url('/meetroHero.png')" : "none",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -20,7 +20,7 @@ const Hero = ({ onclick }) => {
         className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500 ${
           videoLoaded ? "opacity-100" : "opacity-0"
         }`}
-        src="meetrovid.mp4"
+        src="/meetrovid.mp4"
         autoPlay
         muted
         loop
