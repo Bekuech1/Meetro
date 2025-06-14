@@ -18,6 +18,7 @@ import UserProfile from "./routes/UserProfile";
 import Settings from "./routes/Settings";
 import ProtectedRoute from "./components/(appState)/ProtectedRoute";
 import ManageEvents from "./routes/ManageEvents";
+import GoogleAuthCallback from "./components/Onboarding/GoogleAuthCallback";
 
 function App() {
   return (
@@ -35,6 +36,10 @@ function App() {
           <Route path="/location" element={<Location />} />
           <Route path="/calender" element={<Calender />} />
           <Route path="/interest" element={<Interest />} />
+          <Route
+            path="/google-auth-callback"
+            element={<GoogleAuthCallback />}
+          />
 
           {/* Profile Routes */}
           <Route path="/profile" element={<UserProfile />} />

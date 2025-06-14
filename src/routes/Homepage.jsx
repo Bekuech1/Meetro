@@ -75,9 +75,9 @@ function Homepage() {
 
   const handleSubmit = async () => {
     if (
-      !firstName.trim() || 
-      !lastName.trim() || 
-      !email.trim() || 
+      !firstName.trim() ||
+      !lastName.trim() ||
+      !email.trim() ||
       !validateEmail(email)
     ) {
       setErrorText("Please fill in all fields with valid information.");
@@ -99,7 +99,6 @@ function Homepage() {
           body: formData,
         }
       );
-      
 
       setIsSuccess(true);
       setFirstName("");
@@ -133,7 +132,7 @@ function Homepage() {
       <Seamless onclick={openPopup} />
       <FutureFeatures onclick={openPopup} />
       <JoinToday onclick={openPopup} />
-      <Footer onclick={openPopup}/>
+      <Footer onclick={openPopup} />
 
       {/* Popup */}
       <Popup

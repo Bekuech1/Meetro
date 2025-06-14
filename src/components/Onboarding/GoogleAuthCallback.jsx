@@ -14,7 +14,7 @@ const GoogleAuthCallback = () => {
     if (code) {
       // Send the auth code to your backend for token exchange
       axios
-        .post("https://your-api.com/auth/google/callback", { code })
+        .post("https://your-api.com/authentication/google/callback", { code })
         .then((res) => {
           // Assuming your backend returns an idToken and user info
           const { idToken, user } = res.data;
