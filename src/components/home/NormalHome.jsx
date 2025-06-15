@@ -75,11 +75,11 @@ const NormalHome = () => {
             </p>
           </div>
 
-          {
-            //events.length > 0 ? (
-            events.map((event, index) => (
+          {/* {
+            events.length > 0 ? (
+            events.map((event, index) => ( */}
               <section
-                key={index}
+                // key={index}
                 className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
                 onClick={openModal}>
                 <img
@@ -164,10 +164,10 @@ const NormalHome = () => {
                   />
                 </section>
               </section>
-            ))
-            // ) : (
-            //   <EmptyHome />)
-          }
+            {/* ))
+             ) : (
+              <EmptyHome />)
+          } */}
         </section>
       </div>
       {isModalOpen && <EventModal closeModal={closeModal} />}

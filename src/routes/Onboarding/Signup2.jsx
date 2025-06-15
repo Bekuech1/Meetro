@@ -142,6 +142,7 @@ function Signup2() {
       try {
         const response = await API.post("/signup", payload);
         const token = response.data.token;
+        console.log("Signup response:", response.data);
         setToken(token);
         localStorage.setItem("token", token);
 
@@ -152,6 +153,7 @@ function Signup2() {
           }
         })
         setUser(userResponse.data)
+        
         navigate("/home")
       } catch (err) {
         const msg = err.response?.data?.message || "Signup failed";
