@@ -1,7 +1,9 @@
 import React from "react";
 import EventsBtn from "./EventsBtn";
+import { useNavigate } from "react-router";
 
 const EmptyHome = () => {
+  const navigate = useNavigate();
   const homeBtn = [
     {
       text: "all events",
@@ -29,7 +31,7 @@ const EmptyHome = () => {
       </div>
       <div className="h-full w-full flex justify-center items-center text-center">
         <h1 className="paytone text-[#4A3A74] h-fit sm:text-[36px] sm:font-[400] sm:leading-[100%] text-[24px] font-[400] leading-[32px]">
-          Looks like there’s nothing happening
+          Looks like there's nothing happening
           <br /> right now. Why not be the first to
           <br /> create an event?
         </h1>
@@ -44,7 +46,6 @@ const EmptyHome = () => {
         {/* <!-- Right Ellipse --> */}
         <div class="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
       </div>
-       
     </main>
   );
 };

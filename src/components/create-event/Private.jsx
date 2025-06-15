@@ -9,6 +9,7 @@ import ChipIn from "./PopUps/ChipIn";
 import ImageModal from "./PopUps/ImageModal";
 import Preview from "./Preview";
 import EventType from "./PopUps/EventType";
+import API from "@/lib/axios";
 
 // Default image sources array (should match the one in ImageModal)
 const imageSources = [
@@ -47,8 +48,7 @@ const Input = ({
   return (
     <div
       className="flex justify-between p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full cursor-pointer relative"
-      onClick={onClick}
-    >
+      onClick={onClick}>
       {/* Left Image */}
       <div className="bg-white p-1 rounded-4xl size-fit">
         <img src={leftImgSrc} alt="" className="w-5 h-4" />
@@ -56,8 +56,7 @@ const Input = ({
 
       {/* Middle Text */}
       <div
-        className={`text-left w-full ${className} font-medium text-[14px] capitalize satoshi`}
-      >
+        className={`text-left w-full ${className} font-medium text-[14px] capitalize satoshi`}>
         {text}
       </div>
 
@@ -80,8 +79,7 @@ const Input = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   edit && edit();
-                }}
-              >
+                }}>
                 Edit
               </p>
               <p
@@ -89,8 +87,7 @@ const Input = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   remove && remove();
-                }}
-              >
+                }}>
                 Remove
               </p>
             </div>
@@ -105,8 +102,7 @@ const Add = ({ title, onOptionClick }) => {
   return (
     <div
       className="py-2 px-3 flex md:gap-2 w-fit gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer"
-      onClick={onOptionClick}
-    >
+      onClick={onOptionClick}>
       <img src="/add.svg" alt="" className="size-4" />
       <h6 className="font-bold text-black text-[12px] capitalize satoshi">
         {title}
@@ -361,8 +357,7 @@ const Private = ({ onPublic }) => {
         {selectedTypes.map((event, index) => (
           <span
             key={index}
-            className={`px-2 py-1 rounded-full border text-[10px] ${event.className}`}
-          >
+            className={`px-2 py-1 rounded-full border text-[10px] ${event.className}`}>
             {event.title}
           </span>
         ))}
@@ -392,6 +387,57 @@ const Private = ({ onPublic }) => {
     return imageSources[0]; // fallback to first image
   };
 
+  const handleCreateEvent = async () => {
+    const payload = {
+      title: eventName,
+      description: descriptionText,
+      date: fullDateTimeRange,
+      timeFrom: startTime,
+      timeTo: endTime,
+      location: {
+        venue: location,
+        // city,
+        state: state,
+        // country,
+      },
+      isPrivate: true,
+      // Category,
+      dressCode: dressCode,
+      tempImageKey: eventImage?.imageUrl,
+      chipInAmount: amount,
+      chipInType: chipInType,
+      chipInSettings: {
+        fixedAmount: amount,
+      },
+      bankDetails: {
+        bankName: bankName,
+        accountNumber: accountNumber,
+        accountName: accountName,
+        bankCode: bankCode,
+      },
+      // image: eventImage?.imageUrl,
+      // host: hostName,
+      eventTypes: selectedTypes.map((type) => type.title),
+    };
+
+    // if (!eventName || !startDate || !location) {
+    //   alert("Please fill all required fields.");
+    //   return;
+    // }
+
+    try {
+      const res = await API.post("/events", payload);
+      console.log("Event created:", res.data);
+      alert("Event created successfully!");
+    } catch (error) {
+      console.error(
+        "Error creating event:",
+        error.response?.data || error.message
+      );
+      alert("Failed to create event.");
+    }
+  };
+
   return (
     <main className="bg-[#F0F0F0] min-h-[90vh] h-fit w-full grid gap-[43px] lg:pb-10 pt-10">
       <div className="lg:flex-row flex lg:gap-12 gap-8 flex-col sm:w-fit w-[95%] mx-auto">
@@ -414,8 +460,7 @@ const Private = ({ onPublic }) => {
             />
             <div
               className="hidden absolute cursor-pointer top-[303px] left-[302px] rounded-full xl:flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors"
-              onClick={openImageModal}
-            >
+              onClick={openImageModal}>
               <img src="/image.svg" className="z-10" alt="" />
             </div>
           </div>
@@ -440,8 +485,7 @@ const Private = ({ onPublic }) => {
                 boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
                 backdropFilter: "blur(16px)",
               }}
-              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
-            >
+              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full">
               <div className="items-center py-2 px-[10px] rounded-3xl bg-[#BEFD66] cursor-pointer w-full text-center">
                 <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
                   private
@@ -449,8 +493,7 @@ const Private = ({ onPublic }) => {
               </div>
               <div
                 className="items-center py-2 px-[10px] rounded-3xl bg-white cursor-pointer w-full text-center"
-                onClick={onPublic}
-              >
+                onClick={onPublic}>
                 <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
                   public
                 </h5>
@@ -567,6 +610,7 @@ const Private = ({ onPublic }) => {
               text="Create Event"
               textcolor="text-[#095256]"
               bgcolor="bg-[#aefc40]"
+              onClick={handleCreateEvent}
             />
           </section>
         </section>
