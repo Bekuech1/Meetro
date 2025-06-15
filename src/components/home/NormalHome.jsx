@@ -64,7 +64,6 @@ const NormalHome = () => {
             ))}
           </div>
         </section>
-
         <section className="grid gap-4 h-fit w-full ">
           <div className="w-full h-fit grid">
             <h5 className="satoshi capitalize text-black h-fit text-[16px] font-[900] leading-[24px]">
