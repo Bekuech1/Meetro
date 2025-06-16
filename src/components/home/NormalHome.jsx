@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EventsBtn from "./EventsBtn";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import EventModal from "./EventModal";
+import API from "@/lib/axios";
+// import EmptyHome from "./EmptyHome";
 
 const NormalHome = () => {
   const navigate = useNavigate();
@@ -25,6 +27,23 @@ const NormalHome = () => {
       style: "md:flex hidden",
     },
   ];
+
+  const [events, setEvents] = useState([]);
+  const fetchEvents = async () => {
+    try {
+      const response = await API.get("/my-events");
+      if (response.status === 200) {
+        setEvents(response.data);
+      }
+      console.log("Fetched events:", response.data);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   return (
     <main className="bg-[#F0F0F0] relative min-h-[90vh] h-fit w-full grid gap-[43px] md:px-20 px-4 py-10">
@@ -54,91 +73,100 @@ const NormalHome = () => {
               saturday
             </p>
           </div>
-          <section
-            className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
-            onClick={openModal}>
-            <img
-              src="/events-img.png"
-              alt=""
-              className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
-            />
 
-            <ul className="w-full h-fit grid sm:gap-1 gap-2">
-              <li className="items-center flex justify-between satoshi text-black h-fit w-full sm:text-[16px] sm:font-[500] sm:leading-[100%] text-[14px] font-[700] leading-[20px]">
-                <h4 className="w-full capitalize">tech unwind</h4>
-                <h6 className="satoshi text-[#8A9191] h-fit sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px] w-[40px] text-end sm:hidden grid">
-                  12 h
-                </h6>
-              </li>
-
-              <li className="flex gap-1 justify-center items-center">
-                <h6 className="satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[10px]">
-                  host
-                </h6>
+          {/* {
+            events.length > 0 ? (
+            events.map((event, index) => ( */}
+              <section
+                // key={index}
+                className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
+                onClick={openModal}>
                 <img
-                  src="/tiny-profile.png"
+                  src={event.tempImageKey || "/events-img.png"}
                   alt=""
-                  className="w-4 h-4 rounded-2xl"
+                  className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
                 />
-                <h6 className="satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]">
-                  chubby igboanugo
-                </h6>
-              </li>
 
-              <li className="flex gap-1 justify-center items-center">
-                <img
-                  src="/tiny-profile.png"
-                  alt=""
-                  className="w-4 h-4 rounded-2xl"
-                />
-                <h6 className="satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]">
-                  5 mabushi way, abuja
-                </h6>
-              </li>
+                <ul className="w-full h-fit grid sm:gap-1 gap-2">
+                  <li className="items-center flex justify-between satoshi text-black h-fit w-full sm:text-[16px] sm:font-[500] sm:leading-[100%] text-[14px] font-[700] leading-[20px]">
+                    <h4 className="w-full capitalize">tech unwind</h4>
+                    <h6 className="satoshi text-[#8A9191] h-fit sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px] w-[40px] text-end sm:hidden grid">
+                      12 h
+                    </h6>
+                  </li>
 
-              <li className="flex gap-1 justify-center items-center">
-                <img
-                  src="/tiny-profile.png"
-                  alt=""
-                  className="w-4 h-4 rounded-2xl"
-                />
-                <h6 className="satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]">
-                  16:40 <span>pm</span>
-                </h6>
-              </li>
+                  <li className="flex gap-1 justify-center items-center">
+                    <h6 className="satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[10px]">
+                      host
+                    </h6>
+                    <img
+                      src="/tiny-profile.png"
+                      alt=""
+                      className="w-4 h-4 rounded-2xl"
+                    />
+                    <h6 className="satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]">
+                      chubby igboanugo
+                    </h6>
+                  </li>
 
-              <li className="flex gap-1 justify-center items-center">
-                <h6 className="satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[14px]">
-                  going
-                </h6>
-                <img
-                  src="/tiny-profile.png"
-                  alt=""
-                  className="w-4 h-4 rounded-2xl"
-                />
-                <h6 className="satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]">
-                  newman, victory,<span>+200 others</span>
-                </h6>
-              </li>
+                  <li className="flex gap-1 justify-center items-center">
+                    <img
+                      src="/tiny-profile.png"
+                      alt=""
+                      className="w-4 h-4 rounded-2xl"
+                    />
+                    <h6 className="satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]">
+                      5 mabushi way, abuja
+                    </h6>
+                  </li>
 
-              <li>
-                <SiteBtn
-                  name="manage"
-                  colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full sm:hidden "
-                />
-              </li>
-            </ul>
-            <section className="w-fit max-h-full h-[100px] justify-between sm:flex flex-col text-end hidden">
-              <h6 className="satoshi text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[20px] font-[400] leading-[30px]">
-                12 hours ago
-              </h6>
-              <SiteBtn
-                name="manage"
-                colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
-                onclick={() => navigate("/manage-events")}
-              />
-            </section>
-          </section>
+                  <li className="flex gap-1 justify-center items-center">
+                    <img
+                      src="/tiny-profile.png"
+                      alt=""
+                      className="w-4 h-4 rounded-2xl"
+                    />
+                    <h6 className="satoshi capitalize text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[700] leading-[14px]">
+                      16:40 <span>pm</span>
+                    </h6>
+                  </li>
+
+                  <li className="flex gap-1 justify-center items-center">
+                    <h6 className="satoshi capitalize text-[#8A9191] h-fit w-fit sm:text-[12px] sm:font-[700] sm:leading-[18px] text-[10px] font-[700] leading-[14px]">
+                      going
+                    </h6>
+                    <img
+                      src="/tiny-profile.png"
+                      alt=""
+                      className="w-4 h-4 rounded-2xl"
+                    />
+                    <h6 className="satoshi capitalize text-black h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px]">
+                      newman, victory,<span>+200 others</span>
+                    </h6>
+                  </li>
+
+                  <li>
+                    <SiteBtn
+                      name="manage"
+                      colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full sm:hidden "
+                    />
+                  </li>
+                </ul>
+                <section className="w-fit max-h-full h-[100px] justify-between sm:flex flex-col text-end hidden">
+                  <h6 className="satoshi text-[#8A9191] h-fit w-full sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[20px] font-[400] leading-[30px]">
+                    12 hours ago
+                  </h6>
+                  <SiteBtn
+                    name="manage"
+                    colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
+                    onclick={() => navigate("/manage-events")}
+                  />
+                </section>
+              </section>
+            {/* ))
+             ) : (
+              <EmptyHome />)
+          } */}
         </section>
       </div>
       {isModalOpen && <EventModal closeModal={closeModal} />}

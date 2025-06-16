@@ -1,13 +1,18 @@
-import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import React, { useState } from "react";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "../ui/select";
+import PopUpInput from "../create-event/PopUps/Popup components/PopUpInput";
+import { statesAndCapitals } from "@/constants/StateAndCapital";
 
 const Account = () => {
+  const [stateLocation, setStateLocation] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="satoshi flex flex-col gap-8 mb-8">
       {/* users profile image update section */}
@@ -37,7 +42,7 @@ const Account = () => {
               <button className="w-full p-2 bg-[#FFFFFE] text-[#095256] paytone rounded-[60px]">
                 Upload image
               </button>
-              <button className="w-[36px] h-[36px] bg-[#FFFFFE] rounded-[60px] flex items-center justify-center">
+              <button className="w-[36px] h-[36px] p-2.5 bg-[#FFFFFE] rounded-[60px] flex items-center justify-center">
                 <img src="/trash.svg" alt="del-icon" />
               </button>
             </div>
@@ -111,7 +116,7 @@ const Account = () => {
               />
             </div>
 
-            <Select className="">
+            {/* <Select className="">
               <SelectTrigger className="w-1/2 bg-[#FFFFFE80] p-0 px-2 py-3 h-9  border border-[#FFFFFE] rounded-none rounded-r-[12px]  text-[#8A9191] text-[14px] font-medium">
                 <SelectValue placeholder="State"  className="text-[#8A9191]" />
               </SelectTrigger>
@@ -120,7 +125,55 @@ const Account = () => {
                 <SelectItem value="dark">Dark</SelectItem>
                 <SelectItem value="system">System</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
+            <div className="w-1/2 relative">
+              <PopUpInput
+                value={stateLocation} // Display the selected state
+                onClick={() => setIsOpen(!isOpen)}
+                isOpen={isOpen}
+                // leftIcon="/calendar.svg"
+                rightIcon="/arrow-down-gray.svg"
+                // showLeftIcon={true}
+                showRightIcon={true}
+                rounded="rounded-r-[12px]"
+                placeholder="State"
+                className="w-1/2 bg-[#FFFFFE80] py-3 px-2 border border-[#FFFFFE] text-[#8A9191] text-[14px] font-medium h-full"
+              />
+              {isOpen && (
+                <ul className="absolute bg-white border rounded-[12px] shadow-lg top-10 -right-0 w-[50%] z-10 text-center  h-[164px] overflow-y-auto scrollbar-hide scroll-smooth">
+                  {statesAndCapitals.map(({ state }) => (
+                    <li
+                      key={state}
+                      className="flex items-center px-4 py-2 cursor-pointer hover:scale-105 transition-transform justify-center font-medium text-[14px] capitalize"
+                      // onClick={() => handleStateLocationChange(state)}
+                    >
+                      <span
+                        className={`cursor-pointer rounded-md flex justify-center transition text-[16px] satoshi ${
+                          state === stateLocation
+                            ? "text-black font-[600]"
+                            : "text-[#8A9191] font-medium"
+                        }`}>
+                        {state}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* <select
+              name="states"
+              id=""
+              className="w-1/2 bg-[#FFFFFE80] py-3 px-2 rounded-r-[12px] border border-[#FFFFFE] text-[#8A9191] text-[14px] font-medium">
+              {states.map((state, index) => (
+                <option
+                  value={state}
+                  key={index}
+                  className="bg-[#FFFFFE80] text-[#8A9191] text-[14px] font-medium">
+                  {state}
+                </option>
+              ))}
+            </select> */}
           </div>
         </div>
       </div>

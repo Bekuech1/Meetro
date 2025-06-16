@@ -18,8 +18,12 @@ import UserProfile from "./routes/UserProfile";
 import Settings from "./routes/Settings";
 import ProtectedRoute from "./components/(appState)/ProtectedRoute";
 import ManageEvents from "./routes/ManageEvents";
+import GoogleAuthCallback from "./components/Onboarding/GoogleAuthCallback";
+import { useRehydrateAuth } from "./lib/useRehydrateAuth";
 
 function App() {
+  useRehydrateAuth();  // This hook is used to rehydrate the auth state from local storage or session storage
+
   return (
     <>
       <BrowserRouter>
@@ -35,6 +39,10 @@ function App() {
           <Route path="/location" element={<Location />} />
           <Route path="/calender" element={<Calender />} />
           <Route path="/interest" element={<Interest />} />
+          <Route
+            path="/google-auth-callback"
+            element={<GoogleAuthCallback />}
+          />
 
           {/* Profile Routes */}
           <Route path="/profile" element={<UserProfile />} />
