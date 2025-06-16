@@ -19,8 +19,11 @@ import Settings from "./routes/Settings";
 import ProtectedRoute from "./components/(appState)/ProtectedRoute";
 import ManageEvents from "./routes/ManageEvents";
 import GoogleAuthCallback from "./components/Onboarding/GoogleAuthCallback";
+import { useRehydrateAuth } from "./lib/useRehydrateAuth";
 
 function App() {
+  useRehydrateAuth();  // This hook is used to rehydrate the auth state from local storage or session storage
+
   return (
     <>
       <BrowserRouter>

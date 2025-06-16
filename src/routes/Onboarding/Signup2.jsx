@@ -9,8 +9,9 @@ import API from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 function Signup2() {
-  const setToken = useAuthStore((state) => state.setToken);
-  const setUser = useAuthStore((state) => state.setUser);
+  const { setAccessToken, setUser, setRefreshToken, setIdToken } =
+    useAuthStore();
+  // const setUser = useAuthStore((state) => state.setUser);
 
   const [formData, setFormData] = useState(() => {
     const data = JSON.parse(sessionStorage.getItem("signup"));
@@ -125,9 +126,12 @@ function Signup2() {
     if (!formData?.password.trim()) {
       error.password = "Enter your password";
     } else if (
-      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password)
+      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(
+        formData.password
+      )
     ) {
-      error.password = "Password must exceed 8, include a number, capital and lowercase a special character";
+      error.password =
+        "Password must exceed 8, include a number, capital and lowercase a special character";
     }
     setErrorMessages(error);
 
@@ -140,21 +144,34 @@ function Signup2() {
       };
 
       try {
-        const response = await API.post("/signup", payload);
-        const token = response.data.token;
-        console.log("Signup response:", response.data);
-        setToken(token);
-        localStorage.setItem("token", token);
+        const signupResponse = await API.post("/signup", payload);
+        // const userId = signupResponse.data.userId;
+        console.log("Signup response:", signupResponse.data);
 
+        const loginResponse = await API.post("/login", {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        const { accessToken, refreshToken, idToken } = loginResponse.data;
+        
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setIdToken(idToken);
+
+        // console.log("Signup response:", response.data);
+        // setToken(token);
+        // localStorage.setItem("token", token);
 
         const userResponse = await API.get("/profile", {
           headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        })
-        setUser(userResponse.data)
-        
-        navigate("/home")
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+
+        setUser(userResponse.data);
+        navigate("/home");
+
       } catch (err) {
         const msg = err.response?.data?.message || "Signup failed";
         setErrorMessages((prev) => ({ ...prev, email: msg }));

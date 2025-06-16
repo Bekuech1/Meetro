@@ -12,10 +12,11 @@ const PopUpInput = ({
   placeholder = "Select a date", // Placeholder text
   label, // Dynamic label text
   onClick,
-  secondary
+  secondary,
+  className, //= "",
 }) => {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 w-full">
       {/* Label */}
       {label && (
         <label className="text-[10px] font-[700] text-[#8A9191] capitalize satoshi">

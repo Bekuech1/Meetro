@@ -4,7 +4,7 @@ import EventsBtn from "./EventsBtn";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import EventModal from "./EventModal";
 import API from "@/lib/axios";
-import EmptyHome from "./EmptyHome";
+// import EmptyHome from "./EmptyHome";
 
 const NormalHome = () => {
   const navigate = useNavigate();
