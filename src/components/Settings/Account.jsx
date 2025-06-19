@@ -9,7 +9,13 @@ import React, { useState } from "react";
 import PopUpInput from "../create-event/PopUps/Popup components/PopUpInput";
 import { statesAndCapitals } from "@/constants/StateAndCapital";
 
-const Account = () => {
+const Account = ({ form, setForm }) => {
+  const handleChange = (field, value) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
   const [stateLocation, setStateLocation] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -73,12 +79,16 @@ const Account = () => {
               <input
                 type="text"
                 placeholder="First name"
+                value={form.firstName}
+                onChange={(e) => handleChange("firstName", e.target.value)}
                 className="pl-10 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-l-[12px] py-3 text-[#8A9191] text-[14px] font-medium w-full"
               />
             </div>
             <input
               type="text"
               placeholder="Last name"
+              value={form.lastName}
+              onChange={(e) => handleChange("lastName", e.target.value)}
               className="py-3 px-2 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-r-[12px] text-[14px] text-[#8A9191] font-medium w-1/2"
             />
           </div>
@@ -93,6 +103,8 @@ const Account = () => {
             <input
               type="email"
               placeholder="Enter your email address"
+              value={form.email}
+              onChange={(e) => handleChange("email", e.target.value)}
               className="py-3 pl-10 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-[12px] w-full text-[#8A9191] text-[14px] font-medium"
             />
           </div>
@@ -112,20 +124,12 @@ const Account = () => {
               <input
                 type="text"
                 placeholder="Type in offline loaction"
+                // value={form.location || ""}
+                // onChange={(e) => handleChange("location", e.target.value)}
                 className="pl-10 bg-[#FFFFFE80] py-3 rounded-l-[12px] border border-[#FFFFFE] w-full text-[14px] font-medium text-[#8A9191]"
               />
             </div>
 
-            {/* <Select className="">
-              <SelectTrigger className="w-1/2 bg-[#FFFFFE80] p-0 px-2 py-3 h-9  border border-[#FFFFFE] rounded-none rounded-r-[12px]  text-[#8A9191] text-[14px] font-medium">
-                <SelectValue placeholder="State"  className="text-[#8A9191]" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select> */}
             <div className="w-1/2 relative">
               <PopUpInput
                 value={stateLocation} // Display the selected state
@@ -152,7 +156,12 @@ const Account = () => {
                           state === stateLocation
                             ? "text-black font-[600]"
                             : "text-[#8A9191] font-medium"
-                        }`}>
+                        }`}
+                        onClick={() => {
+                          setStateLocation(state);
+                          handleChange("state", state);
+                          setIsOpen(false);
+                        }}>
                         {state}
                       </span>
                     </li>
@@ -160,20 +169,6 @@ const Account = () => {
                 </ul>
               )}
             </div>
-
-            {/* <select
-              name="states"
-              id=""
-              className="w-1/2 bg-[#FFFFFE80] py-3 px-2 rounded-r-[12px] border border-[#FFFFFE] text-[#8A9191] text-[14px] font-medium">
-              {states.map((state, index) => (
-                <option
-                  value={state}
-                  key={index}
-                  className="bg-[#FFFFFE80] text-[#8A9191] text-[14px] font-medium">
-                  {state}
-                </option>
-              ))}
-            </select> */}
           </div>
         </div>
       </div>

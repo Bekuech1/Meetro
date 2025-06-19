@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import Layout from "../../components/Onboarding/Layout";
 import OnboardingButton from "../../components/Onboarding/OnboardingButton";
 import ShowOption from "@/components/Onboarding/ShowOption";
+import GoogleAuth from "@/components/Onboarding/GoogleAuth";
 
 function Login() {
   const navigate = useNavigate();
@@ -16,13 +17,13 @@ function Login() {
   const [showOptions, setShowOptions] = useState(false);
 
   const buttons = [
-    {
-      title: {
-        txt: "Continue with Google",
-        icon: <FcGoogle />,
-      },
-      className: "w-[343px] sm:w-[312px] h-[36px] bg-white text-[#095256] px-6",
-    },
+    // {
+    //   title: {
+    //     txt: "Continue with Google",
+    //     icon: <FcGoogle />,
+    //   },
+    //   className: "w-[343px] sm:w-[312px] h-[36px] bg-white text-[#095256] px-6",
+    // },
     {
       title: {
         txt: "Continue with Email",
@@ -43,6 +44,7 @@ function Login() {
           handleClick1="/authentication"
           handleClick2={() => setShowOptions(true)}>
           <div className="flex flex-col gap-4">
+            <GoogleAuth />
             {buttons.map((btn, index) => (
               <OnboardingButton key={index} {...btn} />
             ))}
