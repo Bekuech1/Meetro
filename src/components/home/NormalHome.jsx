@@ -28,14 +28,51 @@ const NormalHome = () => {
     },
   ];
 
-  const [events, setEvents] = useState([]);
+  // const [events, setEvents] = useState([]);
+  const [groupedEvents, setGroupedEvents] = useState({});
+
+  const groupByDate = (events) => {
+    const grouped = {};
+
+    events.forEach((event) => {
+      const [startRaw, endRaw] = event.date.split(" - ");
+
+      const startDate = new Date(startRaw.trim());
+      const endDate = endRaw?.toLowerCase().includes("null")
+        ? null
+        : new Date(endRaw.trim());
+
+      if (isNaN(startDate)) {
+        console.warn("Invalid start date:", startRaw);
+        return; // Skip invalid start dates
+      }
+
+      // Attach parsed dates to event for easier rendering later
+      const enhancedEvent = {
+        ...event,
+        startDate,
+        endDate,
+      };
+
+      const groupKey = startDate.toISOString().split("T")[0]; // e.g. "2025-06-27"
+
+      if (!grouped[groupKey]) grouped[groupKey] = [];
+      grouped[groupKey].push(enhancedEvent);
+    });
+
+    return grouped;
+  };
+
+
   const fetchEvents = async () => {
     try {
       const response = await API.get("/my-events");
-      if (response.status === 200) {
-        setEvents(response.data);
-      }
-      console.log("Fetched events:", response.data);
+
+      const eventsArray = response.data.events || [];
+      const grouped = groupByDate(eventsArray);
+
+      setGroupedEvents(grouped);
+      console.log("Grouped Events:", grouped);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
@@ -64,7 +101,7 @@ const NormalHome = () => {
             ))}
           </div>
         </section>
-        <section className="grid gap-4 h-fit w-full ">
+        {/* <section className="grid gap-4 h-fit w-full ">
           <div className="w-full h-fit grid">
             <h5 className="satoshi capitalize text-black h-fit text-[16px] font-[900] leading-[24px]">
               mar 1
@@ -74,11 +111,10 @@ const NormalHome = () => {
             </p>
           </div>
 
-          {/* {
-            events.length > 0 ? (
-            events.map((event, index) => ( */}
+          {
+            events.map((event, index) => (
               <section
-                // key={index}
+                key={index}
                 className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
                 onClick={openModal}>
                 <img
@@ -89,7 +125,7 @@ const NormalHome = () => {
 
                 <ul className="w-full h-fit grid sm:gap-1 gap-2">
                   <li className="items-center flex justify-between satoshi text-black h-fit w-full sm:text-[16px] sm:font-[500] sm:leading-[100%] text-[14px] font-[700] leading-[20px]">
-                    <h4 className="w-full capitalize">tech unwind</h4>
+                    <h4 className="w-full capitalize">{event.title}</h4>
                     <h6 className="satoshi text-[#8A9191] h-fit sm:text-[12px] sm:font-[500] sm:leading-[14px] text-[10px] font-[500] leading-[14px] w-[40px] text-end sm:hidden grid">
                       12 h
                     </h6>
@@ -163,11 +199,130 @@ const NormalHome = () => {
                   />
                 </section>
               </section>
-            {/* ))
-             ) : (
-              <EmptyHome />)
-          } */}
-        </section>
+            ))
+            // ) : (
+            //     <EmptyHome />
+            //     <div>empty</div>)
+          }
+        </section> */}
+
+        {Object.entries(groupedEvents).map(([date, events]) => (
+          <div key={date} className="grid gap-4">
+            <div>
+              <h5 className="satoshi capitalize text-black h-fit text-[16px] font-[900] leading-[24px]">
+                {new Date(date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </h5>
+              <p className="satoshi capitalize text-[#8A9191] h-fit text-[14px] font-[700] leading-[20px]">
+                {new Date(date).toLocaleDateString("en-US", {
+                  weekday: "long",
+                })}
+              </p>
+            </div>
+
+            {events.map((event, index) => (
+              <section
+                key={index}
+                className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
+                onClick={openModal}>
+                <img
+                  src={event.tempImageKey || "/events-img.png"}
+                  alt="event-img"
+                  className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
+                />
+
+                <ul className="w-full h-fit grid sm:gap-1 gap-2">
+                  <li className="items-center flex justify-between satoshi text-black h-fit w-full sm:text-[16px] sm:font-[500] sm:leading-[100%] text-[14px] font-[700] leading-[20px]">
+                    <h4 className="w-full capitalize">{event.title}</h4>
+                    <h6 className="satoshi text-[#8A9191] sm:hidden grid text-[10px]">
+                      {event.relativeTime || "12 h"}
+                    </h6>
+                  </li>
+
+                  <li className="flex gap-1 items-center">
+                    <h6 className="text-[#8A9191] font-[700] text-[10px]">
+                      host
+                    </h6>
+                    <img
+                      src="/tiny-profile.png"
+                      alt=""
+                      className="w-4 h-4 rounded-2xl"
+                    />
+                    <h6 className="text-black font-[500] text-[10px]">
+                      {event.creator.firstName || "unknown"}
+                    </h6>
+                  </li>
+
+                  <li className="flex gap-1 items-center">
+                    <img
+                      src="/event-location.svg"
+                      alt=""
+                      className="w-4 h-4 rounded-2xl"
+                    />
+                    <h6 className="text-[#8A9191] font-[700] text-[10px]">
+                      {event.location}
+                    </h6>
+                  </li>
+
+                  <li className="flex gap-1 items-center">
+                    <img src="/event-timer.svg" alt="" className="w-4 h-4" />
+                    <h6 className="text-[#8A9191] font-[700] text-[10px]">
+                      {event.startDate.toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+
+                      {event.endDate && (
+                        <>
+                          {" "}
+                          –{" "}
+                          {event.endDate.toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </>
+                      )}
+                    </h6>
+                  </li>
+
+                  <li className="flex gap-1 items-center">
+                    <h6 className="text-[#8A9191] font-[700] text-[10px]">
+                      going
+                    </h6>
+                    <img
+                      src="/tiny-profile.png"
+                      alt=""
+                      className="w-4 h-4 rounded-2xl"
+                    />
+                    <h6 className="text-black font-[500] text-[10px]">
+                      {event.going || "no one yet"}
+                    </h6>
+                  </li>
+
+                  <li>
+                    <SiteBtn
+                      name="manage"
+                      colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full sm:hidden"
+                    />
+                  </li>
+                </ul>
+
+                <section className="sm:flex hidden flex-col justify-between text-end h-[100px]">
+                  <h6 className="text-[#8A9191] text-[12px] font-[500]">
+                    12 hours ago
+                  </h6>
+                  <SiteBtn
+                    name="manage"
+                    colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
+                    onclick={() => navigate("/manage-events")}
+                  />
+                </section>
+              </section>
+            ))}
+          </div>
+        ))}
       </div>
       {isModalOpen && <EventModal closeModal={closeModal} />}
       {/* <img src="gradient-home.png" className="absolute -top-[10px] fix h-[90vh] w-screen " /> */}

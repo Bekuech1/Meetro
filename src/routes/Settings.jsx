@@ -1,10 +1,57 @@
 import Account from "@/components/Settings/Account";
 import Payments from "@/components/Settings/Payments";
 import Preference from "@/components/Settings/Preference";
-import React, { useState } from "react";
+import API from "@/lib/axios";
+import React, { useEffect, useState } from "react";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("accounts");
+
+  // State to hold account details
+  const [accountDetails, setAccountDetails] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    // bio: "",
+    // profilePictureKey: "",
+    state: "",
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await API.get("/profile");
+        const { email, firstName, lastName, state } = response.data;
+        setAccountDetails({
+          email,
+          firstName,
+          lastName,
+          // bio: response.data.bio || "",
+          // profilePictureKey: response.data.profilePictureKey || "",
+          state: state || "",
+        });
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    }
+
+    fetchProfile();
+  }, []);
+
+  const handleSaveChanges = async () => {
+    try {
+      if (activeTab === "accounts") {
+        await API.put("/profile", accountDetails);
+        console.log("Account details updated successfully");
+      } else if (activeTab === "preferences") {
+        // Handle preferences saving logic here
+        console.log("Preferences saved successfully");
+      }
+    } catch (err) {
+      console.error(err);
+      console.log("An error occured");
+    }
+  };
 
   return (
     <div className="bg-[#F0F0F0] relative">
@@ -57,7 +104,9 @@ const Settings = () => {
 
         {/* content for each tab toggle */}
         <div className="mt-8">
-          {activeTab === "accounts" && <Account />}
+          {activeTab === "accounts" && (
+            <Account form={accountDetails} setForm={setAccountDetails} />
+          )}
 
           {activeTab === "preferences" && <Preference />}
 
@@ -66,7 +115,9 @@ const Settings = () => {
 
         {/* Save changes button */}
         <div>
-          <button className="text-[14px] paytone w-full py-3 bg-[#011F0F] text-[#AEFC40] rounded-[60px] mt-4 ">
+          <button
+            className="text-[14px] paytone w-full py-3 bg-[#011F0F] text-[#AEFC40] rounded-[60px] mt-4"
+            onClick={handleSaveChanges}>
             Save changes
           </button>
         </div>
