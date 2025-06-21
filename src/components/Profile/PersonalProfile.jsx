@@ -3,7 +3,7 @@ import SiteBtn from "../Layout-conponents/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
 import dayjs from "dayjs";
 import API from "@/lib/axios"; // Adjust the import based on your API utility file path
-import { Navigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const PersonalProfile = () => {
   const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
@@ -11,6 +11,7 @@ const PersonalProfile = () => {
   const setUser = useAuthStore((state) => state.setUser); // Zustand action to set user info
   const user = useAuthStore((state) => state.user);
   const formattedDate = dayjs(user?.createdAt).format("D MMMM, YYYY");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (idToken) {
@@ -35,7 +36,7 @@ const PersonalProfile = () => {
             <SiteBtn
               name="Edit Profile"
               colorPadding="bg-[#fffffe] py-[6px] px-[10px]"
-              onclick={() => Navigate("/settings")}
+              onclick={() => navigate("/settings")}
             />
           </div>
 
