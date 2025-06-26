@@ -29,6 +29,7 @@ function Signup2() {
 
   const [errorMessages, setErrorMessages] = useState({});
   const [showOptions, setShowOptions] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ function Signup2() {
   const text = "Join the Meetro in seconds!";
 
   const button = {
-    title: "Let's gooo!",
+    title: loading ? "Loading..." : "Let's gooo!",
     className:
       "w-full bg-[#AFFC41] text-[#095256] px-6 rounded-[60px] h-[36px]",
     onclick: handleSubmit,
@@ -102,6 +103,8 @@ function Signup2() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    setLoading(true);
+
     let error = {};
     // if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(formData.firstName)) {
     //   error.firstName = "Enter a valid name";
@@ -154,7 +157,7 @@ function Signup2() {
         });
 
         const { accessToken, refreshToken, idToken } = loginResponse.data;
-        
+
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setIdToken(idToken);
@@ -171,11 +174,14 @@ function Signup2() {
 
         setUser(userResponse.data);
         navigate("/home");
-
       } catch (err) {
-        const msg = err.response?.data?.message || "Signup failed";
+        const msg = err.response?.data?.error || "Signup failed";
         setErrorMessages((prev) => ({ ...prev, email: msg }));
+      } finally {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   }
 

@@ -10,9 +10,17 @@ const NormalHome = () => {
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openModal = (eventId) => {
+    setSelectedEventId(eventId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedEventId(null);
+    setIsModalOpen(false);
+  };
 
   const homeBtn = [
     {
@@ -63,14 +71,12 @@ const NormalHome = () => {
     return grouped;
   };
 
-
   const fetchEvents = async () => {
     try {
       const response = await API.get("/my-events");
 
       const eventsArray = response.data.events || [];
       const grouped = groupByDate(eventsArray);
-
       setGroupedEvents(grouped);
       console.log("Grouped Events:", grouped);
     } catch (error) {
@@ -222,11 +228,11 @@ const NormalHome = () => {
               </p>
             </div>
 
-            {events.map((event, index) => (
+            {events.map((event) => (
               <section
-                key={index}
+                key={event.id}
                 className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
-                onClick={openModal}>
+                onClick={() => openModal(event.id)}>
                 <img
                   src={event.tempImageKey || "/events-img.png"}
                   alt="event-img"
@@ -324,7 +330,9 @@ const NormalHome = () => {
           </div>
         ))}
       </div>
-      {isModalOpen && <EventModal closeModal={closeModal} />}
+      {isModalOpen && (
+        <EventModal eventId={selectedEventId} closeModal={closeModal} />
+      )}
       {/* <img src="gradient-home.png" className="absolute -top-[10px] fix h-[90vh] w-screen " /> */}
       <div className="absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
         {/* <!-- Left Ellipse --> */}
