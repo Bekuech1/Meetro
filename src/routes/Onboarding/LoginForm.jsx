@@ -8,9 +8,10 @@ import API from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 // import {jwtDecode} from "jwt-decode";
 
-
 function LoginForm() {
-  const { setAccessToken, setUser, setRefreshToken, setIdToken } = useAuthStore();
+  const { setAccessToken, setUser, setRefreshToken, setIdToken } =
+    useAuthStore();
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState(() => {
     const data = JSON.parse(sessionStorage.getItem("login"));
@@ -41,7 +42,7 @@ function LoginForm() {
   );
 
   const button = {
-    title: "Let Me In!",
+    title: loading ? "Loading..." : "Let's gooo!",
     className:
       "w-full bg-[#AFFC41] text-[#095256] px-6 rounded-[60px] h-[36px]",
     onclick: handleSubmit,
@@ -78,6 +79,8 @@ function LoginForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    setLoading(true);
 
     let error = {};
 
@@ -123,9 +126,13 @@ function LoginForm() {
 
         navigate("/home");
       } catch (err) {
-        const msg = err.response?.data?.message || "Login failed";
+        const msg = err.response?.data?.error || "Login failed";
         setErrorMessages((prev) => ({ ...prev, email: msg }));
+      } finally {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   }
 

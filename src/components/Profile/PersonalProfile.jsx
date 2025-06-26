@@ -12,6 +12,8 @@ const PersonalProfile = () => {
   const user = useAuthStore((state) => state.user);
   const formattedDate = dayjs(user?.createdAt).format("D MMMM, YYYY");
   const navigate = useNavigate();
+  const [totalEvents, setTotalEvents] = useState(0);
+  const [totalAttendees, setTotalAttendees] = useState(0);
 
   useEffect(() => {
     if (idToken) {
@@ -22,6 +24,15 @@ const PersonalProfile = () => {
         .catch((err) => {
           console.error("Failed to load profile:", err);
         });
+
+      API.get("/my-events")
+        .then((res) => {
+          setTotalEvents(res.data.totalEvents);
+          setTotalAttendees(res.data.totalAttendees);
+        })
+        .catch((err) => {
+          console.error("Failed to load events:", err);
+        });
     }
   }, [idToken]);
 
@@ -31,7 +42,8 @@ const PersonalProfile = () => {
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between">
-            <img src="/profileimg.png" alt="user-profile-img" />
+            {/* <img src={user?.profilePictureKey} alt="user-profile-img" /> */}
+            <img src="/profileimg.png" alt="" />
             {/* <Button variant="default" className="bg-[#AEFC40] text-black">Edit Profile</Button> */}
             <SiteBtn
               name="Edit Profile"
@@ -55,7 +67,7 @@ const PersonalProfile = () => {
               <span className="flex items-center gap-2">
                 <img src="/icons/location.svg" alt="location-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">
-                  {user?.location ? user?.location : "No location"}
+                  {user?.state}
                 </p>
               </span>
               <span className="flex items-center gap-2">
@@ -70,10 +82,11 @@ const PersonalProfile = () => {
 
         <div className="flex items-center gap-6">
           <p className=" text-[14px] font-medium text-[#001010]">
-            2 <span className="text-[#8A9191]">Events Attended</span>
+            {totalAttendees} {""}
+            <span className="text-[#8A9191]">Events Attended</span>
           </p>
           <p className=" text-[14px] font-medium text-[#001010]">
-            1 <span className="text-[#8A9191]">Event Created</span>
+            {totalEvents} <span className="text-[#8A9191]">Event Created</span>
           </p>
         </div>
       </div>

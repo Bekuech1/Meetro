@@ -33,7 +33,7 @@ const Settings = () => {
       } catch (error) {
         console.error("Failed to fetch profile:", error);
       }
-    }
+    };
 
     fetchProfile();
   }, []);

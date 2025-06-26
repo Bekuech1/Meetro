@@ -11,11 +11,29 @@ const GoogleAuth = () => {
   const navigate = useNavigate();
 
   const login = useGoogleLogin({
-    onSuccess: async (credentialResponse) => {
+    onSuccess: async (tokenResponse) => {
+      console.log("Google tokenResponse:", tokenResponse);
+
+      const accessToken = tokenResponse.access_token;
+
+      if (!accessToken) {
+        console.error("No access token received.");
+        return;
+      }
+
       try {
-        const response = await API.post("/google-signin", {
-          idToken: credentialResponse.credential,
-        });
+        // fetch user info from Google
+        const userInfo = await fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        ).then((res) => res.json());
+
+        console.log("Google user info:", userInfo);
+
+        // send this info or accessToken to your backend for verification & session creation
+        const response = await API.post("/google-signin", { accessToken });
 
         setIdToken(response.data.idToken);
         setUser(response.data.user);
@@ -24,13 +42,13 @@ const GoogleAuth = () => {
         console.error("Google login failed:", error);
       }
     },
-    flow: "auth-code",
-    redirect_uri: import.meta.env.VITE_GOOGLE_REDIRECT_URI,
-
     onError: (error) => {
       console.error("Login Failed:", error);
     },
+    flow: "implicit",
   });
+
+
   return (
     <div>
       <button

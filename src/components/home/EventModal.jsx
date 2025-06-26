@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from "react";
 import SiteBtn from "../Layout-conponents/SiteBtn";
+import API from "@/lib/axios";
 
-const EventModal = ({ closeModal }) => {
+const EventModal = ({ eventId, closeModal }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [eventDetails, setEventDetails] = useState(null);
 
   const toggleReadMore = () => {
     setIsExpanded((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (!eventId) return;
+
+    API.get(`/events/${eventId}`).then((response) => {
+      setEventDetails(response.data);
+    });
+  }, [eventId]);
 
   useEffect(() => {
     // Disable scrolling on the background
@@ -46,7 +56,7 @@ const EventModal = ({ closeModal }) => {
                       className="w-6 h-6 rounded-full border border-white"
                     />
                     <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                      Newman, Victory, Beko
+                      {eventDetails?.creator?.M?.name?.S}
                     </h6>
                   </div>
                 </div>
@@ -68,9 +78,9 @@ const EventModal = ({ closeModal }) => {
               <div className="flex w-full h-fit gap-2">
                 <div className="grid w-full h-fit gap-2 text-start">
                   <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
-                    tech unwind
+                    {eventDetails?.title?.S}
                   </h1>
-                  <ModalText img="timer.svg" text="Sat, Mar 1, 16:30pm" />
+                  <ModalText img="timer.svg" text={eventDetails?.date?.S} />
                   <div className="w-full min-w-[100px] h-fit flex gap-2">
                     <EventCategories
                       borderBgColor="text-[#9B1C46] border-[#9B1C46]"
@@ -100,23 +110,14 @@ const EventModal = ({ closeModal }) => {
                 <h4
                   className={`${
                     isExpanded ? "" : "line-clamp-3"
-                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-                >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
-                  volutpat. Sed id ligula sit amet libero pulvinar egestas.
-                  Morbi scelerisque euismod justo nec scelerisque. Nam ultricies
-                  nulla quis nunc facilisis, in commodo augue placerat. Vivamus
-                  feugiat, lorem eget varius sollicitudin, lorem mauris
-                  tristique metus, id cursus odio nisi nec nunc. Fusce nec arcu
-                  vel neque consectetur auctor.
+                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
+                  {eventDetails?.description?.S}
                 </h4>
 
                 {/* Read More Button */}
                 <button
                   onClick={toggleReadMore}
-                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-                >
+                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
                   {isExpanded ? "Show less" : "Read more"}
                 </button>
               </div>
@@ -150,13 +151,13 @@ const EventModal = ({ closeModal }) => {
 
               <section className="w-full h-fit flex gap-2">
                 <Attendance
-                  text="not sure"
+                  text="Not sure"
                   img="/timer-modal.svg"
                   textcolor="#7A60BF"
                   onclick={() => console.log("Attendance clicked")} // Fixed
                 />
                 <Attendance
-                  text="not sure"
+                  text="Going"
                   img="/tick-circle-green.svg"
                   textcolor="#61B42D"
                 />
@@ -166,10 +167,10 @@ const EventModal = ({ closeModal }) => {
                 <div className="w-full h-fit flex justify-between">
                   <div className="w-full h-fit grid gap-1 satoshi">
                     <h5 className="text-[16px] font-[700] leading-[24px] text-black">
-                      ✅ You’re going!
+                      ✅ You're going!
                     </h5>
                     <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
-                      We'll send you reminders and updates so you don’t miss a
+                      We'll send you reminders and updates so you don't miss a
                       thing.
                     </p>
                   </div>
@@ -201,17 +202,18 @@ const EventModal = ({ closeModal }) => {
               <div className="grid gap-2 w-full h-fit">
                 <ModalText img="/dress.svg" text="dress code" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  casual
+                  {eventDetails?.dressCode?.S}
                 </h6>
               </div>
               <div className="grid gap-2 w-full h-fit">
                 <ModalText img="/modal-location.svg" text="location" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  CCHub
+                  {eventDetails?.location?.M?.venue?.S}
                 </h6>
                 <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                  294 Herbert Macaulay Wy, Sabo yaba, Lagos 101245, Lagos,
-                  Nigeria
+                  {eventDetails?.location?.M?.city?.S},{" "}
+                  {eventDetails?.location?.M?.state?.S},{" "}
+                  {eventDetails?.location?.M?.country?.S}
                 </p>
               </div>
 
@@ -350,8 +352,7 @@ const EventModal = ({ closeModal }) => {
               <h4
                 className={`${
                   isExpanded ? "" : "line-clamp-3"
-                } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-              >
+                } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
                 volutpat. Sed id ligula sit amet libero pulvinar egestas. Morbi
@@ -365,8 +366,7 @@ const EventModal = ({ closeModal }) => {
               {/* Read More Button */}
               <button
                 onClick={toggleReadMore}
-                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-              >
+                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
                 {isExpanded ? "Show less" : "Read more"}
               </button>
             </section>
@@ -553,12 +553,10 @@ export const ModalBtn = ({ onClick, bgcolor, image, textcolor, text }) => {
   return (
     <div
       className={`lg:w-fit w-full h-fit rounded-[60px] flex gap-2 p-[10px] justify-center items-center cursor-pointer ${bgcolor}`}
-      onClick={onClick}
-    >
+      onClick={onClick}>
       <img src={image} className="size-[22px]" />
       <h6
-        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}
-      >
+        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}>
         {text}
       </h6>
     </div>
@@ -569,12 +567,10 @@ export const Attendance = ({ img, text, textcolor, onclick }) => {
   return (
     <div
       className="cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center"
-      onClick={onclick}
-    >
+      onClick={onclick}>
       <img src={img} alt="" className="size-8" />
       <h6
-        className={`text-[${textcolor}] font-[400] text-[12px] lg:leading-[18px] capitalize`}
-      >
+        className={`text-[${textcolor}] font-[400] text-[12px] lg:leading-[18px] capitalize`}>
         {text}
       </h6>
     </div>
