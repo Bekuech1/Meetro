@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import ShareEvent from "./ShareEvent";
 import DownloadEvent from "./DownloadEvent";
 import {
@@ -9,8 +8,11 @@ import {
   ModalText,
 } from "../home/EventModal";
 import SiteBtn from "../Layout-conponents/SiteBtn";
+import API from "@/lib/axios";
+import { useParams } from "react-router-dom";
 
-const Eventdetails = ({ eventId }) => {
+const Eventdetails = () => {
+  const { eventId } = useParams(); // Assuming you're using react-router for routing
   const [isExpanded, setIsExpanded] = useState(false);
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,9 +22,7 @@ const Eventdetails = ({ eventId }) => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const response = await axios.get(
-          `https://ujc35n5wgi.execute-api.eu-north-1.amazonaws.com/dev/events/${eventId}`
-        );
+        const response = await API.get(`/events/${eventId}`);
         setEventData(response.data);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to load event details");
@@ -41,16 +41,12 @@ const Eventdetails = ({ eventId }) => {
   const handleConfirmAttendance = async (responseType) => {
     try {
       // First create a share if one doesn't exist
-      const shareResponse = await axios.post(
-        `https://ujc35n5wgi.execute-api.eu-north-1.amazonaws.com/dev/shares`,
-        { eventId }
-      );
+      const shareResponse = await API.post(`/shares`, { eventId });
 
       // Then confirm attendance
-      await axios.post(
-        `https://ujc35n5wgi.execute-api.eu-north-1.amazonaws.com/dev/shares/${shareResponse.data.shareId}/confirm`,
-        { responseType }
-      );
+      await API.post(`/shares/${shareResponse.data.shareId}/confirm`, {
+        responseType,
+      });
 
       setAttendanceStatus(responseType);
     } catch (err) {
@@ -66,6 +62,7 @@ const Eventdetails = ({ eventId }) => {
     return <div className="text-red-500 text-center py-10">{error}</div>;
   }
 
+  //empty state
   if (!eventData) {
     return <div className="text-center py-10">Event not found</div>;
   }
@@ -84,10 +81,10 @@ const Eventdetails = ({ eventId }) => {
             <img src="/image.svg" className="z-10" alt="Image" />
           </div>
         </div>
-        
+
         <section className="grid gap-4">
           <div className="gap-1 grid">
-            <ModalText img="crown.svg" text="hosts" />
+            <ModalText img="/crown.svg" text="hosts" />
             <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70 justify-center items-center">
               {eventData.creator?.M && (
                 <>
@@ -103,7 +100,7 @@ const Eventdetails = ({ eventId }) => {
               )}
             </div>
           </div>
-          
+
           <div className="rounded-[12px] p-2 flex justify-between border-[2px] border-white items-center bg-white/70">
             <h6 className="text-[#8A9191] text-[13px] font-[500] leading-[24px] satoshi capitalize">
               {attendanceStatus === "yes"
@@ -159,16 +156,14 @@ const Eventdetails = ({ eventId }) => {
           <h4
             className={`${
               isExpanded ? "" : "line-clamp-3"
-            } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-          >
+            } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
             {eventData.description?.S ||
               "No description available for this event."}
           </h4>
           {eventData.description?.S && (
             <button
               onClick={toggleReadMore}
-              className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-            >
+              className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
               {isExpanded ? "Show less" : "Read more"}
             </button>
           )}
@@ -225,13 +220,13 @@ const Eventdetails = ({ eventId }) => {
               <>
                 <Attendance
                   text="Not sure"
-                  img="timer-modal.svg"
+                  img="/timer-modal.svg"
                   textcolor="#7A60BF"
                   onClick={() => handleConfirmAttendance("maybe")}
                 />
                 <Attendance
                   text="Going"
-                  img="tick-circle-green.svg"
+                  img="/tick-circle-green.svg"
                   textcolor="#61B42D"
                   onClick={() => handleConfirmAttendance("yes")}
                 />
@@ -270,8 +265,7 @@ const Eventdetails = ({ eventId }) => {
               {eventData.attendees.L.map((attendee, index) => (
                 <div
                   key={index}
-                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
-                >
+                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
                   <img
                     src="/large-profile.jpg"
                     alt="Attendee"

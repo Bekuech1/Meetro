@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
+
+import API from "@/lib/axios";
 
 const ShareEvent = ({ eventId }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,17 +14,14 @@ const ShareEvent = ({ eventId }) => {
       try {
         setIsLoading(true);
         // Fetch event details
-        const eventResponse = await axios.get(
-          `https://ujc35n5wgi.execute-api.eu-north-1.amazonaws.com/dev/events/${eventId}`
-        );
+        console.log("Fetching event details for ID:", eventId);
+        const eventResponse = await API.get(`/events/${eventId}`);
         setEventDetails(eventResponse.data);
-        
+
         // Create share link
-        const shareResponse = await axios.post(
-          `https://ujc35n5wgi.execute-api.eu-north-1.amazonaws.com/dev/shares`,
-          { eventId }
-        );
+        const shareResponse = await API.post(`/shares`, { eventId });
         setShareUrl(shareResponse.data.shareUrl);
+        console.log("Share URL:", shareResponse.data.shareUrl);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to share event");
       } finally {
@@ -58,8 +56,7 @@ const ShareEvent = ({ eventId }) => {
 
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="mt-4 text-sm text-gray-500 hover:text-gray-700 md:hidden"
-                >
+                  className="mt-4 text-sm text-gray-500 hover:text-gray-700 md:hidden">
                   <img src="/close-circle.svg" alt="Close" />
                 </button>
               </div>
@@ -69,8 +66,8 @@ const ShareEvent = ({ eventId }) => {
                   <div className="flex justify-center items-center py-10">
                     <p>Loading event details...</p>
                   </div>
-                ) : error ? (
-                  <div className="text-red-500 text-center py-4">{error}</div>
+                // ) : error ? (
+                  // <div className="text-red-500 text-center py-4">{error}</div>
                 ) : (
                   <div className="bg-[#FFFFFE80] backdrop-blur-xl border border-[#FFFFFE] rounded-[12px] p-2 flex gap-2 items-center">
                     <div>
@@ -87,16 +84,15 @@ const ShareEvent = ({ eventId }) => {
                           {eventDetails?.title?.S || "Event"}
                         </p>
                         <p>
-                          {eventDetails?.date?.S
-                            ? new Date(eventDetails.date.S).toLocaleString()
-                            : "Date not specified"}
+                            {eventDetails?.date?.S
+                             ? new Date(eventDetails.date.S).toLocaleString()
+                             : "Date not specified"}
                         </p>
                       </div>
 
                       <button
                         onClick={copyToClipboard}
-                        className="flex items-center justify-center gap-1 bg-[#AEFC40] py-2 px-3 rounded-3xl"
-                      >
+                        className="flex items-center justify-center gap-1 bg-[#AEFC40] py-2 px-3 rounded-3xl">
                         <p className="font-bold text-[12px] text-[#011F0F]">
                           Copy Link
                         </p>{" "}

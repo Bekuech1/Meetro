@@ -21,7 +21,9 @@ const ManageEvents = () => {
       <div className="relative z-10 w-full lg:w-[950px] md:min-h-[700px] p-4 pb-12 mx-auto">
         {/* back button */}
         <div className="flex justify-between items-center gap-2">
-          <img src="/arrow-left.svg" alt="" />
+          <button onClick={() => window.history.back()}>
+            <img src="/arrow-left.svg" alt="" />
+          </button>
 
           <div className="flex gap-2 md:hidden">
             <ShareEvent />
