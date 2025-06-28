@@ -8,6 +8,7 @@ const ShareEvent = ({ eventId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [shareUrl, setShareUrl] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const togglePopup = async () => {
     if (!isOpen) {
@@ -18,9 +19,12 @@ const ShareEvent = ({ eventId }) => {
         const eventResponse = await API.get(`/events/${eventId}`);
         setEventDetails(eventResponse.data);
 
+        const currentUrl = window.location.href;
+        setShareUrl(currentUrl)
+
         // Create share link
         const shareResponse = await API.post(`/shares`, { eventId });
-        setShareUrl(shareResponse.data.shareUrl);
+        // setShareUrl(shareResponse.data.shareUrl);
         console.log("Share URL:", shareResponse.data.shareUrl);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to share event");
@@ -33,6 +37,8 @@ const ShareEvent = ({ eventId }) => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // Hide after 2 seconds
   };
 
   return (
@@ -96,7 +102,10 @@ const ShareEvent = ({ eventId }) => {
                         <p className="font-bold text-[12px] text-[#011F0F]">
                           Copy Link
                         </p>{" "}
-                        <img src="/link.svg" alt="Copy" className="w-4 h-4" />
+                          <img src="/link.svg" alt="Copy" className="w-4 h-4" />
+                        {copied && (
+                          <span className="text-green-600 ml-2">Copied!</span>
+                        )}
                       </button>
                     </div>
                   </div>
