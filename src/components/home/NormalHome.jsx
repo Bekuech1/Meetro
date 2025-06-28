@@ -43,12 +43,28 @@ const NormalHome = () => {
     const grouped = {};
 
     events.forEach((event) => {
-      const [startRaw, endRaw] = event.date.split(" - ");
+      const dateStr = event.date;
+
+      if (!dateStr || typeof dateStr !== "string") {
+        console.warn("Skipping event with invalid date:", event);
+        return; // Skip events with invalid date format
+      }
+
+      let startRaw = "";
+      let endRaw = null;
+
+      if (dateStr.includes(" - ")) {
+        //dateStr is in the format "start - end"
+        [startRaw, endRaw] = dateStr.split(" - ");
+      } else {
+        startRaw = dateStr;
+      }
 
       const startDate = new Date(startRaw.trim());
-      const endDate = endRaw?.toLowerCase().includes("null")
-        ? null
-        : new Date(endRaw.trim());
+      const endDate =
+        endRaw && endRaw.trim().toLowerCase() !== "null"
+          ? new Date(endRaw.trim())
+          : null;
 
       if (isNaN(startDate)) {
         console.warn("Invalid start date:", startRaw);
@@ -212,123 +228,125 @@ const NormalHome = () => {
           }
         </section> */}
 
-        {Object.entries(groupedEvents).map(([date, events]) => (
-          <div key={date} className="grid gap-4">
-            <div>
-              <h5 className="satoshi capitalize text-black h-fit text-[16px] font-[900] leading-[24px]">
-                {new Date(date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </h5>
-              <p className="satoshi capitalize text-[#8A9191] h-fit text-[14px] font-[700] leading-[20px]">
-                {new Date(date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                })}
-              </p>
-            </div>
+        {Object.entries(groupedEvents)
+          .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+          .map(([date, events]) => (
+            <div key={date} className="grid gap-4">
+              <div>
+                <h5 className="satoshi capitalize text-black h-fit text-[16px] font-[900] leading-[24px]">
+                  {new Date(date).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </h5>
+                <p className="satoshi capitalize text-[#8A9191] h-fit text-[14px] font-[700] leading-[20px]">
+                  {new Date(date).toLocaleDateString("en-US", {
+                    weekday: "long",
+                  })}
+                </p>
+              </div>
 
-            {events.map((event) => (
-              <section
-                key={event.id}
-                className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
-                onClick={() => openModal(event.id)}>
-                <img
-                  src={event.tempImageKey || "/events-img.png"}
-                  alt="event-img"
-                  className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
-                />
+              {events.map((event) => (
+                <section
+                  key={event.id}
+                  className="bg-[#FCFEF9]/50 backdrop-blur-[40px] h-fit w-full rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
+                  onClick={() => openModal(event.id)}>
+                  <img
+                    src={event.tempImageKey || "/events-img.png"}
+                    alt="event-img"
+                    className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
+                  />
 
-                <ul className="w-full h-fit grid sm:gap-1 gap-2">
-                  <li className="items-center flex justify-between satoshi text-black h-fit w-full sm:text-[16px] sm:font-[500] sm:leading-[100%] text-[14px] font-[700] leading-[20px]">
-                    <h4 className="w-full capitalize">{event.title}</h4>
-                    <h6 className="satoshi text-[#8A9191] sm:hidden grid text-[10px]">
-                      {event.relativeTime || "12 h"}
+                  <ul className="w-full h-fit grid sm:gap-1 gap-2">
+                    <li className="items-center flex justify-between satoshi text-black h-fit w-full sm:text-[16px] sm:font-[500] sm:leading-[100%] text-[14px] font-[700] leading-[20px]">
+                      <h4 className="w-full capitalize">{event.title}</h4>
+                      <h6 className="satoshi text-[#8A9191] sm:hidden grid text-[10px]">
+                        {event.relativeTime || "12 h"}
+                      </h6>
+                    </li>
+
+                    <li className="flex gap-1 items-center">
+                      <h6 className="text-[#8A9191] font-[700] text-[10px]">
+                        host
+                      </h6>
+                      <img
+                        src="/tiny-profile.png"
+                        alt=""
+                        className="w-4 h-4 rounded-2xl"
+                      />
+                      <h6 className="text-black font-[500] text-[10px]">
+                        {event.creator.firstName || "unknown"}
+                      </h6>
+                    </li>
+
+                    <li className="flex gap-1 items-center">
+                      <img
+                        src="/event-location.svg"
+                        alt=""
+                        className="w-4 h-4 rounded-2xl"
+                      />
+                      <h6 className="text-[#8A9191] font-[700] text-[10px]">
+                        {event.location}
+                      </h6>
+                    </li>
+
+                    <li className="flex gap-1 items-center">
+                      <img src="/event-timer.svg" alt="" className="w-4 h-4" />
+                      <h6 className="text-[#8A9191] font-[700] text-[10px]">
+                        {event.startDate.toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+
+                        {event.endDate && (
+                          <>
+                            {" "}
+                            -{" "}
+                            {event.endDate.toLocaleTimeString("en-US", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </>
+                        )}
+                      </h6>
+                    </li>
+
+                    <li className="flex gap-1 items-center">
+                      <h6 className="text-[#8A9191] font-[700] text-[10px]">
+                        going
+                      </h6>
+                      <img
+                        src="/tiny-profile.png"
+                        alt=""
+                        className="w-4 h-4 rounded-2xl"
+                      />
+                      <h6 className="text-black font-[500] text-[10px]">
+                        {event.going || "no one yet"}
+                      </h6>
+                    </li>
+
+                    <li>
+                      <SiteBtn
+                        name="manage"
+                        colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full sm:hidden"
+                      />
+                    </li>
+                  </ul>
+
+                  <section className="sm:flex hidden flex-col justify-between text-end h-[100px]">
+                    <h6 className="text-[#8A9191] text-[12px] font-[500]">
+                      12 hours ago
                     </h6>
-                  </li>
-
-                  <li className="flex gap-1 items-center">
-                    <h6 className="text-[#8A9191] font-[700] text-[10px]">
-                      host
-                    </h6>
-                    <img
-                      src="/tiny-profile.png"
-                      alt=""
-                      className="w-4 h-4 rounded-2xl"
-                    />
-                    <h6 className="text-black font-[500] text-[10px]">
-                      {event.creator.firstName || "unknown"}
-                    </h6>
-                  </li>
-
-                  <li className="flex gap-1 items-center">
-                    <img
-                      src="/event-location.svg"
-                      alt=""
-                      className="w-4 h-4 rounded-2xl"
-                    />
-                    <h6 className="text-[#8A9191] font-[700] text-[10px]">
-                      {event.location}
-                    </h6>
-                  </li>
-
-                  <li className="flex gap-1 items-center">
-                    <img src="/event-timer.svg" alt="" className="w-4 h-4" />
-                    <h6 className="text-[#8A9191] font-[700] text-[10px]">
-                      {event.startDate.toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-
-                      {event.endDate && (
-                        <>
-                          {" "}
-                          –{" "}
-                          {event.endDate.toLocaleTimeString("en-US", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </>
-                      )}
-                    </h6>
-                  </li>
-
-                  <li className="flex gap-1 items-center">
-                    <h6 className="text-[#8A9191] font-[700] text-[10px]">
-                      going
-                    </h6>
-                    <img
-                      src="/tiny-profile.png"
-                      alt=""
-                      className="w-4 h-4 rounded-2xl"
-                    />
-                    <h6 className="text-black font-[500] text-[10px]">
-                      {event.going || "no one yet"}
-                    </h6>
-                  </li>
-
-                  <li>
                     <SiteBtn
                       name="manage"
-                      colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full sm:hidden"
+                      colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
+                      onclick={() => navigate(`/event/${event.id}`)}
                     />
-                  </li>
-                </ul>
-
-                <section className="sm:flex hidden flex-col justify-between text-end h-[100px]">
-                  <h6 className="text-[#8A9191] text-[12px] font-[500]">
-                    12 hours ago
-                  </h6>
-                  <SiteBtn
-                    name="manage"
-                    colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
-                    onclick={() => navigate("/manage-events")}
-                  />
+                  </section>
                 </section>
-              </section>
-            ))}
-          </div>
-        ))}
+              ))}
+            </div>
+          ))}
       </div>
       {isModalOpen && (
         <EventModal eventId={selectedEventId} closeModal={closeModal} />

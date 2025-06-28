@@ -64,7 +64,7 @@ function App() {
             <Route index element={<Settings />} />
           </Route>
 
-          <Route path="/manage-events" element={<HomepageLayout />}>
+          <Route path="/event/:eventId" element={<HomepageLayout />}>
             <Route index element={<ManageEvents />} />
           </Route>
 

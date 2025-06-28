@@ -12,8 +12,8 @@ const Settings = () => {
     email: "",
     firstName: "",
     lastName: "",
-    // bio: "",
-    // profilePictureKey: "",
+    bio: "",
+    profilePictureKey: "",
     state: "",
   });
 
@@ -21,14 +21,14 @@ const Settings = () => {
     const fetchProfile = async () => {
       try {
         const response = await API.get("/profile");
-        const { email, firstName, lastName, state } = response.data;
+        const { email, firstName, lastName, state, bio, profilePictureKey} = response.data;
         setAccountDetails({
           email,
           firstName,
           lastName,
-          // bio: response.data.bio || "",
-          // profilePictureKey: response.data.profilePictureKey || "",
-          state: state || "",
+          bio: bio || "",
+          profilePictureKey: profilePictureKey || "",
+          state,
         });
       } catch (error) {
         console.error("Failed to fetch profile:", error);
