@@ -40,15 +40,15 @@ const NormalHome = () => {
     },
   ];
 
-  const safeToTime = (value) => {
-    const date = new Date(value);
-    return isNaN(date)
-      ? "Invalid time"
-      : date.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-  };
+  // const safeToTime = (value) => {
+  //   const date = new Date(value);
+  //   return isNaN(date)
+  //     ? "Invalid time"
+  //     : date.toLocaleTimeString("en-US", {
+  //         hour: "2-digit",
+  //         minute: "2-digit",
+  //       });
+  // };
 
   // imageUrl is defined in your environment variables
   // and event.imageKey is a valid S3 key
