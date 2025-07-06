@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
-import useEventStore from "@/stores/eventStore";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,13 +42,13 @@ const Header = () => {
       text: "settings",
       image: "/support.svg",
       className: "",
-      onClick: () => navigate("/home"),
+      onClick: () => navigate("/settings"),
     },
     {
       text: "contact us",
       image: "/header-contact.svg",
       className: "border-b border-gray-300",
-      onClick: () => navigate("/home"),
+      onClick: () => navigate("/"),
     },
     {
       text: "sign out",
@@ -64,9 +63,6 @@ const Header = () => {
       },
     },
   ];
-
-  const totalEvents = useEventStore((state) => state.totalEvents);
-  const totalAttendees = useEventStore((state) => state.totalAttendees);
 
   return (
     <header className="flex sm:px-8 sm:py-3 p-4 justify-between bg-[#011F0F] items-center z-20 sticky top-0 shadow-md w-full">
@@ -197,12 +193,11 @@ const Header = () => {
                   </h4>
                   <div className="flex gap-2 text-[12px] satoshi font-[500]">
                     <span>
-                      {totalEvents}{" "}
+                      2{" "}
                       <span className="text-[#8A9191] text-[10px]">Hosted</span>
                     </span>
                     <span>
-                      {totalAttendees}{" "}
-                      <span className="text-[#8A9191]">Attended</span>
+                      2 <span className="text-[#8A9191]">Attended</span>
                     </span>
                   </div>
                 </div>
@@ -243,14 +238,13 @@ const Header = () => {
                       </h4>
                       <div className="flex gap-2 text-[12px] satoshi font-[500]">
                         <span>
-                          {totalEvents}{" "}
+                          2{" "}
                           <span className="text-[#8A9191] text-[10px]">
                             Hosted
                           </span>
                         </span>
                         <span>
-                          {totalAttendees}{" "}
-                          <span className="text-[#8A9191]">Attended</span>
+                          2 <span className="text-[#8A9191]">Attended</span>
                         </span>
                       </div>
                     </div>
