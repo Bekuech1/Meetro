@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // Sample image sources - replace with your actual image URLs
 const imageSources = [

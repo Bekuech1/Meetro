@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import API from "@/lib/axios";
+import Eventdetails from "../event-dashboard/Eventdetails";
 
 const EventModal = ({ eventId, closeModal }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -80,7 +81,10 @@ const EventModal = ({ eventId, closeModal }) => {
                   <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
                     {eventDetails?.title?.S}
                   </h1>
-                  <ModalText img="timer.svg" text={eventDetails?.date?.S} />
+                  <ModalText
+                    img="timer.svg"
+                    text={`${eventDetails?.date?.S}`}
+                  />
                   <div className="w-full min-w-[100px] h-fit flex gap-2">
                     <EventCategories
                       borderBgColor="text-[#9B1C46] border-[#9B1C46]"
@@ -128,10 +132,10 @@ const EventModal = ({ eventId, closeModal }) => {
                 <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
                   <div className="h-fit w-full grid">
                     <p className="capitalize text-[#8A9191] font-[500] text-[14px] leading-[20px] satoshi ">
-                      Target goal
+                      {eventDetails?.chipInType?.S}
                     </p>
                     <h6 className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi ">
-                      ₦ 1000
+                      ₦ {eventDetails?.chipInAmount?.S || "0"}
                     </h6>
                   </div>
                   <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
@@ -140,10 +144,10 @@ const EventModal = ({ eventId, closeModal }) => {
                   </div>
                   <div className="h-fit w-full flex justify-between">
                     <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      ₦ 1000
+                      {/* ₦ {eventDetails?.chipInAmount?.S} */}
                     </h6>
                     <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      ₦ 1000
+                      ₦ {eventDetails?.chipInAmount?.S || "0"}
                     </h6>
                   </div>
                 </div>
@@ -202,7 +206,7 @@ const EventModal = ({ eventId, closeModal }) => {
               <div className="grid gap-2 w-full h-fit">
                 <ModalText img="/dress.svg" text="dress code" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  {eventDetails?.dressCode?.S}
+                  {eventDetails?.dressCode?.S || "Not specified"}
                 </h6>
               </div>
               <div className="grid gap-2 w-full h-fit">
@@ -211,7 +215,6 @@ const EventModal = ({ eventId, closeModal }) => {
                   {eventDetails?.location?.M?.venue?.S}
                 </h6>
                 <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                  {eventDetails?.location?.M?.city?.S},{" "}
                   {eventDetails?.location?.M?.state?.S},{" "}
                   {eventDetails?.location?.M?.country?.S}
                 </p>
@@ -303,14 +306,14 @@ const EventModal = ({ eventId, closeModal }) => {
           <div className="w-full h-fit grid gap-4 items-center justify-center">
             <section className="w-full h-fit gap-[6px]">
               <h1 className="paytone capitalize text-black font-[400] text-[20px]">
-                tech unwind
+                {eventDetails?.title?.S}
               </h1>
               <div className="flex gap-[6px]">
                 <ModalText
                   img="/modal-location.svg"
-                  text="5 Mabushi way, Abuja."
+                  text={`${eventDetails?.location?.M?.venue?.S}, ${eventDetails?.location?.M?.state?.S}`}
                 />
-                <ModalText img="/timer.svg" text="6:30pm" />
+                <ModalText img="/timer.svg" text={eventDetails?.timeFrom?.S} />
               </div>
             </section>
             <img
@@ -329,7 +332,7 @@ const EventModal = ({ eventId, closeModal }) => {
                     className="w-6 h-6 rounded-full border border-white"
                   />
                   <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                    Newman, Victory, Beko
+                    {eventDetails?.creator?.M?.name?.S}
                   </h6>
                 </div>
               </div>
@@ -353,14 +356,8 @@ const EventModal = ({ eventId, closeModal }) => {
                 className={`${
                   isExpanded ? "" : "line-clamp-3"
                 } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Phasellus nec iaculis mauris. Curabitur ultrices eu lorem ut
-                volutpat. Sed id ligula sit amet libero pulvinar egestas. Morbi
-                scelerisque euismod justo nec scelerisque. Nam ultricies nulla
-                quis nunc facilisis, in commodo augue placerat. Vivamus feugiat,
-                lorem eget varius sollicitudin, lorem mauris tristique metus, id
-                cursus odio nisi nec nunc. Fusce nec arcu vel neque consectetur
-                auctor.
+                {eventDetails?.description?.S ||
+                  "No description for this event"}
               </h4>
 
               {/* Read More Button */}
@@ -378,10 +375,10 @@ const EventModal = ({ eventId, closeModal }) => {
             <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
               <div className="h-fit w-full grid">
                 <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi ">
-                  Target goal
+                  {eventDetails?.chipInType?.S || "Not specified"}
                 </p>
                 <h6 className="capitalize text-black font-[700] text-[24px] satoshi ">
-                  ₦ 1000
+                  ₦ {eventDetails?.chipInAmount?.S || "0"}
                 </h6>
               </div>
               <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
@@ -390,7 +387,9 @@ const EventModal = ({ eventId, closeModal }) => {
               </div>
               <div className="h-fit w-full flex justify-between">
                 <h6 className="satoshi font-[500] text-[16px]">₦ 1000</h6>
-                <h6 className="satoshi font-[500] text-[16px]">₦ 1000</h6>
+                <h6 className="satoshi font-[500] text-[16px]">
+                  ₦ {eventDetails?.chipInAmount?.S || "0"}
+                </h6>
               </div>
             </div>
           </div>
@@ -412,7 +411,7 @@ const EventModal = ({ eventId, closeModal }) => {
             <div className="w-full h-fit flex justify-between">
               <div className="w-full h-fit grid gap-1 satoshi">
                 <h5 className="text-[16px] font-[700] leading-[24px] text-black">
-                  ✅ You’re going!
+                  ✅ You're going!
                 </h5>
                 <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
                   We'll send you reminders and updates so you don’t miss a
@@ -449,16 +448,18 @@ const EventModal = ({ eventId, closeModal }) => {
           <div className="grid gap-2 w-full h-fit">
             <ModalText img="/dress.svg" text="dress code" />
             <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-              casual
+              {eventDetails?.dressCode?.S || "Not specified"}
             </h6>
           </div>
           <div className="grid gap-2 w-full h-fit">
             <ModalText img="/modal-location.svg" text="location" />
             <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-              CCHub
+              {eventDetails?.location?.M?.venue?.S || "Not specified"}
             </h6>
             <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-              294 Herbert Macaulay Wy, Sabo yaba, Lagos 101245, Lagos, Nigeria
+              {`${eventDetails?.location?.M?.state?.S || "Not specified"}, ${
+                eventDetails?.location?.M?.country?.S || "Not specified"
+              }`}
             </p>
           </div>
 
@@ -563,11 +564,11 @@ export const ModalBtn = ({ onClick, bgcolor, image, textcolor, text }) => {
   );
 };
 
-export const Attendance = ({ img, text, textcolor, onclick }) => {
+export const Attendance = ({ img, text, textcolor, onClick }) => {
   return (
     <div
       className="cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center"
-      onClick={onclick}>
+      onClick={onClick}>
       <img src={img} alt="" className="size-8" />
       <h6
         className={`text-[${textcolor}] font-[400] text-[12px] lg:leading-[18px] capitalize`}>

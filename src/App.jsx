@@ -22,7 +22,7 @@ import ManageEvents from "./routes/ManageEvents";
 import { useRehydrateAuth } from "./lib/useRehydrateAuth";
 
 function App() {
-  useRehydrateAuth();  // This hook is used to rehydrate the auth state from local storage or session storage
+  useRehydrateAuth(); // This hook is used to rehydrate the auth state from local storage or session storage
 
   return (
     <>
@@ -45,7 +45,14 @@ function App() {
           /> */}
 
           {/* Profile Routes */}
-          <Route path="/profile" element={<UserProfile />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
           {/* <Route path="/settings" element={<Settings />} /> */}
 
           {/* Homepage Route */}
