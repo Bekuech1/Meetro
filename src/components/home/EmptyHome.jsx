@@ -18,7 +18,7 @@ const EmptyHome = () => {
   ];
 
   return (
-    <main className="bg-[#F0F0F0] flex flex-col px-20 py-10 gap-[43px] h-[90vh] max-h-[760px] relative">
+    <main className="bg-[#F0F0F0] flex flex-col px-20 py-10 gap-[43px] h-[90vh] max-h-[760px] relative overflow-hidden">
       <div className="flex gap-4 justify-center w-full h-fit">
         {homeBtn.map((item, index) => (
           <EventsBtn

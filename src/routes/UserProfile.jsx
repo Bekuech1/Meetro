@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "../components/home/Header";
 import Footer from "../components/Layout-conponents/Footer";
 import PersonalProfile from "../components/Profile/PersonalProfile";
+import Header from "@/components/home/HomeNav";
 
 const UserProfile = () => {
   return (
