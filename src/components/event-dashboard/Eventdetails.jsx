@@ -40,16 +40,18 @@ const Eventdetails = () => {
 
   const handleConfirmAttendance = async (responseType) => {
     try {
-      // First create a share if one doesn't exist
+      console.log("Confirming attendance for:", eventId);
       const shareResponse = await API.post(`/shares`, { eventId });
+      console.log("Share created:", shareResponse.data);
 
-      // Then confirm attendance
-      await API.post(`/shares/${shareResponse.data.shareId}/confirm`, {
-        responseType,
-      });
+      const shareId = shareResponse.data?.shareId;
+      if (!shareId) throw new Error("shareId not returned");
+
+      await API.post(`/shares/${shareId}/confirm`, { responseType });
 
       setAttendanceStatus(responseType);
     } catch (err) {
+      console.error("Confirm attendance error:", err.response?.data || err);
       setError(err.response?.data?.error || "Failed to confirm attendance");
     }
   };
@@ -67,14 +69,20 @@ const Eventdetails = () => {
     return <div className="text-center py-10">Event not found</div>;
   }
 
+  const imageUrl = import.meta.env.VITE_IMAGE_URL;
+  const imagePath = `${imageUrl.replace(
+    /\/$/,
+    ""
+  )}/${eventData.imageKey?.S?.replace(/^\//, "")}`;
+
   return (
     <div className="mt-4 flex flex-col md:flex-row gap-8">
       {/* Left Section - Event Image and Host Info */}
       <section className="w-full lg:w-[349px] h-full grid gap-8 relative overflow-y-auto scrollbar-hide">
         <div className="relative">
           <img
-            src={eventData.imageUrl?.S || "/events-modal.png"}
-            alt="Event"
+            src={imagePath}
+            alt="Event-poster"
             className="rounded-3xl w-full lg:w-[393px] h-[318px] lg:h-[349px]"
           />
           <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
@@ -125,11 +133,7 @@ const Eventdetails = () => {
             </h1>
             <ModalText
               img="/timer.svg"
-              text={
-                eventData.date?.S
-                  ? new Date(eventData.date.S).toLocaleString()
-                  : "Date not specified"
-              }
+              text={`${eventData?.date?.S} - ${eventData?.timeFrom?.S}`}
             />
             <div className="w-full min-w-[100px] h-fit flex gap-2">
               {eventData.categories?.L?.map((category, index) => (
@@ -202,7 +206,7 @@ const Eventdetails = () => {
             {attendanceStatus === "yes" ? (
               <>
                 <ModalBtn
-                  onClick={() => console.log("Invite friend")}
+                  onClick={() => handleConfirmAttendance("no")}
                   bgcolor="bg-[#E6F2F3]"
                   image="/send.svg"
                   textcolor="text-black"
@@ -247,10 +251,11 @@ const Eventdetails = () => {
         <div className="grid gap-2 w-full h-fit">
           <ModalText img="/modal-location.svg" text="location" />
           <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-            {eventData.locationName?.S || "Location not specified"}
+            {eventData.location?.M?.venue?.S || "Location not specified"}
           </h6>
           <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-            {eventData.locationAddress?.S || "Address not specified"}
+            {eventData.location?.M?.state?.S},{" "}
+            {eventData.location?.M?.country?.S}
           </p>
         </div>
 

@@ -36,6 +36,7 @@ const EmptyHome = () => {
           <br /> create an event?
         </h1>
       </div>
+      
       <div class=" absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
         {/* <!-- Left Ellipse --> */}
         <div class="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>

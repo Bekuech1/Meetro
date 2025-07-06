@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputModals from "../InputModals";
 import PopUpInput from "./Popup components/PopUpInput";
 import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
-import { banks, searchBanks } from "../../../utils/Banks"; // Import the banks data and search function
+import { searchBanks } from "../../../utils/Banks"; // Import the banks data and search function
+import API from "@/lib/axios";
 
 const ChipIn = ({ isVisible, onClose, onSave }) => {
   const [showBank, setShowBank] = useState(false);
@@ -14,12 +15,15 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
   const [accountNumber, setAccountNumber] = useState("");
   const [accountName, setAccountName] = useState("");
   const [amount, setAmount] = useState("0.00");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
 
   // Function to set event type based on activeTab
-  const setChipInType = (activeTab) => { 
+  const setChipInType = (activeTab) => {
     switch (activeTab) {
       case 0:
-        return "FIXED";   
+        return "FIXED";
       case 1:
         return "TARGET GOAL";
       case 2:
@@ -42,6 +46,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
     setSearchInput(bank.name);
     setSelectedBankCode(bank.code);
     setShowBankList(false);
+    setErrorMessage(""); // Clear any previous error messages
   };
 
   const handleInputChange = (e) => {
@@ -81,7 +86,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
   const handleSave = () => {
     if (onSave) {
       onSave({
-        selectedBank,
+        selectedBankName: selectedBank,
         selectedBankCode,
         accountNumber,
         accountName,
@@ -91,6 +96,41 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
     }
     onClose();
   };
+
+  useEffect(() => {
+    const shouldVerify = accountNumber.length === 10 && selectedBankCode;
+    if (shouldVerify) {
+      verifyAccount(accountNumber, selectedBankCode);
+    }
+  }, [accountNumber, selectedBankCode]);
+
+  const verifyAccount = async (accNumber, bankCode) => {
+    setIsVerifying(true);
+    setErrorMessage(""); // Clear any previous errors
+
+    try {
+      const response = await API.post("/verify-bank", {
+        accountNumber: accNumber,
+        bankCode: bankCode,
+      });
+
+      if (response.data.isValid) {
+        setAccountName(response.data.accountName);
+      } else {
+        setAccountName("");
+        setErrorMessage("Bank verification failed. Please check your inputs.");
+      }
+    } catch (error) {
+      console.error("Bank verification error:", error);
+      setAccountName("");
+      setErrorMessage(
+        error.response?.data?.error || "Something went wrong. Try again."
+      );
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
 
   if (!isVisible) return null;
 
@@ -128,22 +168,6 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* Account Name Input */}
-              <div className="w-full h-fit satoshi grid gap-1 relative">
-                <label className="text-[10px] font-bold text-[#8A9191] capitalize">
-                  account name
-                </label>
-                <div className="w-full h-fit bg-[#FFFFFE]/50 flex pr-2 pl-4 py-3 rounded-[12px] border border-white cursor-pointer">
-                  <input
-                    type="text"
-                    value={accountName}
-                    onChange={(e) => setAccountName(e.target.value)}
-                    placeholder="Account Name"
-                    className="w-full h-fit leading-tight text-sm font-medium satoshi capitalize text-black bg-transparent outline-none placeholder:text-[#8A9191]"
-                  />
-                </div>
-              </div>
-
               {/* Bank Selection */}
               <div className="w-full h-fit satoshi grid gap-1 relative">
                 <label className="text-[10px] font-bold text-[#8A9191] capitalize">
@@ -151,8 +175,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                 </label>
                 <div
                   className="w-full h-fit bg-[#FFFFFE]/50 flex pr-2 pl-4 py-3 rounded-[12px] border border-white cursor-pointer"
-                  onClick={() => setShowBankList((prev) => !prev)}
-                >
+                  onClick={() => setShowBankList((prev) => !prev)}>
                   <input
                     type="text"
                     value={searchInput}
@@ -169,20 +192,47 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                       <li
                         key={bank.code}
                         className="flex items-center px-4 py-2 cursor-pointer hover:scale-105 transition-transform justify-between font-medium text-[14px]"
-                        onClick={() => handleBankSelect(bank)}
-                      >
+                        onClick={() => handleBankSelect(bank)}>
                         <span
                           className={`cursor-pointer transition text-[14px] satoshi capitalize ${
                             bank.name === selectedBank
                               ? "text-black font-[600]"
                               : "text-[#8A9191] font-medium"
-                          }`}
-                        >
+                          }`}>
                           {bank.name}
                         </span>
                       </li>
                     ))}
                   </ul>
+                )}
+              </div>
+
+              {/* Account Name Input */}
+              <div className="w-full h-fit satoshi grid gap-1 relative">
+                <label className="text-[10px] font-bold text-[#8A9191] capitalize">
+                  account name
+                </label>
+                <div
+                  className={`w-full h-fit bg-[#FFFFFE]/50 flex pr-2 pl-4 py-3 rounded-[12px] border ${
+                    errorMessage ? "border-red-400" : "border-white"
+                  } cursor-pointer`}>
+                  <input
+                    type="text"
+                    value={accountName}
+                    readOnly
+                    placeholder="Account Name"
+                    className="w-full h-fit leading-tight text-sm font-medium satoshi capitalize text-black bg-transparent outline-none placeholder:text-[#8A9191]"
+                  />
+                </div>
+                {isVerifying && (
+                  <p className="text-[10px] text-blue-500 mt-1 satoshi font-medium">
+                    Verifying account details...
+                  </p>
+                )}
+                {errorMessage && (
+                  <p className="text-[10px] text-red-500 mt-1 satoshi font-medium">
+                    {errorMessage}
+                  </p>
                 )}
               </div>
             </div>
@@ -224,8 +274,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
       text2="Target Goal"
       text3="As the Spirit leads"
       activeTab={activeTab}
-      onTabChange={handleTabChange}
-    >
+      onTabChange={handleTabChange}>
       {[
         <div key="1">
           <Content
@@ -266,7 +315,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
 };
 
 const Content = ({
-  label,
+  // label,
   header,
   showBank,
   accNo,
