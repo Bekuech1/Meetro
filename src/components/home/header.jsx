@@ -68,7 +68,6 @@ const Header = () => {
   const totalEvents = useEventStore((state) => state.totalEvents);
   const totalAttendees = useEventStore((state) => state.totalAttendees);
 
-
   return (
     <header className="flex sm:px-8 sm:py-3 p-4 justify-between bg-[#011F0F] items-center z-20 sticky top-0 shadow-md w-full">
       {/* Logo and My Events */}
@@ -250,7 +249,8 @@ const Header = () => {
                           </span>
                         </span>
                         <span>
-                          {totalAttendees} <span className="text-[#8A9191]">Attended</span>
+                          {totalAttendees}{" "}
+                          <span className="text-[#8A9191]">Attended</span>
                         </span>
                       </div>
                     </div>
