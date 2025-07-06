@@ -49,7 +49,7 @@ const Header = () => {
       text: "contact us",
       image: "/header-contact.svg",
       className: "border-b border-gray-300",
-      onClick: () => navigate("/"),
+      onClick: () => navigate("/home"),
     },
     {
       text: "sign out",
