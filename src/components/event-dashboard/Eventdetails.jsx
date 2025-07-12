@@ -70,10 +70,7 @@ const Eventdetails = () => {
   }
 
   const imageUrl = import.meta.env.VITE_IMAGE_URL;
-  const imagePath = `${imageUrl.replace(
-    /\/$/,
-    ""
-  )}/${eventData.imageKey?.S?.replace(/^\//, "")}`;
+  const imagePath = `${imageUrl} / ${eventData.imageKey?.S}`;
 
   return (
     <div className="mt-4 flex flex-col md:flex-row gap-8">
