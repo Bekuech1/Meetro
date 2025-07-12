@@ -11,7 +11,7 @@ const imageSources = [
   "/event-ph7.jpg",
 ];
 
-const ImageModal = ({ onClose, isOpen, onSave }) => {
+const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
   if (!isOpen) return null;
 
   // State to manage selected image and uploaded image
@@ -33,7 +33,7 @@ const ImageModal = ({ onClose, isOpen, onSave }) => {
     onClose(); // Close modal after selection
   };
 
-  const handleImageUpload = (event) => {
+  const handleLocalFileRead = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -57,6 +57,34 @@ const ImageModal = ({ onClose, isOpen, onSave }) => {
     }
   };
 
+  const handleImageUploadLocal = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const result = await handleImageUpload(file);
+
+      if (result.success) {
+        setUploadedImage(result.imageUrl);
+        setSelectedImage(null); // Clear template selection if image is uploaded
+
+        // Pass data back to parent
+        if (onSave) {
+          onSave({
+            type: "upload",
+            file: file,
+            imageUrl: result.imageUrl,
+            fileName: file.name,
+          });
+        }
+        onClose(); // Close modal after upload
+      } else {
+        console.error("Image upload failed:", result.error);
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
 
   return (
     <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
@@ -83,7 +111,7 @@ const ImageModal = ({ onClose, isOpen, onSave }) => {
               <input
                 type="file"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleImageUploadLocal}
                 className="absolute inset-0 w-full h-full cursor-pointer opacity-0"
               />
             </label>
@@ -94,8 +122,7 @@ const ImageModal = ({ onClose, isOpen, onSave }) => {
             <div
               key={index}
               className={`image-wrapper rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer`}
-              onClick={() => handleImageSelect(src)}
-            >
+              onClick={() => handleImageSelect(src)}>
               <img
                 src={src}
                 alt={`Template ${index + 1}`}

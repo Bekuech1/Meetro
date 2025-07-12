@@ -14,25 +14,32 @@ const ShareEvent = ({ eventId }) => {
     if (!isOpen) {
       try {
         setIsLoading(true);
+
         // Fetch event details
-        console.log("Fetching event details for ID:", eventId);
         const eventResponse = await API.get(`/events/${eventId}`);
         setEventDetails(eventResponse.data);
 
-        const currentUrl = window.location.href;
-        setShareUrl(currentUrl)
-
         // Create share link
         const shareResponse = await API.post(`/shares`, { eventId });
-        // setShareUrl(shareResponse.data.shareUrl);
-        console.log("Share URL:", shareResponse.data.shareUrl);
+        const { shareId } = shareResponse.data;
+
+        // Construct new share URL
+        const shareUrlWithRef = `${window.location.origin}/event/${eventId}?ref=share_${shareId}`;
+        setShareUrl(shareUrlWithRef);
+
+        // Update browser URL (without page reload)
+        const newPath = `/event/${eventId}?ref=share_${shareId}`;
+        window.history.pushState({}, "", newPath);
+
+        console.log("Share URL:", shareUrlWithRef);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to share event");
       } finally {
         setIsLoading(false);
       }
     }
-    setIsOpen(!isOpen);
+
+    setIsOpen((prev) => !prev);
   };
 
   const copyToClipboard = () => {
@@ -72,9 +79,9 @@ const ShareEvent = ({ eventId }) => {
                   <div className="flex justify-center items-center py-10">
                     <p>Loading event details...</p>
                   </div>
-                // ) : error ? (
-                  // <div className="text-red-500 text-center py-4">{error}</div>
                 ) : (
+                  // ) : error ? (
+                  // <div className="text-red-500 text-center py-4">{error}</div>
                   <div className="bg-[#FFFFFE80] backdrop-blur-xl border border-[#FFFFFE] rounded-[12px] p-2 flex gap-2 items-center">
                     <div>
                       <img
@@ -90,9 +97,9 @@ const ShareEvent = ({ eventId }) => {
                           {eventDetails?.title?.S || "Event"}
                         </p>
                         <p>
-                            {eventDetails?.date?.S
-                             ? new Date(eventDetails.date.S).toLocaleString()
-                             : "Date not specified"}
+                          {eventDetails?.date?.S
+                            ? new Date(eventDetails.date.S).toLocaleString()
+                            : "Date not specified"}
                         </p>
                       </div>
 
@@ -102,7 +109,7 @@ const ShareEvent = ({ eventId }) => {
                         <p className="font-bold text-[12px] text-[#011F0F]">
                           Copy Link
                         </p>{" "}
-                          <img src="/link.svg" alt="Copy" className="w-4 h-4" />
+                        <img src="/link.svg" alt="Copy" className="w-4 h-4" />
                         {copied && (
                           <span className="text-green-600 ml-2">Copied!</span>
                         )}

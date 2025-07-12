@@ -42,15 +42,15 @@ const Header = () => {
     {
       text: "settings",
       image: "/support.svg",
-      className: "",
-      onClick: () => navigate("/home"),
-    },
-    {
-      text: "contact us",
-      image: "/header-contact.svg",
       className: "border-b border-gray-300",
-      onClick: () => navigate("/home"),
+      onClick: () => navigate("/settings"),
     },
+    // {
+    //   text: "contact us",
+    //   image: "/header-contact.svg",
+    //   className: "border-b border-gray-300",
+    //   onClick: () => navigate("/home"),
+    // },
     {
       text: "sign out",
       image: "/logout.svg",
@@ -60,6 +60,7 @@ const Header = () => {
         useAuthStore.getState().setAccessToken(null);
         useAuthStore.getState().setRefreshToken(null);
         useAuthStore.getState().setIdToken(null);
+        // useEventStore.getState().resetStore();
         navigate("/");
       },
     },

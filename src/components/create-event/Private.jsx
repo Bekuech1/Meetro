@@ -12,6 +12,7 @@ import EventType from "./PopUps/EventType";
 import API from "@/lib/axios";
 import { banks } from "@/utils/Banks";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 // Default image sources array (should match the one in ImageModal)
 const imageSources = [
@@ -393,11 +394,11 @@ const Private = ({ onPublic }) => {
   // Handle image upload
   const handleImageUpload = async (file) => {
     try {
-      console.log("handleImageUpload called with file:", file);
-      const fileName = `event-image-${Date.now()}.${file.name
-        .split(".")
-        .pop()}`;
-      const response = await API.post(`/upload`, { fileName });
+      const fileExtension = file.name.split(".").pop();
+      const response = await API.post(`/upload`, {
+        type: "event_temp",
+        fileExtension: fileExtension,
+      });
 
       const { uploadUrl, fileKey } = response.data;
       console.log("Upload URL:", uploadUrl);
@@ -405,26 +406,27 @@ const Private = ({ onPublic }) => {
       console.log("File type:", file.type);
       console.log("Got upload URL:", uploadUrl);
 
-      await API.put(uploadUrl, file, {
+      // const putUrl = import.meta.env.VITE_IMAGE_TO_S3_URL;
+      await axios.put(uploadUrl, file, {
         headers: {
           "Content-Type": file.type,
         },
       });
 
-      setEventImage({
-        type: "uploaded",
-        imageUrl: uploadUrl.split("?")[0], // Remove query params from URL
-        imageKey: fileKey,
-      });
+      const getImg = import.meta.env.VITE_IMAGE_URL;
+      const evtImg = `${getImg}/${fileKey}`;
+      console.log("Image URL after upload:", evtImg);
 
-      return fileKey;
+      return {
+        success: true,
+        imageUrl: evtImg, // Remove query params from URL
+        imageKey: fileKey,
+      };
     } catch (error) {
       console.error("Image upload failed:", error);
       throw error;
     }
   };
-  // console.log("current image url", getCurrentImageUrl());
-  // console.log("event image", eventImage);
 
   // Create event function
   const handleCreateEvent = async () => {
@@ -454,7 +456,7 @@ const Private = ({ onPublic }) => {
       },
       isPrivate: true,
       dressCode: dressCode,
-      tempImageKey: eventImage?.imageUrl,
+      tempImageKey: eventImage?.imageKey,
       ...(amount && {
         chipInAmount: amount,
         chipInType: chipInType,
@@ -719,6 +721,7 @@ const Private = ({ onPublic }) => {
         onClose={closeImageModal}
         isOpen={imageModal}
         onSave={handleImageSave}
+        handleImageUpload={handleImageUpload}
         onUpload={handleImageUpload}
         banks={banks}
       />
