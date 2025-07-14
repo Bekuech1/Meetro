@@ -81,7 +81,7 @@ const Settings = () => {
               }`}>
               Accounts
             </button>
-            <button
+            {/* <button
               onClick={() => setActiveTab("preferences")}
               className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi ${
                 activeTab === "preferences"
@@ -89,7 +89,7 @@ const Settings = () => {
                   : "text-[#010E1F]"
               }`}>
               Preferences
-            </button>
+            </button> */}
             <button
               onClick={() => setActiveTab("payments")}
               className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi ${
