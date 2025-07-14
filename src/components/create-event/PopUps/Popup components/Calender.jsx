@@ -6,6 +6,7 @@ const Calender = ({ value, onChange, label }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -16,8 +17,14 @@ const Calender = ({ value, onChange, label }) => {
   };
 
   const handleDateClick = (date) => {
-    onChange(date); // Trigger the parent component's onChange handler
-    setIsOpen(false);
+    // Only allow selection of current day or future dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (date >= today) {
+      onChange(date);
+      setIsOpen(false);
+    }
   };
 
   const handlePrevMonth = () => {
@@ -42,20 +49,50 @@ const Calender = ({ value, onChange, label }) => {
 
   const daysInMonth = getDaysInMonth(currentMonth);
 
+  // Helper function to get date styling
+  const getDateStyling = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const compareDate = new Date(date);
+    compareDate.setHours(0, 0, 0, 0);
+    
+    const isSelected = value && value.toDateString() === date.toDateString();
+    const isPast = compareDate < today;
+    const isToday = compareDate.getTime() === today.getTime();
+    const isFuture = compareDate > today;
+
+    if (isSelected) {
+      return "text-white bg-[#011F0F] font-[600]";
+    } else if (isPast) {
+      return "text-[#8A9191] font-medium cursor-not-allowed";
+    } else if (isToday || isFuture) {
+      return "text-black font-medium hover:bg-gray-100";
+    }
+    
+    return "text-[#8A9191] font-medium";
+  };
+
+  // Helper function to determine if date is clickable
+  const isDateClickable = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date >= today;
+  };
+
   return (
     <div className="relative w-full h-fit">
       {/* Input Field */}
-
       <PopUpInput
         value={formattedDate}
         onClick={() => setIsOpen(!isOpen)}
         isOpen={isOpen}
-        leftIcon="/calendar.svg" // Use a custom left icon
-        rightIcon="/arrow-down-gray.svg" // Use a custom right icon
-        showLeftIcon={true} // Show or hide the left icon
-        showRightIcon={true} // Show or hide the right icon
-        rounded="rounded-l-[12px]" // Fully rounded corners
-        placeholder="Pick a date" // Custom placeholder text
+        leftIcon="/calendar.svg"
+        rightIcon="/arrow-down-gray.svg"
+        showLeftIcon={true}
+        showRightIcon={true}
+        rounded="rounded-l-[12px]"
+        placeholder="Pick a date"
         label={label}
       />
 
@@ -71,6 +108,7 @@ const Calender = ({ value, onChange, label }) => {
               <img
                 src="/arrow-down-gray.svg"
                 className="w-5 h-4 rotate-90 hover:scale-150 transition-transform duration-200"
+                alt="Previous month"
               />
             </button>
             <span className="text-black text-[12px] font-[400] paytone">
@@ -84,6 +122,7 @@ const Calender = ({ value, onChange, label }) => {
               <img
                 src="/arrow-down-gray.svg"
                 className="w-5 h-4 rotate-270 hover:scale-150 transition-transform duration-200"
+                alt="Next month"
               />
             </button>
           </div>
@@ -106,10 +145,13 @@ const Calender = ({ value, onChange, label }) => {
               <button
                 key={index}
                 onClick={() => handleDateClick(date)}
-                className={`p-2 rounded-lg satoshi text-[10px] flex justify-center hover:scale-125 ${
-                  value?.toDateString() === date.toDateString()
-                    ? "text-black font-[600]"
-                    : "text-[#8A9191] font-medium"
+                disabled={!isDateClickable(date)}
+                className={`p-2 rounded-lg satoshi text-[10px] flex justify-center transition-all duration-200 ${
+                  getDateStyling(date)
+                } ${
+                  isDateClickable(date) 
+                    ? "hover:scale-125 cursor-pointer" 
+                    : "cursor-not-allowed"
                 }`}
               >
                 {date.getDate()}

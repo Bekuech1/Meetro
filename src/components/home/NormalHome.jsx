@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EventsBtn from "./EventsBtn";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import EventModal from "./EventModal";
 import useEventStore from "@/stores/eventStore";
@@ -70,18 +69,23 @@ const NormalHome = () => {
 
 
   return (
-    <main className="bg-[#F0F0F0] relative min-h-[90vh] w-full grid items-start gap-[43px] md:px-20 px-4 py-10">
-      <div className="grid md:w-[680px] w-full mx-auto gap-6 z-10">
-        {/* Header */}
-        <section className="flex justify-between items-center">
+    <main className="bg-[#F0F0F0] relative min-h-[90vh] w-full grid gap-[43px] md:px-20 px-4 py-10">
+      <div className="grid md:w-[680px] w-full h-fit mx-auto gap-6 z-10">
+        <section className="flex h-fit">
           <h1 className="paytone capitalize text-[#055962] sm:text-[30px] text-[20px] font-[400]">
             my events
           </h1>
-          <div className="flex gap-4">
-            {homeBtn.map((item, i) => (
-              <EventsBtn key={i} {...item} />
+          {/* <div className="flex gap-4">
+            {homeBtn.map((item, index) => (
+              <EventsBtn
+                key={index}
+                onClick={item.onClick}
+                image={item.image}
+                text={item.text}
+                style={item.style}
+              />
             ))}
-          </div>
+          </div> */}
         </section>
 
         {/* Events by grouped date */}
