@@ -100,9 +100,9 @@ const EventModal = ({ eventId, closeModal }) => {
                   <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
                     <img src="/send.svg" alt="" />
                   </div>
-                  <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
+                  {/* <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
                     <img src="/download.svg" alt="" />
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
