@@ -64,12 +64,12 @@ const PersonalProfile = () => {
                   {user?.email}
                 </p>
               </span>
-              <span className="flex items-center gap-2">
+              {/* <span className="flex items-center gap-2">
                 <img src="/icons/location.svg" alt="location-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">
                   {user?.state}
                 </p>
-              </span>
+              </span> */}
               <span className="flex items-center gap-2">
                 <img src="/calendar.svg" alt="calendar-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">
@@ -98,23 +98,31 @@ const PersonalProfile = () => {
             {activeTab === "events" ? "Past Events" : "Invites"}
           </h2>
 
-          <div className="flex items-center justify-center gap-2 bg-[#fffffe] h-[30px] w-full md:w-[98px] p-1 rounded-[20px]">
+          <div
+            style={{
+              boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
+              backdropFilter: "blur(16px)",
+            }}
+            className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
+          >
             <button
               onClick={() => setActiveTab("events")}
-              className={`rounded-3xl w-1/2 md:w-[47px] h-[22px] transition-all text-[10px] font-bold satoshi ${
+              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi flex items-center py-2 px-2 cursor-pointer justify-center ${
                 activeTab === "events"
                   ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
                   : "text-[#010E1F]"
-              }`}>
+              }`}
+            >
               Events
             </button>
             <button
               onClick={() => setActiveTab("invites")}
-              className={`rounded-3xl w-1/2 md:w-[47px] h-[22px] transition-all text-[10px] font-bold satoshi ${
+              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi flex items-center py-2 px-2 cursor-pointer justify-center ${
                 activeTab === "invites"
                   ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
                   : "text-[#010E1F]"
-              }`}>
+              }`}
+            >
               Invites
             </button>
           </div>

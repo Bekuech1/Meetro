@@ -15,6 +15,7 @@ const NormalHome = () => {
   useEffect(() => {
     fetchEvents().then((res) => {
       if (res) {
+        console.log("Fetched events details:", res);
         const grouped = groupEventsByDate(res);
         setGroupedEvents(grouped);
       }
@@ -116,9 +117,9 @@ const NormalHome = () => {
                   className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
                 />
 
-                <ul className="w-full grid sm:gap-1 gap-2">
+                <ul className="w-full grid sm:gap-[2px] gap-[2px] satoshi">
                   <li className="flex justify-between">
-                    <h4 className="capitalize">{event.title}</h4>
+                    <h4 className="capitalize satoshi text-[#001010] text-base font-medium leading-tight">{event.title}</h4>
                     <h6 className="satoshi text-[#8A9191] sm:hidden text-[10px]">
                       {event.relativeTime || "12 h"}
                     </h6>
@@ -126,7 +127,7 @@ const NormalHome = () => {
 
                   {/* Host */}
                   <li className="flex gap-1 items-center">
-                    <h6 className="text-[#8A9191] text-[10px] font-[700]">
+                    <h6 className="text-[#8A9191] text-[10px] font-[700] capitalize satoshi">
                       host
                     </h6>
                     <img
@@ -156,7 +157,7 @@ const NormalHome = () => {
 
                   {/* Going */}
                   <li className="flex gap-1 items-center">
-                    <h6 className="text-[#8A9191] text-[10px] font-[700]">
+                    <h6 className="text-[#8A9191] text-[10px] font-[700] capitalize satoshi">
                       going
                     </h6>
                     <img
@@ -172,7 +173,7 @@ const NormalHome = () => {
                   <li className="sm:hidden">
                     <SiteBtn
                       name="manage"
-                      colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full"
+                      colorPadding="bg-[#AEFC40] py-2 px-4 w-full mt-[2px]"
                       onclick={() => navigate(`/event/${event.id}`)}
                     />
                   </li>

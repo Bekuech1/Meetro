@@ -7,6 +7,7 @@ import React, { useState } from "react";
 //   SelectValue,
 // } from "../ui/select";
 import PopUpInput from "../create-event/PopUps/Popup components/PopUpInput";
+import TextOnlyInput from "../create-event/PopUps/Popup components/TextOnlyInput";
 import { statesAndCapitals } from "@/constants/StateAndCapital";
 
 const Account = ({ form, setForm }) => {
@@ -48,8 +49,8 @@ const Account = ({ form, setForm }) => {
               <button className="w-full p-2 bg-[#FFFFFE] text-[#095256] paytone rounded-[60px]">
                 Upload image
               </button>
-              <button className="w-[36px] h-[36px] p-2.5 bg-[#FFFFFE] rounded-[60px] flex items-center justify-center">
-                <img src="/trash.svg" alt="del-icon" />
+              <button className="w-fit p-3 bg-[#FFFFFE] rounded-[60px] flex items-center justify-center">
+                <img src="/trash.svg" alt="del-icon" className="" />
               </button>
             </div>
           </div>
@@ -89,7 +90,7 @@ const Account = ({ form, setForm }) => {
               placeholder="Last name"
               value={form.lastName}
               onChange={(e) => handleChange("lastName", e.target.value)}
-              className="py-3 px-2 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-r-[12px] text-[14px] text-[#8A9191] font-medium w-1/2"
+              className="py-2 px-2 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-r-[12px] text-[14px] text-[#8A9191] font-medium w-1/2"
             />
           </div>
         </div>
@@ -98,14 +99,20 @@ const Account = ({ form, setForm }) => {
           <label htmlFor="" className="text-[12px] font-bold text-[#8A9191]">
             Email
           </label>
-          <div className="relative flex items-center w-full">
-            <img src="/sms.svg" alt="" className="absolute ml-2 rounded-full" />
+          <div className="flex relative items-center w-full bg-[#FFFFFE80] rounded-[12px] border border-[#FFFFFE] py-[10px]">
+            <div className="ml-2 absolute bg-white p-1 rounded-[50px]">
+              <img
+                src="/sms.svg"
+                alt=""
+                className="rounded-full"
+              />
+            </div>
             <input
               type="email"
               placeholder="Enter your email address"
               value={form.email}
               onChange={(e) => handleChange("email", e.target.value)}
-              className="py-3 pl-10 bg-[#FFFFFE80] border border-[#FFFFFE] rounded-[12px] w-full text-[#8A9191] text-[14px] font-medium"
+              className="pl-10 w-full px-2 outline-none cursor-text text-left text-[#8A9191] font-medium text-[14px] capitalize satoshi"
             />
           </div>
         </div>
@@ -115,7 +122,7 @@ const Account = ({ form, setForm }) => {
             Location
           </label>
           <div className="flex gap-1 w-full">
-            <div className="flex relative items-center w-1/2">
+            <div className="flex relative items-center w-1/2 bg-[#FFFFFE80] rounded-l-[12px] border border-[#FFFFFE] py-2">
               <img
                 src="/location.svg"
                 alt=""
@@ -126,7 +133,7 @@ const Account = ({ form, setForm }) => {
                 placeholder="Type in offline loaction"
                 // value={form.location || ""}
                 // onChange={(e) => handleChange("location", e.target.value)}
-                className="pl-10 bg-[#FFFFFE80] py-3 rounded-l-[12px] border border-[#FFFFFE] w-full text-[14px] font-medium text-[#8A9191]"
+                className="pl-10 w-full px-2 outline-none cursor-text text-left text-[#8A9191] font-medium text-[14px] capitalize satoshi"
               />
             </div>
 
@@ -161,7 +168,8 @@ const Account = ({ form, setForm }) => {
                           setStateLocation(state);
                           handleChange("state", state);
                           setIsOpen(false);
-                        }}>
+                        }}
+                      >
                         {state}
                       </span>
                     </li>

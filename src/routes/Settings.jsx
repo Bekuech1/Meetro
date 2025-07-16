@@ -71,10 +71,15 @@ const Settings = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center gap-[17px] justify-between">
           <h2 className="text-[30px] paytone text-[#055962]">Settings</h2>
 
-          <div className="flex items-center justify-center bg-[#fffffe] w-full md:w-[188px] h-7.5 md:h-6.5 p-1 md:p-0.5 rounded-[20px]">
+          <div style={{
+                boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
+                backdropFilter: "blur(16px)",
+              }}
+              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
+            >
             <button
               onClick={() => setActiveTab("accounts")}
-              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi ${
+              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold leading-[14px] satoshi flex items-center py-2 px-2 cursor-pointer justify-center ${
                 activeTab === "accounts"
                   ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
                   : "text-[#010E1F]"
@@ -92,7 +97,7 @@ const Settings = () => {
             </button> */}
             <button
               onClick={() => setActiveTab("payments")}
-              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi ${
+              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi flex items-center py-2 px-2 cursor-pointer justify-center ${
                 activeTab === "payments"
                   ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
                   : "text-[#010E1F]"

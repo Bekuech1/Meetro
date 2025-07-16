@@ -47,7 +47,7 @@ const TextOnlyInput = ({
 
         {/* Right Icon */}
         {showRightIcon && (
-          <span className="pl-2 text-gray-500 fix">
+          <span className="pl-2 text-gray-500">
             <img
               src={rightIcon}
               alt="Right Icon"

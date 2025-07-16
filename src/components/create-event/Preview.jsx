@@ -2,14 +2,6 @@ import React, { useState, useEffect } from "react";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import EventType from "./PopUps/EventType";
 
-const profiles = [
-  { id: 1, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
-  { id: 2, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
-  { id: 3, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
-  { id: 4, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
-  { id: 5, image: "/large-profile.jpg", name: "Chubby Igboanugo" },
-];
-
 const Preview = ({
   closeModal,
   eventImg,
@@ -22,9 +14,36 @@ const Preview = ({
   locationType,
   amount,
   eventTypes,
-  time
+  time,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [countdown, setCountdown] = useState("");
+
+  useEffect(() => {
+    const targetDate = new Date(time).getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        setCountdown("Time's up!");
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+    };
+
+    updateCountdown(); // run immediately
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [time]);
 
   const toggleReadMore = () => {
     setIsExpanded((prev) => !prev);
@@ -111,9 +130,9 @@ const Preview = ({
                   <div>{eventTypes}</div>
                 </div>
                 <div className="h-fit w-fit flex gap-4 justify-items-start">
-                  <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
+                  {/* <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
                     <img src="/send.svg" alt="Send" />
-                  </div>
+                  </div> */}
                   {/* <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
                     <img src="/download.svg" alt="Download" />
                   </div> */}
@@ -141,35 +160,37 @@ const Preview = ({
                 </div>
               )}
 
-              <div className="w-full h-fit grid gap-2">
-                <ModalText img="/money-add.svg" text="chip in" />
-                <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-                  <div className="h-fit w-full grid">
-                    <p className="capitalize text-[#8A9191] font-[500] text-[14px] leading-[20px] satoshi">
-                      Target goal
-                    </p>
-                    <h6 className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi">
-                      ₦ {amount}
-                    </h6>
-                  </div>
-                  <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
-                    <div className="h-2 w-[40%] rounded-[10px] bg-[#61B42D]"></div>
-                  </div>
-                  <div className="h-fit w-full flex justify-between">
-                    <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      ₦ {amount}
-                    </h6>
-                    <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      ₦ {amount}
-                    </h6>
+              {amount && (
+                <div className="w-full h-fit grid gap-2">
+                  <ModalText img="/money-add.svg" text="chip in" />
+                  <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                    <div className="h-fit w-full grid">
+                      <p className="capitalize text-[#8A9191] font-[500] text-[14px] leading-[20px] satoshi">
+                        Target goal
+                      </p>
+                      <h6 className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi">
+                        ₦ {amount}
+                      </h6>
+                    </div>
+                    <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
+                      <div className="h-2 w-[40%] rounded-[10px] bg-[#61B42D]"></div>
+                    </div>
+                    <div className="h-fit w-full flex justify-between">
+                      <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
+                        ₦ {amount}
+                      </h6>
+                      <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
+                        ₦ {amount}
+                      </h6>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
                 <div className="w-full h-fit flex justify-between">
                   <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-                    Starting in <span className="text-[#866AD2]">6d 8h</span>
+                    Starting in <span className="text-[#866AD2]">{countdown}</span>
                   </div>
                 </div>
               </div>
@@ -195,7 +216,7 @@ const Preview = ({
                 </div>
               )}
 
-              {profiles.length > 0 && (
+              {/* {profiles.length > 0 && (
                 <div className="grid gap-2 w-full h-fit">
                   <ModalText
                     img="/crown.svg"
@@ -219,7 +240,7 @@ const Preview = ({
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
             </section>
           </div>
         </div>
@@ -241,7 +262,7 @@ const Preview = ({
           </div>
 
           <div className="w-full h-fit grid gap-4 items-center justify-center">
-            <section className="w-full h-fit gap-[6px]">
+            <section className="w-[100%] h-fit gap-[6px]">
               <h1 className="paytone capitalize text-black font-[400] text-[20px]">
                 {eventName}
               </h1>
@@ -256,9 +277,9 @@ const Preview = ({
             <img
               src={eventImg}
               alt="Event"
-              className="rounded-3xl min-w-[300px] min-h-[300px] sm:size-[350px] mx-auto"
+              className="rounded-3xl w-[75%] sm:size-[350px] mx-auto"
             />
-            <section className="grid gap-4">
+            <section className="grid gap-4 w-full">
               <div className="gap-1 grid">
                 <ModalText img="/crown.svg" text="hosts" />
                 <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70">
@@ -297,26 +318,32 @@ const Preview = ({
           </div>
 
           <div className="flex flex-col gap-4 w-full mx-auto">
-            <div className="w-full h-fit grid gap-2">
-              <ModalText img="/money-add.svg" text="chip in" />
-              <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-                <div className="h-fit w-full grid">
-                  <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi">
-                    Target goal
-                  </p>
-                  <h6 className="capitalize text-black font-[700] text-[24px] satoshi">
-                    ₦ {amount}
-                  </h6>
-                </div>
-                <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
-                  <div className="h-2 w-[10%] rounded-[10px] bg-[#61B42D]"></div>
-                </div>
-                <div className="h-fit w-full flex justify-between">
-                  <h6 className="satoshi font-[500] text-[16px]">₦ {amount}</h6>
-                  <h6 className="satoshi font-[500] text-[16px]">₦ {amount}</h6>
+            {amount && (
+              <div className="w-full h-fit grid gap-2">
+                <ModalText img="/money-add.svg" text="chip in" />
+                <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                  <div className="h-fit w-full grid">
+                    <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi">
+                      Target goal
+                    </p>
+                    <h6 className="capitalize text-black font-[700] text-[24px] satoshi">
+                      ₦ {amount}
+                    </h6>
+                  </div>
+                  <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
+                    <div className="h-2 w-[10%] rounded-[10px] bg-[#61B42D]"></div>
+                  </div>
+                  <div className="h-fit w-full flex justify-between">
+                    <h6 className="satoshi font-[500] text-[16px]">
+                      ₦ {amount}
+                    </h6>
+                    <h6 className="satoshi font-[500] text-[16px]">
+                      ₦ {amount}
+                    </h6>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
               <div className="w-full h-fit flex justify-between">
@@ -324,11 +351,11 @@ const Preview = ({
                   Starting in <span className="text-[#866AD2]">6d 8h</span>
                 </div>
               </div>
-              <div className="satoshi w-full h-fit grid gap-[10px] items-center">
+              {/* <div className="satoshi w-full h-fit grid gap-[10px] items-center">
                 <h5 className="text-[14px] font-[700] leading-[20px] text-black flex">
                   Invite a friend too 👉
                 </h5>
-              </div>
+              </div> */}
             </div>
 
             {dressCode && (
@@ -347,12 +374,12 @@ const Preview = ({
                   CCHub
                 </h6>
                 <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                  {location}, { state }
+                  {location}, {state}
                 </p>
               </div>
             )}
 
-            {profiles.length > 0 && (
+            {/* {profiles.length > 0 && (
               <div className="grid gap-2 w-full h-fit">
                 <ModalText
                   img="/crown.svg"
@@ -376,7 +403,7 @@ const Preview = ({
                   ))}
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
