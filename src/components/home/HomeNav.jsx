@@ -56,6 +56,7 @@ const Header = () => {
       image: "/logout.svg",
       className: "text-[#DB2863]",
       onClick: () => {
+        localStorage.clear();
         useAuthStore.getState().setUser(null);
         useAuthStore.getState().setAccessToken(null);
         useAuthStore.getState().setRefreshToken(null);

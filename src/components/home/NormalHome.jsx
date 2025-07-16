@@ -68,7 +68,6 @@ const NormalHome = () => {
     return grouped;
   };
 
-
   return (
     <main className="bg-[#F0F0F0] relative min-h-[90vh] w-full grid items-start gap-[43px] md:px-20 px-4 py-10">
       <div className="grid md:w-[680px] w-full mx-auto gap-6 z-10">
@@ -174,18 +173,20 @@ const NormalHome = () => {
                   </li>
                 </ul>
 
-                  <section className="sm:flex hidden flex-col justify-between text-end h-[100px]">
-                    <h6 className="text-[#8A9191] text-[12px] font-[500]">12hr</h6>
-                    <SiteBtn
-                      name="manage"
-                      colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
-                      onclick={() => navigate(`/event/${event.id}`)}
-                    />
-                  </section>
+                <section className="sm:flex hidden flex-col justify-between text-end h-[100px]">
+                  <h6 className="text-[#8A9191] text-[12px] font-[500]">
+                    12hr
+                  </h6>
+                  <SiteBtn
+                    name="manage"
+                    colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
+                    onclick={() => navigate(`/event/${event.id}`)}
+                  />
                 </section>
-              ))}
-            </div>
-          ))}
+              </section>
+            ))}
+          </div>
+        ))}
       </div>
 
       {isModalOpen && (

@@ -115,7 +115,8 @@ const EventModal = ({ eventId, closeModal }) => {
                   className={`${
                     isExpanded ? "" : "line-clamp-3"
                   } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
-                  {eventDetails?.description?.S}
+                  {eventDetails?.description?.S ||
+                    "No description for this event"}
                 </h4>
 
                 {/* Read More Button */}
