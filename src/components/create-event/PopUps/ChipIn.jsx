@@ -23,6 +23,9 @@ const LoadingSpinner = ({ size = 40, color = "purple-600", speed = "1s" }) => {
 };
 
 const ChipIn = ({ isVisible, onClose, onSave }) => {
+  const [error, setError] = useState("");
+
+  // State variables for bank details
   const [showBank, setShowBank] = useState(false);
   const [showBankList, setShowBankList] = useState(false);
   const [selectedBank, setSelectedBank] = useState("");
@@ -107,6 +110,14 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
   };
 
   const handleSave = () => {
+    if (!accountName || !accountNumber || accountNumber.trim() === "") {
+      setError("Account name and number are required");
+      return;
+    }
+
+    // Clear any previous errors
+    setError("");
+
     if (onSave) {
       onSave({
         selectedBankName: selectedBank,
@@ -308,6 +319,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
             accNo={accountNumber}
             onAmountChange={handleAmountChange}
             amountValue={amount}
+            error={error}
           />
         </div>,
         <div key="2">
@@ -318,7 +330,8 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
             bankName={selectedBank || "Select Bank"}
             accNo={accountNumber}
             onAmountChange={handleAmountChange}
-            amountValue={amount} // Use the same amountValue for simplicity
+            amountValue={amount}
+            error={error}
           />
         </div>,
         <div key="3">
@@ -330,6 +343,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
             accNo={accountNumber}
             onAmountChange={handleAmountChange}
             amountValue={amount}
+            error={error}
           />
         </div>,
       ]}
@@ -345,6 +359,7 @@ const Content = ({
   bankName,
   amountValue,
   onAmountChange,
+  error,
 }) => {
   return (
     <div className="gap-4 grid w-full h-fit">
@@ -379,6 +394,14 @@ const Content = ({
           if the event is cancelled.
         </p>
       </div>
+
+      {/* Error display */}
+      {error && (
+        <div className=" mt-4 flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
+          <img src="info-circle.svg" alt="" />
+          <span>{error}</span>
+        </div>
+      )}
     </div>
   );
 };
