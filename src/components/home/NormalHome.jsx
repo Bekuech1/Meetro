@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EventsBtn from "./EventsBtn";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import EventModal from "./EventModal";
 import useEventStore from "@/stores/eventStore";
@@ -16,6 +15,7 @@ const NormalHome = () => {
   useEffect(() => {
     fetchEvents().then((res) => {
       if (res) {
+        console.log("Fetched events details:", res);
         const grouped = groupEventsByDate(res);
         setGroupedEvents(grouped);
       }
@@ -69,18 +69,23 @@ const NormalHome = () => {
   };
 
   return (
-    <main className="bg-[#F0F0F0] relative min-h-[90vh] w-full grid items-start gap-[43px] md:px-20 px-4 py-10">
-      <div className="grid md:w-[680px] w-full mx-auto gap-6 z-10">
-        {/* Header */}
-        <section className="flex justify-between items-center">
+    <main className="bg-[#F0F0F0] relative min-h-[90vh] w-full grid gap-[43px] md:px-20 px-4 py-10">
+      <div className="grid md:w-[680px] w-full h-fit mx-auto gap-6 z-10">
+        <section className="flex h-fit">
           <h1 className="paytone capitalize text-[#055962] sm:text-[30px] text-[20px] font-[400]">
             my events
           </h1>
-          <div className="flex gap-4">
-            {homeBtn.map((item, i) => (
-              <EventsBtn key={i} {...item} />
+          {/* <div className="flex gap-4">
+            {homeBtn.map((item, index) => (
+              <EventsBtn
+                key={index}
+                onClick={item.onClick}
+                image={item.image}
+                text={item.text}
+                style={item.style}
+              />
             ))}
-          </div>
+          </div> */}
         </section>
 
         {/* Events by grouped date */}
@@ -111,9 +116,9 @@ const NormalHome = () => {
                   className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
                 />
 
-                <ul className="w-full grid sm:gap-1 gap-2">
+                <ul className="w-full grid sm:gap-[2px] gap-[2px] satoshi">
                   <li className="flex justify-between">
-                    <h4 className="capitalize">{event.title}</h4>
+                    <h4 className="capitalize satoshi text-[#001010] text-base font-medium leading-tight">{event.title}</h4>
                     <h6 className="satoshi text-[#8A9191] sm:hidden text-[10px]">
                       {event.relativeTime || "12 h"}
                     </h6>
@@ -121,7 +126,7 @@ const NormalHome = () => {
 
                   {/* Host */}
                   <li className="flex gap-1 items-center">
-                    <h6 className="text-[#8A9191] text-[10px] font-[700]">
+                    <h6 className="text-[#8A9191] text-[10px] font-[700] capitalize satoshi">
                       host
                     </h6>
                     <img
@@ -151,7 +156,7 @@ const NormalHome = () => {
 
                   {/* Going */}
                   <li className="flex gap-1 items-center">
-                    <h6 className="text-[#8A9191] text-[10px] font-[700]">
+                    <h6 className="text-[#8A9191] text-[10px] font-[700] capitalize satoshi">
                       going
                     </h6>
                     <img
@@ -167,7 +172,7 @@ const NormalHome = () => {
                   <li className="sm:hidden">
                     <SiteBtn
                       name="manage"
-                      colorPadding="bg-[#AEFC40] py-[4px] px-[16px] w-full"
+                      colorPadding="bg-[#AEFC40] py-2 px-4 w-full mt-[2px]"
                       onclick={() => navigate(`/event/${event.id}`)}
                     />
                   </li>

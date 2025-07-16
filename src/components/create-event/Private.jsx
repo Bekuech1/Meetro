@@ -51,7 +51,8 @@ const Input = ({
   return (
     <div
       className="flex justify-between p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full cursor-pointer relative"
-      onClick={onClick}>
+      onClick={onClick}
+    >
       {/* Left Image */}
       <div className="bg-white p-1 rounded-4xl size-fit">
         <img src={leftImgSrc} alt="" className="w-5 h-4" />
@@ -59,7 +60,8 @@ const Input = ({
 
       {/* Middle Text */}
       <div
-        className={`text-left w-full ${className} font-medium text-[14px] capitalize satoshi`}>
+        className={`text-left w-full ${className} font-medium text-[14px] capitalize satoshi whitespace-nowrap overflow-hidden text-ellipsis`}
+      >
         {text}
       </div>
 
@@ -82,7 +84,8 @@ const Input = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   edit && edit();
-                }}>
+                }}
+              >
                 Edit
               </p>
               <p
@@ -90,7 +93,8 @@ const Input = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   remove && remove();
-                }}>
+                }}
+              >
                 Remove
               </p>
             </div>
@@ -105,7 +109,8 @@ const Add = ({ title, onOptionClick }) => {
   return (
     <div
       className="py-2 px-3 flex md:gap-2 w-fit gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer"
-      onClick={onOptionClick}>
+      onClick={onOptionClick}
+    >
       <img src="/add.svg" alt="" className="size-4" />
       <h6 className="font-bold text-black text-[12px] capitalize satoshi">
         {title}
@@ -165,6 +170,44 @@ const Private = ({ onPublic }) => {
 
   const navigate = useNavigate();
 
+  // Function to check if any modal is open
+  const isAnyModalOpen = () => {
+    return (
+      isPreviewOpen ||
+      imageModal ||
+      description ||
+      host ||
+      when ||
+      where ||
+      dress ||
+      chipin ||
+      eventType
+    );
+  };
+
+  // Function to check if preview should be enabled
+  const isPreviewEnabled = () => {
+    return (
+      eventName.trim() !== "" && startDate !== "" && location.trim() !== ""
+    );
+  };
+
+  // Prevent scroll when modal is open
+  useEffect(() => {
+    if (isAnyModalOpen()) {
+      // Disable scroll
+      document.body.style.overflow = "hidden";
+    } else {
+      // Re-enable scroll
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup function to reset overflow when component unmounts
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isAnyModalOpen()]);
+
   // Set default image on component mount
   useEffect(() => {
     if (!eventImage && imageSources.length > 0) {
@@ -192,7 +235,11 @@ const Private = ({ onPublic }) => {
   }, []);
 
   // Modal control functions
-  const openPreview = () => setIsPreviewOpen(true);
+  const openPreview = () => {
+    if (isPreviewEnabled()) {
+      setIsPreviewOpen(true);
+    }
+  };
   const closePreview = () => setIsPreviewOpen(false);
 
   const openImageModal = () => setImageModal(true);
@@ -339,9 +386,14 @@ const Private = ({ onPublic }) => {
     setEndTime(TimeData.endTime);
   };
 
-  const fullDateTimeRange = startDate
-    ? `${startDate}, ${startTime} - ${endDate}, ${endTime}`
-    : "when is your event?";
+  const fullDateTimeRange =
+    startDate && startTime
+      ? endDate && endTime
+        ? startDate === endDate
+          ? `${startDate}, ${startTime} - ${endTime}`
+          : `${startDate}, ${startTime} - ${endDate}, ${endTime}`
+        : `${startDate}, ${startTime}` // Only start values present
+      : "when is your event?";
 
   const handleLocationSave = (LocationData) => {
     setLocation(LocationData.venue);
@@ -356,18 +408,19 @@ const Private = ({ onPublic }) => {
   };
 
   const eventTypes = () => {
-    return selectedTypes.length > 0 ? (
-      <div className="flex flex-wrap gap-2">
-        {selectedTypes.map((event, index) => (
-          <span
-            key={index}
-            className={`px-2 py-1 rounded-full border text-[10px] ${event.className}`}>
-            {event.title}
-          </span>
-        ))}
-      </div>
-    ) : (
-      <p>What type of event is this?</p>
+    return (
+      selectedTypes.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {selectedTypes.map((event, index) => (
+            <span
+              key={index}
+              className={`px-2 py-1 rounded-full border text-[10px] ${event.className}`}
+            >
+              {event.title}
+            </span>
+          ))}
+        </div>
+      )
     );
   };
 
@@ -436,7 +489,7 @@ const Private = ({ onPublic }) => {
     // Basic validation
     if (!eventName || !startDate || !location) {
       setError(
-        "Please fill all required fields (Event Name, Date, and Location)."
+        "Please fill all required fields (Event Name, Date, and Location)"
       );
       setIsLoading(false);
       return;
@@ -482,6 +535,7 @@ const Private = ({ onPublic }) => {
       console.log("Event created successfully:", response.data);
       alert("Event created successfully!");
       navigate(`/home`);
+
       // You might want to redirect to the event page or dashboard here
       // history.push(`/event/${response.data.eventId}`);
     } catch (error) {
@@ -498,14 +552,12 @@ const Private = ({ onPublic }) => {
     }
   };
 
-  // console.log({ bankName, accountNumber, accountName, bankCode });
-
   return (
     <main className="bg-[#F0F0F0] min-h-[90vh] h-fit w-full grid gap-[43px] lg:pb-10 pt-10">
       <div className="lg:flex-row flex lg:gap-12 gap-8 flex-col sm:w-fit w-[95%] mx-auto">
         {/* left section */}
         <section className="sm:w-fit w-full h-fit flex flex-col gap-4 mx-auto">
-          <div className="grid h-fit w-full">
+          <div className="flex flex-col justify-center h-fit">
             <h5 className="text-black text-[14px] font-[700] leading-[20px] satoshi capitalize">
               event image
             </h5>
@@ -513,16 +565,17 @@ const Private = ({ onPublic }) => {
               Upload a JPEG or PNG file with a size of 2mb or less
             </p>
           </div>
-          <div className="relative">
+          <div className="relative flex justify-center">
             <img
               src={getCurrentImageUrl()}
-              alt="Event-img"
-              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[95vw] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer justify-center"
+              alt="/Event-img"
+              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer justify-center"
               onClick={openImageModal}
             />
             <div
               className="hidden absolute cursor-pointer top-[303px] left-[302px] rounded-full xl:flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors"
-              onClick={openImageModal}>
+              onClick={openImageModal}
+            >
               <img src="/image.svg" className="z-10" alt="" />
             </div>
           </div>
@@ -530,12 +583,6 @@ const Private = ({ onPublic }) => {
             <p className="text-[#7A60BF] text-[12px] font-[500] leading-[18px] satoshi capitalize">
               Images with a 1 : 1 ratio (a square) work best
             </p>
-          </div>
-          <div className="lg:flex p-3 gap-2 rounded-[12px] bg-white/50 border border-white backdrop-blur-[2px] items-center w-full hidden">
-            <h5 className="text-[#8A9191] text-[16px] font-[700] leading-[24px] satoshi capitalize w-full">
-              theme settings
-            </h5>
-            <div className="aspect-square size-[47px] py-3 px-2 flex justify-center items-center rounded-[6px] backdrop-blur-[12px] border border-[#866AD2]"></div>
           </div>
         </section>
 
@@ -547,7 +594,8 @@ const Private = ({ onPublic }) => {
                 boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
                 backdropFilter: "blur(16px)",
               }}
-              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full">
+              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
+            >
               <div className="items-center py-2 px-[10px] rounded-3xl bg-[#BEFD66] cursor-pointer w-full text-center">
                 <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
                   private
@@ -555,7 +603,8 @@ const Private = ({ onPublic }) => {
               </div>
               <div
                 className="items-center py-2 px-[10px] rounded-3xl bg-white cursor-pointer w-full text-center"
-                onClick={onPublic}>
+                onClick={onPublic}
+              >
                 <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
                   public
                 </h5>
@@ -635,7 +684,7 @@ const Private = ({ onPublic }) => {
             {addEventType && (
               <Input
                 leftImgSrc="/category-2.svg"
-                text={eventTypes()}
+                text={eventTypes() || "what type of event is this?"}
                 onClick={openEventType}
                 rightImg="/more-circle.svg"
                 onClickRight={toggleEventTypeDropdown}
@@ -662,8 +711,9 @@ const Private = ({ onPublic }) => {
 
           {/* Error display */}
           {error && (
-            <div className="text-red-500 text-sm p-2 rounded bg-red-50">
-              Error: {error}
+            <div className="flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
+              <img src="info-circle.svg" alt="" />
+              <span>{error}</span>
             </div>
           )}
 
@@ -671,9 +721,12 @@ const Private = ({ onPublic }) => {
           <section className="h-fit w-full lg:flex justify-between gap-4 hidden">
             <CreateEventBtn
               text="View Preview"
-              bgcolor="bg-[#E6F2F3]"
-              textcolor="text-[#095256]"
+              bgcolor={isPreviewEnabled() ? "bg-[#E6F2F3]" : "bg-gray-300"}
+              textcolor={
+                isPreviewEnabled() ? "text-[#095256]" : "text-gray-500"
+              }
               onClick={openPreview}
+              disabled={!isPreviewEnabled()}
             />
             <CreateEventBtn
               text={isLoading ? "Creating..." : "Create Event"}
@@ -686,18 +739,19 @@ const Private = ({ onPublic }) => {
         </section>
       </div>
       <section className="w-full h-fit px-4 pt-6 pb-12 rounded-t-2xl bg-white/90 lg:hidden grid gap-4">
-        <div className="flex p-3 gap-2 rounded-[12px] bg-white/90 border backdrop-blur-[2px] items-center w-full">
+        {/* <div className="flex p-3 gap-2 rounded-[12px] bg-white/90 border backdrop-blur-[2px] items-center w-full">
           <h5 className="text-[#8A9191] text-[16px] font-[700] leading-[24px] satoshi capitalize w-full">
             theme settings
           </h5>
           <div className="aspect-square size-[47px] py-3 px-2 flex justify-center items-center rounded-[6px] backdrop-blur-[12px] border border-[#866AD2]"></div>
-        </div>
+        </div> */}
         <section className="h-fit w-full flex justify-between gap-4">
           <CreateEventBtn
             text="View Preview"
-            bgcolor="bg-[#E6F2F3]"
-            textcolor="text-[#095256]"
+            bgcolor={isPreviewEnabled() ? "bg-[#E6F2F3]" : "bg-gray-300"}
+            textcolor={isPreviewEnabled() ? "text-[#095256]" : "text-gray-500"}
             onClick={openPreview}
+            disabled={!isPreviewEnabled()}
           />
           <CreateEventBtn
             text={isLoading ? "Creating..." : "Create Event"}
@@ -758,6 +812,8 @@ const Private = ({ onPublic }) => {
           location={location}
           locationType={locationType}
           amount={amount}
+          eventTypes={eventTypes()}
+          time={fullDateTimeRange}
         />
       )}
     </main>

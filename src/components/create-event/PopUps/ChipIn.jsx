@@ -5,7 +5,27 @@ import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
 import { searchBanks } from "../../../utils/Banks"; // Import the banks data and search function
 import API from "@/lib/axios";
 
+const LoadingSpinner = ({ size = 40, color = "purple-600", speed = "1s" }) => {
+  const spinnerSize = `${size}px`;
+
+  return (
+    <div className="flex items-center justify-center">
+      <div
+        className={`border-2 border-t-transparent border-[#7A60BF] rounded-full animate-spin`}
+        style={{
+          width: spinnerSize,
+          height: spinnerSize,
+          animationDuration: speed,
+        }}
+      ></div>
+    </div>
+  );
+};
+
 const ChipIn = ({ isVisible, onClose, onSave }) => {
+  const [error, setError] = useState("");
+
+  // State variables for bank details
   const [showBank, setShowBank] = useState(false);
   const [showBankList, setShowBankList] = useState(false);
   const [selectedBank, setSelectedBank] = useState("");
@@ -18,16 +38,15 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-
   // Function to set event type based on activeTab
   const setChipInType = (activeTab) => {
     switch (activeTab) {
       case 0:
-        return "FIXED";
+        return "Price";
       case 1:
-        return "TARGET GOAL";
+        return "Target Goal";
       case 2:
-        return "AS THE SPIRIT LEADS";
+        return "Minimum Amount";
       default:
         return ""; // Default case
     }
@@ -74,16 +93,31 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
 
   const handleAmountChange = (e) => {
     let input = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
     if (input === "") {
       setAmount("0.00");
       return;
     }
+
     input = parseInt(input, 10); // Convert to number
-    const formatted = (input / 100).toFixed(2); // Format as currency
+    const number = input / 100; // Move decimal 2 places
+    const formatted = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(number);
+
     setAmount(formatted);
   };
 
   const handleSave = () => {
+    if (!accountName || !accountNumber || accountNumber.trim() === "") {
+      setError("Account name and number are required");
+      return;
+    }
+
+    // Clear any previous errors
+    setError("");
+
     if (onSave) {
       onSave({
         selectedBankName: selectedBank,
@@ -131,7 +165,6 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
     }
   };
 
-
   if (!isVisible) return null;
 
   if (showBank) {
@@ -144,7 +177,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
             </h1>
           </div>
           <div className="w-full sm:h-fit h-full px-6 py-3 sm:rounded-b-4xl bg-gray-100">
-            <div className="grid gap-4 h-fit mb-8 fix">
+            <div className="grid gap-4 h-fit mb-8">
               {/* Account Number Input */}
               <div className="w-full h-fit satoshi grid gap-1 relative">
                 <label className="text-[10px] font-bold text-[#8A9191] capitalize">
@@ -175,7 +208,8 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                 </label>
                 <div
                   className="w-full h-fit bg-[#FFFFFE]/50 flex pr-2 pl-4 py-3 rounded-[12px] border border-white cursor-pointer"
-                  onClick={() => setShowBankList((prev) => !prev)}>
+                  onClick={() => setShowBankList((prev) => !prev)}
+                >
                   <input
                     type="text"
                     value={searchInput}
@@ -192,13 +226,15 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                       <li
                         key={bank.code}
                         className="flex items-center px-4 py-2 cursor-pointer hover:scale-105 transition-transform justify-between font-medium text-[14px]"
-                        onClick={() => handleBankSelect(bank)}>
+                        onClick={() => handleBankSelect(bank)}
+                      >
                         <span
                           className={`cursor-pointer transition text-[14px] satoshi capitalize ${
                             bank.name === selectedBank
                               ? "text-black font-[600]"
                               : "text-[#8A9191] font-medium"
-                          }`}>
+                          }`}
+                        >
                           {bank.name}
                         </span>
                       </li>
@@ -209,36 +245,33 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
 
               {/* Account Name Input */}
               <div className="w-full h-fit satoshi grid gap-1 relative">
-                <label className="text-[10px] font-bold text-[#8A9191] capitalize">
-                  account name
-                </label>
-                <div
-                  className={`w-full h-fit bg-[#FFFFFE]/50 flex pr-2 pl-4 py-3 rounded-[12px] border ${
-                    errorMessage ? "border-red-400" : "border-white"
-                  } cursor-pointer`}>
-                  <input
-                    type="text"
-                    value={accountName}
-                    readOnly
-                    placeholder="Account Name"
-                    className="w-full h-fit leading-tight text-sm font-medium satoshi capitalize text-black bg-transparent outline-none placeholder:text-[#8A9191]"
-                  />
-                </div>
+                {accountName && (
+                  <div className="flex items-center justify-between">
+                    <p className="text-[14px] text-[#001010] satoshi font-medium capitalize">
+                      {accountName.toLowerCase()}
+                    </p>
+                    <img src="tick-circle.svg" alt="" />
+                  </div>
+                )}
                 {isVerifying && (
-                  <p className="text-[10px] text-blue-500 mt-1 satoshi font-medium">
-                    Verifying account details...
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[14px] text-[#8A9191] satoshi font-medium capitalize">
+                      Verifying
+                    </p>
+                    <LoadingSpinner size={16} color="[#7A60BF]" speed="0.7s" />
+                  </div>
                 )}
                 {errorMessage && (
-                  <p className="text-[10px] text-red-500 mt-1 satoshi font-medium">
-                    {errorMessage}
-                  </p>
+                  <div className="flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
+                    <img src="info-circle.svg" alt="" />
+                    <span>{errorMessage}</span>
+                  </div>
                 )}
               </div>
             </div>
 
             <div className="mb-4 w-full h-[1px] bg-[#E2E2E2] sm:block hidden"></div>
-            <div className="flex justify-center sm:items-center gap-4 sm:h-fit h-full fix">
+            <div className="flex justify-center items-end gap-4 sm:h-fit h-fit">
               <CreateEventBtn
                 text="cancel"
                 onClick={() => setShowBank(false)}
@@ -274,7 +307,8 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
       text2="Target Goal"
       text3="As the Spirit leads"
       activeTab={activeTab}
-      onTabChange={handleTabChange}>
+      onTabChange={handleTabChange}
+    >
       {[
         <div key="1">
           <Content
@@ -285,6 +319,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
             accNo={accountNumber}
             onAmountChange={handleAmountChange}
             amountValue={amount}
+            error={error}
           />
         </div>,
         <div key="2">
@@ -295,7 +330,8 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
             bankName={selectedBank || "Select Bank"}
             accNo={accountNumber}
             onAmountChange={handleAmountChange}
-            amountValue={amount} // Use the same amountValue for simplicity
+            amountValue={amount}
+            error={error}
           />
         </div>,
         <div key="3">
@@ -307,6 +343,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
             accNo={accountNumber}
             onAmountChange={handleAmountChange}
             amountValue={amount}
+            error={error}
           />
         </div>,
       ]}
@@ -322,6 +359,7 @@ const Content = ({
   bankName,
   amountValue,
   onAmountChange,
+  error,
 }) => {
   return (
     <div className="gap-4 grid w-full h-fit">
@@ -356,6 +394,14 @@ const Content = ({
           if the event is cancelled.
         </p>
       </div>
+
+      {/* Error display */}
+      {error && (
+        <div className=" mt-4 flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
+          <img src="info-circle.svg" alt="" />
+          <span>{error}</span>
+        </div>
+      )}
     </div>
   );
 };
