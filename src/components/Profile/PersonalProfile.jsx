@@ -44,6 +44,7 @@ const PersonalProfile = () => {
           <div className="flex items-start justify-between">
             {/* <img src={user?.profilePictureKey} alt="user-profile-img" /> */}
             <img src="/profileimg.png" alt="" />
+            {/* <img src={user?.profilePictureKey} alt="" /> */}
             {/* <Button variant="default" className="bg-[#AEFC40] text-black">Edit Profile</Button> */}
             <SiteBtn
               name="Edit Profile"
@@ -95,24 +96,23 @@ const PersonalProfile = () => {
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <h2 className="hidden md:block text-[30px] paytone text-[#055962]">
-            {activeTab === "events" ? "Past Events" : "Invites"}
+            {/* {activeTab === "events" ? "Past Events" : "Invites"} */}
+            Past Events
           </h2>
 
-          <div
+          {/* <div
             style={{
               boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
               backdropFilter: "blur(16px)",
             }}
-            className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
-          >
+            className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full">
             <button
               onClick={() => setActiveTab("events")}
               className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi flex items-center py-2 px-2 cursor-pointer justify-center ${
                 activeTab === "events"
                   ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
                   : "text-[#010E1F]"
-              }`}
-            >
+              }`}>
               Events
             </button>
             <button
@@ -121,22 +121,22 @@ const PersonalProfile = () => {
                 activeTab === "invites"
                   ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
                   : "text-[#010E1F]"
-              }`}
-            >
+              }`}>
               Invites
             </button>
-          </div>
+          </div> */}
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-[18px] font-bold text-[#001010] satoshi">
+            No Events
+          </h2>
+          <p className="text-[16px] font-medium text-[#8A9191] satoshi">
+            Create or attend an event
+          </p>
         </div>
 
-        {activeTab === "events" ? (
-          <div className="flex flex-col items-center gap-2">
-            <h2 className="text-[18px] font-bold text-[#001010] satoshi">
-              No Events
-            </h2>
-            <p className="text-[16px] font-medium text-[#8A9191] satoshi">
-              Create or attend an event
-            </p>
-          </div>
+        {/* {activeTab === "events" ? (
+          <div></div>
         ) : (
           <div>
             <div>
@@ -173,17 +173,17 @@ const PersonalProfile = () => {
               </div>
             </div>
 
-            {/* invite default state  */}
-            {/* <div className="flex flex-col items-center gap-2">
+            invite default state 
+            <div className="flex flex-col items-center gap-2">
               <h2 className="text-[18px] font-bold text-[#001010]">
                 No Invites
               </h2>
               <p className="text-[16px] font-medium text-[#8A9191]">
                 You haven't received any invites yet
               </p>
-            </div> */}
+            </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

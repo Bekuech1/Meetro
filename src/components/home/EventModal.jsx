@@ -115,21 +115,48 @@ const EventModal = ({ eventId, closeModal }) => {
                   className={`${
                     isExpanded ? "" : "line-clamp-3"
                   } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
-                  {eventDetails?.description?.S}
+                  {eventDetails?.description?.S ||
+                    "No description for this event"}
                 </h4>
 
                 {/* Read More Button */}
-                <button
-                  onClick={toggleReadMore}
-                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
-                  {isExpanded ? "Show less" : "Read more"}
-                </button>
+                {eventDetails?.description?.S && (
+                  <button
+                    onClick={toggleReadMore}
+                    className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
+                    {isExpanded ? "Show less" : "Read more"}
+                  </button>
+                )}
               </div>
 
+              {/* chip in area */}
               <div className="w-full h-fit grid gap-2">
                 <ModalText img="/money-add.svg" text="chip in" />
 
-                <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                {eventDetails?.chipInType?.S === "FIXED" ? (
+                  <div className="rounded-[12px] p-4 border-[2px] border-white text-left bg-white/70">
+                    <p className="text-[#8A9191]">
+                      {eventDetails?.chipInType?.S}
+                    </p>
+
+                    <div className="flex justify-between items-center">
+                      <p className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi ">
+                        ₦{eventDetails?.chipInAmount?.S}
+                      </p>
+                      <p className="bg-[#D9D1F1] text-sm font-bold text-[#7A60BF] py-1 px-2 rounded-full">
+                        Required to join the fun
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                    <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi ">
+                      {eventDetails?.chipInType?.S || "Not specified"}
+                    </p>
+                  </div>
+                )}
+
+                {/* <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
                   <div className="h-fit w-full grid">
                     <p className="capitalize text-[#8A9191] font-[500] text-[14px] leading-[20px] satoshi ">
                       {eventDetails?.chipInType?.S}
@@ -140,17 +167,17 @@ const EventModal = ({ eventId, closeModal }) => {
                   </div>
                   <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
                     <div className="h-2 w-[40%] rounded-[10px] bg-[#61B42D]"></div>{" "}
-                    {/* Fixed */}
+                    Fixed
                   </div>
                   <div className="h-fit w-full flex justify-between">
                     <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      {/* ₦ {eventDetails?.chipInAmount?.S} */}
+                      ₦ {eventDetails?.chipInAmount?.S}
                     </h6>
                     <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
                       ₦ {eventDetails?.chipInAmount?.S || "0"}
                     </h6>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <section className="w-full h-fit flex gap-2">
@@ -158,10 +185,12 @@ const EventModal = ({ eventId, closeModal }) => {
                   text="Not sure"
                   img="/timer-modal.svg"
                   textcolor="#7A60BF"
+                  bgHover="#011F0F"
                   onclick={() => console.log("Attendance clicked")} // Fixed
                 />
                 <Attendance
                   text="Going"
+                  bgHover="#011F0F"
                   img="/tick-circle-green.svg"
                   textcolor="#61B42D"
                 />
@@ -189,6 +218,7 @@ const EventModal = ({ eventId, closeModal }) => {
                   <ModalBtn
                     onClick=""
                     bgcolor="bg-[#E6F2F3]"
+                    // bgHover="hover:bg-[#011F0F]"
                     image="/send.svg"
                     textcolor="text-black"
                     text="Invite a Friend"
@@ -550,10 +580,17 @@ export const EventCategories = ({ borderBgColor, text }) => {
   );
 };
 
-export const ModalBtn = ({ onClick, bgcolor, image, textcolor, text }) => {
+export const ModalBtn = ({
+  onClick,
+  bgcolor,
+  bgHover,
+  image,
+  textcolor,
+  text,
+}) => {
   return (
     <div
-      className={`lg:w-fit w-full h-fit rounded-[60px] flex gap-2 p-[10px] justify-center items-center cursor-pointer ${bgcolor}`}
+      className={`lg:w-fit w-full h-fit rounded-[60px] flex gap-2 p-[10px] justify-center items-center cursor-pointer ${bgHover} ${bgcolor}`}
       onClick={onClick}>
       <img src={image} className="size-[22px]" />
       <h6
@@ -564,10 +601,10 @@ export const ModalBtn = ({ onClick, bgcolor, image, textcolor, text }) => {
   );
 };
 
-export const Attendance = ({ img, text, textcolor, onClick }) => {
+export const Attendance = ({ img, text, bgHover, textcolor, onClick }) => {
   return (
     <div
-      className="cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center"
+      className={`cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center hover:bg-[${bgHover}]`}
       onClick={onClick}>
       <img src={img} alt="" className="size-8" />
       <h6

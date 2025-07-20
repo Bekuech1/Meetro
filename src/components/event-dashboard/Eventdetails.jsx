@@ -69,8 +69,10 @@ const Eventdetails = () => {
     return <div className="text-center py-10">Event not found</div>;
   }
 
-  const imageUrl = import.meta.env.VITE_IMAGE_URL;
-  const imagePath = `${imageUrl} / ${eventData.imageKey?.S}`;
+  // const imageUrl = import.meta.env.VITE_IMAGE_URL;
+  const imagePath = eventData?.imageKey?.S
+    ? new URL(eventData.imageKey.S, import.meta.env.VITE_IMAGE_URL).toString()
+    : "/events-modal.png"; // or some placeholder
 
   return (
     <div className="mt-4 flex flex-col md:flex-row gap-8">
@@ -154,6 +156,7 @@ const Eventdetails = () => {
 
         <div className="w-full h-fit grid gap-2">
           <ModalText img="/note-text.svg" text="about event" />
+
           <h4
             className={`${
               isExpanded ? "" : "line-clamp-3"
@@ -161,7 +164,9 @@ const Eventdetails = () => {
             {eventData.description?.S ||
               "No description available for this event."}
           </h4>
-          {eventData.description?.S && (
+
+          {/* ✅ Show the toggle button only if description is long */}
+          {eventData.description?.S && eventData.description.S.length > 150 && (
             <button
               onClick={toggleReadMore}
               className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
@@ -221,12 +226,14 @@ const Eventdetails = () => {
               <>
                 <Attendance
                   text="Not sure"
+                  bgHover="#011F0F"
                   img="/timer-modal.svg"
                   textcolor="#7A60BF"
                   onClick={() => handleConfirmAttendance("maybe")}
                 />
                 <Attendance
                   text="Going"
+                  bgHover="#011F0F"
                   img="/tick-circle-green.svg"
                   textcolor="#61B42D"
                   onClick={() => handleConfirmAttendance("yes")}

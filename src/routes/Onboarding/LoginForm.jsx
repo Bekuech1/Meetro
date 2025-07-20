@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import Layout from "../../components/Onboarding/Layout";
 import Form from "../../components/Onboarding/Form";
@@ -13,26 +13,27 @@ function LoginForm() {
     useAuthStore();
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState(() => {
-    const data = JSON.parse(sessionStorage.getItem("login"));
-    if (!data) {
-      return { name: "", password: "", email: "" };
-    } else {
-      return {
-        name: data?.name,
-        password: data?.password,
-        email: data?.email,
-      };
-    }
-  });
+  const [formData, setFormData] = useState({ password: "", email: "" });
+  // const [formData, setFormData] = useState(() => {
+  //   const data = JSON.parse(sessionStorage.getItem("login"));
+  //   if (!data) {
+  //     return { name: "", password: "", email: "" };
+  //   } else {
+  //     return {
+  //       name: data?.name,
+  //       password: data?.password,
+  //       email: data?.email,
+  //     };
+  //   }
+  // });
 
   const [errorMessages, setErrorMessages] = useState({});
   const [showOptions, setShowOptions] = useState(false);
 
-  useEffect(() => {
-    const newForm = { ...formData };
-    sessionStorage.setItem("login", JSON.stringify(newForm));
-  }, [formData]);
+  // useEffect(() => {
+  //   const newForm = { ...formData };
+  //   sessionStorage.setItem("login", JSON.stringify(newForm));
+  // }, [formData]);
 
   const navigate = useNavigate();
   const text = (

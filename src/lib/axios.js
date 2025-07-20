@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "../stores/useAuthStore";
+import { isTokenExpired } from "@/utils/authUtils";
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -11,8 +12,12 @@ const API = axios.create({
 // ----- REQUEST INTERCEPTOR -----
 API.interceptors.request.use(
   (config) => {
-    const { idToken } = useAuthStore.getState(); // 👈 read from Zustand, not localStorage
+    const { idToken, logout } = useAuthStore.getState(); // 👈 read from Zustand, not localStorage
     if (idToken) {
+      if (isTokenExpired(idToken)) {
+        logout(); // If token is expired, logout
+        return Promise.reject(new axios.Cancel("Token expired, logging out"));
+      }
       config.headers.Authorization = `Bearer ${idToken}`;
     }
     return config;
@@ -47,8 +52,6 @@ API.interceptors.response.use(
       !originalRequest._retry &&
       refreshToken
     ) {
-      originalRequest._retry = true;
-
       if (isRefreshing) {
         return new Promise((resolve) => {
           subscribeTokenRefresh((newToken) => {
@@ -58,7 +61,9 @@ API.interceptors.response.use(
         });
       }
 
+      originalRequest._retry = true;
       isRefreshing = true;
+
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/refresh`,

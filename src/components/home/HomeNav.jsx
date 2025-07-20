@@ -11,6 +11,7 @@ const Header = () => {
   const notificationRef = useRef(null);
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
   const toggleNotification = () => setIsNotificationOpen((prev) => !prev);
@@ -56,11 +57,13 @@ const Header = () => {
       image: "/logout.svg",
       className: "text-[#DB2863]",
       onClick: () => {
-        useAuthStore.getState().setUser(null);
-        useAuthStore.getState().setAccessToken(null);
-        useAuthStore.getState().setRefreshToken(null);
-        useAuthStore.getState().setIdToken(null);
-        // useEventStore.getState().resetStore();
+        logout();
+        // localStorage.clear();
+        // useAuthStore.getState().setUser(null);
+        // useAuthStore.getState().setAccessToken(null);
+        // useAuthStore.getState().setRefreshToken(null);
+        // useAuthStore.getState().setIdToken(null);
+        // // useEventStore.getState().resetStore();
         navigate("/");
       },
     },
