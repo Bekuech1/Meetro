@@ -100,7 +100,7 @@ const PersonalProfile = () => {
             Past Events
           </h2>
 
-          <div
+          {/* <div
             style={{
               boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
               backdropFilter: "blur(16px)",
@@ -124,7 +124,7 @@ const PersonalProfile = () => {
               }`}>
               Invites
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="flex flex-col items-center gap-2">
           <h2 className="text-[18px] font-bold text-[#001010] satoshi">

@@ -32,40 +32,54 @@ const NormalHome = () => {
     setSelectedEventId(null);
   };
 
-  const homeBtn = [
-    {
-      text: "all events",
-      image: "/home-arrow-down.svg",
-      onClick: () => navigate("/home"),
-    },
-    // {
-    //   text: "march, 2025",
-    //   image: "/home-arrow-down.svg",
-    //   onClick: () => navigate("/home"),
-    //   style: "md:flex hidden",
-    // },
-  ];
+  // const homeBtn = [
+  //   {
+  //     text: "all events",
+  //     image: "/home-arrow-down.svg",
+  //     onClick: () => navigate("/home"),
+  //   },
+  // {
+  //   text: "march, 2025",
+  //   image: "/home-arrow-down.svg",
+  //   onClick: () => navigate("/home"),
+  //   style: "md:flex hidden",
+  // },
+  // ];
 
   const groupEventsByDate = (eventsArray) => {
     const grouped = {};
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of the day
 
     eventsArray.forEach((event) => {
       const rawDate = event.date;
       if (!rawDate || typeof rawDate !== "string") return;
 
       const parsed = new Date(rawDate);
-      if (isNaN(parsed)) return;
+      parsed.setHours(0, 0, 0, 0); // Normalize
+
+      // Skip past events
+      if (parsed < today) return;
 
       const yyyy = parsed.getFullYear();
       const mm = String(parsed.getMonth() + 1).padStart(2, "0");
       const dd = String(parsed.getDate()).padStart(2, "0");
-      const key = `${yyyy}-${mm}-${dd}`; // example: 2025-07-14
+      const key = `${yyyy}-${mm}-${dd}`; // e.g., 2025-07-19
 
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(event);
     });
 
-    return grouped;
+    // Sort the grouped dates descending (latest dates first)
+    // Sort dates in ascending order (nearest date first)
+    const sortedGrouped = Object.keys(grouped)
+      .sort((a, b) => new Date(a) - new Date(b)) // ✅ Ascending
+      .reduce((acc, date) => {
+        acc[date] = grouped[date];
+        return acc;
+      }, {});
+
+    return sortedGrouped;
   };
 
   return (
@@ -118,7 +132,9 @@ const NormalHome = () => {
 
                 <ul className="w-full grid sm:gap-[2px] gap-[2px] satoshi">
                   <li className="flex justify-between">
-                    <h4 className="capitalize satoshi text-[#001010] text-base font-medium leading-tight">{event.title}</h4>
+                    <h4 className="capitalize satoshi text-[#001010] text-base font-medium leading-tight">
+                      {event.title}
+                    </h4>
                     <h6 className="satoshi text-[#8A9191] sm:hidden text-[10px]">
                       {event.relativeTime || "12 h"}
                     </h6>
@@ -164,7 +180,7 @@ const NormalHome = () => {
                       className="w-4 h-4 rounded-full"
                     />
                     <h6 className="text-black text-[10px] font-[500]">
-                      {event.going || "no one yet"}
+                      {event.attendees.name || "no one yet"}
                     </h6>
                   </li>
 

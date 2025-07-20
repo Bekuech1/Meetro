@@ -101,11 +101,7 @@ const Account = ({ form, setForm }) => {
           </label>
           <div className="flex relative items-center w-full bg-[#FFFFFE80] rounded-[12px] border border-[#FFFFFE] py-[10px]">
             <div className="ml-2 absolute bg-white p-1 rounded-[50px]">
-              <img
-                src="/sms.svg"
-                alt=""
-                className="rounded-full"
-              />
+              <img src="/sms.svg" alt="" className="rounded-full" />
             </div>
             <input
               type="email"
@@ -117,7 +113,7 @@ const Account = ({ form, setForm }) => {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <label htmlFor="" className="font-bold text-[12px] text-[#8A9191]">
             Location
           </label>
@@ -168,8 +164,7 @@ const Account = ({ form, setForm }) => {
                           setStateLocation(state);
                           handleChange("state", state);
                           setIsOpen(false);
-                        }}
-                      >
+                        }}>
                         {state}
                       </span>
                     </li>
@@ -178,7 +173,7 @@ const Account = ({ form, setForm }) => {
               )}
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* 3rd party accounts */}

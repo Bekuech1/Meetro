@@ -3,7 +3,7 @@ import Eventdetails from "@/components/event-dashboard/Eventdetails";
 import ShareEvent from "@/components/event-dashboard/ShareEvent";
 import React from "react";
 
-const ManageEvents = () => {
+const EventDetails = () => {
   return (
     <div className="bg-[#F0F0F0] relative">
       {/* background ellipses */}
@@ -39,4 +39,4 @@ const ManageEvents = () => {
   );
 };
 
-export default ManageEvents;
+export default EventDetails;
