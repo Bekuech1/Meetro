@@ -166,7 +166,7 @@ const NormalHome = () => {
                   <li className="flex gap-1 items-center">
                     <img src="/event-location.svg" className="w-4 h-4" />
                     <h6 className="text-[#8A9191] text-[10px] font-[700]">
-                      {event.location}
+                      {`${event?.location?.venue?.S}, ${event?.location?.state?.S}`}
                     </h6>
                   </li>
 
