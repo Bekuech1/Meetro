@@ -604,7 +604,7 @@ export const ModalBtn = ({
 export const Attendance = ({ img, text, bgHover, textcolor, onClick }) => {
   return (
     <div
-      className={`cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center hover:bg-[${bgHover}]`}
+      className={`cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center hover:bg-[${bgHover}] transition-all duration-1000 ease-in-out`}
       onClick={onClick}>
       <img src={img} alt="" className="size-8" />
       <h6
