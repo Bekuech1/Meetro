@@ -50,7 +50,7 @@ const Input = ({
 }) => {
   return (
     <div
-      className="flex justify-between p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full cursor-pointer relative"
+      className="flex justify-between p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full max-w-[] cursor-pointer relative"
       onClick={onClick}
     >
       {/* Left Image */}

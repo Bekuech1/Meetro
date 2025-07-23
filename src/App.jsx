@@ -1,16 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import Authentication from "./routes/Onboarding/Authentication";
 import Signup from "./routes/Onboarding/Signup";
-import Homepage from "./routes/Homepage";
+import Homepage from "./routes/LandingPage/Homepage";
 import Signup2 from "./routes/Onboarding/Signup2";
 import Location from "./routes/Onboarding/Location";
 import Calender from "./routes/Onboarding/Calender";
 import Interest from "./routes/Onboarding/Interest";
-import HomepageLayout from "./layouts/HomepageLayout";
 import Home from "./routes/home";
 import Login from "./routes/Onboarding/Login";
 import LoginForm from "./routes/Onboarding/LoginForm";
 import ReserveSpot from "./components/home/ReserveSpot";
+import HomepageLayout from "./layouts/HomepageLayout";
+import BlogPost from "./components/LandingPage/BlogPost";
 import Payment from "./components/home/Payment";
 import CreateEventsLayout from "./layouts/CreateEventsLayout";
 import CreateEvent from "./routes/CreateEvent";
@@ -30,6 +31,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Homepage />} />
+
+
+          {/* Blogs Route */}
+          <Route path="blog/:id" element={<BlogPost />} />
 
           {/* Onboarding Routes */}
           <Route path="/authentication" element={<Authentication />} />

@@ -45,7 +45,7 @@ function LoginForm() {
   const button = {
     title: loading ? "Loading..." : "Let's gooo!",
     className:
-      "w-full bg-[#AFFC41] text-[#095256] px-6 rounded-[60px] h-[36px]",
+      "w-full bg-[#011F0F] text-[#BEFD66] px-6 rounded-[60px] h-[36px]",
     onclick: handleSubmit,
     type: "submit",
   };
@@ -153,7 +153,7 @@ function LoginForm() {
         </div>
         <OnboardingButton {...button} />
         <div>
-          <h3 className="text-xs text-center sm:text-sm mt-6 font-medium">
+          <h3 className="text-xs text-center sm:text-sm mt-6 font-medium satoshi">
             New to Meetro?
             <span
               className="text-purple-400 satoshi cursor-pointer"

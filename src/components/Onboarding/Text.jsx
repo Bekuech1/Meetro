@@ -5,7 +5,7 @@ function Text({ path }) {
 
   return (
     <div>
-      <h3 className="text-xs text-center sm:text-sm mt-6 font-medium">
+      <h3 className="text-xs text-center sm:text-sm mt-6 font-medium satoshi">
         Already have an account?
         <span
           className="text-purple-400 satoshi cursor-pointer"

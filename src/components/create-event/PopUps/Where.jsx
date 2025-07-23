@@ -4,9 +4,9 @@ import TextOnlyInput from "./Popup components/TextOnlyInput"; // Custom Text Inp
 import PopUpInput from "./Popup components/PopUpInput";
 import { statesAndCapitals } from "@/constants/StateAndCapital";
 
-
 const Where = ({ isVisible, onClose, onSave }) => {
-  const [location, setLocation] = useState("");
+  const [online, setOnline] = useState("");
+  const [offline, setOffline] = useState("");
   const [stateLocation, setStateLocation] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0); // Track the active tab
@@ -15,11 +15,16 @@ const Where = ({ isVisible, onClose, onSave }) => {
     setActiveTab(tabIndex);
   };
 
-  const setEventType = (activeTab) => {
+  const getEventType = (activeTab) => {
     return activeTab === 1 ? "online" : "offline";
   };
 
-  const handleLocationChange = (value) => setLocation(value);
+  const getCurrentLocation = (activeTab) => {
+    return activeTab === 1 ? online : offline;
+  };
+ 
+  const handleOnlineChange = (value) => setOnline(value);
+  const handleOfflineChange = (value) => setOffline(value);
   const handleStateLocationChange = (state) => {
     setStateLocation(state);
     setIsOpen(false);
@@ -28,9 +33,9 @@ const Where = ({ isVisible, onClose, onSave }) => {
   const handleSave = () => {
     if (onSave) {
       onSave({
-        venue: location,
+        venue: getCurrentLocation(activeTab), // Use the appropriate location based on active tab
         state: stateLocation,
-        locationType: setEventType(activeTab),
+        locationType: getEventType(activeTab),
       });
     }
     onClose();
@@ -52,8 +57,8 @@ const Where = ({ isVisible, onClose, onSave }) => {
         // Offline Event Input
         <div className="flex gap-[2px] items-end w-full" key="1">
           <TextOnlyInput
-            value={location}
-            onChange={handleLocationChange}
+            value={offline}
+            onChange={handleOfflineChange}
             label="Offline Location"
             placeholder="Type in offline location"
             leftIcon="location.svg"
@@ -96,8 +101,8 @@ const Where = ({ isVisible, onClose, onSave }) => {
         // Online Event Input
         <div key="2" className="grid gap-4">
           <TextOnlyInput
-            value={location}
-            onChange={handleLocationChange}
+            value={online}
+            onChange={handleOnlineChange}
             label="Online Location"
             placeholder="virtual event link like Zoom, Google Meet, etc."
             leftIcon="/video.svg"

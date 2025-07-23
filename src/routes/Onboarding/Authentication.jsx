@@ -20,7 +20,7 @@ function Authentication() {
       title: "Register",
       onclick: () => navigate("/signup"),
       className:
-        "sm:w-[107px] h-[34px] w-[163.5px] bg-[#AFFC41] rounded-[60px] text-[#095256] px-6",
+        "sm:w-[107px] h-[34px] w-[163.5px] bg-[#011F0F] rounded-[60px] text-[#BEFD66] px-6",
     },
   ];
 
