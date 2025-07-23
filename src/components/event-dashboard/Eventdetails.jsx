@@ -150,7 +150,7 @@ const Eventdetails = () => {
           </div>
           <div className="hidden md:flex flex-row gap-2">
             <ShareEvent eventId={eventId} />
-            <DownloadEvent />
+            {/* <DownloadEvent /> */}
           </div>
         </div>
 
@@ -160,7 +160,8 @@ const Eventdetails = () => {
           <h4
             className={`${
               isExpanded ? "" : "line-clamp-3"
-            } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
+            } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+          >
             {eventData.description?.S ||
               "No description available for this event."}
           </h4>
@@ -169,78 +170,137 @@ const Eventdetails = () => {
           {eventData.description?.S && eventData.description.S.length > 150 && (
             <button
               onClick={toggleReadMore}
-              className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
+              className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+            >
               {isExpanded ? "Show less" : "Read more"}
             </button>
           )}
         </div>
 
         {/* Attendance Confirmation Section */}
-        <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-          <div className="w-full h-fit flex justify-between">
-            <div className="w-full h-fit grid gap-1 satoshi">
-              <h5 className="text-[16px] font-[700] leading-[24px] text-black">
-                {attendanceStatus === "yes"
-                  ? "✅ You're going!"
-                  : "Not confirmed yet"}
-              </h5>
-              <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
-                {attendanceStatus === "yes"
-                  ? "We'll send you reminders and updates so you don't miss a thing."
-                  : "Confirm your attendance to get updates."}
+        <ModalText img="/money-add.svg" text="chip in" />
+
+        {eventData?.chipInType?.S === "FIXED" ? (
+          <div className="rounded-[12px] p-4 border-[2px] border-white text-left bg-white/70">
+            <p className="text-[#8A9191]">{eventData?.chipInType?.S}</p>
+
+            <div className="flex justify-between items-center">
+              <p className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi ">
+                ₦{eventData?.chipInAmount?.S}
+              </p>
+              <p className="bg-[#D9D1F1] text-sm font-bold text-[#7A60BF] py-1 px-2 rounded-full">
+                Required to join the fun
               </p>
             </div>
-            {eventData.date?.S && (
-              <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-                Starting in{" "}
-                <span className="text-[#866AD2]">
-                  {calculateTimeRemaining(eventData.date.S)}
-                </span>
+          </div>
+        ) : (
+          <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+            <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi ">
+              {eventData?.chipInType?.S || "Not specified"}
+            </p>
+          </div>
+        )}
+
+        {!attendanceStatus && (
+          <div className="flex gap-4 items-center">
+            <Attendance
+              text="Not sure"
+              bgHover="#011F0F"
+              img="/timer-modal.svg"
+              textcolor="#7A60BF"
+              onClick={() => handleConfirmAttendance("maybe")}
+            />
+            <Attendance
+              text="Going"
+              bgHover="#011F0F"
+              img="/tick-circle-green.svg"
+              textcolor="#61B42D"
+              onClick={() => handleConfirmAttendance("yes")}
+            />
+          </div>
+        )}
+
+        {/* <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70"> */}
+        <div className="w-full h-fit flex justify-between">
+          <div className="w-full h-fit grid gap-1 satoshi">
+            {attendanceStatus === "yes" && (
+              <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                <>
+                  <h5 className="text-[16px] font-[700] leading-[24px] text-black">
+                    ✅ You're going!
+                  </h5>
+                  <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                    We'll send you reminders and updates so you don't miss a
+                    thing.
+                  </p>
+                </>
+                <div className="flex justify-between items-center">
+                  <h5 className="text-[14px] font-[700] leading-[20px] text-black">
+                    Invite a friend too 👉
+                  </h5>
+                  <ModalBtn
+                    onClick={() => console.log("Invite a friend")}
+                    bgcolor="bg-[#E6F2F3]"
+                    image="/send.svg"
+                    textcolor="text-black"
+                    text="Invite a Friend"
+                  />
+                </div>
               </div>
             )}
-          </div>
-          <div className="satoshi w-full h-fit flex justify-between items-center">
-            <h5 className="text-[14px] font-[700] leading-[20px] text-black flex">
-              {attendanceStatus === "yes"
-                ? "Invite a friend too 👉"
-                : "Confirm your attendance"}
-            </h5>
-            {attendanceStatus === "yes" ? (
-              <>
-                <ModalBtn
-                  onClick={() => handleConfirmAttendance("no")}
-                  bgcolor="bg-[#E6F2F3]"
-                  image="/send.svg"
-                  textcolor="text-black"
-                  text="Invite a Friend"
-                />
-                <ModalBtn
-                  onClick={() => handleConfirmAttendance("yes")}
-                  bgcolor="bg-[#011F0F]"
-                  image="/tick-circle-green.svg"
-                  textcolor="text-[#61B42D]"
-                  text="Change to Going"
-                />
-              </>
-            ) : (
-              <>
-                <Attendance
-                  text="Not sure"
-                  bgHover="#011F0F"
-                  img="/timer-modal.svg"
-                  textcolor="#7A60BF"
-                  onClick={() => handleConfirmAttendance("maybe")}
-                />
-                <Attendance
-                  text="Going"
-                  bgHover="#011F0F"
-                  img="/tick-circle-green.svg"
-                  textcolor="#61B42D"
-                  onClick={() => handleConfirmAttendance("yes")}
-                />
-              </>
+
+            {attendanceStatus === "maybe" && (
+              <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                <>
+                  <h5 className="text-[16px] font-[700] leading-[24px] text-[#001010]">
+                    👀 Got it you're thinking about it!
+                  </h5>
+                  <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                    We'll remind you as the date gets closer, just in case you
+                    decide to come.
+                  </p>
+                </>
+                <div className="flex justify-between items-center">
+                  {/* <h5 className="text-[14px] font-[700] leading-[20px] text-black">
+        Invite a friend too 👉
+      </h5> */}
+                  <ModalBtn
+                    onClick={() => console.log("Invite a friend")}
+                    bgcolor="bg-[#E6F2F3]"
+                    image="/tick-circle.svg"
+                    textcolor="text-[#61B42D]"
+                    text="Change to Going"
+                  />
+                </div>
+              </div>
             )}
+
+            {/* {!attendanceStatus && (
+        <>
+          <h5 className="text-[16px] font-[700] leading-[24px] text-black">
+            Not confirmed yet
+          </h5>
+          <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+            Confirm your attendance to get updates.
+          </p>
+        </>
+      )} */}
+            {/* </div> */}
+
+            {/* {eventData.date?.S && (
+      <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
+        Starting in{" "}
+        <span className="text-[#866AD2]">
+          {calculateTimeRemaining(eventData.date.S)}
+        </span>
+      </div>
+    )} */}
           </div>
+
+          {/* Optional: Add share/invite here only if status is 'yes' */}
+          {/* {attendanceStatus === "yes" && ( */}
+
+          {/* )} */}
         </div>
 
         {/* Dress Code Section */}
@@ -274,7 +334,8 @@ const Eventdetails = () => {
               {eventData.attendees.L.map((attendee, index) => (
                 <div
                   key={index}
-                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
+                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
+                >
                   <img
                     src="/large-profile.jpg"
                     alt="Attendee"
@@ -294,17 +355,17 @@ const Eventdetails = () => {
 };
 
 // Helper function to calculate time remaining
-function calculateTimeRemaining(eventDate) {
-  const now = new Date();
-  const eventTime = new Date(eventDate);
-  const diff = eventTime - now;
+// function calculateTimeRemaining(eventDate) {
+//   const now = new Date();
+//   const eventTime = new Date(eventDate);
+//   const diff = eventTime - now;
 
-  if (diff <= 0) return "Event has started";
+//   if (diff <= 0) return "Event has started";
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+//   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+//   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
-  return `${days}d ${hours}h`;
-}
+//   return `${days}d ${hours}h`;
+// }
 
 export default Eventdetails;
