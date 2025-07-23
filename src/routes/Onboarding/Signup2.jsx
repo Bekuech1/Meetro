@@ -43,7 +43,7 @@ function Signup2() {
   const button = {
     title: loading ? "Loading..." : "Let's gooo!",
     className:
-      "w-full bg-[#AFFC41] text-[#095256] px-6 rounded-[60px] h-[36px]",
+      "w-full bg-[#011F0F] text-[#BEFD66] px-6 rounded-[60px] h-[36px]",
     onclick: handleSubmit,
     type: "submit",
   };

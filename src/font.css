@@ -2,6 +2,13 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Paytone+One&display=swap');
 
+/* nico moji */
+
+@import url('https://fonts.googleapis.com/earlyaccess/nicomoji.css');
+
+/* urbanist */
+@import url('https://fonts.googleapis.com/css?family=Urbanist');
+
 
 /* visbycf */
 
@@ -71,4 +78,16 @@
 
 .satoshi{
   font-family: 'satoshi', sans-serif;
+}
+
+.nico-moji{
+  font-family: 'Nico Moji', sans-serif;
+}
+
+.times-new-roman{
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.urbanist{
+  font-family: 'Urbanist', sans-serif;
 }
