@@ -31,7 +31,7 @@ function Login() {
       },
       onclick: () => navigate("/signin"),
       className:
-        "w-[343px] sm:w-[312px] h-[36px] bg-[#AFFC41] text-[#095256] px-6",
+        "w-[343px] sm:w-[312px] h-[36px] bg-[#011F0F] text-[#BEFD66] px-6",
     },
   ];
 
@@ -50,7 +50,7 @@ function Login() {
             ))}
           </div>
           <div>
-            <h3 className="text-xs text-center sm:text-sm mt-6 font-medium">
+            <h3 className="text-xs text-center sm:text-sm mt-6 font-medium satoshi">
               New to Meetro?
               <span
                 className="text-purple-400 satoshi cursor-pointer"
@@ -60,7 +60,7 @@ function Login() {
               </span>
             </h3>
           </div>
-          <h6 className="absolute bottom-2 left-0 text-xs sm:text-sm text-center w-full font-normal tracking-wide ">
+          <h6 className="absolute bottom-2 left-0 text-xs sm:text-sm text-center w-full font-normal tracking-wide satoshi">
             <span className="text-[#8A9191] ">
               By signing up, you agree to our{" "}
             </span>

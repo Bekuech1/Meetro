@@ -11,7 +11,7 @@ function ShowOption({ onclick1, onclick2 }) {
     {
       title: "Continue onboarding",
       className:
-        "bg-[#AFFC41] px-2 text-sm w-[295px] sm:w-[200.5px] rounded-[60px] h-[36px] text-[#095256]",
+        "bg-[#011F0F] text-[#BEFD66] px-2 text-sm w-[295px] sm:w-[200.5px] rounded-[60px] h-[36px]",
       onclick: onclick2,
     },
   ];

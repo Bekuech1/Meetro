@@ -38,7 +38,7 @@ function Form({
             name={id}
             id={id}
             placeholder={placeholder}
-            className="border-1 border-white outline-none rounded-lg pl-10 py-1.5 w-full font-medium placeholder:text-[#989c9c] text-black text-sm "
+            className="border-1 satoshi border-white outline-none rounded-lg pl-10 py-1.5 w-full font-medium placeholder:text-[#989c9c] text-black text-sm "
             value={value}
             onChange={handleChange}
           />
@@ -47,7 +47,7 @@ function Form({
       <div className="relative">
         {error && (
           <span
-            className="text-red-400 text-xs absolute left-0
+            className="text-red-400 text-xs absolute left-0 satoshi
            max-w-full">
             {error}
           </span>
