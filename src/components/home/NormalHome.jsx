@@ -123,7 +123,8 @@ const NormalHome = () => {
               <section
                 key={event.id}
                 className="bg-[#FCFEF9]/50 backdrop-blur-[40px] rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
-                onClick={() => openModal(event.id)}>
+                onClick={() => openModal(event.id)}
+              >
                 <img
                   src={event?.imageKey || "/events-img.png"}
                   alt="event-img"
@@ -180,7 +181,10 @@ const NormalHome = () => {
                       className="w-4 h-4 rounded-full"
                     />
                     <h6 className="text-black text-[10px] font-[500]">
-                      {event.attendees.name || "no one yet"}
+                      {event.attendees?.filter((a) => a.response === "yes")
+                        .length > 0
+                        ? `${event.attendees.filter((a) => a.response === "yes").length} confirmed`
+                        : "no one confirmed yet"}
                     </h6>
                   </li>
 

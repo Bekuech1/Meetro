@@ -27,7 +27,7 @@ const EventDetails = () => {
 
           <div className="flex gap-2 md:hidden">
             <ShareEvent />
-            <DownloadEvent />
+            {/* <DownloadEvent /> */}
           </div>
         </div>
 

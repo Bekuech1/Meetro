@@ -9,7 +9,8 @@ import {
 } from "../home/EventModal";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import API from "@/lib/axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const Eventdetails = () => {
   const { eventId } = useParams(); // Assuming you're using react-router for routing
@@ -18,12 +19,27 @@ const Eventdetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [attendanceStatus, setAttendanceStatus] = useState(null);
+  const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
         const response = await API.get(`/events/${eventId}`);
-        setEventData(response.data);
+        const event = response.data;
+
+        // check if current user is already attending event
+        const attendees = event.attendees?.L || [];
+        const matchedAttendee = attendees.find(
+          (attendee) => attendee.M?.userId.S === user.userId
+        );
+
+        if (matchedAttendee) {
+          // set status directly based on responseType
+          setAttendanceStatus(matchedAttendee.M?.responseType.S || null);
+        }
+
+        setEventData(event);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to load event details");
       } finally {
@@ -117,7 +133,7 @@ const Eventdetails = () => {
             <SiteBtn
               name="manage"
               colorPadding="py-2 px-3 bg-[#AEFC40]"
-              onclick={() => console.log("Manage button clicked")}
+              onclick={() => navigate("/manage-event/" + eventId)}
             />
           </div>
         </section>
@@ -196,11 +212,12 @@ const Eventdetails = () => {
         ) : (
           <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
             <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi ">
-              {eventData?.chipInType?.S || "Not specified"}
+              {eventData?.chipInType?.S || "Free event"}
             </p>
           </div>
         )}
 
+        {/* attendance confirmation section */}
         {!attendanceStatus && (
           <div className="flex gap-4 items-center">
             <Attendance
@@ -208,6 +225,7 @@ const Eventdetails = () => {
               bgHover="#011F0F"
               img="/timer-modal.svg"
               textcolor="#7A60BF"
+              texthover="#C7BAEA"
               onClick={() => handleConfirmAttendance("maybe")}
             />
             <Attendance
@@ -215,25 +233,37 @@ const Eventdetails = () => {
               bgHover="#011F0F"
               img="/tick-circle-green.svg"
               textcolor="#61B42D"
+              texthover="#BEFD66"
               onClick={() => handleConfirmAttendance("yes")}
             />
           </div>
         )}
 
-        {/* <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70"> */}
         <div className="w-full h-fit flex justify-between">
           <div className="w-full h-fit grid gap-1 satoshi">
             {attendanceStatus === "yes" && (
               <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-                <>
-                  <h5 className="text-[16px] font-[700] leading-[24px] text-black">
-                    ✅ You're going!
-                  </h5>
-                  <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
-                    We'll send you reminders and updates so you don't miss a
-                    thing.
-                  </p>
-                </>
+                <div className="flex justify-between">
+                  <div>
+                    <h5 className="text-[16px] font-[700] leading-[24px] text-black">
+                      ✅ You're going!
+                    </h5>
+                    <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                      We'll send you reminders and updates so you don't miss a
+                      thing.
+                    </p>
+                  </div>
+
+                  {eventData.date?.S && (
+                    <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
+                      Starting in{" "}
+                      <span className="text-[#866AD2]">
+                        {calculateTimeRemaining(eventData.date.S)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex justify-between items-center">
                   <h5 className="text-[14px] font-[700] leading-[20px] text-black">
                     Invite a friend too 👉
@@ -261,9 +291,6 @@ const Eventdetails = () => {
                   </p>
                 </>
                 <div className="flex justify-between items-center">
-                  {/* <h5 className="text-[14px] font-[700] leading-[20px] text-black">
-        Invite a friend too 👉
-      </h5> */}
                   <ModalBtn
                     onClick={() => console.log("Invite a friend")}
                     bgcolor="bg-[#E6F2F3]"
@@ -274,33 +301,7 @@ const Eventdetails = () => {
                 </div>
               </div>
             )}
-
-            {/* {!attendanceStatus && (
-        <>
-          <h5 className="text-[16px] font-[700] leading-[24px] text-black">
-            Not confirmed yet
-          </h5>
-          <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
-            Confirm your attendance to get updates.
-          </p>
-        </>
-      )} */}
-            {/* </div> */}
-
-            {/* {eventData.date?.S && (
-      <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-        Starting in{" "}
-        <span className="text-[#866AD2]">
-          {calculateTimeRemaining(eventData.date.S)}
-        </span>
-      </div>
-    )} */}
           </div>
-
-          {/* Optional: Add share/invite here only if status is 'yes' */}
-          {/* {attendanceStatus === "yes" && ( */}
-
-          {/* )} */}
         </div>
 
         {/* Dress Code Section */}
@@ -355,17 +356,17 @@ const Eventdetails = () => {
 };
 
 // Helper function to calculate time remaining
-// function calculateTimeRemaining(eventDate) {
-//   const now = new Date();
-//   const eventTime = new Date(eventDate);
-//   const diff = eventTime - now;
+function calculateTimeRemaining(eventDate) {
+  const now = new Date();
+  const eventTime = new Date(eventDate);
+  const diff = eventTime - now;
 
-//   if (diff <= 0) return "Event has started";
+  if (diff <= 0) return "Event has started";
 
-//   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-//   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
-//   return `${days}d ${hours}h`;
-// }
+  return `${days}d ${hours}h`;
+}
 
 export default Eventdetails;

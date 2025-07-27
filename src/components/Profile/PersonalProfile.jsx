@@ -6,7 +6,7 @@ import API from "@/lib/axios"; // Adjust the import based on your API utility fi
 import { useNavigate } from "react-router";
 
 const PersonalProfile = () => {
-  const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
+  // const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
   const idToken = useAuthStore((state) => state.idToken);
   const setUser = useAuthStore((state) => state.setUser); // Zustand action to set user info
   const user = useAuthStore((state) => state.user);
@@ -70,7 +70,7 @@ const PersonalProfile = () => {
                 <p className="text-[14px] font-medium text-[#001010] ">
                   {user?.state}
                 </p>
-              </span> */}
+              </span> */} 
               <span className="flex items-center gap-2">
                 <img src="/calendar.svg" alt="calendar-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">
