@@ -70,7 +70,7 @@ const PersonalProfile = () => {
                 <p className="text-[14px] font-medium text-[#001010] ">
                   {user?.state}
                 </p>
-              </span> */}
+              </span> */} 
               <span className="flex items-center gap-2">
                 <img src="/calendar.svg" alt="calendar-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">

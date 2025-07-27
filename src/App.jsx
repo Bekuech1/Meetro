@@ -22,6 +22,7 @@ import ProtectedRoute from "./components/(appState)/ProtectedRoute";
 // import GoogleAuthCallback from "./components/Onboarding/GoogleAuthCallback";
 import { useRehydrateAuth } from "./lib/useRehydrateAuth";
 import EventDetails from "./routes/EventDetails";
+import ManageEventPage from "./routes/ManageEvent";
 
 function App() {
   useRehydrateAuth(); // This hook is used to rehydrate the auth state from local storage or session storage
@@ -31,7 +32,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Homepage />} />
-
 
           {/* Blogs Route */}
           <Route path="blog/:id" element={<BlogPost />} />
@@ -79,6 +79,10 @@ function App() {
 
           <Route path="/event/:eventId" element={<HomepageLayout />}>
             <Route index element={<EventDetails />} />
+          </Route>
+
+          <Route path="/manage-event/:eventId" element={<HomepageLayout />}>
+            <Route index element={<ManageEventPage />} />
           </Route>
 
           {/* Test Routes */}

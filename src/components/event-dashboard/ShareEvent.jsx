@@ -43,9 +43,10 @@ const ShareEvent = ({ eventId }) => {
   };
 
   const copyToClipboard = () => {
+    // navigator.clipboard.writeText(window.location.href);
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Hide after 2 seconds
+    setTimeout(() => setCopied(false), 5000); // Hide after 2 seconds
   };
 
   return (
@@ -72,7 +73,7 @@ const ShareEvent = ({ eventId }) => {
                 />
 
                 <div className="flex flex-col items-center gap-2">
-                  <h2 className="paytone text-2xl">{eventDetails?.title?.S}</h2>
+                  <h2 className="paytone text-2xl capitalize">{eventDetails?.title?.S}</h2>
 
                   <div className="flex gap-2">
                     <ModalText
@@ -89,18 +90,23 @@ const ShareEvent = ({ eventId }) => {
 
               {/* copy btn below */}
               <div className="flex items-center justify-center w-full bg-[#FFFFFF] h-20">
-                <button
-                  onClick={copyToClipboard}
-                  className="flex items-center justify-center gap-1 bg-[#AEFC40] py-2 px-3 rounded-3xl"
-                >
-                  <p className="font-bold text-[12px] text-[#011F0F]">
-                    Copy Link
-                  </p>{" "}
-                  <img src="/link.svg" alt="Copy" className="w-4 h-4" />
-                  {copied && (
-                    <span className="text-green-600 ml-2">Copied!</span>
-                  )}
-                </button>
+                {!copied ? (
+                  <button
+                    onClick={copyToClipboard}
+                    className="flex items-center justify-center gap-1 bg-[#AEFC40] py-2 px-3 rounded-3xl"
+                  >
+                    <p className="font-bold text-[12px] text-[#011F0F]">
+                      Copy Link
+                    </p>{" "}
+                    <img src="/link.svg" alt="Copy" className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <div className="bg-[#011F0F] text-[#AEFC40] px-3 py-2 flex gap-4 rounded-full items-center justify-center">
+                    <p className="">Copied</p>
+                    <img src="/tick-circle.svg" alt="" />
+                  </div>
+                )}
+
                 {/* </div> */}
               </div>
             </div>

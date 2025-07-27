@@ -114,7 +114,8 @@ const EventModal = ({ eventId, closeModal }) => {
                 <h4
                   className={`${
                     isExpanded ? "" : "line-clamp-3"
-                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
+                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+                >
                   {eventDetails?.description?.S ||
                     "No description for this event"}
                 </h4>
@@ -123,7 +124,8 @@ const EventModal = ({ eventId, closeModal }) => {
                 {eventDetails?.description?.S && (
                   <button
                     onClick={toggleReadMore}
-                    className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
+                    className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                  >
                     {isExpanded ? "Show less" : "Read more"}
                   </button>
                 )}
@@ -385,7 +387,8 @@ const EventModal = ({ eventId, closeModal }) => {
               <h4
                 className={`${
                   isExpanded ? "" : "line-clamp-3"
-                } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}>
+                } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+              >
                 {eventDetails?.description?.S ||
                   "No description for this event"}
               </h4>
@@ -393,7 +396,8 @@ const EventModal = ({ eventId, closeModal }) => {
               {/* Read More Button */}
               <button
                 onClick={toggleReadMore}
-                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit">
+                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+              >
                 {isExpanded ? "Show less" : "Read more"}
               </button>
             </section>
@@ -591,24 +595,28 @@ export const ModalBtn = ({
   return (
     <div
       className={`lg:w-fit w-full h-fit rounded-[60px] flex gap-2 p-[10px] justify-center items-center cursor-pointer ${bgHover} ${bgcolor}`}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       <img src={image} className="size-[22px]" />
       <h6
-        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}>
+        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}
+      >
         {text}
       </h6>
     </div>
   );
 };
 
-export const Attendance = ({ img, text, bgHover, textcolor, onClick }) => {
+export const Attendance = ({ img, text, bgHover, textcolor, texthover, onClick }) => {
   return (
     <div
       className={`cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center hover:bg-[${bgHover}] transition-all duration-1000 ease-in-out`}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       <img src={img} alt="" className="size-8" />
       <h6
-        className={`text-[${textcolor}] font-[400] text-[12px] lg:leading-[18px] capitalize`}>
+        className={`text-[${textcolor}] hover:text-[${texthover}] font-[400] text-[12px] lg:leading-[18px] capitalize`}
+      >
         {text}
       </h6>
     </div>
