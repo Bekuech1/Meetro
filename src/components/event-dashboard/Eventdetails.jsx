@@ -133,8 +133,7 @@ const Eventdetails = () => {
             <SiteBtn
               name="manage"
               colorPadding="py-2 px-3 bg-[#AEFC40]"
-
-              onclick={() => navigate('/manage-event/' + eventId)}
+              onclick={() => navigate("/manage-event/" + eventId)}
             />
           </div>
         </section>
@@ -226,6 +225,7 @@ const Eventdetails = () => {
               bgHover="#011F0F"
               img="/timer-modal.svg"
               textcolor="#7A60BF"
+              texthover="#C7BAEA"
               onClick={() => handleConfirmAttendance("maybe")}
             />
             <Attendance

@@ -2,20 +2,56 @@ import React, { useState, useEffect } from "react";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import API from "@/lib/axios";
 import Eventdetails from "../event-dashboard/Eventdetails";
+import { useNavigate } from "react-router";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const EventModal = ({ eventId, closeModal }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
+  const [attendanceStatus, setAttendanceStatus] = useState(null);
+  const [error, setError] = useState(null);
+  const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
 
   const toggleReadMore = () => {
     setIsExpanded((prev) => !prev);
+  };
+
+  const handleConfirmAttendance = async (responseType) => {
+    try {
+      console.log("Confirming attendance for:", eventId);
+      const shareResponse = await API.post(`/shares`, { eventId });
+      console.log("Share created:", shareResponse.data);
+
+      const shareId = shareResponse.data?.shareId;
+      if (!shareId) throw new Error("shareId not returned");
+
+      await API.post(`/shares/${shareId}/confirm`, { responseType });
+
+      setAttendanceStatus(responseType);
+    } catch (err) {
+      console.error("Confirm attendance error:", err.response?.data || err);
+      setError(err.response?.data?.error || "Failed to confirm attendance");
+    }
   };
 
   useEffect(() => {
     if (!eventId) return;
 
     API.get(`/events/${eventId}`).then((response) => {
-      setEventDetails(response.data);
+      const event = response.data;
+      // check if current user is already attending event
+      const attendees = event.attendees?.L || [];
+      const matchedAttendee = attendees.find(
+        (attendee) => attendee.M?.userId.S === user.userId
+      );
+
+      if (matchedAttendee) {
+        // set status directly based on responseType
+        setAttendanceStatus(matchedAttendee.M?.responseType.S || null);
+      }
+
+      setEventDetails(event);
     });
   }, [eventId]);
 
@@ -68,7 +104,7 @@ const EventModal = ({ eventId, closeModal }) => {
                   <SiteBtn
                     name="manage"
                     colorPadding="py-2 px-3 bg-[#AEFC40]"
-                    onclick={() => console.log("Manage button clicked")} // Fixed
+                    onclick={() => navigate("/manage-event/" + eventId)}
                   />
                 </div>
               </section>
@@ -132,7 +168,7 @@ const EventModal = ({ eventId, closeModal }) => {
               </div>
 
               {/* chip in area */}
-              <div className="w-full h-fit grid gap-2">
+              <div className="w-full h-fit grid gap-4">
                 <ModalText img="/money-add.svg" text="chip in" />
 
                 {eventDetails?.chipInType?.S === "FIXED" ? (
@@ -158,80 +194,90 @@ const EventModal = ({ eventId, closeModal }) => {
                   </div>
                 )}
 
-                {/* <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-                  <div className="h-fit w-full grid">
-                    <p className="capitalize text-[#8A9191] font-[500] text-[14px] leading-[20px] satoshi ">
-                      {eventDetails?.chipInType?.S}
-                    </p>
-                    <h6 className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi ">
-                      ₦ {eventDetails?.chipInAmount?.S || "0"}
-                    </h6>
+                {!attendanceStatus && (
+                  <div className="flex gap-4 items-center">
+                    <Attendance
+                      text="Not sure"
+                      bgHover="#011F0F"
+                      img="/timer-modal.svg"
+                      textcolor="#7A60BF"
+                      texthover="#C7BAEA"
+                      onClick={() => handleConfirmAttendance("maybe")}
+                    />
+                    <Attendance
+                      text="Going"
+                      bgHover="#011F0F"
+                      img="/tick-circle-green.svg"
+                      textcolor="#61B42D"
+                      texthover="#BEFD66"
+                      onClick={() => handleConfirmAttendance("yes")}
+                    />
                   </div>
-                  <div className="w-full h-fit rounded-[10px] bg-[#518A00]/10">
-                    <div className="h-2 w-[40%] rounded-[10px] bg-[#61B42D]"></div>{" "}
-                    Fixed
-                  </div>
-                  <div className="h-fit w-full flex justify-between">
-                    <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      ₦ {eventDetails?.chipInAmount?.S}
-                    </h6>
-                    <h6 className="satoshi font-[500] text-[16px] leading-[24px]">
-                      ₦ {eventDetails?.chipInAmount?.S || "0"}
-                    </h6>
-                  </div>
-                </div> */}
+                )}
               </div>
 
-              <section className="w-full h-fit flex gap-2">
-                <Attendance
-                  text="Not sure"
-                  img="/timer-modal.svg"
-                  textcolor="#7A60BF"
-                  bgHover="#011F0F"
-                  onclick={() => console.log("Attendance clicked")} // Fixed
-                />
-                <Attendance
-                  text="Going"
-                  bgHover="#011F0F"
-                  img="/tick-circle-green.svg"
-                  textcolor="#61B42D"
-                />
-              </section>
+              <div className="w-full h-fit flex justify-between">
+                <div className="w-full h-fit grid gap-1 satoshi">
+                  {attendanceStatus === "yes" && (
+                    <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                      <div className="flex justify-between">
+                        <div>
+                          <h5 className="text-[16px] font-[700] leading-[24px] text-black">
+                            ✅ You're going!
+                          </h5>
+                          <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                            We'll send you reminders and updates so you don't
+                            miss a thing.
+                          </p>
+                        </div>
 
-              <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-                <div className="w-full h-fit flex justify-between">
-                  <div className="w-full h-fit grid gap-1 satoshi">
-                    <h5 className="text-[16px] font-[700] leading-[24px] text-black">
-                      ✅ You're going!
-                    </h5>
-                    <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
-                      We'll send you reminders and updates so you don't miss a
-                      thing.
-                    </p>
-                  </div>
-                  <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-                    Starting in <span className="text-[#866AD2]">6d 8h</span>
-                  </div>
-                </div>
-                <div className="satoshi w-full h-fit flex justify-between items-center">
-                  <h5 className="text-[14px] font-[700] leading-[20px] text-black flex">
-                    Invite a friend too 👉
-                  </h5>
-                  <ModalBtn
-                    onClick=""
-                    bgcolor="bg-[#E6F2F3]"
-                    // bgHover="hover:bg-[#011F0F]"
-                    image="/send.svg"
-                    textcolor="text-black"
-                    text="Invite a Friend"
-                  />
-                  <ModalBtn
-                    onClick=""
-                    bgcolor="bg-[#011F0F]"
-                    image="/tick-circle-green.svg"
-                    textcolor="text-[#61B42D]"
-                    text="Change to Going"
-                  />
+                        {eventDetails.date?.S && (
+                          <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
+                            Starting in{" "}
+                            <span className="text-[#866AD2]">
+                              {calculateTimeRemaining(eventDetails.date.S)}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <h5 className="text-[14px] font-[700] leading-[20px] text-black">
+                          Invite a friend too 👉
+                        </h5>
+                        <ModalBtn
+                          onClick={() => console.log("Invite a friend")}
+                          bgcolor="bg-[#E6F2F3]"
+                          image="/send.svg"
+                          textcolor="text-black"
+                          text="Invite a Friend"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {attendanceStatus === "maybe" && (
+                    <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                      <>
+                        <h5 className="text-[16px] font-[700] leading-[24px] text-[#001010]">
+                          👀 Got it you're thinking about it!
+                        </h5>
+                        <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                          We'll remind you as the date gets closer, just in case
+                          you decide to come.
+                        </p>
+                      </>
+                      <div className="flex justify-between items-center">
+                        <ModalBtn
+                          onClick={() => console.log("Invite a friend")}
+                          bgcolor="bg-[#E6F2F3]"
+                          image="/tick-circle.svg"
+                          textcolor="text-[#61B42D]"
+                          text="Change to Going"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -254,58 +300,26 @@ const EventModal = ({ eventId, closeModal }) => {
 
               {/* have to map attendees */}
               <div className="grid gap-2 w-full h-fit">
-                <ModalText img="/crown.svg" text="going (280)" />
+                <ModalText
+                  img="/crown.svg"
+                  text={`going (${eventDetails?.attendees?.L.length})`}
+                />
                 <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
-                  <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
-                    <img
-                      src="/large-profile.jpg"
-                      alt=""
-                      className="size-[66px] rounded-full"
-                    />
-                    <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                      Chubby Igboanugo
-                    </h6>
-                  </div>
-                  <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
-                    <img
-                      src="/large-profile.jpg"
-                      alt=""
-                      className="size-[66px] rounded-full"
-                    />
-                    <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                      Chubby Igboanugo
-                    </h6>
-                  </div>
-                  <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
-                    <img
-                      src="/large-profile.jpg"
-                      alt=""
-                      className="size-[66px] rounded-full"
-                    />
-                    <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                      Chubby Igboanugo
-                    </h6>
-                  </div>
-                  <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
-                    <img
-                      src="/large-profile.jpg"
-                      alt=""
-                      className="size-[66px] rounded-full"
-                    />
-                    <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                      Chubby Igboanugo
-                    </h6>
-                  </div>
-                  <div className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70">
-                    <img
-                      src="/large-profile.jpg"
-                      alt=""
-                      className="size-[66px] rounded-full"
-                    />
-                    <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                      Chubby Igboanugo
-                    </h6>
-                  </div>
+                  {eventDetails?.attendees?.L.map((attendee, index) => (
+                    <div
+                      key={index}
+                      className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
+                    >
+                      <img
+                        src="/large-profile.jpg"
+                        alt="Attendee"
+                        className="size-[66px] rounded-full"
+                      />
+                      <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                        {attendee.M?.name?.S || "Attendee"}
+                      </h6>
+                    </div>
+                  ))}
                 </div>
               </div>
             </section>
@@ -427,7 +441,7 @@ const EventModal = ({ eventId, closeModal }) => {
               </div>
             </div>
           </div>
-          <section className="w-full h-fit flex gap-2">
+          <section className="w-full h-fit flex gap-2 mt-2">
             <Attendance
               text="not sure"
               img="/timer-modal.svg"
@@ -607,7 +621,14 @@ export const ModalBtn = ({
   );
 };
 
-export const Attendance = ({ img, text, bgHover, textcolor, texthover, onClick }) => {
+export const Attendance = ({
+  img,
+  text,
+  bgHover,
+  textcolor,
+  texthover,
+  onClick,
+}) => {
   return (
     <div
       className={`cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center hover:bg-[${bgHover}] transition-all duration-1000 ease-in-out`}
@@ -622,3 +643,16 @@ export const Attendance = ({ img, text, bgHover, textcolor, texthover, onClick }
     </div>
   );
 };
+
+function calculateTimeRemaining(eventDate) {
+  const now = new Date();
+  const eventTime = new Date(eventDate);
+  const diff = eventTime - now;
+
+  if (diff <= 0) return "Event has started";
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  return `${days}d ${hours}h`;
+}
