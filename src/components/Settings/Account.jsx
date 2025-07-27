@@ -108,7 +108,7 @@ const Account = ({ form, setForm }) => {
               placeholder="Enter your email address"
               value={form.email}
               onChange={(e) => handleChange("email", e.target.value)}
-              className="pl-10 w-full px-2 outline-none cursor-text text-left text-[#8A9191] font-medium text-[14px] capitalize satoshi"
+              className="pl-10 w-full px-2 outline-none cursor-text text-left text-[#8A9191] font-medium text-[14px] satoshi"
             />
           </div>
         </div>

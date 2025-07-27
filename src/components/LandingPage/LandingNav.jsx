@@ -25,7 +25,7 @@ const LandingNav = ({ activeItem, setActiveItem, onClick, onAuth }) => {
         {navItems.map((item) => (
           <li key={item.id}>
             <button
-              className={`font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 ${
+              className={`font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${
                 activeItem === item.id ? "text-[#AEFC40]" : "text-[#B0BAB5]"
               }`}
               onClick={() => setActiveItem(item.id)}
