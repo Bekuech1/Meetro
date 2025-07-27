@@ -3,10 +3,10 @@ import CtaButton from "../Layout-conponents/CtaButton";
 import BlogCard from "./components/BlogCard";
 import { blogPosts } from "@/utils/blogs";
 
-const LandingBlog = ({ onClick }) => {
+const LandingBlog = ({ onClick, goToBlog }) => {
   const latestPosts = blogPosts.slice(0, 3);
   return (
-    <div className="bg-[#F0F0F0] flex flex-col py-15 gap-15 h-fit relative justify-center items-center w-full">
+    <div className="bg-[#F0F0F0] flex flex-col py-15 gap-15 h-fit relative justify-center items-center w-full overflow-hidden">
       <div className="flex flex-col gap-12 w-full h-fit justify-center text-center">
         <div className="grid lg:w-[702px] w-[90%] h-fit gap-6 text-center mx-auto">
           <h1 className="paytone lg:text-[60px] text-4xl leading-none text-[#8A9191] font-[400] capitalize">
@@ -19,7 +19,7 @@ const LandingBlog = ({ onClick }) => {
           </p>
         </div>
         <div className="flex justify-center">
-          <CtaButton name="read our blog" />
+          <CtaButton name="read our blog" onclick={goToBlog} />
         </div>
 
         {/* Horizontal Scroll Container */}

@@ -14,6 +14,23 @@ import { banks } from "@/utils/Banks";
 import { useNavigate } from "react-router";
 import axios from "axios";
 
+const LoadingSpinner = ({ size = 16, color = "#7A60BF", speed = "0.7s" }) => {
+  const spinnerSize = `${size}px`;
+
+  return (
+    <div className="flex items-center justify-center">
+      <div
+        className={`border-2 border-t-transparent border-[#7A60BF] rounded-full animate-spin`}
+        style={{
+          width: spinnerSize,
+          height: spinnerSize,
+          animationDuration: speed,
+        }}
+      ></div>
+    </div>
+  );
+};
+
 // Default image sources array (should match the one in ImageModal)
 const imageSources = [
   "/event-ph1.png",
@@ -155,6 +172,8 @@ const Private = ({ onPublic }) => {
   const [dress, setDress] = useState(false);
   const [chipin, setChipIn] = useState(false);
   const [eventType, setEventType] = useState(false);
+  const [createEventModal, setCreateEventModal] = useState(false);
+  const [creatingEventPopup, setCreatingEventPopup] = useState(false);
 
   // Add to List states
   const [addDressCode, setAddDressCode] = useState(false);
@@ -181,6 +200,8 @@ const Private = ({ onPublic }) => {
       where ||
       dress ||
       chipin ||
+      createEventModal ||
+      creatingEventPopup ||
       eventType
     );
   };
@@ -265,6 +286,9 @@ const Private = ({ onPublic }) => {
 
   const openEventType = () => setEventType(true);
   const closeEventType = () => setEventType(false);
+
+  const creatingEvent = () => setCreateEventModal(true);
+  const creatingEventComplete = () => setCreateEventModal(false);
 
   // Add List control functions
   const putDress = () => {
@@ -481,7 +505,6 @@ const Private = ({ onPublic }) => {
     }
   };
 
-  // Create event function
   const handleCreateEvent = async () => {
     setIsLoading(true);
     setError(null);
@@ -494,6 +517,9 @@ const Private = ({ onPublic }) => {
       setIsLoading(false);
       return;
     }
+
+    // Show the popup before starting the API call
+    setCreatingEventPopup(true);
 
     // Prepare the payload
     const payload = {
@@ -533,11 +559,12 @@ const Private = ({ onPublic }) => {
       const response = await API.post(`/events`, payload);
 
       console.log("Event created successfully:", response.data);
-      alert("Event created successfully!");
-      navigate(`/home`);
 
-      // You might want to redirect to the event page or dashboard here
-      // history.push(`/event/${response.data.eventId}`);
+      setTimeout(() => {
+        navigate(`/home`);
+      }, 10000);
+
+      // Show success message briefly before navigating
     } catch (error) {
       console.error(
         "Error creating event:",
@@ -709,7 +736,6 @@ const Private = ({ onPublic }) => {
             </div>
           </Grid>
 
-          {/* Error display */}
           {error && (
             <div className="flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
               <img src="info-circle.svg" alt="" />
@@ -815,6 +841,98 @@ const Private = ({ onPublic }) => {
           eventTypes={eventTypes()}
           time={fullDateTimeRange}
         />
+      )}
+      {creatingEventPopup && (
+        <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
+          <div className="sm:w-[90%] w-fit max-w-[546px] h-fit rounded-3xl border border-white/50 bg-[#F0F0F0] backdrop-blur-[32px] flex flex-col justify-center items-center">
+            <div className="grid size-fit sm:gap-4 gap-2 sm:py-12 sm:px-6 p-6">
+              <img
+                src={getCurrentImageUrl()}
+                alt=""
+                className="sm:size-[220px] size-[120px] border border-white rounded-3xl mx-auto object-cover"
+              />
+              <div className="grid w-full h-fit gap-2 text-center">
+                <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
+                  {eventName}
+                </h1>
+                <div className="flex gap-1 items-center w-fit h-fit mx-auto">
+                  <img src="/calendar.svg" className="w-4 h-4" />
+                  <h6 className="text-[#8A9191] text-[16px] font-[500] leading-[24px] satoshi capitalize">
+                    {startDate}
+                  </h6>
+                  <img src="/timer.svg" className="w-4 h-4" />
+                  <h6 className="text-[#8A9191] text-[16px] font-[500] leading-[24px] satoshi capitalize">
+                    {startTime}
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white w-full h-fit grid gap-4 py-6 px-12 rounded-b-3xl">
+              {/* Error State */}
+              {error && (
+                <>
+                  <div className="flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
+                    <img src="/info-circle.svg" alt="" />
+                    <span>{error}</span>
+                  </div>
+                  <section className="h-fit w-full flex justify-between gap-4">
+                    <CreateEventBtn
+                      text="Cancel"
+                      bgcolor="bg-[#F3F0FB]"
+                      textcolor="text-[#7A60BF]"
+                      onClick={() => setCreatingEventPopup(false)}
+                    />
+                    <CreateEventBtn
+                      text="Try Again"
+                      textcolor="text-white"
+                      bgcolor="bg-[#011F0F]"
+                      onClick={handleCreateEvent}
+                    />
+                  </section>
+                </>
+              )}
+
+              {/* Loading State */}
+              {isLoading && !error && (
+                <div className="flex text-[12px] text-[#7A60BF] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3F0FB] border border-[#D9D1F1]">
+                  <LoadingSpinner />
+                  <span>Creating Event</span>
+                </div>
+              )}
+
+              {/* Success State */}
+              {!isLoading && !error && (
+                <>
+                  <div className="flex text-[12px] text-[#61B42D] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3FFEC] border border-[#C8FEA7]">
+                    <img src="/tick-circle.svg" alt="" />
+                    <span>Event has been created successfully</span>
+                  </div>
+                  <section className="h-fit w-full flex justify-between gap-4">
+                    <CreateEventBtn
+                      text="Manage"
+                      bgcolor="bg-[#F3F0FB]"
+                      textcolor="text-[#7A60BF]"
+                      onClick={() => {
+                        setCreatingEventPopup(false);
+                        navigate(`/home`);
+                      }}
+                      disabled={!response.data.id}
+                    />
+                    <CreateEventBtn
+                      text="Share Event"
+                      textcolor="text-white"
+                      bgcolor="bg-[#011F0F]"
+                      onClick={() => {
+                        setCreatingEventPopup(false);
+                        navigate(`/home`);
+                      }}
+                    />
+                  </section>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );
