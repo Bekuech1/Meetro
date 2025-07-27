@@ -92,11 +92,11 @@ const PersonalProfile = () => {
         </div>
       </div>
 
+      {/* comment from here */}
       {/* past events or invites details  */}
-      <div className="flex flex-col gap-6">
+      {/* <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <h2 className="hidden md:block text-[30px] paytone text-[#055962]">
-            {/* {activeTab === "events" ? "Past Events" : "Invites"} */}
             Past Events
           </h2>
 
@@ -173,8 +173,8 @@ const PersonalProfile = () => {
               </div>
             </div>
 
-            invite default state 
-            <div className="flex flex-col items-center gap-2">
+            {/* invite default state */}
+      {/* <div className="flex flex-col items-center gap-2">
               <h2 className="text-[18px] font-bold text-[#001010]">
                 No Invites
               </h2>
@@ -184,7 +184,8 @@ const PersonalProfile = () => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
+      {/* to here */}
     </div>
   );
 };

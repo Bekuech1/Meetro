@@ -19,7 +19,7 @@ const EmptyHome = () => {
 
   return (
     <main className="bg-[#F0F0F0] flex flex-col px-20 py-10 gap-[43px] h-[90vh] max-h-[760px] relative overflow-hidden">
-      <div className="flex gap-4 justify-center w-full h-fit">
+      {/* <div className="flex gap-4 justify-center w-full h-fit">
         {homeBtn.map((item, index) => (
           <EventsBtn
             key={index}
@@ -28,7 +28,7 @@ const EmptyHome = () => {
             text={item.text}
           />
         ))}
-      </div>
+      </div> */}
       <div className="h-full w-full flex justify-center items-center text-center">
         <h1 className="paytone text-[#4A3A74] h-fit sm:text-[36px] sm:font-[400] sm:leading-[100%] text-[24px] font-[400] leading-[32px]">
           Looks like there's nothing happening
