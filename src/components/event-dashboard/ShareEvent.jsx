@@ -50,21 +50,24 @@ const ShareEvent = ({ eventId }) => {
   };
 
   return (
-    <div className="satoshi">
+    <div className="satoshi w-fit h-fit">
       <button onClick={togglePopup}>
         <img
-          src="/icons/share-event.svg"
+          src="/send.svg"
           alt="Share event"
-          className="w-7 h-7 md:w-auto md:h-auto"
+          className="w-4 h-4 md:w-auto md:h-auto"
         />
       </button>
 
       {isOpen && (
-        <div className="w-screen h-screen bg-[#00000080] fixed inset-0 flex items-end md:items-center md:justify-center z-50">
+        <div
+          className="w-screen h-screen bg-[#00000080] fixed inset-0 flex items-end md:items-center md:justify-center z-50"
+          onClick={() => setIsOpen(false)}
+        >
           <div className="w-full md:w-[546px] h-fit relative">
             {/* main shar pop up */}
-            {/* <div className="w-full  bg-[#FFFFFFD9]  backdrop-blur-xl shadow-sm shadow-[#028E4B1A]"> */}
-            <div className="bg-[#FFFFFFE5] backdrop-blur-xl border border-[#FFFFFE] md:rounded-3xl overflow-clip rounded-[12px] flex flex-col items-center justify-center">
+
+            <div className="bg-[#FFFFFFE5] backdrop-blur-xl border border-[#FFFFFE] md:rounded-3xl overflow-clip rounded-t-[12px] flex flex-col items-center justify-center">
               <div className="md:w-80 pt-9 pb-6 flex flex-col items-center justify-center gap-4">
                 <img
                   src={eventDetails?.imageUrl?.S || "/events-modal.png"}
@@ -73,7 +76,9 @@ const ShareEvent = ({ eventId }) => {
                 />
 
                 <div className="flex flex-col items-center gap-2">
-                  <h2 className="paytone text-2xl capitalize">{eventDetails?.title?.S}</h2>
+                  <h2 className="paytone text-2xl capitalize">
+                    {eventDetails?.title?.S}
+                  </h2>
 
                   <div className="flex gap-2">
                     <ModalText
@@ -106,8 +111,6 @@ const ShareEvent = ({ eventId }) => {
                     <img src="/tick-circle.svg" alt="" />
                   </div>
                 )}
-
-                {/* </div> */}
               </div>
             </div>
 
