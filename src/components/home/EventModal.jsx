@@ -4,6 +4,7 @@ import API from "@/lib/axios";
 import Eventdetails from "../event-dashboard/Eventdetails";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "@/stores/useAuthStore";
+import ShareEvent from "../event-dashboard/ShareEvent";
 
 const EventModal = ({ eventId, closeModal }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -119,7 +120,7 @@ const EventModal = ({ eventId, closeModal }) => {
                   </h1>
                   <ModalText
                     img="timer.svg"
-                    text={`${eventDetails?.date?.S}`}
+                    text={`${eventDetails?.date?.S}, ${eventDetails?.timeFrom?.S}`}
                   />
                   <div className="w-full min-w-[100px] h-fit flex gap-2">
                     <EventCategories
@@ -132,9 +133,10 @@ const EventModal = ({ eventId, closeModal }) => {
                     />
                   </div>
                 </div>
-                <div className="h-fit w-fit flex gap-4 justify-items-start">
-                  <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
-                    <img src="/send.svg" alt="" />
+                <div className="flex gap-4 justify-items-start">
+                  <div className="h-10 w-10 p-2 pt-4 flex items-center justify-center bg-white rounded-full cursor-pointer">
+                    {/* <img src="/send.svg" alt="" /> */}
+                    <ShareEvent eventId={eventId} />
                   </div>
                   {/* <div className="w-fit h-fit p-[10px] bg-white rounded-full cursor-pointer">
                     <img src="/download.svg" alt="" />
@@ -284,7 +286,7 @@ const EventModal = ({ eventId, closeModal }) => {
               <div className="grid gap-2 w-full h-fit">
                 <ModalText img="/dress.svg" text="dress code" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  {eventDetails?.dressCode?.S || "Not specified"}
+                  {eventDetails?.dressCode?.S || "Come in your best fit!"}
                 </h6>
               </div>
               <div className="grid gap-2 w-full h-fit">

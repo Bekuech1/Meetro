@@ -2,8 +2,11 @@ import DownloadEvent from "@/components/event-dashboard/DownloadEvent";
 import Eventdetails from "@/components/event-dashboard/Eventdetails";
 import ShareEvent from "@/components/event-dashboard/ShareEvent";
 import React from "react";
+import { useParams } from "react-router";
 
 const EventDetails = () => {
+  const { eventId } = useParams();
+
   return (
     <div className="bg-[#F0F0F0] relative">
       {/* background ellipses */}
@@ -26,7 +29,9 @@ const EventDetails = () => {
           </button>
 
           <div className="flex gap-2 md:hidden">
-            <ShareEvent />
+            <div className="h-7 w-7 pt-1 flex items-center justify-center bg-white rounded-full cursor-pointer">
+              <ShareEvent eventId={eventId} />
+            </div>
             {/* <DownloadEvent /> */}
           </div>
         </div>

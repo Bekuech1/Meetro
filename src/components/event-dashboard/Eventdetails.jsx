@@ -11,6 +11,7 @@ import SiteBtn from "../Layout-conponents/SiteBtn";
 import API from "@/lib/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
+import LoginModal from "../Onboarding/LoginModal";
 
 const Eventdetails = () => {
   const { eventId } = useParams(); // Assuming you're using react-router for routing
@@ -19,6 +20,8 @@ const Eventdetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [attendanceStatus, setAttendanceStatus] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingResponseType, setPendingResponseType] = useState(null);
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
 
@@ -55,6 +58,16 @@ const Eventdetails = () => {
   };
 
   const handleConfirmAttendance = async (responseType) => {
+    if (!user || !user.userId) {
+      setPendingResponseType(responseType);
+      setShowLoginModal(true);
+      return;
+    }
+
+    await confirmAttendance(responseType);
+  };
+
+  const confirmAttendance = async (responseType) => {
     try {
       console.log("Confirming attendance for:", eventId);
       const shareResponse = await API.post(`/shares`, { eventId });
@@ -165,7 +178,10 @@ const Eventdetails = () => {
             </div>
           </div>
           <div className="hidden md:flex flex-row gap-2">
-            <ShareEvent eventId={eventId} />
+            <div className="h-10 w-10 p-2 pt-4 flex items-center justify-center bg-white rounded-full cursor-pointer">
+              <ShareEvent eventId={eventId} />
+            </div>
+
             {/* <DownloadEvent /> */}
           </div>
         </div>
@@ -351,6 +367,18 @@ const Eventdetails = () => {
           </div>
         )}
       </section>
+
+      {showLoginModal && (
+        <LoginModal
+          onSuccess={async () => {
+            setShowLoginModal(false);
+            if (pendingResponseType) {
+              await confirmAttendance(pendingResponseType);
+              setPendingResponseType(null);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

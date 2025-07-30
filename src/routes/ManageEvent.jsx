@@ -33,14 +33,26 @@ export default function ManageEventPage() {
   return (
     <>
       <section className="bg-white  ">
-        <div className="w-[950px] mx-auto flex flex-col pt-10 px-20 pb-6 gap-2">
-          <div>
+        <div className="md:w-[950px] mx-auto flex flex-col p-4 gap-4 md:pt-10 md:px-20 md:pb-6 md:gap-2">
+          <div className="flex items-center justify-between ">
             <img
               src="/arrow-left.svg"
               alt=""
               onClick={() => window.history.back()}
               className="cursor-pointer"
             />
+
+            <div className="flex gap-4 md:hidden">
+              <div className="h-7 w-7 pt-1 flex items-center justify-center bg-[#F0F0F0] rounded-full cursor-pointer">
+                <ShareEvent eventId={eventId} />
+              </div>
+
+              <img
+                src="/delete.svg"
+                alt="delete-icon"
+                className="w-7 h-7 md:w-auto md:h-auto"
+              />
+            </div>
           </div>
 
           <div className="flex justify-between">
@@ -67,14 +79,8 @@ export default function ManageEventPage() {
               </div>
             </div>
 
-            <div className="flex gap-4 items-center">
-              {/* <img
-                src="/share.svg"
-                alt="Share event"
-                className="w-7 h-7 md:w-auto md:h-auto"
-              /> */}
-
-              <div className="w-7 h-7 bg-gray-200 flex items-center justify-center rounded-full cursor-pointer">
+            <div className="hidden md:flex gap-4 items-center ">
+              <div className="h-10 w-10 p-2 pt-4 flex items-center justify-center bg-[#F0F0F0] rounded-full cursor-pointer">
                 <ShareEvent eventId={eventId} />
               </div>
 
@@ -88,13 +94,13 @@ export default function ManageEventPage() {
 
           <div className="flex items-center justify-center">
             {/* tab toggle */}
-            <div className="flex bg-[#FFFFFEFC] backdrop-blur-[32px] shadow-[0px_4px_24px_0px_#00000014] gap-2 rounded-[20px] p-0.5">
+            <div className="flex bg-[#FFFFFEFC] w-full md:w-auto border border-[#E6F2F3] md:border-none md:backdrop-blur-[32px] md:shadow-[0px_4px_24px_0px_#00000014] gap-2 rounded-[20px] p-0.5">
               <button
                 className={`${
                   activeTab === "eventDetails"
                     ? "bg-[#AEFC40]"
                     : "bg-[#FFFFFEFC]"
-                } text-[#010E1F] py-1 px-2 rounded-3xl text-xs font-bold satoshi`}
+                } text-[#010E1F] py-1 px-2 rounded-3xl text-xs font-bold satoshi w-full md:w-auto`}
                 onClick={() => handleTabChange("eventDetails")}
               >
                 Event Details
@@ -102,7 +108,7 @@ export default function ManageEventPage() {
               <button
                 className={`${
                   activeTab === "guests" ? "bg-[#AEFC40] " : "bg-[#FFFFFEFC] "
-                } text-[#010E1F] py-1 px-2 rounded-3xl text-xs font-bold satoshi`}
+                } text-[#010E1F] py-1 px-2 rounded-3xl text-xs font-bold satoshi w-full md:w-auto`}
                 onClick={() => handleTabChange("guests")}
               >
                 Guests
@@ -112,7 +118,7 @@ export default function ManageEventPage() {
         </div>
       </section>
 
-      <section className="min-h-[642px] pb-10 pt-6 bg-[#F0F0F0]">
+      <section className="min-h-[642px] px-4 pb-10 pt-6 bg-[#F0F0F0]">
         {activeTab === "eventDetails" && <EditEvent />}
         {activeTab === "guests" && (
           <GuestList guests={eventData?.attendees?.L || []} />
