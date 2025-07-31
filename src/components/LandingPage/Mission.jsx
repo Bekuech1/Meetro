@@ -8,7 +8,7 @@ const Mission = () => {
         alt=""
         className="md:w-[600px] w-[90%] min-h-[300px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[532px] max-h-[562px] object-cover rounded-4xl md:mx-0 mx-auto"
       />
-      <div className="grid gap-12 xl:w-[45%] w-[90%] xl:mx-0 max-w-[500px]">
+      <div className="grid gap-12 xl:w-[45%] w-[90%] xl:mx-0 max-w-[500px] mx-auto">
         <div className="grid gap-6">
           <h5 className="capitalize text-[36px] md:text-[48px] font-[400] leading-[100%] text-[#055962] w-fit lg:w-[560px] paytone">
             our mission our goal

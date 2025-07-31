@@ -174,6 +174,7 @@ const Private = ({ onPublic }) => {
   const [eventType, setEventType] = useState(false);
   const [createEventModal, setCreateEventModal] = useState(false);
   const [creatingEventPopup, setCreatingEventPopup] = useState(false);
+  const [response, setResponse] = useState(null);
 
   // Add to List states
   const [addDressCode, setAddDressCode] = useState(false);
@@ -508,6 +509,7 @@ const Private = ({ onPublic }) => {
   const handleCreateEvent = async () => {
     setIsLoading(true);
     setError(null);
+    setResponse(null); // Clear previous response
 
     // Basic validation
     if (!eventName || !startDate || !location) {
@@ -556,15 +558,15 @@ const Private = ({ onPublic }) => {
     };
 
     try {
-      const response = await API.post(`/events`, payload);
+      const apiResponse = await API.post(`/events`, payload);
 
-      console.log("Event created successfully:", response.data);
+      console.log("Event created successfully:", apiResponse.data);
 
-      setTimeout(() => {
-        navigate(`/home`);
-      }, 10000);
+      // Store the response in state for the modal to use
+      setResponse(apiResponse.data);
 
-      // Show success message briefly before navigating
+      // Optional: Add a shorter delay or remove completely
+      // You can handle navigation from the modal buttons instead
     } catch (error) {
       console.error(
         "Error creating event:",
@@ -788,7 +790,6 @@ const Private = ({ onPublic }) => {
           />
         </section>
       </section>
-
       {/* All Modals */}
       <When isVisible={when} onClose={closeWhen} onSave={handleTimeSave} />
       <Where
@@ -880,7 +881,11 @@ const Private = ({ onPublic }) => {
                       text="Cancel"
                       bgcolor="bg-[#F3F0FB]"
                       textcolor="text-[#7A60BF]"
-                      onClick={() => setCreatingEventPopup(false)}
+                      onClick={() => {
+                        setCreatingEventPopup(false);
+                        setError(null);
+                        setResponse(null);
+                      }}
                     />
                     <CreateEventBtn
                       text="Try Again"
@@ -901,7 +906,7 @@ const Private = ({ onPublic }) => {
               )}
 
               {/* Success State */}
-              {!isLoading && !error && (
+              {!isLoading && !error && response && (
                 <>
                   <div className="flex text-[12px] text-[#61B42D] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3FFEC] border border-[#C8FEA7]">
                     <img src="/tick-circle.svg" alt="" />
@@ -914,9 +919,10 @@ const Private = ({ onPublic }) => {
                       textcolor="text-[#7A60BF]"
                       onClick={() => {
                         setCreatingEventPopup(false);
+                        // Navigate to event management page with the event ID
                         navigate(`/home`);
                       }}
-                      disabled={!response.data.id}
+                      disabled={!response?.id}
                     />
                     <CreateEventBtn
                       text="Share Event"
@@ -924,6 +930,7 @@ const Private = ({ onPublic }) => {
                       bgcolor="bg-[#011F0F]"
                       onClick={() => {
                         setCreatingEventPopup(false);
+                        // Navigate to share page or home with share functionality
                         navigate(`/home`);
                       }}
                     />
