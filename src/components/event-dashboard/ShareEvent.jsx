@@ -11,7 +11,7 @@ const ShareEvent = ({ eventId }) => {
   const [copied, setCopied] = useState(false);
 
   const togglePopup = async () => {
-    if (!isOpen) {
+    if (isOpen) {
       try {
         setIsLoading(true);
 
@@ -62,7 +62,7 @@ const ShareEvent = ({ eventId }) => {
       {isOpen && (
         <div
           className="w-screen h-screen bg-[#00000080] fixed inset-0 flex items-end md:items-center md:justify-center z-50"
-          onClick={() => setIsOpen(false)}
+          // onClick={() => setIsOpen(false)}
         >
           <div className="w-full md:w-[546px] h-fit relative">
             {/* main shar pop up */}
@@ -118,7 +118,7 @@ const ShareEvent = ({ eventId }) => {
             <img
               src="/closePopup.svg"
               alt="Close"
-              className="h-12 hidden md:block w-12 absolute -top-10 -right-10 cursor-pointer"
+              className="h-12 hidden md:block w-12 absolute -top-15 -right-15 cursor-pointer"
               onClick={() => setIsOpen(false)}
             />
           </div>

@@ -178,7 +178,7 @@ const Eventdetails = () => {
             </div>
           </div>
           <div className="hidden md:flex flex-row gap-2">
-            <div className="h-10 w-10 p-2 pt-4 flex items-center justify-center bg-white rounded-full cursor-pointer">
+            <div className="h-10 w-10 p-2 pt-4 flex items-center justify-center bg-white rounded-full">
               <ShareEvent eventId={eventId} />
             </div>
 
@@ -186,28 +186,31 @@ const Eventdetails = () => {
           </div>
         </div>
 
-        <div className="w-full h-fit grid gap-2">
-          <ModalText img="/note-text.svg" text="about event" />
+        {eventData.description?.S && (
+          <div className="w-full h-fit grid gap-2">
+            <ModalText img="/note-text.svg" text="about event" />
 
-          <h4
-            className={`${
-              isExpanded ? "" : "line-clamp-3"
-            } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-          >
-            {eventData.description?.S ||
-              "No description available for this event."}
-          </h4>
-
-          {/* ✅ Show the toggle button only if description is long */}
-          {eventData.description?.S && eventData.description.S.length > 150 && (
-            <button
-              onClick={toggleReadMore}
-              className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+            <h4
+              className={`${
+                isExpanded ? "" : "line-clamp-3"
+              } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
             >
-              {isExpanded ? "Show less" : "Read more"}
-            </button>
-          )}
-        </div>
+              {eventData.description?.S ||
+                "No description available for this event."}
+            </h4>
+
+            {/* ✅ Show the toggle button only if description is long */}
+            {eventData.description?.S &&
+              eventData.description.S.length > 150 && (
+                <button
+                  onClick={toggleReadMore}
+                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                >
+                  {isExpanded ? "Show less" : "Read more"}
+                </button>
+              )}
+          </div>
+        )}
 
         {/* Attendance Confirmation Section */}
         <ModalText img="/money-add.svg" text="chip in" />
@@ -306,14 +309,28 @@ const Eventdetails = () => {
                     decide to come.
                   </p>
                 </>
-                <div className="flex justify-between items-center">
-                  <ModalBtn
-                    onClick={() => console.log("Invite a friend")}
-                    bgcolor="bg-[#E6F2F3]"
-                    image="/tick-circle.svg"
-                    textcolor="text-[#61B42D]"
-                    text="Change to Going"
-                  />
+                <div className="flex items-center gap-4">
+                  <div className="w-full rounded-[60px] bg-[#E6F2F3] flex items-center justify-center">
+                    <ModalBtn
+                      // onClick={() => console.log("Invite a friend")}
+                      bgcolor="bg-[#E6F2F3]"
+                      image="/send.svg"
+                      textcolor="text-black"
+                      text="Invite a Friend"
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="bg-white rounded-[60px] w-full flex items-center justify-center border border-[#E5E7E3]">
+                    <ModalBtn
+                      onClick={() => handleConfirmAttendance("yes")}
+                      // bgcolor="bg-[#E6F2F3]"
+                      image="/tick-circle.svg"
+                      textcolor="text-[#61B42D]"
+                      text="Change to Going"
+                      // className="w-full"
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -321,12 +338,14 @@ const Eventdetails = () => {
         </div>
 
         {/* Dress Code Section */}
-        <div className="grid gap-2 w-full h-fit">
-          <ModalText img="/dress.svg" text="dress code" />
-          <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-            {eventData.dressCode?.S || "Not specified"}
-          </h6>
-        </div>
+        {eventData.dressCode?.S && (
+          <div className="grid gap-2 w-full h-fit">
+            <ModalText img="/dress.svg" text="dress code" />
+            <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+              {eventData.dressCode?.S || "Come in your best fit!"}
+            </h6>
+          </div>
+        )}
 
         {/* Location Section */}
         <div className="grid gap-2 w-full h-fit">
@@ -351,14 +370,21 @@ const Eventdetails = () => {
               {eventData.attendees.L.map((attendee, index) => (
                 <div
                   key={index}
-                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-white/70"
+                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-[#FFFFFE80]"
                 >
-                  <img
+                  {/* <img
                     src="/large-profile.jpg"
                     alt="Attendee"
                     className="size-[66px] rounded-full"
-                  />
-                  <h6 className="h-fit w-full min-w-[120px] capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                  /> */}
+
+                  <div className="size-[66px] rounded-full bg-[#E5E7E3] flex items-center justify-center">
+                    <p className="text-[12px] font-[700] leading-[18px] text-black capitalize">
+                      {getInitials(attendee.M?.name?.S)}
+                    </p>
+                  </div>
+
+                  <h6 className="h-fit w-full min-w-[120px] text-center capitalize satoshi font-[700] text-[12px] leading-[18px]">
                     {attendee.M?.name?.S || "Attendee"}
                   </h6>
                 </div>
@@ -395,6 +421,17 @@ function calculateTimeRemaining(eventDate) {
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
   return `${days}d ${hours}h`;
+}
+
+// helper function to get attendees initials
+function getInitials(fullName) {
+  if (!fullName) return "";
+
+  const parts = fullName.trim().split(" ");
+  const firstInitial = parts[0]?.charAt(0).toUpperCase() || "";
+  const secondInitial = parts[1]?.charAt(0).toUpperCase() || "";
+
+  return `${firstInitial}${secondInitial}`;
 }
 
 export default Eventdetails;

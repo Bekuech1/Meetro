@@ -607,6 +607,7 @@ export const ModalBtn = ({
   image,
   textcolor,
   text,
+  className,
 }) => {
   return (
     <div
@@ -615,7 +616,7 @@ export const ModalBtn = ({
     >
       <img src={image} className="size-[22px]" />
       <h6
-        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}
+        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor} ${className}`}
       >
         {text}
       </h6>
