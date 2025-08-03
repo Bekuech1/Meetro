@@ -110,6 +110,7 @@ const Eventdetails = () => {
         <div className="relative">
           <img
             src={imagePath}
+            // src={eventData?.imageKey?.S}
             alt="Event-poster"
             className="rounded-3xl w-full lg:w-[393px] h-[318px] lg:h-[349px]"
           />

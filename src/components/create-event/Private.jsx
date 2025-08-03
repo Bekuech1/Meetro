@@ -13,6 +13,7 @@ import API from "@/lib/axios";
 import { banks } from "@/utils/Banks";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import useEventStore from "@/stores/eventStore";
 
 const LoadingSpinner = ({ size = 16, color = "#7A60BF", speed = "0.7s" }) => {
   const spinnerSize = `${size}px`;
@@ -537,7 +538,8 @@ const Private = ({ onPublic }) => {
       },
       isPrivate: true,
       dressCode: dressCode,
-      tempImageKey: eventImage?.imageKey,
+      tempImageKey: eventImage?.imageUrl,
+      // tempImageKey: eventImage?.imageKey,
       ...(amount && {
         chipInAmount: amount,
         chipInType: chipInType,
@@ -919,6 +921,7 @@ const Private = ({ onPublic }) => {
                       textcolor="text-[#7A60BF]"
                       onClick={() => {
                         setCreatingEventPopup(false);
+                        useEventStore.getState().setShouldRefetch(true);
                         // Navigate to event management page with the event ID
                         navigate(`/home`);
                       }}
