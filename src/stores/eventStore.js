@@ -8,9 +8,12 @@ const useEventStore = create((set, get) => ({
   error: null,
   totalEvents: 0,
   totalAttendees: 0,
+  shouldRefetch: false,
+
+  setShouldRefetch: (value) => set({ shouldRefetch: value}),
 
   fetchEvents: async () => {
-    if (get().events.length > 0) return get().events;
+    if (get().events.length > 0 && !get().shouldRefetch) return get().events;
 
     set({ loading: true });
 
@@ -24,6 +27,7 @@ const useEventStore = create((set, get) => ({
         totalAttendees,
         loading: false,
         error: null,
+        shouldRefetch: false,
       });
 
       return events;

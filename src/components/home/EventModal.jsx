@@ -144,30 +144,32 @@ const EventModal = ({ eventId, closeModal }) => {
                 </div>
               </div>
 
-              <div className="w-full h-fit grid gap-2">
-                {/* ModalText Component */}
-                <ModalText img="/note-text.svg" text="about event" />
+              {eventDetails?.description?.S && (
+                <div className="w-full h-fit grid gap-2">
+                  {/* ModalText Component */}
+                  <ModalText img="/note-text.svg" text="about event" />
 
-                {/* H4 Element */}
-                <h4
-                  className={`${
-                    isExpanded ? "" : "line-clamp-3"
-                  } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-                >
-                  {eventDetails?.description?.S ||
-                    "No description for this event"}
-                </h4>
-
-                {/* Read More Button */}
-                {eventDetails?.description?.S && (
-                  <button
-                    onClick={toggleReadMore}
-                    className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                  {/* H4 Element */}
+                  <h4
+                    className={`${
+                      isExpanded ? "" : "line-clamp-3"
+                    } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
                   >
-                    {isExpanded ? "Show less" : "Read more"}
-                  </button>
-                )}
-              </div>
+                    {eventDetails?.description?.S ||
+                      "No description for this event"}
+                  </h4>
+
+                  {/* Read More Button */}
+                  {eventDetails?.description?.S && (
+                    <button
+                      onClick={toggleReadMore}
+                      className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                    >
+                      {isExpanded ? "Show less" : "Read more"}
+                    </button>
+                  )}
+                </div>
+              )}
 
               {/* chip in area */}
               <div className="w-full h-fit grid gap-4">

@@ -6,11 +6,49 @@ import useEventStore from "@/stores/eventStore";
 
 const NormalHome = () => {
   const navigate = useNavigate();
-  const { fetchEvents } = useEventStore();
+  const { fetchEvents, shouldRefetch } = useEventStore();
 
   const [groupedEvents, setGroupedEvents] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
+
+  const groupEventsByDate = (eventsArray) => {
+    const grouped = {};
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (const event of eventsArray) {
+      const rawDate = event.date;
+      if (!rawDate || typeof rawDate !== "string") continue;
+
+      // Remove weekday: "Tuesday, August 5, 2025" → "August 5, 2025"
+      const cleanedDateStr = rawDate.replace(/^.*?,\s*/, "");
+      const parsed = new Date(cleanedDateStr);
+      if (isNaN(parsed)) continue;
+
+      parsed.setHours(0, 0, 0, 0); // Remove time component
+
+      if (parsed < today) continue;
+
+      // Format date key using local time (not UTC)
+      const yyyy = parsed.getFullYear();
+      const mm = String(parsed.getMonth() + 1).padStart(2, "0");
+      const dd = String(parsed.getDate()).padStart(2, "0");
+      const key = `${yyyy}-${mm}-${dd}`; // e.g., 2025-08-04
+
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(event);
+    }
+
+    const sortedGrouped = Object.keys(grouped)
+      .sort((a, b) => new Date(a) - new Date(b))
+      .reduce((acc, date) => {
+        acc[date] = grouped[date];
+        return acc;
+      }, {});
+
+    return sortedGrouped;
+  };
 
   useEffect(() => {
     fetchEvents().then((res) => {
@@ -20,7 +58,7 @@ const NormalHome = () => {
         setGroupedEvents(grouped);
       }
     });
-  }, []);
+  }, [shouldRefetch]);
 
   const openModal = (id) => {
     setSelectedEventId(id);
@@ -45,42 +83,6 @@ const NormalHome = () => {
   //   style: "md:flex hidden",
   // },
   // ];
-
-  const groupEventsByDate = (eventsArray) => {
-    const grouped = {};
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to start of the day
-
-    eventsArray.forEach((event) => {
-      const rawDate = event.date;
-      if (!rawDate || typeof rawDate !== "string") return;
-
-      const parsed = new Date(rawDate);
-      parsed.setHours(0, 0, 0, 0); // Normalize
-
-      // Skip past events
-      if (parsed < today) return;
-
-      const yyyy = parsed.getFullYear();
-      const mm = String(parsed.getMonth() + 1).padStart(2, "0");
-      const dd = String(parsed.getDate()).padStart(2, "0");
-      const key = `${yyyy}-${mm}-${dd}`; // e.g., 2025-07-19
-
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(event);
-    });
-
-    // Sort the grouped dates descending (latest dates first)
-    // Sort dates in ascending order (nearest date first)
-    const sortedGrouped = Object.keys(grouped)
-      .sort((a, b) => new Date(a) - new Date(b)) // ✅ Ascending
-      .reduce((acc, date) => {
-        acc[date] = grouped[date];
-        return acc;
-      }, {});
-
-    return sortedGrouped;
-  };
 
   return (
     <main className="bg-[#F0F0F0] relative min-h-[90vh] w-full grid gap-[43px] md:px-20 px-4 py-10">
@@ -143,22 +145,22 @@ const NormalHome = () => {
 
                   {/* Host */}
                   <li className="flex gap-1 items-center">
-                    <h6 className="text-[#8A9191] text-[10px] font-[700] capitalize satoshi">
+                    <h6 className="text-[#8A9191] text-xs font-bold capitalize satoshi">
                       host
                     </h6>
                     <img
                       src="/tiny-profile.png"
                       className="w-4 h-4 rounded-full"
                     />
-                    <h6 className="text-black text-[10px] font-[500]">
-                      {event.creator?.firstName || "unknown"}
+                    <h6 className="text-black text-xs font-medium capitalize">
+                      {event.creator?.firstName}
                     </h6>
                   </li>
 
                   {/* Time */}
                   <li className="flex gap-1 items-center">
                     <img src="/event-timer.svg" className="w-4 h-4" />
-                    <h6 className="text-[#8A9191] text-[10px] font-[700]">
+                    <h6 className="text-[#8A9191] text-xs font-medium">
                       {event.timeFrom}
                     </h6>
                   </li>
@@ -166,25 +168,22 @@ const NormalHome = () => {
                   {/* Location */}
                   <li className="flex gap-1 items-center">
                     <img src="/event-location.svg" className="w-4 h-4" />
-                    <h6 className="text-[#8A9191] text-[10px] font-[700] capitalize">
+                    <h6 className="text-[#8A9191] text-xs font-medium capitalize">
                       {`${event?.location?.venue?.S}, ${event?.location?.state?.S}`}
                     </h6>
                   </li>
 
                   {/* Going */}
                   <li className="flex gap-1 items-center">
-                    <h6 className="text-[#8A9191] text-[10px] font-[700] capitalize satoshi">
+                    <h6 className="text-[#8A9191] text-xs font-bold capitalize satoshi">
                       going
                     </h6>
                     <img
                       src="/tiny-profile.png"
                       className="w-4 h-4 rounded-full"
                     />
-                    <h6 className="text-black text-[10px] font-[500]">
-                      {event.attendees?.filter((a) => a.response === "yes")
-                        .length > 0
-                        ? `${event.attendees.filter((a) => a.response === "yes").length} confirmed`
-                        : "no one confirmed yet"}
+                    <h6 className="text-black text-xs font-medium">
+                      {formatAttendeesDisplay(event.attendees)}
                     </h6>
                   </li>
 
@@ -222,3 +221,25 @@ const NormalHome = () => {
 };
 
 export default NormalHome;
+
+
+// helper function to format attendees display
+const formatAttendeesDisplay = (attendees = []) => {
+  // Step 1: Filter only "yes"
+  const yesAttendees = attendees.filter((a) => a.response === "yes");
+
+  // Step 2: Deduplicate by userId
+  const uniqueYes = Array.from(
+    new Map(yesAttendees.map((a) => [a.userId, a])).values()
+  );
+
+  // Step 3: Get first names
+  const firstNames = uniqueYes.map((a) => a.name.split(" ")[0]);
+
+  if (firstNames.length === 0) return "no one going yet";
+
+  const displayNames = firstNames.slice(0, 2).join(", ");
+  const extraCount = firstNames.length - 2;
+
+  return extraCount > 0 ? `${displayNames} +${extraCount}` : displayNames;
+};
