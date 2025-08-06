@@ -21,7 +21,8 @@ const Settings = () => {
     const fetchProfile = async () => {
       try {
         const response = await API.get("/profile");
-        const { email, firstName, lastName, state, bio, profilePictureKey} = response.data;
+        const { email, firstName, lastName, state, bio, profilePictureKey } =
+          response.data;
         setAccountDetails({
           email,
           firstName,
@@ -71,19 +72,21 @@ const Settings = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center gap-[17px] justify-between">
           <h2 className="text-[30px] paytone text-[#055962]">Settings</h2>
 
-          <div style={{
-                boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
-                backdropFilter: "blur(16px)",
-              }}
-              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
-            >
+          <div
+            style={{
+              boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
+              backdropFilter: "blur(16px)",
+            }}
+            className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
+          >
             <button
               onClick={() => setActiveTab("accounts")}
               className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold leading-[14px] satoshi flex items-center py-2 px-2 cursor-pointer justify-center ${
                 activeTab === "accounts"
                   ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
                   : "text-[#010E1F]"
-              }`}>
+              }`}
+            >
               Accounts
             </button>
             {/* <button
@@ -101,7 +104,8 @@ const Settings = () => {
                 activeTab === "payments"
                   ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
                   : "text-[#010E1F]"
-              }`}>
+              }`}
+            >
               Payments
             </button>
           </div>
@@ -122,7 +126,8 @@ const Settings = () => {
         <div>
           <button
             className="text-[14px] paytone w-full py-3 bg-[#011F0F] text-[#AEFC40] rounded-[60px] mt-4"
-            onClick={handleSaveChanges}>
+            onClick={handleSaveChanges}
+          >
             Save changes
           </button>
         </div>

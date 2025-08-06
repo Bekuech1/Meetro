@@ -11,7 +11,7 @@ export default function GuestList({ guests }) {
   // console.log("guests:", guests);
 
   return (
-    <div className="flex flex-col gap-6 md:w-[950px] mx-auto">
+    <div className="flex flex-col gap-6 w-full">
       {/* two btns at the top */}
       <div></div>
 

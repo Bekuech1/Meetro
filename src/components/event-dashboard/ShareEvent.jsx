@@ -11,7 +11,7 @@ const ShareEvent = ({ eventId }) => {
   const [copied, setCopied] = useState(false);
 
   const togglePopup = async () => {
-    if (isOpen) {
+    if (!isOpen) {
       try {
         setIsLoading(true);
 
