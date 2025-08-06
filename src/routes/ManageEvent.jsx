@@ -33,7 +33,7 @@ export default function ManageEventPage() {
   return (
     <>
       <section className="bg-white  ">
-        <div className="md:w-[950px] mx-auto flex flex-col p-4 gap-4 md:pt-10 md:px-20 md:pb-6 md:gap-2">
+        <div className="md:w-[950px] mx-auto flex flex-col p-4 gap-4 md:pt-10 md:px-0 md:pb-6 md:gap-2">
           <div className="flex items-center justify-between ">
             <img
               src="/arrow-left.svg"
@@ -65,15 +65,15 @@ export default function ManageEventPage() {
                 <div className="flex items-center">
                   <img src="/location.svg" alt="" />
                   <p className="text-sm font-medium text-[#8A9191] capitalize">
-                    {eventData?.location?.M?.venue?.S},{" "}
-                    {eventData?.location?.M?.state?.S},{" "}
-                    {eventData?.location?.M?.country?.S}{" "}
+                    {`${eventData?.location?.M?.venue?.S},
+                    ${eventData?.location?.M?.state?.S},
+                    ${eventData?.location?.M?.country?.S}`}
                   </p>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center gap-1">
                   <img src="/timer.svg" alt="" />
                   <p className="text-sm font-medium text-[#8A9191] capitalize">
-                    {eventData?.timeFrom?.S}
+                    {`${eventData?.timeFrom?.S}`}
                   </p>
                 </div>
               </div>
@@ -108,7 +108,7 @@ export default function ManageEventPage() {
               <button
                 className={`${
                   activeTab === "guests" ? "bg-[#AEFC40] " : "bg-[#FFFFFEFC] "
-                } text-[#010E1F] py-1 px-2 rounded-3xl text-xs font-bold satoshi w-full md:w-auto`}
+                } text-[#010E1F] py-2 px-2 rounded-3xl text-xs font-bold satoshi w-full md:w-auto`}
                 onClick={() => handleTabChange("guests")}
               >
                 Guests
@@ -119,10 +119,12 @@ export default function ManageEventPage() {
       </section>
 
       <section className="min-h-[642px] px-4 pb-10 pt-6 bg-[#F0F0F0]">
-        {activeTab === "eventDetails" && <EditEvent />}
-        {activeTab === "guests" && (
-          <GuestList guests={eventData?.attendees?.L || []} />
-        )}
+        <div className="md:w-[950px] mx-auto">
+          {activeTab === "eventDetails" && <EditEvent />}
+          {activeTab === "guests" && (
+            <GuestList guests={eventData?.attendees?.L || []} />
+          )}
+        </div>
       </section>
     </>
   );
