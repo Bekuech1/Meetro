@@ -12,9 +12,11 @@ const ShareEvent = ({ eventId }) => {
 
   const togglePopup = async () => {
     if (!isOpen) {
-      try {
-        setIsLoading(true);
+      // Open modal immediately
+      setIsOpen(true);
+      setIsLoading(true);
 
+      try {
         // Fetch event details
         const eventResponse = await API.get(`/events/${eventId}`);
         setEventDetails(eventResponse.data);
@@ -23,23 +25,23 @@ const ShareEvent = ({ eventId }) => {
         const shareResponse = await API.post(`/shares`, { eventId });
         const { shareId } = shareResponse.data;
 
-        // Construct new share URL
         const shareUrlWithRef = `${window.location.origin}/event/${eventId}?ref=share_${shareId}`;
         setShareUrl(shareUrlWithRef);
 
-        // Update browser URL (without page reload)
-        const newPath = `/event/${eventId}?ref=share_${shareId}`;
-        window.history.pushState({}, "", newPath);
-
-        console.log("Share URL:", shareUrlWithRef);
+        // Optional: update browser URL
+        window.history.pushState(
+          {},
+          "",
+          `/event/${eventId}?ref=share_${shareId}`
+        );
       } catch (err) {
         setError(err.response?.data?.error || "Failed to share event");
       } finally {
         setIsLoading(false);
       }
+    } else {
+      setIsOpen(false);
     }
-
-    setIsOpen((prev) => !prev);
   };
 
   const copyToClipboard = () => {
@@ -68,30 +70,44 @@ const ShareEvent = ({ eventId }) => {
             {/* main shar pop up */}
 
             <div className="bg-[#FFFFFFE5] backdrop-blur-xl border border-[#FFFFFE] md:rounded-3xl overflow-clip rounded-t-[12px] flex flex-col items-center justify-center">
-              <div className="md:w-80 pt-9 pb-6 flex flex-col items-center justify-center gap-4">
-                <img
-                  src={eventDetails?.imageUrl?.S || "/events-modal.png"}
-                  alt="Event"
-                  className="w-[219px] h-[219px] rounded-xl border-2 border-[#FFFFFF]"
-                />
+              {isLoading ? (
+                // Loading state
+                <div className="flex flex-col items-center justify-center gap-4">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div>
+                  <p className="text-[#866AD2] font-bold">
+                    Preparing share link...
+                  </p>
+                </div>
+              ) : error ? (
+                // Error state
+                <div className="text-center text-red-500">{error}</div>
+              ) : (
+                // Actual content after load
+                <div className="md:w-80 pt-9 pb-6 flex flex-col items-center justify-center gap-4">
+                  <img
+                    src={eventDetails?.imageUrl?.S || "/events-modal.png"}
+                    alt="Event"
+                    className="w-[219px] h-[219px] rounded-xl border-2 border-[#FFFFFF]"
+                  />
 
-                <div className="flex flex-col items-center gap-2">
-                  <h2 className="paytone text-2xl capitalize">
-                    {eventDetails?.title?.S}
-                  </h2>
+                  <div className="flex flex-col items-center gap-2">
+                    <h2 className="paytone text-2xl capitalize">
+                      {eventDetails?.title?.S}
+                    </h2>
 
-                  <div className="flex gap-2">
-                    <ModalText
-                      img={"/calendar.svg"}
-                      text={eventDetails?.date?.S}
-                    />
-                    <ModalText
-                      img={"/timer.svg"}
-                      text={eventDetails?.timeFrom?.S}
-                    />
+                    <div className="flex gap-2">
+                      <ModalText
+                        img={"/calendar.svg"}
+                        text={eventDetails?.date?.S}
+                      />
+                      <ModalText
+                        img={"/timer.svg"}
+                        text={eventDetails?.timeFrom?.S}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* copy btn below */}
               <div className="flex items-center justify-center w-full bg-[#FFFFFF] h-20">

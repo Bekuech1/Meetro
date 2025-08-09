@@ -1,8 +1,9 @@
 import DownloadEvent from "@/components/event-dashboard/DownloadEvent";
 import Eventdetails from "@/components/event-dashboard/Eventdetails";
+import EventInfo from "@/components/event-dashboard/EventInfo";
 import ShareEvent from "@/components/event-dashboard/ShareEvent";
 import React from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 
 const EventDetails = () => {
   const { eventId } = useParams();
@@ -36,8 +37,9 @@ const EventDetails = () => {
           </div>
         </div>
 
+        {/* event details is coming from this info component */}
         <div>
-          <Eventdetails />
+          <EventInfo eventId={eventId} />
         </div>
       </div>
     </div>
