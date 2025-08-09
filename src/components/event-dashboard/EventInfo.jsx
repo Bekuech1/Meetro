@@ -1,16 +1,44 @@
+import API from "@/lib/axios";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Attendance,
+  EventCategories,
+  ModalBtn,
+  ModalText,
+} from "../home/EventModal";
+import SiteBtn from "../Layout-conponents/SiteBtn";
+import ShareEvent from "./ShareEvent";
+import LoginModal from "../Onboarding/LoginModal";
+
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
   const [attendanceStatus, setAttendanceStatus] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingResponseType, setPendingResponseType] = useState(null);
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
+  // const {eventId} = useParams()
 
   const toggleReadMore = () => {
     setIsExpanded((prev) => !prev);
   };
-  
+
   const handleConfirmAttendance = async (responseType) => {
+    if (!user || !user.userId) {
+      setPendingResponseType(responseType);
+      setShowLoginModal(true);
+      return;
+    }
+
+    await confirmAttendance(responseType);
+  };
+
+  const confirmAttendance = async (responseType) => {
     try {
       console.log("Confirming attendance for:", eventId);
       const shareResponse = await API.post(`/shares`, { eventId });
@@ -29,28 +57,391 @@ export default function EventInfo({ eventId }) {
   };
 
   useEffect(() => {
-    if (!eventId) return;
+    const fetchEventDetails = async () => {
+      try {
+        const response = await API.get(`/events/${eventId}`);
+        const event = response.data;
 
-    API.get(`/events/${eventId}`).then((response) => {
-      const event = response.data;
-      // check if current user is already attending event
-      const attendees = event.attendees?.L || [];
-      const matchedAttendee = attendees.find(
-        (attendee) => attendee.M?.userId.S === user.userId
-      );
+        // check if current user is already attending event
+        const attendees = event.attendees?.L || [];
+        const matchedAttendee = attendees.find(
+          (attendee) => attendee.M?.userId.S === user.userId
+        );
 
-      if (matchedAttendee) {
-        // set status directly based on responseType
-        setAttendanceStatus(matchedAttendee.M?.responseType.S || null);
+        if (matchedAttendee) {
+          // set status directly based on responseType
+          setAttendanceStatus(matchedAttendee.M?.responseType.S || null);
+        }
+
+        setEventDetails(event);
+      } catch (err) {
+        setError(err.response?.data?.error || "Failed to load event details");
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setEventDetails(event);
-    });
+    fetchEventDetails();
   }, [eventId]);
 
+  if (loading) {
+    return (
+      <div className="text-center py-10 w-full md:w-[950px] h-full flex flex-col items-center justify-center gap-3">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div>
+        <p>Loading event details...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-red-500 text-center py-10">{error}</div>;
+  }
+
+  //empty state
+  if (!eventDetails) {
+    return <div className="text-center py-10">Event not found</div>;
+  }
+
+  // const imageUrl = import.meta.env.VITE_IMAGE_URL;
+  const imagePath = eventDetails?.imageKey?.S
+    ? new URL(
+        eventDetails.imageKey.S,
+        import.meta.env.VITE_IMAGE_URL
+      ).toString()
+    : "/events-modal.png"; // or some placeholder
+
   return (
-    <div className="w-full md:w-[950px]">
-      <div></div>
+    <div className="mt-4 flex flex-col md:flex-row gap-4 md:gap-8 w-full md:w-[950px] mx-auto">
+      {/* Left Section - Event Image and Host Info */}
+      <section className="w-full lg:w-[349px] h-full grid gap-8 relative overflow-y-auto scrollbar-hide">
+        <div className="relative">
+          <img
+            src={imagePath}
+            // src={eventDetails?.imageKey?.S}
+            alt="Event-poster"
+            className="rounded-3xl w-full lg:w-[393px] h-[318px] lg:h-[349px]"
+          />
+          <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
+            <img src="/image.svg" className="z-10" alt="Image" />
+          </div>
+        </div>
+
+        <section className="grid gap-4">
+          <div className="gap-1 grid">
+            <ModalText img="/crown.svg" text="hosts" />
+            <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70 justify-center items-center">
+              {eventDetails.creator?.M && (
+                <>
+                  <img
+                    src="/tiny-profile.png"
+                    alt="Host"
+                    className="w-6 h-6 rounded-full border border-white"
+                  />
+                  <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
+                    {eventDetails.creator.M.name?.S || "Event Host"}
+                  </h6>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-[12px] p-2 flex justify-between border-[2px] border-white items-center bg-white/70">
+            <h6 className="text-[#8A9191] text-[13px] font-[500] leading-[24px] satoshi capitalize">
+              {attendanceStatus === "yes"
+                ? "You're attending this event"
+                : "You have Manage access to this event"}
+            </h6>
+            <SiteBtn
+              name="manage"
+              colorPadding="py-2 px-3 bg-[#AEFC40]"
+              onclick={() => navigate("/manage-event/" + eventId)}
+            />
+          </div>
+        </section>
+      </section>
+
+      {/* Right Section - Event Details */}
+      <section className="w-full lg:w-[569px] sm:h-full h-fit sm:overflow-y-auto scrollbar-hide flex flex-col gap-6">
+        <div className="flex w-full h-fit gap-2">
+          <div className="grid w-full h-fit gap-2 text-start">
+            <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
+              {eventDetails.title?.S || "Event"}
+            </h1>
+            <ModalText
+              img="/timer.svg"
+              text={`${eventDetails?.date?.S} - ${eventDetails?.timeFrom?.S}`}
+            />
+            <div className="w-full min-w-[100px] h-fit flex gap-2">
+              {eventDetails.categories?.L?.map((category, index) => (
+                <EventCategories
+                  key={index}
+                  borderBgColor={
+                    index % 2 === 0
+                      ? "text-[#9B1C46] border-[#9B1C46]"
+                      : "text-[#0A84FF] border-[#0A84FF]"
+                  }
+                  text={category.S || "Category"}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="hidden md:flex flex-row gap-2">
+            <div className="h-10 w-10 p-2 pt-4 flex items-center justify-center bg-white rounded-full">
+              <ShareEvent eventId={eventId} />
+            </div>
+
+            {/* <DownloadEvent /> */}
+          </div>
+        </div>
+
+        {eventDetails.description?.S && (
+          <div className="w-full h-fit grid gap-2">
+            <ModalText img="/note-text.svg" text="about event" />
+
+            <h4
+              className={`${
+                isExpanded ? "" : "line-clamp-3"
+              } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
+            >
+              {eventDetails.description?.S ||
+                "No description available for this event."}
+            </h4>
+
+            {/* ✅ Show the toggle button only if description is long */}
+            {eventDetails.description?.S &&
+              eventDetails.description.S.length > 150 && (
+                <button
+                  onClick={toggleReadMore}
+                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+                >
+                  {isExpanded ? "Show less" : "Read more"}
+                </button>
+              )}
+          </div>
+        )}
+
+        {/* chip in */}
+        <div className="flex flex-col gap-2">
+          <ModalText img="/money-add.svg" text="chip in" />
+
+          {eventDetails?.chipInType?.S === "FIXED" ? (
+            <div className="rounded-[12px] p-4 border-[2px] border-white text-left bg-white/70">
+              <p className="text-[#8A9191]">{eventDetails?.chipInType?.S}</p>
+
+              <div className="flex justify-between items-center">
+                <p className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi ">
+                  ₦{eventDetails?.chipInAmount?.S}
+                </p>
+                <p className="bg-[#D9D1F1] text-sm font-bold text-[#7A60BF] py-1 px-2 rounded-full">
+                  Required to join the fun
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+              <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi ">
+                {eventDetails?.chipInType?.S || "Free event"}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* attendance confirmation section */}
+        <div>
+          {!attendanceStatus && (
+            <div className="flex gap-4 items-center">
+              <Attendance
+                text="Not sure"
+                bgHover="#011F0F"
+                img="/timer-modal.svg"
+                textcolor="#7A60BF"
+                texthover="#C7BAEA"
+                onClick={() => handleConfirmAttendance("maybe")}
+              />
+              <Attendance
+                text="Going"
+                bgHover="#011F0F"
+                img="/tick-circle-green.svg"
+                textcolor="#61B42D"
+                texthover="#BEFD66"
+                onClick={() => handleConfirmAttendance("yes")}
+              />
+            </div>
+          )}
+
+          <div className="w-full h-fit flex justify-between">
+            <div className="w-full h-fit grid gap-1 satoshi">
+              {attendanceStatus === "yes" && (
+                <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                  <div className="flex justify-between">
+                    <div>
+                      <h5 className="text-[16px] font-[700] leading-[24px] text-black">
+                        ✅ You're going!
+                      </h5>
+                      <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                        We'll send you reminders and updates so you don't miss a
+                        thing.
+                      </p>
+                    </div>
+
+                    {eventDetails.date?.S && (
+                      <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
+                        Starting in{" "}
+                        <span className="text-[#866AD2]">
+                          {calculateTimeRemaining(eventDetails.date.S)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <h5 className="text-[14px] font-[700] leading-[20px] text-black">
+                      Invite a friend too 👉
+                    </h5>
+                    <ModalBtn
+                      onClick={() => console.log("Invite a friend")}
+                      bgcolor="bg-[#E6F2F3]"
+                      image="/send.svg"
+                      textcolor="text-black"
+                      text="Invite a Friend"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {attendanceStatus === "maybe" && (
+                <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
+                  <>
+                    <h5 className="text-[16px] font-[700] leading-[24px] text-[#001010]">
+                      👀 Got it you're thinking about it!
+                    </h5>
+                    <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                      We'll remind you as the date gets closer, just in case you
+                      decide to come.
+                    </p>
+                  </>
+                  <div className="flex items-center gap-4">
+                    <div className="w-full rounded-[60px] bg-[#E6F2F3] flex items-center justify-center">
+                      <ModalBtn
+                        // onClick={() => console.log("Invite a friend")}
+                        bgcolor="bg-[#E6F2F3]"
+                        image="/send.svg"
+                        textcolor="text-black"
+                        text="Invite a Friend"
+                        className="w-full"
+                      />
+                    </div>
+
+                    <div className="bg-white rounded-[60px] w-full flex items-center justify-center border border-[#E5E7E3]">
+                      <ModalBtn
+                        onClick={() => handleConfirmAttendance("yes")}
+                        // bgcolor="bg-[#E6F2F3]"
+                        image="/tick-circle.svg"
+                        textcolor="text-[#61B42D]"
+                        text="Change to Going"
+                        // className="w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Dress Code Section */}
+        {eventDetails.dressCode?.S && (
+          <div className="grid gap-2 w-full h-fit">
+            <ModalText img="/dress.svg" text="dress code" />
+            <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+              {eventDetails.dressCode?.S || "Come in your best fit!"}
+            </h6>
+          </div>
+        )}
+
+        {/* Location Section */}
+        <div className="grid gap-2 w-full h-fit">
+          <ModalText img="/modal-location.svg" text="location" />
+          <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
+            {eventDetails.location?.M?.venue?.S || "Location not specified"}
+          </h6>
+          <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
+            {eventDetails.location?.M?.state?.S},{" "}
+            {eventDetails.location?.M?.country?.S}
+          </p>
+        </div>
+
+        {/* Attendees Section */}
+        {eventDetails.attendees?.L && eventDetails.attendees.L.length > 0 && (
+          <div className="grid gap-2 w-full h-fit">
+            <ModalText
+              img="/crown.svg"
+              text={`going (${eventDetails.attendees.L.length})`}
+            />
+            <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
+              {eventDetails.attendees.L.map((attendee, index) => (
+                <div
+                  key={index}
+                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-[#FFFFFE80]"
+                >
+                  {/* <img
+                    src="/large-profile.jpg"
+                    alt="Attendee"
+                    className="size-[66px] rounded-full"
+                  /> */}
+
+                  <div className="size-[66px] rounded-full bg-[#E5E7E3] flex items-center justify-center">
+                    <p className="text-[12px] font-[700] leading-[18px] text-black capitalize">
+                      {getInitials(attendee.M?.name?.S)}
+                    </p>
+                  </div>
+
+                  <h6 className="h-fit w-full min-w-[120px] text-center capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                    {attendee.M?.name?.S || "Attendee"}
+                  </h6>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {showLoginModal && (
+        <LoginModal
+          onSuccess={async () => {
+            setShowLoginModal(false);
+            if (pendingResponseType) {
+              await confirmAttendance(pendingResponseType);
+              setPendingResponseType(null);
+            }
+          }}
+        />
+      )}
     </div>
   );
+}
+
+// Helper function to calculate time remaining
+function calculateTimeRemaining(eventDate) {
+  const now = new Date();
+  const eventTime = new Date(eventDate);
+  const diff = eventTime - now;
+
+  if (diff <= 0) return "Event has started";
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  return `${days}d ${hours}h`;
+}
+
+// helper function to get attendees initials
+function getInitials(fullName) {
+  if (!fullName) return "";
+
+  const parts = fullName.trim().split(" ");
+  const firstInitial = parts[0]?.charAt(0).toUpperCase() || "";
+  const secondInitial = parts[1]?.charAt(0).toUpperCase() || "";
+
+  return `${firstInitial}${secondInitial}`;
 }
