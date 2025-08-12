@@ -65,11 +65,20 @@ const EventType = ({ isVisible, onClose, onSave }) => {
   ];
 
   function handleSelectedButtons(title) {
-    setSelectedButton((prev) =>
-      prev.includes(title)
-        ? prev.filter((btn) => btn !== title)
-        : [...prev, title]
-    );
+    setSelectedButton((prev) => {
+      if (prev.includes(title)) {
+        // If already selected, remove it
+        return prev.filter((btn) => btn !== title);
+      } else {
+        // If not selected and we haven't reached the limit, add it
+        if (prev.length < 3) {
+          return [...prev, title];
+        } else {
+          // If we've reached the limit, don't add the new selection
+          return prev;
+        }
+      }
+    });
   }
 
   // Function to get selected buttons with their data
@@ -104,7 +113,7 @@ const EventType = ({ isVisible, onClose, onSave }) => {
     >
       <div className="grid gap-4">
         <p className="text-[#8A9191] satoshi font-medium text-sm">
-          Pick a vibe! Music, Tech, Networking, Food, Sports—you name it.
+          Pick a vibe! Music, Tech, Networking, Food, Sports—you name it. (Max 3 selections)
         </p>
         {/* Display selected buttons */}
         <div className="">

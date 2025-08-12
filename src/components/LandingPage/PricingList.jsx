@@ -31,8 +31,8 @@ const PricingComponent = ({ heading, subtext, features }) => (
 
 const PricingList = () => {
   return (
-    <div className="relative w-full h-fit py-20 min-h-[780px] flex flex-col gap-10 bg-[#FCFEF9] satoshi ">
-      <div className="flex flex-col gap-6 md:w-[563px] w-[90%] h-fit justify-center text-center mx-auto">
+    <div className="relative w-full h-fit py-24 min-h-[780px] flex flex-col gap-10 bg-[#FCFEF9] satoshi ">
+      <div className="flex flex-col gap-6 md:w-[563px] w-[90%] h-fit justify-center text-center mx-auto mt-6">
         <h1 className="paytone md:text-[60px] text-[40px] leading-none text-[#011F0F] font-[400] capitalize">
           💸 Pricing That Works for You
         </h1>
