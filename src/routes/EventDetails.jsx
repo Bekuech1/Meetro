@@ -30,7 +30,7 @@ const EventDetails = () => {
           </button>
 
           <div className="flex gap-2 md:hidden">
-            <div className="h-7 w-7 pt-1 flex items-center justify-center bg-white rounded-full cursor-pointer">
+            <div className="h-7 w-7 flex items-center justify-center bg-white rounded-full cursor-pointer">
               <ShareEvent eventId={eventId} />
             </div>
             {/* <DownloadEvent /> */}

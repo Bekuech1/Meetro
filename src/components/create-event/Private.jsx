@@ -15,13 +15,13 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import useEventStore from "@/stores/eventStore";
 
-const LoadingSpinner = ({ size = 16, color = "#7A60BF", speed = "0.7s" }) => {
+export const LoadingSpinner = ({ size = 16, color = "#7A60BF", speed = "0.7s" }) => {
   const spinnerSize = `${size}px`;
 
   return (
     <div className="flex items-center justify-center">
       <div
-        className={`border-2 border-t-transparent border-[#7A60BF] rounded-full animate-spin`}
+        className={`border-2 border-t-transparent border-[#7A60BF] ${size} ${color} rounded-full animate-spin`}
         style={{
           width: spinnerSize,
           height: spinnerSize,

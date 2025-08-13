@@ -11,6 +11,7 @@ import {
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import ShareEvent from "./ShareEvent";
 import LoginModal from "../Onboarding/LoginModal";
+import { LoadingSpinner } from "../create-event/Private";
 
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -87,7 +88,8 @@ export default function EventInfo({ eventId }) {
   if (loading) {
     return (
       <div className="text-center py-10 w-full md:w-[950px] h-full flex flex-col items-center justify-center gap-3">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div>
+        {/* <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div> */}
+        <LoadingSpinner size={32} />
         <p>Loading event details...</p>
       </div>
     );
@@ -145,17 +147,19 @@ export default function EventInfo({ eventId }) {
             </div>
           </div>
 
-          <div className="rounded-[12px] p-2 flex justify-between border-[2px] border-white items-center bg-white/70">
-            <h6 className="text-[#8A9191] text-[13px] font-[500] leading-[24px] satoshi capitalize">
-              {attendanceStatus === "yes"
-                ? "You're attending this event"
-                : "You have Manage access to this event"}
-            </h6>
-            <SiteBtn
-              name="manage"
-              colorPadding="py-2 px-3 bg-[#AEFC40]"
-              onclick={() => navigate("/manage-event/" + eventId)}
-            />
+          <div>
+            {user?.userId === eventDetails.creator?.M?.id?.S && (
+              <div className="rounded-[12px] p-2 flex justify-between border-[2px] border-white items-center bg-white/70">
+                <h6 className="text-[#8A9191] text-[13px] font-[500] leading-[24px] satoshi capitalize">
+                  You have Manage access to this event
+                </h6>
+                <SiteBtn
+                  name="manage"
+                  colorPadding="py-2 px-3 bg-[#AEFC40]"
+                  onclick={() => navigate("/manage-event/" + eventId)}
+                />
+              </div>
+            )}
           </div>
         </section>
       </section>
@@ -186,7 +190,7 @@ export default function EventInfo({ eventId }) {
             </div>
           </div>
           <div className="hidden md:flex flex-row gap-2">
-            <div className="h-10 w-10 p-2 pt-4 flex items-center justify-center bg-white rounded-full">
+            <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full">
               <ShareEvent eventId={eventId} />
             </div>
 
@@ -298,13 +302,17 @@ export default function EventInfo({ eventId }) {
                     <h5 className="text-[14px] font-[700] leading-[20px] text-black">
                       Invite a friend too 👉
                     </h5>
-                    <ModalBtn
+                    {/* <ModalBtn
                       onClick={() => console.log("Invite a friend")}
                       bgcolor="bg-[#E6F2F3]"
                       image="/send.svg"
                       textcolor="text-black"
                       text="Invite a Friend"
-                    />
+                    /> */}
+                    <div className="w-full rounded-[60px] bg-[#E6F2F3] flex items-center justify-center p-2.5 gap-2">
+                      <ShareEvent eventId={eventId} />
+                      <p className="paytone">Invite a Friend</p>
+                    </div>
                   </div>
                 </div>
               )}
@@ -321,15 +329,18 @@ export default function EventInfo({ eventId }) {
                     </p>
                   </>
                   <div className="flex items-center gap-4">
-                    <div className="w-full rounded-[60px] bg-[#E6F2F3] flex items-center justify-center">
-                      <ModalBtn
+                    <div className="w-full rounded-[60px] bg-[#E6F2F3] flex items-center justify-center p-2.5 gap-2">
+                      <ShareEvent eventId={eventId} />
+                      <p className="paytone">Invite a Friend</p>
+
+                      {/* <ModalBtn
                         // onClick={() => console.log("Invite a friend")}
                         bgcolor="bg-[#E6F2F3]"
                         image="/send.svg"
                         textcolor="text-black"
                         text="Invite a Friend"
                         className="w-full"
-                      />
+                      /> */}
                     </div>
 
                     <div className="bg-white rounded-[60px] w-full flex items-center justify-center border border-[#E5E7E3]">
@@ -390,8 +401,8 @@ export default function EventInfo({ eventId }) {
                     className="size-[66px] rounded-full"
                   /> */}
 
-                  <div className="size-[66px] rounded-full bg-[#E5E7E3] flex items-center justify-center">
-                    <p className="text-[12px] font-[700] leading-[18px] text-black capitalize">
+                  <div className="size-[66px] rounded-full bg-[#077D8A] flex items-center justify-center">
+                    <p className="text-sm font-[700] leading-[18px] text-white capitalize">
                       {getInitials(attendee.M?.name?.S)}
                     </p>
                   </div>

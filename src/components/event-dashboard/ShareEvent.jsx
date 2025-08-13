@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import API from "@/lib/axios";
 import { ModalText } from "../home/EventModal";
+import { LoadingSpinner } from "../create-event/Private";
 
 const ShareEvent = ({ eventId }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +53,7 @@ const ShareEvent = ({ eventId }) => {
   };
 
   return (
-    <div className="satoshi w-fit h-fit">
+    <div className="satoshi flex items-center justify-center">
       <button onClick={togglePopup}>
         <img
           src="/send.svg"
@@ -72,13 +73,23 @@ const ShareEvent = ({ eventId }) => {
             <div className="bg-[#FFFFFFE5] backdrop-blur-xl border border-[#FFFFFE] md:rounded-3xl overflow-clip rounded-t-[12px] flex flex-col items-center justify-center">
               {isLoading ? (
                 // Loading state
-                <div className="flex flex-col items-center justify-center gap-4">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div>
+                <div className="flex flex-col items-center justify-center gap-4 h-80 md:w-80 pt-9 pb-6">
+                  <LoadingSpinner size={32}/>
+                  {/* <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div> */}
                   <p className="text-[#866AD2] font-bold">
                     Preparing share link...
                   </p>
                 </div>
-              ) : error ? (
+              ) : // skeleton loader
+              // <div className="flex flex-col items-center gap-4 p-4">
+              //   <div className="bg-gray-300 rounded-xl w-[219px] h-[219px] animate-pulse"></div>
+              //   <div className="w-40 h-5 bg-gray-300 rounded animate-pulse"></div>
+              //   <div className="flex gap-2">
+              //     <div className="w-20 h-4 bg-gray-300 rounded animate-pulse"></div>
+              //     <div className="w-20 h-4 bg-gray-300 rounded animate-pulse"></div>
+              //   </div>
+              // </div>
+              error ? (
                 // Error state
                 <div className="text-center text-red-500">{error}</div>
               ) : (
@@ -116,14 +127,14 @@ const ShareEvent = ({ eventId }) => {
                     onClick={copyToClipboard}
                     className="flex items-center justify-center gap-1 bg-[#AEFC40] py-2 px-3 rounded-3xl"
                   >
-                    <p className="font-bold text-[12px] text-[#011F0F]">
+                    <p className="font-bold text-xs text-[#011F0F]">
                       Copy Link
                     </p>{" "}
                     <img src="/link.svg" alt="Copy" className="w-4 h-4" />
                   </button>
                 ) : (
-                  <div className="bg-[#011F0F] text-[#AEFC40] px-3 py-2 flex gap-4 rounded-full items-center justify-center">
-                    <p className="">Copied</p>
+                  <div className="bg-[#011F0F] text-[#AEFC40] px-3 py-2 flex gap-1 rounded-full items-center justify-center">
+                    <p className="text-xs font-bold">Copied</p>
                     <img src="/tick-circle.svg" alt="" />
                   </div>
                 )}

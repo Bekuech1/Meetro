@@ -16,13 +16,13 @@ export default function GuestList({ guests }) {
       <div></div>
 
       {/* notice to event creators */}
-      <div className="bg-[#F3F0FB] border border-[#D9D1F1] rounded-2xl p-2 flex flex-col gap-2 text-[#7A60BF] items-center justify-center">
+      {/* <div className="bg-[#F3F0FB] border border-[#D9D1F1] rounded-2xl p-2 flex flex-col gap-2 text-[#7A60BF] items-center justify-center">
         <p className="font-bold text-[16px]">✏️ Heads up, Creator!</p>
         <p className="font-medium text-sm text-center">
           You can only withdraw after the event to ensure refunding is possible
           if the event is canceled
         </p>
-      </div>
+      </div> */}
 
       <div></div>
 

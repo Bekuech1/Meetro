@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
 import useEventStore from "@/stores/eventStore";
+import { Button } from "../ui/button";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [logoutModal, setLogoutModal] = useState(false);
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
   const navigate = useNavigate();
@@ -57,14 +59,15 @@ const Header = () => {
       image: "/logout.svg",
       className: "text-[#DB2863]",
       onClick: () => {
-        logout();
+        setLogoutModal(true);
+        setIsOpen(false)
+        // logout();
         // localStorage.clear();
         // useAuthStore.getState().setUser(null);
         // useAuthStore.getState().setAccessToken(null);
         // useAuthStore.getState().setRefreshToken(null);
         // useAuthStore.getState().setIdToken(null);
         // // useEventStore.getState().resetStore();
-        navigate("/");
       },
     },
   ];
@@ -96,7 +99,7 @@ const Header = () => {
       <section className="flex items-center gap-4">
         {/* Notification */}
         <div ref={notificationRef}>
-          <button
+          {/* <button
             onClick={toggleNotification}
             className={` h-fit w-fit p-1 rounded-[24px] bg-[#344C3F] ${
               isNotificationOpen ? "bg-[#496A1B]" : ""
@@ -106,7 +109,7 @@ const Header = () => {
               alt="Notification"
               className="sm:w-6 sm:h-6 size-[22px]"
             />
-          </button>
+          </button> */}
 
           {isNotificationOpen && (
             <div className="absolute top-full right-2 mt-2 pb-2 bg-white rounded-[16px] shadow-lg w-[391px] h-[815px] transform transition-transform duration-300 ease-in-out satoshi z-20 sm:block hidden overflow-clip">
@@ -172,7 +175,8 @@ const Header = () => {
             onClick={toggleDropdown}
             className={`h-fit w-fit p-1 rounded-[24px] flex items-center gap-2 transition-all duration-300 ease-in-out ${
               isOpen ? "bg-[#496A1B]" : "bg-[#344C3F]"
-            }`}>
+            }`}
+          >
             <div className="rounded-full sm:w-6 sm:h-6 size-[22px] flex items-center justify-center bg-[#077D8A] text-white uppercase satoshi text-[8px] sm:text-[10px] font-[700] leading-[18px]">
               {user?.firstName?.charAt(0)}
               {user?.lastName?.charAt(0)}
@@ -216,7 +220,8 @@ const Header = () => {
                 <li
                   key={index}
                   className={`cursor-pointer flex w-full gap-1 py-2 capitalize satoshi text-[12px] font-[500] leading-[18px] items-center ${item.className}`}
-                  onClick={item.onClick}>
+                  onClick={item.onClick}
+                >
                   {item.image && (
                     <img
                       src={item.image}
@@ -271,7 +276,8 @@ const Header = () => {
                   <li
                     key={index}
                     className={`cursor-pointer py-2 flex w-full gap-1 capitalize satoshi text-[12px] font-[500] leading-[18px] items-center ${item.className}`}
-                    onClick={item.onClick}>
+                    onClick={item.onClick}
+                  >
                     {item.image && (
                       <img
                         src={item.image}
@@ -283,6 +289,47 @@ const Header = () => {
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+          {/* signout confirmation modal */}
+          {logoutModal && (
+            <div className="fixed inset-0 w-full flex items-end md:items-center justify-center bg-[#00000080]">
+              <div className="rounded-t-3xl md:rounded-3xl overflow-clip">
+                <div className="bg-[#FFFFFFE5] border-white backdrop-blur-[32px] p-6 pt-12 flex flex-col items-center justify-center gap-12">
+                  <img
+                    src="/signout-img.png"
+                    alt="img"
+                    className="w-[166px] h-[147px]"
+                  />
+                  <div className="md:w-[450px] text-center">
+                    <p className="paytone text-2xl">
+                      Are you sure you want to sign out?
+                    </p>
+                    <p className="text-sm font-medium text-[#8A9191]">
+                      You'll be logged out of your Meetro account and returned
+                      to the login screen.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white py-6 px-12 flex items-center gap-4">
+                  <Button
+                    className="w-1/2 border border-[#E5E7E3] h-9 bg-white paytone text-sm text-[#011F0F] rounded-[60px] hover:bg-[#E5E7E3]"
+                    onClick={() => setLogoutModal(false)}
+                  >
+                    No, Cancel
+                  </Button>
+                  <Button
+                    className="w-1/2 bg-[#DB2863] text-white rounded-[60px] paytone text-sm h-9"
+                    onClick={() => {
+                      logout();
+                      navigate("/");
+                    }}
+                  >
+                    Yes, Sign out
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>
