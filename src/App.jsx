@@ -90,7 +90,14 @@ function App() {
 
           {/* Create Event Routes */}
           <Route path="/create-event" element={<CreateEventsLayout />}>
-            <Route index element={<CreateEvent />} />
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <CreateEvent />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>
