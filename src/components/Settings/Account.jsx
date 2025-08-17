@@ -177,7 +177,7 @@ const Account = ({ form, setForm }) => {
       </div>
 
       {/* 3rd party accounts */}
-      <div>
+      {/* <div>
         <div>
           <h2 className="text-[#001010] text-[14px] font-bold">
             Third Party Account Syncing
@@ -206,7 +206,7 @@ const Account = ({ form, setForm }) => {
             <p className="text-[#61B42D]">Synced</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* account deletion confirmation */}
       {/* <div className="flex items-center justify-between gap-3">
