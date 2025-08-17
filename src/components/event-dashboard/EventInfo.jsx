@@ -438,6 +438,7 @@ function calculateTimeRemaining(eventDate) {
   const eventTime = new Date(eventDate);
   const diff = eventTime - now;
 
+
   if (diff <= 0) return "Event has started";
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
