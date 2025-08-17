@@ -43,7 +43,7 @@ export default function ManageEventPage() {
             />
 
             <div className="flex gap-4 md:hidden">
-              <div className="h-7 w-7 pt-1 flex items-center justify-center bg-[#F0F0F0] rounded-full cursor-pointer">
+              <div className="h-7 w-7 flex items-center justify-center bg-[#F0F0F0] rounded-full cursor-pointer">
                 <ShareEvent eventId={eventId} />
               </div>
 
@@ -80,7 +80,7 @@ export default function ManageEventPage() {
             </div>
 
             <div className="hidden md:flex gap-4 items-center ">
-              <div className="h-10 w-10 p-2 pt-4 flex items-center justify-center bg-[#F0F0F0] rounded-full cursor-pointer">
+              <div className="h-10 w-10 p-2 flex items-center justify-center bg-[#F0F0F0] rounded-full cursor-pointer">
                 <ShareEvent eventId={eventId} />
               </div>
 
