@@ -162,6 +162,7 @@ const Private = ({ onPublic }) => {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [uploadResponse, setUploadResponse] = useState(null);
 
   // Modal states
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -496,6 +497,8 @@ const Private = ({ onPublic }) => {
       const evtImg = `${getImg}/${fileKey}`;
       console.log("Image URL after upload:", evtImg);
 
+      setUploadResponse(response.data);
+
       return {
         success: true,
         imageUrl: evtImg, // Remove query params from URL
@@ -539,7 +542,7 @@ const Private = ({ onPublic }) => {
       isPrivate: true,
       dressCode: dressCode,
       // tempImageKey: eventImage?.imageUrl,
-      tempImageKey: eventImage?.imageKey,
+      tempImageKey: uploadResponse?.fileKey,
       ...(amount && {
         chipInAmount: amount,
         chipInType: chipInType,

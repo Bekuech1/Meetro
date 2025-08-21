@@ -128,7 +128,7 @@ const NormalHome = () => {
                 onClick={() => openModal(event.id)}
               >
                 <img
-                  src={event?.imageKey || "/events-img.png"}
+                  src={event?.imageUrl?.S ? `${import.meta.env.VITE_IMAGE_URL}/${event.imageUrl.S}` : "/events-img.png"}
                   alt="event-img"
                   className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
                 />
