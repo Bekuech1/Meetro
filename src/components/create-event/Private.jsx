@@ -538,8 +538,8 @@ const Private = ({ onPublic }) => {
       },
       isPrivate: true,
       dressCode: dressCode,
-      tempImageKey: eventImage?.imageUrl,
-      // tempImageKey: eventImage?.imageKey,
+      // tempImageKey: eventImage?.imageUrl,
+      tempImageKey: eventImage?.imageKey,
       ...(amount && {
         chipInAmount: amount,
         chipInType: chipInType,
@@ -558,6 +558,9 @@ const Private = ({ onPublic }) => {
       fontStyle: 1,
       isLightMode: true,
     };
+
+    console.log("Sending tempImageKey:", eventImage?.imageKey);
+console.log("NOT sending imageUrl:", eventImage?.imageUrl);
 
     try {
       const apiResponse = await API.post(`/events`, payload);
