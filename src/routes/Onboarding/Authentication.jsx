@@ -18,7 +18,7 @@ function Authentication() {
     },
     {
       title: "Register",
-      onclick: () => navigate("/signup"),
+      onclick: () => navigate("/register"),
       className:
         "sm:w-[107px] h-[34px] w-[163.5px] bg-[#011F0F] rounded-[60px] text-[#BEFD66] px-6",
     },
@@ -30,13 +30,23 @@ function Authentication() {
         text={text}
         handleClick1="/"
         handleClick2={() => setShowOptions(true)}
-        width={"w-[343px] sm:w-[450px]"}>
+        width={"w-[343px] sm:w-[450px]"}
+      >
         <div className="flex gap-5">
           {buttons.map((btn, index) => (
             <OnboardingButton {...btn} key={index} />
           ))}
         </div>
       </Layout>
+
+      <h6 className="absolute bottom-2 left-0 text-xs sm:text-sm text-center w-full font-normal tracking-wide satoshi">
+        <span className="text-[#8A9191] ">
+          By signing up, you agree to our{" "}
+        </span>
+        Terms & Conditions <span className="text-[#8A9191] ">and </span>
+        Privacy Policy.
+      </h6>
+      
       {showOptions && (
         <ShowOption
           onclick1={() => {

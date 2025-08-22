@@ -190,7 +190,6 @@ function Signup2() {
       <Layout
         text={text}
         width={"w-[255px]  sm:w-[450px]"}
-        handleClick1="/signup"
         handleClick2={() => setShowOptions(true)}>
         <div className="sm:w-[312px] w-[343px] mb-12">
           <form onSubmit={handleSubmit}>

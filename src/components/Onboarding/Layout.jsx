@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router";
 import React from "react";
 
-function Layout({ text, children, handleClick1, handleClick2, width }) {
+function Layout({ text, children, handleClick2, width }) {
   const navigate = useNavigate();
+
   return (
     <div className='relative bg-[url("/joinToday.png")] bg-no-repeat h-screen w-full bg-cover'>
       <div className="relative h-screen flex justify-center items-center flex-col mx-4">
@@ -10,7 +11,7 @@ function Layout({ text, children, handleClick1, handleClick2, width }) {
           <img
             src="/arrow-left.svg"
             alt="left arrow"
-            onClick={() => navigate(handleClick1)}
+            onClick={() => navigate(-1)}
             className="cursor-pointer"
           />
           <img

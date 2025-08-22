@@ -38,10 +38,12 @@ function App() {
 
           {/* Onboarding Routes */}
           <Route path="/authentication" element={<Authentication />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/sign" element={<Signup2 />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signin" element={<LoginForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<Signup2 />} />
+
+          {/* <Route path="/signup" element={<Signup />} /> */}
+          {/* <Route path="/signin" element={<Login />} /> */}
+
           <Route path="/location" element={<Location />} />
           <Route path="/calender" element={<Calender />} />
           <Route path="/interest" element={<Interest />} />
@@ -82,7 +84,14 @@ function App() {
           </Route>
 
           <Route path="/manage-event/:eventId" element={<HomepageLayout />}>
-            <Route index element={<ManageEventPage />} />
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <ManageEventPage />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           {/* Test Routes */}
