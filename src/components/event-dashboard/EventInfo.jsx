@@ -23,6 +23,8 @@ export default function EventInfo({ eventId }) {
   const [pendingResponseType, setPendingResponseType] = useState(null);
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
+  const [loadingResponseType, setLoadingResponseType] = useState(null);
+
   // const {eventId} = useParams()
 
   const toggleReadMore = () => {
@@ -36,7 +38,15 @@ export default function EventInfo({ eventId }) {
       return;
     }
 
-    await confirmAttendance(responseType);
+    setLoadingResponseType(responseType);
+    try {
+      await confirmAttendance(responseType);
+    } catch (error) {
+      // console.error("Confirm attendance error:", error.response?.data || error);
+      setError(error.response?.data?.error || "Failed to confirm attendance");
+    } finally {
+      setLoadingResponseType(null);
+    }
   };
 
   const confirmAttendance = async (responseType) => {
@@ -260,6 +270,7 @@ export default function EventInfo({ eventId }) {
                 img="/timer-modal.svg"
                 textcolor="#7A60BF"
                 texthover="#C7BAEA"
+                loading={loadingResponseType === "maybe"}
                 onClick={() => handleConfirmAttendance("maybe")}
               />
               <Attendance
@@ -268,6 +279,7 @@ export default function EventInfo({ eventId }) {
                 img="/tick-circle-green.svg"
                 textcolor="#61B42D"
                 texthover="#BEFD66"
+                loading={loadingResponseType === "yes"}
                 onClick={() => handleConfirmAttendance("yes")}
               />
             </div>
@@ -309,9 +321,9 @@ export default function EventInfo({ eventId }) {
                       textcolor="text-black"
                       text="Invite a Friend"
                     /> */}
-                    <div className="w-full rounded-[60px] bg-[#E6F2F3] flex items-center justify-center p-2.5 gap-2">
+                    <div className="w-fit rounded-[60px] bg-[#E6F2F3] flex items-center justify-center p-2.5 gap-2">
                       <ShareEvent eventId={eventId} />
-                      <p className="paytone">Invite a Friend</p>
+                      <p className="text-sm font-bold">Invite a Friend</p>
                     </div>
                   </div>
                 </div>
@@ -437,7 +449,6 @@ function calculateTimeRemaining(eventDate) {
   const now = new Date();
   const eventTime = new Date(eventDate);
   const diff = eventTime - now;
-
 
   if (diff <= 0) return "Event has started";
 

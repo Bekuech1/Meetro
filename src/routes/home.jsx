@@ -18,9 +18,9 @@ export default function Home() {
       <main className="bg-[#F0F0F0] flex flex-col px-20 py-10 gap-[43px] h-[90vh] max-h-[760px] relative overflow-hidden">
         <div className="h-full w-full flex flex-col gap-2 justify-center items-center text-center">
           <LoadingSpinner size={32} />
-          <h1 className="text-[#4A3A74] h-fit sm:text-[36px] sm:font-[400] sm:leading-[100%] text-[24px] font-[400] leading-[32px]">
+          {/* <h1 className="text-[#4A3A74] h-fit sm:text-[36px] sm:font-[400] sm:leading-[100%] text-[24px] font-[400] leading-[32px]">
             Your events are loading....
-          </h1>
+          </h1> */}
         </div>
 
         <div class=" absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">

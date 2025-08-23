@@ -104,6 +104,20 @@ const NormalHome = () => {
           </div> */}
         </section>
 
+        {/* No events message */}
+        {Object.keys(groupedEvents).length === 0 && (
+          <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
+            <p className="mb-4">
+              You have no upcoming events. All your events are in the past.
+            </p>
+            <SiteBtn
+              name="Create a new event"
+              colorPadding="bg-[#AEFC40] py-2 px-6 mt-4"
+              onclick={() => navigate("/create-event")}
+            />
+          </section>
+        )}
+
         {/* Events by grouped date */}
         {Object.entries(groupedEvents).map(([date, events]) => (
           <div key={date} className="grid gap-4">
@@ -139,7 +153,7 @@ const NormalHome = () => {
                       {event.title}
                     </h4>
                     <h6 className="satoshi text-[#8A9191] sm:hidden text-[10px]">
-                      {event.relativeTime || "12 h"}
+                      {timeAgo(event?.createdAt)}
                     </h6>
                   </li>
 
@@ -199,7 +213,7 @@ const NormalHome = () => {
 
                 <section className="sm:flex hidden flex-col justify-between text-end h-[100px]">
                   <h6 className="text-[#8A9191] text-[12px] font-[500]">
-                    12hr
+                    {timeAgo(event?.createdAt)}
                   </h6>
                   <SiteBtn
                     name="manage"
@@ -222,7 +236,6 @@ const NormalHome = () => {
 
 export default NormalHome;
 
-
 // helper function to format attendees display
 const formatAttendeesDisplay = (attendees = []) => {
   // Step 1: Filter only "yes"
@@ -243,3 +256,24 @@ const formatAttendeesDisplay = (attendees = []) => {
 
   return extraCount > 0 ? `${displayNames} +${extraCount}` : displayNames;
 };
+
+function timeAgo(createdAt) {
+  const now = new Date();
+  const created = new Date(createdAt);
+  const diffMs = now - created; // difference in ms
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHrs = Math.floor(diffMin / 60);
+  const diffDays = Math.floor(diffHrs / 24);
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  if (diffSec < 60) return `${diffSec}s ago`;
+  if (diffMin < 60) return `${diffMin}m ago`;
+  if (diffHrs < 24) return `${diffHrs}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffWeeks < 5) return `${diffWeeks}w ago`;
+  if (diffMonths < 12) return `${diffMonths}mo ago`;
+  return `${diffYears}y ago`;
+}

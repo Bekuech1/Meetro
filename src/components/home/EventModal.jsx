@@ -1,3 +1,4 @@
+import { LoadingSpinner } from "../create-event/Private";
 import EventInfo from "../event-dashboard/EventInfo";
 
 const EventModal = ({ eventId, closeModal }) => {
@@ -20,7 +21,6 @@ const EventModal = ({ eventId, closeModal }) => {
       </div>
 
       {/* mobile modal */}
-      
     </>
   );
 };
@@ -81,18 +81,29 @@ export const Attendance = ({
   textcolor,
   texthover,
   onClick,
+  loading,
 }) => {
   return (
     <div
       className={`cursor-pointer w-full h-fit rounded-[60px] lg:py-3 lg:px-8 lg:gap-2 py-2 px-3 gap-1 bg-white flex flex-col paytone items-center justify-center hover:bg-[${bgHover}] transition-all duration-300 ease-in-out`}
-      onClick={onClick}
+      onClick={loading ? null : onClick}
     >
-      <img src={img} alt="" className="size-8" />
-      <h6
-        className={`text-[${textcolor}] hover:text-[${texthover}] font-[400] text-[12px] lg:leading-[18px] capitalize`}
-      >
-        {text}
-      </h6>
+      {loading ? (
+        <div className="flex items-center justify-center gap-2 py-3">
+          <LoadingSpinner size={20} />
+          {/* <div className="loader size-4 border-2 border-t-transparent border-green-500 rounded-full animate-spin" /> */}
+          {/* <span className="text-[12px] text-gray-500">Loading...</span> */}
+        </div>
+      ) : (
+        <>
+          <img src={img} alt="" className="size-8" />
+          <h6
+            className={`text-[${textcolor}] hover:text-[${texthover}] font-[400] text-[12px] lg:leading-[18px] capitalize`}
+          >
+            {text}
+          </h6>
+        </>
+      )}
     </div>
   );
 };
