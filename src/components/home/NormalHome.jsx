@@ -141,11 +141,17 @@ const NormalHome = () => {
                 className="bg-[#FCFEF9]/50 backdrop-blur-[40px] rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
                 onClick={() => openModal(event.id)}
               >
-                <img
-                  src={event?.imageUrl?.S ? `${import.meta.env.VITE_IMAGE_URL}/${event.imageUrl.S}` : "/events-img.png"}
-                  alt="event-img"
-                  className="rounded-[8px] sm:w-[114px] sm:h-[104px] w-[70px] h-[64px]"
-                />
+                <div className="shrink-0 w-[70px] h-[64px] md:w-[114px] md:h-[104px]">
+                  <img
+                    src={
+                      event?.imageUrl?.S
+                        ? `${import.meta.env.VITE_IMAGE_URL}/${event.imageUrl.S}`
+                        : "/events-img.png"
+                    }
+                    alt="event-img"
+                    className="w-full h-full object-cover rounded-[8px]"
+                  />
+                </div>
 
                 <ul className="w-full grid sm:gap-[2px] gap-[2px] satoshi">
                   <li className="flex justify-between">

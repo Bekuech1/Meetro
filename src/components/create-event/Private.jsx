@@ -15,7 +15,11 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import useEventStore from "@/stores/eventStore";
 
-export const LoadingSpinner = ({ size = 16, color = "#7A60BF", speed = "0.7s" }) => {
+export const LoadingSpinner = ({
+  size = 16,
+  color = "#7A60BF",
+  speed = "0.7s",
+}) => {
   const spinnerSize = `${size}px`;
 
   return (
@@ -563,7 +567,7 @@ const Private = ({ onPublic }) => {
     };
 
     console.log("Sending tempImageKey:", eventImage?.imageKey);
-console.log("NOT sending imageUrl:", eventImage?.imageUrl);
+    console.log("NOT sending imageUrl:", eventImage?.imageUrl);
 
     try {
       const apiResponse = await API.post(`/events`, payload);
