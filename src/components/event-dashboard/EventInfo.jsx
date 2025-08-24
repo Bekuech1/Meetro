@@ -200,9 +200,9 @@ export default function EventInfo({ eventId }) {
             </div>
           </div>
           <div className="hidden md:flex flex-row gap-2">
-            <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full">
-              <ShareEvent eventId={eventId} />
-            </div>
+            {/* <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full"> */}
+            <ShareEvent eventId={eventId} className={`bg-white`} />
+            {/* </div> */}
 
             {/* <DownloadEvent /> */}
           </div>
@@ -321,10 +321,14 @@ export default function EventInfo({ eventId }) {
                       textcolor="text-black"
                       text="Invite a Friend"
                     /> */}
-                    <div className="w-fit rounded-[60px] bg-[#E6F2F3] flex items-center justify-center p-2.5 gap-2">
-                      <ShareEvent eventId={eventId} />
-                      <p className="text-sm font-bold">Invite a Friend</p>
-                    </div>
+                    {/* <div className="w-fit rounded-[60px] bg-[#E6F2F3] flex items-center justify-center p-2.5 gap-2"> */}
+                    <ShareEvent
+                      eventId={eventId}
+                      text={"Invite a friend"}
+                      className={"bg-[#E6F2F3] paytone"}
+                    />
+                    {/* <p className="text-sm font-bold">Invite a Friend</p> */}
+                    {/* </div> */}
                   </div>
                 </div>
               )}
@@ -341,11 +345,15 @@ export default function EventInfo({ eventId }) {
                     </p>
                   </>
                   <div className="flex items-center gap-4">
-                    <div className="w-full rounded-[60px] bg-[#E6F2F3] flex items-center justify-center p-2.5 gap-2">
-                      <ShareEvent eventId={eventId} />
-                      <p className="paytone">Invite a Friend</p>
+                    <div className="w-full">
+                    <ShareEvent
+                      eventId={eventId}
+                      text={"Invite a friend"}
+                      className={`bg-[#E6F2F3] w-full text-center paytone`}
+                    />
+                    {/* <p className="paytone">Invite a Friend</p> */}
 
-                      {/* <ModalBtn
+                    {/* <ModalBtn
                         // onClick={() => console.log("Invite a friend")}
                         bgcolor="bg-[#E6F2F3]"
                         image="/send.svg"
@@ -358,7 +366,7 @@ export default function EventInfo({ eventId }) {
                     <div className="bg-white rounded-[60px] w-full flex items-center justify-center border border-[#E5E7E3]">
                       <ModalBtn
                         onClick={() => handleConfirmAttendance("yes")}
-                        // bgcolor="bg-[#E6F2F3]"
+                        // bgcolor="bg-white"
                         image="/tick-circle.svg"
                         textcolor="text-[#61B42D]"
                         text="Change to Going"

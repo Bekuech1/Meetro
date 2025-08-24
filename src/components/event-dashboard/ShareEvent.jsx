@@ -3,7 +3,7 @@ import API from "@/lib/axios";
 import { ModalText } from "../home/EventModal";
 import { LoadingSpinner } from "../create-event/Private";
 
-const ShareEvent = ({ eventId }) => {
+const ShareEvent = ({ eventId, text, className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,12 +54,13 @@ const ShareEvent = ({ eventId }) => {
 
   return (
     <div className="satoshi flex items-center justify-center">
-      <button onClick={togglePopup}>
+      <button onClick={togglePopup} className={`flex items-center justify-center gap-2 p-2.5 rounded-[60px] ${className}`}>
         <img
           src="/send.svg"
           alt="Share event"
           className="w-4 h-4 md:w-auto md:h-auto"
         />
+        <p className="text-sm font-bold">{text && <span>{text}</span>}</p>
       </button>
 
       {isOpen && (
@@ -74,7 +75,7 @@ const ShareEvent = ({ eventId }) => {
               {isLoading ? (
                 // Loading state
                 <div className="flex flex-col items-center justify-center gap-4 h-80 md:w-80 pt-9 pb-6">
-                  <LoadingSpinner size={32}/>
+                  <LoadingSpinner size={32} />
                   {/* <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div> */}
                   <p className="text-[#866AD2] font-bold">
                     Preparing share link...
