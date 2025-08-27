@@ -179,7 +179,7 @@ export default function EventInfo({ eventId }) {
         <div className="flex w-full h-fit gap-2">
           <div className="grid w-full h-fit gap-2 text-start">
             <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
-              {eventDetails.title?.S || "Event"}
+              {eventDetails.title?.S}
             </h1>
             <ModalText
               img="/timer.svg"
@@ -199,7 +199,7 @@ export default function EventInfo({ eventId }) {
               ))}
             </div>
           </div>
-          <div className="hidden md:flex flex-row gap-2">
+          <div className="hidden md:flex">
             {/* <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full"> */}
             <ShareEvent eventId={eventId} className={`bg-white`} />
             {/* </div> */}

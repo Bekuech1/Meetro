@@ -3,7 +3,27 @@ import SiteBtn from "../Layout-conponents/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
 import dayjs from "dayjs";
 import API from "@/lib/axios"; // Adjust the import based on your API utility file path
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
+
+const profilePictures = [
+  "/Profile.svg",
+  "/Profile-1.svg",
+  "/Profile-2.svg",
+  "/Profile-3.svg",
+];
+
+//function to randomise profile picture selection
+export function getProfilePicture() {
+  let storedPic = localStorage.getItem("profilePic");
+
+  if (!storedPic) {
+    const randomIndex = Math.floor(Math.random() * profilePictures.length);
+    storedPic = profilePictures[randomIndex];
+    localStorage.setItem("profilePic", storedPic);
+  }
+
+  return storedPic;
+}
 
 const PersonalProfile = () => {
   // const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
@@ -11,9 +31,10 @@ const PersonalProfile = () => {
   const setUser = useAuthStore((state) => state.setUser); // Zustand action to set user info
   const user = useAuthStore((state) => state.user);
   const formattedDate = dayjs(user?.createdAt).format("D MMMM, YYYY");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [totalEvents, setTotalEvents] = useState(0);
   const [totalAttendees, setTotalAttendees] = useState(0);
+  const profilePic = getProfilePicture();
 
   useEffect(() => {
     if (idToken) {
@@ -43,14 +64,14 @@ const PersonalProfile = () => {
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between">
             {/* <img src={user?.profilePictureKey} alt="user-profile-img" /> */}
-            <img src="/profileimg.png" alt="" />
+            <img src={profilePic} alt="" className="w-[154px]" />
             {/* <img src={user?.profilePictureKey} alt="" /> */}
             {/* <Button variant="default" className="bg-[#AEFC40] text-black">Edit Profile</Button> */}
-            <SiteBtn
+            {/* <SiteBtn
               name="Edit Profile"
               colorPadding="bg-[#fffffe] py-[6px] px-[10px]"
               onclick={() => navigate("/settings")}
-            />
+            /> */}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -70,7 +91,7 @@ const PersonalProfile = () => {
                 <p className="text-[14px] font-medium text-[#001010] ">
                   {user?.state}
                 </p>
-              </span> */} 
+              </span> */}
               <span className="flex items-center gap-2">
                 <img src="/calendar.svg" alt="calendar-icon" />{" "}
                 <p className="text-[14px] font-medium text-[#001010] ">

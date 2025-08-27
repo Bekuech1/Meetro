@@ -4,6 +4,7 @@ import SiteBtn from "../Layout-conponents/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
 import useEventStore from "@/stores/eventStore";
 import { Button } from "../ui/button";
+import { getProfilePicture } from "../Profile/PersonalProfile";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,7 @@ const Header = () => {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const profilePic = getProfilePicture()
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
   const toggleNotification = () => setIsNotificationOpen((prev) => !prev);
@@ -42,12 +44,12 @@ const Header = () => {
       className: "",
       onClick: () => navigate("/profile"),
     },
-    {
-      text: "settings",
-      image: "/support.svg",
-      className: "border-b border-gray-300",
-      onClick: () => navigate("/settings"),
-    },
+    // {
+    //   text: "settings",
+    //   image: "/support.svg",
+    //   className: "border-b border-gray-300",
+    //   onClick: () => navigate("/settings"),
+    // },
     // {
     //   text: "contact us",
     //   image: "/header-contact.svg",
@@ -61,13 +63,6 @@ const Header = () => {
       onClick: () => {
         setLogoutModal(true);
         setIsOpen(false)
-        // logout();
-        // localStorage.clear();
-        // useAuthStore.getState().setUser(null);
-        // useAuthStore.getState().setAccessToken(null);
-        // useAuthStore.getState().setRefreshToken(null);
-        // useAuthStore.getState().setIdToken(null);
-        // // useEventStore.getState().resetStore();
       },
     },
   ];
@@ -173,13 +168,15 @@ const Header = () => {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={toggleDropdown}
+            // onClick={() => navigate("/profile")}
             className={`h-fit w-fit p-1 rounded-[24px] flex items-center gap-2 transition-all duration-300 ease-in-out ${
               isOpen ? "bg-[#496A1B]" : "bg-[#344C3F]"
             }`}
           >
             <div className="rounded-full sm:w-6 sm:h-6 size-[22px] flex items-center justify-center bg-[#077D8A] text-white uppercase satoshi text-[8px] sm:text-[10px] font-[700] leading-[18px]">
-              {user?.firstName?.charAt(0)}
-              {user?.lastName?.charAt(0)}
+              {/* {user?.firstName?.charAt(0)}
+              {user?.lastName?.charAt(0)} */}
+              <img src={ profilePic} alt="user-icon" />
             </div>
             <img
               src="/arrow-down.svg"
