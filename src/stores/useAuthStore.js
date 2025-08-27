@@ -37,6 +37,7 @@ export const useAuthStore = create(
         idToken: state.idToken,
         user: state.user,
       }),
+      // getStorage: () => sessionStorage
     }
   )
 );

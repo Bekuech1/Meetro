@@ -52,9 +52,19 @@ const ShareEvent = ({ eventId, text, className }) => {
     setTimeout(() => setCopied(false), 5000); // Hide after 2 seconds
   };
 
+  const imagePath = eventDetails?.imageKey?.S
+    ? new URL(
+        eventDetails.imageKey.S,
+        import.meta.env.VITE_IMAGE_URL
+      ).toString()
+    : "/events-modal.png"; // or some placeholder
+
   return (
     <div className="satoshi flex items-center justify-center">
-      <button onClick={togglePopup} className={`flex items-center justify-center gap-2 p-2.5 rounded-[60px] ${className}`}>
+      <button
+        onClick={togglePopup}
+        className={`flex items-center justify-center p-1 md:p-2.5 rounded-[60px] ${text ? "gap-2" : "gap-0"} ${className}`}
+      >
         <img
           src="/send.svg"
           alt="Share event"
@@ -97,7 +107,7 @@ const ShareEvent = ({ eventId, text, className }) => {
                 // Actual content after load
                 <div className="md:w-80 pt-9 pb-6 flex flex-col items-center justify-center gap-4">
                   <img
-                    src={eventDetails?.imageUrl?.S || "/events-modal.png"}
+                    src={imagePath}
                     alt="Event"
                     className="w-[219px] h-[219px] rounded-xl border-2 border-[#FFFFFF]"
                   />

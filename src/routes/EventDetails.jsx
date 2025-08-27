@@ -31,7 +31,7 @@ const EventDetails = () => {
 
           <div className="flex gap-2 md:hidden">
             <div className="h-7 w-7 flex items-center justify-center bg-white rounded-full cursor-pointer">
-              <ShareEvent eventId={eventId} />
+              <ShareEvent eventId={eventId} className={"p-1"} />
             </div>
             {/* <DownloadEvent /> */}
           </div>
