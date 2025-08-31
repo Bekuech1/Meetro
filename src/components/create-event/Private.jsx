@@ -594,7 +594,7 @@ const Private = ({ onPublic }) => {
   };
 
   return (
-    <main className="bg-[#F0F0F0] min-h-[90vh] h-fit w-full grid gap-[43px] lg:pb-10 pt-10">
+    <main className="bg-[#F0F0F0] min-h-[90vh] h-fit w-full grid gap-[43px] lg:pb-10 pt-10 pb-24">
       <div className="lg:flex-row flex lg:gap-12 gap-8 flex-col sm:w-fit w-[95%] mx-auto">
         {/* left section */}
         <section className="sm:w-fit w-full h-fit flex flex-col gap-4 mx-auto">
@@ -778,13 +778,9 @@ const Private = ({ onPublic }) => {
           </section>
         </section>
       </div>
-      <section className="w-full h-fit px-4 pt-6 pb-12 rounded-t-2xl bg-white/90 lg:hidden grid gap-4">
-        {/* <div className="flex p-3 gap-2 rounded-[12px] bg-white/90 border backdrop-blur-[2px] items-center w-full">
-          <h5 className="text-[#8A9191] text-[16px] font-[700] leading-[24px] satoshi capitalize w-full">
-            theme settings
-          </h5>
-          <div className="aspect-square size-[47px] py-3 px-2 flex justify-center items-center rounded-[6px] backdrop-blur-[12px] border border-[#866AD2]"></div>
-        </div> */}
+
+      {/* Fixed Bottom Section for Mobile */}
+      <section className="fixed bottom-0 left-0 right-0 w-full h-fit px-4 pt-6 pb-6 rounded-t-2xl bg-white/90 backdrop-blur-md lg:hidden grid gap-4 z-20 border-t border-white/20 shadow-lg">
         <section className="h-fit w-full flex justify-between gap-4">
           <CreateEventBtn
             text="View Preview"
@@ -802,6 +798,7 @@ const Private = ({ onPublic }) => {
           />
         </section>
       </section>
+
       {/* All Modals */}
       <When isVisible={when} onClose={closeWhen} onSave={handleTimeSave} />
       <Where
@@ -888,6 +885,7 @@ const Private = ({ onPublic }) => {
                     <img src="/info-circle.svg" alt="" />
                     <span>{error}</span>
                   </div>
+                  {/* this section */}
                   <section className="h-fit w-full flex justify-between gap-4">
                     <CreateEventBtn
                       text="Cancel"

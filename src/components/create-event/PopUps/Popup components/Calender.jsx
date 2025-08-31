@@ -10,13 +10,33 @@ const Calender = ({ value, onChange, label }) => {
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
-    return new Array(31)
-      .fill(null)
-      .map((_, i) => new Date(year, month, i + 1))
-      .filter((d) => d.getMonth() === month);
+    
+    // Get the first day of the month and what day of the week it falls on
+    const firstDay = new Date(year, month, 1);
+    const firstDayOfWeek = firstDay.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    // Get the number of days in the month
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+    // Create array with empty cells for days before the month starts
+    const days = [];
+    
+    // Add empty cells for days before the month starts
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(year, month, day));
+    }
+    
+    return days;
   };
 
   const handleDateClick = (date) => {
+    if (!date) return; // Don't do anything for empty cells
+    
     // Only allow selection of current day or future dates
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -29,13 +49,13 @@ const Calender = ({ value, onChange, label }) => {
 
   const handlePrevMonth = () => {
     setCurrentMonth(
-      new Date(currentMonth.setMonth(currentMonth.getMonth() - 1))
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
     );
   };
 
   const handleNextMonth = () => {
     setCurrentMonth(
-      new Date(currentMonth.setMonth(currentMonth.getMonth() + 1))
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)
     );
   };
 
@@ -51,6 +71,8 @@ const Calender = ({ value, onChange, label }) => {
 
   // Helper function to get date styling
   const getDateStyling = (date) => {
+    if (!date) return ""; // Empty cell
+    
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
@@ -75,6 +97,7 @@ const Calender = ({ value, onChange, label }) => {
 
   // Helper function to determine if date is clickable
   const isDateClickable = (date) => {
+    if (!date) return false; // Empty cell
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return date >= today;
@@ -147,14 +170,14 @@ const Calender = ({ value, onChange, label }) => {
                 onClick={() => handleDateClick(date)}
                 disabled={!isDateClickable(date)}
                 className={`p-2 rounded-lg satoshi text-[10px] flex justify-center transition-all duration-200 ${
-                  getDateStyling(date)
+                  date ? getDateStyling(date) : ""
                 } ${
                   isDateClickable(date) 
                     ? "hover:scale-125 cursor-pointer" 
-                    : "cursor-not-allowed"
+                    : date ? "cursor-not-allowed" : ""
                 }`}
               >
-                {date.getDate()}
+                {date ? date.getDate() : ""}
               </button>
             ))}
           </div>

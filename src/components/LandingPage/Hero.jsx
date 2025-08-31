@@ -314,7 +314,7 @@ const Hero = () => {
 
   return (
     <div className="relative w-full h-screen max-h-[1040px] min-h-[780px] flex items-center justify-center bg-[#FCFEF9] satoshi overflow-hidden">
-      <div className="w-[1069px] h-fit flex gap-14 flex-col items-center justify-center">
+      <div className="w-[1069px] h-fit flex gap-14 flex-col items-center justify-center mt-16">
         <motion.section
           className="flex items-center justify-center h-fit relative will-change-transform"
           {...containerAnimation}
