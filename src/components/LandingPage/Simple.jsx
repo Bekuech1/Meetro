@@ -19,7 +19,7 @@ const Simple = () => {
         </div>
       </div>
       <video
-        src="/meetrovideo.mp4"
+        src="/meetro-new.mp4"
         className="lg:w-[750px] lg:h-[435px] sm:w-[580px] sm:h-[380px] w-[90%] h-[205px] rounded-4xl"
         autoPlay
         loop

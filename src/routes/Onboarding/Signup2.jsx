@@ -41,11 +41,12 @@ function Signup2() {
   const text = "Join the Meetro in seconds!";
 
   const button = {
-    title: loading ? "Loading..." : "Let's gooo!",
+    title: "Let's gooo!",
     className:
       "w-full bg-[#011F0F] text-[#BEFD66] px-6 rounded-[60px] h-[36px]",
     onclick: handleSubmit,
     type: "submit",
+    isLoading: loading
   };
 
   const forms = [

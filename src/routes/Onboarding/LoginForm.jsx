@@ -43,12 +43,12 @@ function LoginForm() {
   );
 
   const button = {
-    title: loading ? "Loading..." : "Let's gooo!",
-    className:
-      "w-full bg-[#011F0F] text-[#BEFD66] px-6 rounded-[60px] h-[36px]",
-    onclick: handleSubmit,
-    type: "submit",
-  };
+  title: "Let's gooo!",
+  className: "w-full bg-[#011F0F] text-[#BEFD66] px-6 rounded-[60px] h-[36px]",
+  onclick: handleSubmit,
+  type: "submit",
+  isLoading: loading,
+};
 
   const forms = [
     {
@@ -143,7 +143,8 @@ function LoginForm() {
         text={text}
         width={"w-[255px]  sm:w-[450px]"}
         handleClick1="/login"
-        handleClick2={() => setShowOptions(true)}>
+        handleClick2={() => setShowOptions(true)}
+      >
         <div className={`sm:w-[312px] w-[343px] mb-9`}>
           <form onSubmit={handleSubmit}>
             {forms.map((form, index) => (
@@ -157,7 +158,8 @@ function LoginForm() {
             New to Meetro?
             <span
               className="text-purple-400 satoshi cursor-pointer"
-              onClick={() => navigate("/sign")}>
+              onClick={() => navigate("/sign")}
+            >
               {" "}
               Sign up here
             </span>

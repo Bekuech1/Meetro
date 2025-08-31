@@ -5,7 +5,10 @@ const BlogCard = ({ post, onClick, mobile }) => {
     onClick(post.id); // Pass the post ID to parent
   };
   return (
-    <div className={`lg:w-[416px] ${mobile} h-fit grid gap-6`}>
+    <div
+      className={`lg:w-[416px] ${mobile} h-fit grid gap-6`}
+      onClick={handleCardClick}
+    >
       <img
         src={post.image || "/blog-placeholder.png"}
         alt="Blog Post"
@@ -33,7 +36,7 @@ const BlogCard = ({ post, onClick, mobile }) => {
           <button className="text-[14px] leading-5 text-[#7A60BF] font-[700]">
             Read More
           </button>
-          <button onClick={handleCardClick}>
+          <button>
             <img src="/blog-arrow.svg" alt="" />
           </button>
         </div>
