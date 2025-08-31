@@ -5,7 +5,8 @@ import { isTokenExpired } from "@/utils/authUtils";
 
 export function useRehydrateAuth() {
   // const setUser = useAuthStore((state) => state.setUser);
-  const { idToken, logout, setUser} = useAuthStore.getState();
+  const { idToken, setUser } = useAuthStore.getState();
+  const logout = useAuthStore((state) => state.logout);
 
   useEffect(() => {
     if (!idToken || isTokenExpired(idToken)) {
