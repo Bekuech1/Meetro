@@ -346,14 +346,14 @@ export default function EventInfo({ eventId }) {
                   </>
                   <div className="flex items-center gap-4">
                     <div className="w-full">
-                    <ShareEvent
-                      eventId={eventId}
-                      text={"Invite a friend"}
-                      className={`bg-[#E6F2F3] w-full text-center paytone`}
-                    />
-                    {/* <p className="paytone">Invite a Friend</p> */}
+                      <ShareEvent
+                        eventId={eventId}
+                        text={"Invite a friend"}
+                        className={`bg-[#E6F2F3] w-full text-center paytone`}
+                      />
+                      {/* <p className="paytone">Invite a Friend</p> */}
 
-                    {/* <ModalBtn
+                      {/* <ModalBtn
                         // onClick={() => console.log("Invite a friend")}
                         bgcolor="bg-[#E6F2F3]"
                         image="/send.svg"
@@ -403,7 +403,7 @@ export default function EventInfo({ eventId }) {
         </div>
 
         {/* Attendees Section */}
-        {eventDetails.attendees?.L && eventDetails.attendees.L.length > 0 && (
+        {eventDetails.attendees?.L && eventDetails.attendees.L?.M?.responseType === "yes" && eventDetails.attendees.L.length > 0 && (
           <div className="grid gap-2 w-full h-fit">
             <ModalText
               img="/crown.svg"
@@ -428,7 +428,7 @@ export default function EventInfo({ eventId }) {
                   </div>
 
                   <h6 className="h-fit w-full min-w-[120px] text-center capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                    {attendee.M?.name?.S || "Attendee"}
+                    {attendee.M?.name?.S}
                   </h6>
                 </div>
               ))}
