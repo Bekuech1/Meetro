@@ -23,8 +23,8 @@ export const useAuthStore = create(
           idToken: null,
           user: null,
         });
-        localStorage.removeItem("auth-storage"); // Clear localStorage
-        // localStorage.clear(); // Clear all localStorage
+        // localStorage.removeItem("auth-storage"); // Clear localStorage
+        localStorage.clear(); // Clear all localStorage
         // window.location.href = "/login"; // Redirect to login
         // navigate("/login"); // Redirect to login
       },

@@ -15,7 +15,7 @@ const Header = () => {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
-  const profilePic = getProfilePicture()
+  const profilePic = getProfilePicture();
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
   const toggleNotification = () => setIsNotificationOpen((prev) => !prev);
@@ -62,12 +62,12 @@ const Header = () => {
       className: "text-[#DB2863]",
       onClick: () => {
         setLogoutModal(true);
-        setIsOpen(false)
+        setIsOpen(false);
       },
     },
   ];
 
-  const totalEvents = useEventStore((state) => state.totalEvents);
+  const myEventsTotal = useEventStore((state) => state.myEventsTotal);
   const totalAttendees = useEventStore((state) => state.totalAttendees);
 
   return (
@@ -176,7 +176,7 @@ const Header = () => {
             <div className="rounded-full sm:w-6 sm:h-6 size-[22px] flex items-center justify-center bg-[#077D8A] text-white uppercase satoshi text-[8px] sm:text-[10px] font-[700] leading-[18px]">
               {/* {user?.firstName?.charAt(0)}
               {user?.lastName?.charAt(0)} */}
-              <img src={ profilePic} alt="user-icon" />
+              <img src={profilePic} alt="user-icon" />
             </div>
             <img
               src="/arrow-down.svg"
@@ -192,9 +192,10 @@ const Header = () => {
             <ul className="absolute right-0 mt-3 pb-2 px-4 bg-white rounded-[16px] shadow-lg w-[264px] satoshi z-20 hidden sm:block">
               {/* User Info */}
               <li className="py-4 grid items-center gap-4">
-                <div className="bg-[#077D8A] text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
-                  {user?.firstName?.charAt(0)}
-                  {user?.lastName?.charAt(0)}
+                <div className=" text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
+                  {/* {user?.firstName?.charAt(0)}
+                  {user?.lastName?.charAt(0)} */}
+                  <img src={profilePic} alt="" />
                 </div>
                 <div>
                   <h4 className="satoshi text-[12px] font-[500] leading-[18px] capitalize">
@@ -202,7 +203,7 @@ const Header = () => {
                   </h4>
                   <div className="flex gap-2 text-[12px] satoshi font-[500]">
                     <span>
-                      {totalEvents}{" "}
+                      {myEventsTotal}{" "}
                       <span className="text-[#8A9191] text-[10px]">Hosted</span>
                     </span>
                     <span>
@@ -239,9 +240,10 @@ const Header = () => {
                 {/* User Info */}
                 <li className="py-4 flex justify-between gap-4 items-start">
                   <div className="grid items-center gap-4">
-                    <div className="bg-[#077D8A] text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
-                      {user?.firstName?.charAt(0)}
-                      {user?.lastName?.charAt(0)}
+                    <div className=" text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
+                      {/* {user?.firstName?.charAt(0)}
+                      {user?.lastName?.charAt(0)} */}
+                      <img src={profilePic} alt="" />
                     </div>
                     <div>
                       <h4 className="satoshi text-[12px] font-[500] leading-[18px] capitalize">
@@ -249,7 +251,7 @@ const Header = () => {
                       </h4>
                       <div className="flex gap-2 text-[12px] satoshi font-[500]">
                         <span>
-                          {totalEvents}{" "}
+                          {myEventsTotal}{" "}
                           <span className="text-[#8A9191] text-[10px]">
                             Hosted
                           </span>

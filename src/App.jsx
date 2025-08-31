@@ -20,12 +20,12 @@ import Settings from "./routes/Settings";
 import ProtectedRoute from "./components/(appState)/ProtectedRoute";
 
 // import GoogleAuthCallback from "./components/Onboarding/GoogleAuthCallback";
-// import { useRehydrateAuth } from "./lib/useRehydrateAuth";
+import { useRehydrateAuth } from "./lib/useRehydrateAuth";
 import EventDetails from "./routes/EventDetails";
 import ManageEventPage from "./routes/ManageEvent";
 
 function App() {
-  // useRehydrateAuth(); // This hook is used to rehydrate the auth state from local storage or session storage
+  useRehydrateAuth(); // This hook is used to rehydrate the auth state from local storage or session storage
 
   return (
     <>

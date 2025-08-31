@@ -743,7 +743,7 @@ const Private = ({ onPublic }) => {
               {!addDescription && (
                 <Add title="description" onOptionClick={putDescription} />
               )}
-              {!addChipIn && <Add title="chip-in" onOptionClick={putChipIn} />}
+              {/* {!addChipIn && <Add title="chip-in" onOptionClick={putChipIn} />} */}
               {!addEventType && (
                 <Add title="event type" onOptionClick={putEventType} />
               )}

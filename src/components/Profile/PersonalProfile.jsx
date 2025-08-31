@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import SiteBtn from "../Layout-conponents/SiteBtn";
+// import SiteBtn from "../Layout-conponents/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
 import dayjs from "dayjs";
-import API from "@/lib/axios"; // Adjust the import based on your API utility file path
+import useEventStore from "@/stores/eventStore";
 // import { useNavigate } from "react-router";
 
 const profilePictures = [
@@ -27,35 +26,11 @@ export function getProfilePicture() {
 
 const PersonalProfile = () => {
   // const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
-  const idToken = useAuthStore((state) => state.idToken);
-  const setUser = useAuthStore((state) => state.setUser); // Zustand action to set user info
   const user = useAuthStore((state) => state.user);
   const formattedDate = dayjs(user?.createdAt).format("D MMMM, YYYY");
-  // const navigate = useNavigate();
-  const [totalEvents, setTotalEvents] = useState(0);
-  const [totalAttendees, setTotalAttendees] = useState(0);
   const profilePic = getProfilePicture();
-
-  useEffect(() => {
-    if (idToken) {
-      API.get("/profile")
-        .then((res) => {
-          setUser(res.data); // Save user info to Zustand
-        })
-        .catch((err) => {
-          console.error("Failed to load profile:", err);
-        });
-
-      API.get("/my-events")
-        .then((res) => {
-          setTotalEvents(res.data.totalEvents);
-          setTotalAttendees(res.data.totalAttendees);
-        })
-        .catch((err) => {
-          console.error("Failed to load events:", err);
-        });
-    }
-  }, [idToken]);
+  const myEventsTotal = useEventStore((state) => state.myEventsTotal);
+  const totalAttendees = useEventStore((state) => state.totalAttendees);
 
   return (
     <div className="w-full md:w-[680px] md:h-[470px] px-4 pt-6 pb-12 md:p-0 flex flex-col gap-6 satoshi">
@@ -108,7 +83,8 @@ const PersonalProfile = () => {
             <span className="text-[#8A9191]">Events Attended</span>
           </p>
           <p className=" text-[14px] font-medium text-[#001010]">
-            {totalEvents} <span className="text-[#8A9191]">Event Created</span>
+            {myEventsTotal}{" "}
+            <span className="text-[#8A9191]">Event Created</span>
           </p>
         </div>
       </div>
