@@ -12,6 +12,21 @@ const NormalHome = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
 
+  useEffect(() => {
+    if (isModalOpen) {
+      // Disable scroll
+      document.body.style.overflow = "hidden";
+    } else {
+      // Re-enable scroll
+      document.body.style.overflow = "unset";
+    }
+  
+    // Cleanup function to reset overflow when component unmounts
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isModalOpen]);
+
   const groupEventsByDate = (eventsArray) => {
     const grouped = {};
     const today = new Date();
@@ -108,7 +123,7 @@ const NormalHome = () => {
         {Object.keys(groupedEvents).length === 0 && (
           <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
             <p className="mb-4">
-              You have no upcoming events. All your events are in the past.
+              You have no upcoming events. All of your events are in the past.
             </p>
             <SiteBtn
               name="Create a new event"

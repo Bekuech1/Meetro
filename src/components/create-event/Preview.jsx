@@ -208,10 +208,10 @@ const Preview = ({
                 <div className="grid gap-2 w-full h-fit">
                   <ModalText img="/modal-location.svg" text="location" />
                   <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                    CCHub
+                  {location} 
                   </h6>
                   <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                    {location}, {state}
+                  {state}
                   </p>
                 </div>
               )}
@@ -246,6 +246,9 @@ const Preview = ({
         </div>
       </div>
 
+
+
+
       {/* Mobile Modal */}
       <div className="fixed inset-0 h-full z-30 bg-transparent flex lg:hidden">
         <div className="w-full h-[calc(100vh-64px)] absolute left-0 top-[64px] px-4 pt-4 pb-12 bg-[#E8E8E8] z-40 grid gap-4 lg:hidden overflow-y-auto scrollbar-hide">
@@ -266,12 +269,12 @@ const Preview = ({
               <h1 className="paytone capitalize text-black font-[400] text-[20px]">
                 {eventName}
               </h1>
-              <div className="flex gap-[6px]">
+              <div className="grid gap-[6px]">
                 <ModalText
                   img="/modal-location.svg"
-                  text="5 Mabushi way, Abuja."
+                  text={`${location}, ${state}`}
                 />
-                <ModalText img="/timer.svg" text="6:30pm" />
+                <ModalText img="/timer.svg" text={time} />
               </div>
             </section>
             <img
@@ -348,7 +351,7 @@ const Preview = ({
             <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
               <div className="w-full h-fit flex justify-between">
                 <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-                  Starting in <span className="text-[#866AD2]">6d 8h</span>
+                  Starting in <span className="text-[#866AD2]">{countdown}</span>
                 </div>
               </div>
               {/* <div className="satoshi w-full h-fit grid gap-[10px] items-center">
@@ -371,10 +374,10 @@ const Preview = ({
               <div className="grid gap-2 w-full h-fit">
                 <ModalText img="/modal-location.svg" text="location" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  CCHub
+                {location} 
                 </h6>
                 <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                  {location}, {state}
+                {state}
                 </p>
               </div>
             )}

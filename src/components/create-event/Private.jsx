@@ -15,20 +15,22 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import useEventStore from "@/stores/eventStore";
 
-export const LoadingSpinner = ({
-  size = 16,
-  color = "#7A60BF",
-  speed = "0.7s",
+export const LoadingSpinner = ({ 
+  size = 16, 
+  color = "#7A60BF", 
+  speed = "0.7s" 
 }) => {
   const spinnerSize = `${size}px`;
-
+  
   return (
     <div className="flex items-center justify-center">
       <div
-        className={`border-2 border-t-transparent border-[#7A60BF] ${size} ${color} rounded-full animate-spin`}
+        className="border-2 border-t-transparent rounded-full animate-spin"
         style={{
           width: spinnerSize,
           height: spinnerSize,
+          borderColor: color,
+          borderTopColor: 'transparent',
           animationDuration: speed,
         }}
       ></div>
@@ -181,6 +183,9 @@ const Private = ({ onPublic }) => {
   const [createEventModal, setCreateEventModal] = useState(false);
   const [creatingEventPopup, setCreatingEventPopup] = useState(false);
   const [response, setResponse] = useState(null);
+
+  // Image loading state
+  const [isImageLoading, setIsImageLoading] = useState(false);
 
   // Add to List states
   const [addDressCode, setAddDressCode] = useState(false);
@@ -384,6 +389,20 @@ const Private = ({ onPublic }) => {
 
   const handleImageSave = (imageData) => {
     setEventImage(imageData);
+    // Modal is already closed by ImageModal component
+    
+    // For template selection, show loading spinner briefly
+    if (imageData.type === "template") {
+      setIsImageLoading(true);
+      setTimeout(() => {
+        setIsImageLoading(false);
+      }, 300); // Show spinner for 300ms on the image container
+    } else if (imageData.type === "upload") {
+      // For file uploads, clear the loading state after a brief delay
+      setTimeout(() => {
+        setIsImageLoading(false);
+      }, 200); // Show spinner briefly after upload completes
+    }
   };
 
   const handleHostNameSave = (hostName) => {
@@ -477,6 +496,7 @@ const Private = ({ onPublic }) => {
 
   // Handle image upload
   const handleImageUpload = async (file) => {
+    setIsImageLoading(true); // Show loading spinner on image container
     try {
       const fileExtension = file.name.split(".").pop();
       const response = await API.post(`/upload`, {
@@ -511,6 +531,8 @@ const Private = ({ onPublic }) => {
     } catch (error) {
       console.error("Image upload failed:", error);
       throw error;
+    } finally {
+      // Keep loading state active - it will be cleared by handleImageSave
     }
   };
 
@@ -606,27 +628,31 @@ const Private = ({ onPublic }) => {
               Upload a JPEG or PNG file with a size of 2mb or less
             </p>
           </div>
+          
           <div className="relative flex justify-center">
-            <img
+            { !isImageLoading ? (<img
               src={getCurrentImageUrl()}
-              alt="/Event-img"
-              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer justify-center"
+              alt="Event image"
+              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer"
               onClick={openImageModal}
-            />
-            <div
-              className="hidden absolute cursor-pointer top-[303px] left-[302px] rounded-full xl:flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors"
+            /> ) : (<div className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] bg-white/60 flex items-center justify-center"><LoadingSpinner size={40} color="#61B42D" /></div>)
+            }
+            
+            { !isImageLoading && <div
+              className="absolute cursor-pointer top-[275px] left-[275px] sm:top-[303px] sm:left-[302px] rounded-full flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors"
               onClick={openImageModal}
             >
               <img src="/image.svg" className="z-10" alt="" />
-            </div>
+            </div> }
           </div>
+          
           <div className="flex justify-center p-2 items-start bg-[#F3F0FB]">
             <p className="text-[#7A60BF] text-[12px] font-[500] leading-[18px] satoshi capitalize">
               Images with a 1 : 1 ratio (a square) work best
             </p>
           </div>
         </section>
-
+  
         {/* right section */}
         <section className="gap-6 items-start flex flex-col w-full lg:w-[553px] h-fit mx-auto">
           <div className="grid gap-2 w-full">
@@ -655,6 +681,7 @@ const Private = ({ onPublic }) => {
               Shh... it's exclusive! Only those with the magic link can RSVP.
             </p>
           </div>
+          
           <div className="grid p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full">
             <input
               type="text"
@@ -664,6 +691,7 @@ const Private = ({ onPublic }) => {
               className="appearance-none bg-transparent border-none text-2xl font-[400] leading-[32px] text-black placeholder-[#8A9191] focus:outline-none paytone"
             />
           </div>
+          
           <Grid title="event details">
             <Input
               leftImgSrc="/timer.svg"
@@ -735,7 +763,7 @@ const Private = ({ onPublic }) => {
                 className="text-[#8A9191]"
               />
             )}
-
+  
             <div className="flex flex-wrap gap-2 w-full">
               {!addDressCode && (
                 <Add title="dress code" onOptionClick={putDress} />
@@ -743,20 +771,20 @@ const Private = ({ onPublic }) => {
               {!addDescription && (
                 <Add title="description" onOptionClick={putDescription} />
               )}
-              {!addChipIn && <Add title="chip-in" onOptionClick={putChipIn} />}
+              {/* {!addChipIn && <Add title="chip-in" onOptionClick={putChipIn} />} */}
               {!addEventType && (
                 <Add title="event type" onOptionClick={putEventType} />
               )}
             </div>
           </Grid>
-
+  
           {error && (
             <div className="flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
-              <img src="info-circle.svg" alt="" />
+              <img src="/info-circle.svg" alt="" />
               <span>{error}</span>
             </div>
           )}
-
+  
           {/* Create Event Buttons */}
           <section className="h-fit w-full lg:flex justify-between gap-4 hidden">
             <CreateEventBtn
@@ -778,9 +806,9 @@ const Private = ({ onPublic }) => {
           </section>
         </section>
       </div>
-
+  
       {/* Fixed Bottom Section for Mobile */}
-      <section className="fixed bottom-0 left-0 right-0 w-full h-fit px-4 pt-6 pb-6 rounded-t-2xl bg-white/90 backdrop-blur-md lg:hidden grid gap-4 z-20 border-t border-white/20 shadow-lg">
+      <section className="fixed bottom-0 left-0 right-0 w-full h-20 px-4 pt-6 pb-6 rounded-t-2xl bg-white/90 backdrop-blur-md lg:hidden grid gap-4 z-20 border-t border-white/20 shadow-lg">
         <section className="h-fit w-full flex justify-between gap-4">
           <CreateEventBtn
             text="View Preview"
@@ -798,7 +826,7 @@ const Private = ({ onPublic }) => {
           />
         </section>
       </section>
-
+  
       {/* All Modals */}
       <When isVisible={when} onClose={closeWhen} onSave={handleTimeSave} />
       <Where
@@ -877,6 +905,7 @@ const Private = ({ onPublic }) => {
                 </div>
               </div>
             </div>
+            
             <div className="bg-white w-full h-fit grid gap-4 py-6 px-12 rounded-b-3xl">
               {/* Error State */}
               {error && (
@@ -885,7 +914,6 @@ const Private = ({ onPublic }) => {
                     <img src="/info-circle.svg" alt="" />
                     <span>{error}</span>
                   </div>
-                  {/* this section */}
                   <section className="h-fit w-full flex justify-between gap-4">
                     <CreateEventBtn
                       text="Cancel"
@@ -906,7 +934,7 @@ const Private = ({ onPublic }) => {
                   </section>
                 </>
               )}
-
+  
               {/* Loading State */}
               {isLoading && !error && (
                 <div className="flex text-[12px] text-[#7A60BF] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3F0FB] border border-[#D9D1F1]">
@@ -914,7 +942,7 @@ const Private = ({ onPublic }) => {
                   <span>Creating Event</span>
                 </div>
               )}
-
+  
               {/* Success State */}
               {!isLoading && !error && response && (
                 <>
@@ -930,7 +958,6 @@ const Private = ({ onPublic }) => {
                       onClick={() => {
                         setCreatingEventPopup(false);
                         useEventStore.getState().setShouldRefetch(true);
-                        // Navigate to event management page with the event ID
                         navigate(`/home`);
                       }}
                       disabled={!response?.id}
@@ -941,7 +968,6 @@ const Private = ({ onPublic }) => {
                       bgcolor="bg-[#011F0F]"
                       onClick={() => {
                         setCreatingEventPopup(false);
-                        // Navigate to share page or home with share functionality
                         navigate(`/home`);
                       }}
                     />
