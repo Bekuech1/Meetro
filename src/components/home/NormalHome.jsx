@@ -3,7 +3,7 @@ import MyEvent from "./MyEvent";
 import AttendedEvents from "./AttendedEvents";
 
 const NormalHome = () => {
-  const [activeTab, setActiveTab] = useState("going");
+  const [activeTab, setActiveTab] = useState("created");
 
   const homeBtn = [
     { name: "created", onClick: () => setActiveTab("created") },

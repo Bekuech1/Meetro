@@ -18,9 +18,17 @@ const useEventStore = create(persist((set, get) => ({
       shouldRefetch: false,
 
   setShouldRefetch: (value) => set({ shouldRefetch: value }),
+  setEvents: (events) => set({ myEvents: events }),
 
   fetchEvents: async () => {
-    if (get().myEvents.length > 0 && !get().shouldRefetch) return get().myEvents;
+    const { myEvents, shouldRefetch } = get();
+
+        // only skip if we *already have events in memory* and no refetch
+        if (myEvents.length > 0 && !shouldRefetch) {
+          return myEvents;
+        }
+
+
 
     set({ loadingMyEvents: true });
 
@@ -44,7 +52,10 @@ const useEventStore = create(persist((set, get) => ({
   },
 
   fetchAttendedEvents: async () => {
-    if (get().attendedEvents.length > 0 && !get().shouldRefetch) return get().attendedEvents;
+   const { attendedEvents, shouldRefetch } = get();
+        if (attendedEvents.length > 0 && !shouldRefetch) {
+          return attendedEvents;
+        }
 
     set({ loadingAttendedEvents: true });
 

@@ -3,15 +3,19 @@ import useEventStore from "@/stores/eventStore";
 import { useEffect, useState } from "react";
 import EventModal from "./EventModal";
 import SiteBtn from "../Layout-conponents/SiteBtn";
+import { getProfilePicture } from "../Profile/PersonalProfile";
+import { LoadingSpinner } from "@/components/create-event/Private";
+
 
 export default function MyEvent() {
   const navigate = useNavigate();
-  const { fetchEvents, shouldRefetch } = useEventStore();
+  const { fetchEvents } = useEventStore();
 
   const [groupedEvents, setGroupedEvents] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
-  const myEventsTotal = useEventStore((state) => state.myEventsTotal);
+  // const myEventsTotal = useEventStore((state) => state.myEventsTotal);
+  const profilePic = getProfilePicture();
   // const hasEvents = myEventsTotal > 0;
 
   const groupEventsByDate = (eventsArray) => {
@@ -53,15 +57,13 @@ export default function MyEvent() {
   };
 
   useEffect(() => {
-    fetchEvents().then((res) => {
-      if (res) {
-        console.log("Fetched events details:", res);
-        const grouped = groupEventsByDate(res);
-        setGroupedEvents(grouped);
-        console.log(shouldRefetch)
-      }
-    });
-  }, [shouldRefetch]);
+    (async () => {
+      const res = await fetchEvents();
+      console.log("Fetched events:", res);
+      const grouped = groupEventsByDate(res || []);
+      setGroupedEvents(grouped);
+    })();
+  }, []);
 
   const openModal = (id) => {
     setSelectedEventId(id);
@@ -74,13 +76,27 @@ export default function MyEvent() {
   };
 
   const loadingMyEvents = useEventStore((state) => state.loadingMyEvents);
-  const MyEvent = useEventStore((state) => state.myEventsTotal);
-  console.log(MyEvent)
+  const myEvents = useEventStore((state) => state.myEvents);
+  // const myEvent = useEventStore((state) => state.myEventsTotal);
+  // console.log(MyEvent);
 
-  if (!loadingMyEvents && MyEvent === 0) {
+  if (loadingMyEvents) {
+    return (
+      <div className="h-full w-full mt-5 flex flex-col gap-2 justify-center items-center text-center">
+        <LoadingSpinner size={32} />
+
+        {/* <h1 className="text-[#4A3A74] h-fit sm:text-[36px] sm:font-[400] sm:leading-[100%] text-[24px] font-[400] leading-[32px]">
+           Your events are loading....</h1> */}
+      </div>
+    );
+  }
+
+  // Case 1: No events ever created
+  if (myEvents.length === 0) {
     return (
       <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
-        <p className="mb-4">You haven’t created any events yet.</p>
+        <p className="mb-4">You haven't created any events yet.</p>
+
         <SiteBtn
           name="Create a new event"
           colorPadding="bg-[#AEFC40] py-2 px-6 mt-4"
@@ -90,12 +106,26 @@ export default function MyEvent() {
     );
   }
 
-
+  // Case 2: All events are past (groupedEvents is empty)
+  if (Object.keys(groupedEvents).length === 0) {
+    return (
+      <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
+        <p className="mb-4">
+          You have no upcoming events. All your events are in the past.
+        </p>
+        <SiteBtn
+          name="Create a new event"
+          colorPadding="bg-[#AEFC40] py-2 px-6 mt-4"
+          onclick={() => navigate("/create-event")}
+        />
+      </section>
+    );
+  }
 
   return (
     <div>
       {/* No events message */}
-      {Object.keys(groupedEvents).length === 0 && (
+      {/* {Object.keys(groupedEvents).length === 0 && (
         <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
           <p className="mb-4">
             You have no upcoming events. All your events are in the past.
@@ -106,9 +136,7 @@ export default function MyEvent() {
             onclick={() => navigate("/create-event")}
           />
         </section>
-      )}
-
-      
+      )} */}
 
       {/* Events by grouped date */}
       {Object.entries(groupedEvents).map(([date, events]) => (
@@ -160,12 +188,9 @@ export default function MyEvent() {
                   <h6 className="text-[#8A9191] text-xs font-bold capitalize satoshi">
                     host
                   </h6>
-                  <img
-                    src="/tiny-profile.png"
-                    className="w-4 h-4 rounded-full"
-                  />
+                  <img src={profilePic} className="w-4 h-4 rounded-full" />
                   <h6 className="text-black text-xs font-medium capitalize">
-                    {event.creator?.firstName}
+                    {event.creator?.firstName} {event.creator?.lastName}
                   </h6>
                 </li>
 
@@ -191,7 +216,8 @@ export default function MyEvent() {
                     going
                   </h6>
                   <img
-                    src="/tiny-profile.png"
+                    // src="/tiny-profile.png"
+                    src={profilePic}
                     className="w-4 h-4 rounded-full"
                   />
                   <h6 className="text-black text-xs font-medium">

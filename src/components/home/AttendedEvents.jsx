@@ -3,15 +3,21 @@ import useEventStore from "@/stores/eventStore";
 import { useEffect, useState } from "react";
 import EventModal from "./EventModal";
 import SiteBtn from "../Layout-conponents/SiteBtn";
+import { LoadingSpinner } from "@/components/create-event/Private";
+import { getProfilePicture } from "../Profile/PersonalProfile";
 
 export default function AttendedEvents() {
   const navigate = useNavigate();
-  const { fetchAttendedEvents, shouldRefetch } = useEventStore();
-  const attendedEventsTotal = useEventStore((state) => state.attendedEventsTotal);
+  const { fetchAttendedEvents } = useEventStore();
+  const loadingAttendedEvents = useEventStore(
+    (state) => state.loadingAttendedEvents
+  );
+  const attendedEvents = useEventStore((state) => state.attendedEvents);
 
   const [groupedEvents, setGroupedEvents] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
+  const profilePic = getProfilePicture();
 
   const groupEventsByDate = (eventsArray) => {
     const grouped = {};
@@ -52,14 +58,21 @@ export default function AttendedEvents() {
   };
 
   useEffect(() => {
-    fetchAttendedEvents().then((res) => {
-      if (res) {
-        console.log("Fetched attended events details:", res);
-        const grouped = groupEventsByDate(res);
-        setGroupedEvents(grouped);
-      }
-    });
-  }, [shouldRefetch]);
+    (async () => {
+      const res = await fetchAttendedEvents();
+      console.log("Fetched attended events:", res);
+      const grouped = groupEventsByDate(res || []);
+      setGroupedEvents(grouped);
+    })();
+
+    // fetchAttendedEvents().then((res) => {
+    //   if (res) {
+    //     // console.log("Fetched attended events details:", res);
+    //     const grouped = groupEventsByDate(res);
+    //     setGroupedEvents(grouped);
+    //   }
+    // });
+  }, []);
 
   const openModal = (id) => {
     setSelectedEventId(id);
@@ -71,16 +84,41 @@ export default function AttendedEvents() {
     setSelectedEventId(null);
   };
 
+  if (loadingAttendedEvents) {
+    return (
+      <div className="h-full w-full flex flex-col gap-2 justify-center items-center text-center">
+        <LoadingSpinner size={32} />
+
+        {/* <h1 className="text-[#4A3A74] h-fit sm:text-[36px] sm:font-[400] sm:leading-[100%] text-[24px] font-[400] leading-[32px]">
+           Your events are loading....</h1> */}
+      </div>
+    );
+  }
+
+  if (!loadingAttendedEvents && attendedEvents.length === 0) {
+    return (
+      <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
+        <p className="mb-4">You haven't been invited to any events yet.</p>
+        <SiteBtn
+          name="Create event"
+          colorPadding="bg-[#AEFC40] py-2 px-6 mt-4"
+          onclick={() => navigate("/create-event")}
+        />
+      </section>
+    );
+  }
+
   return (
     <div>
-      {/* No events message */}
-      {Object.keys(groupedEvents).length === 0 || attendedEventsTotal === 0 && (
+      {/* when there's no new events */}
+      {Object.keys(groupedEvents).length === 0 && (
         <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
           <p className="mb-4">
-            You have no upcoming events. All your events are in the past.
+            You have no upcoming events. Get invited to new events or create
+            your own new event.
           </p>
           <SiteBtn
-            name="Create a new event"
+            name="Create event"
             colorPadding="bg-[#AEFC40] py-2 px-6 mt-4"
             onclick={() => navigate("/create-event")}
           />
@@ -138,7 +176,8 @@ export default function AttendedEvents() {
                     host
                   </h6>
                   <img
-                    src="/tiny-profile.png"
+                    // src="/tiny-profile.png"
+                    src={profilePic}
                     className="w-4 h-4 rounded-full"
                   />
                   <h6 className="text-black text-xs font-medium capitalize">
@@ -168,7 +207,8 @@ export default function AttendedEvents() {
                     going
                   </h6>
                   <img
-                    src="/tiny-profile.png"
+                    // src="/tiny-profile.png"
+                    src={profilePic}
                     className="w-4 h-4 rounded-full"
                   />
                   <h6 className="text-black text-xs font-medium">
@@ -177,24 +217,24 @@ export default function AttendedEvents() {
                 </li>
 
                 {/* Manage Btn Mobile */}
-                <li className="sm:hidden">
+                {/* <li className="sm:hidden">
                   <SiteBtn
                     name="manage"
                     colorPadding="bg-[#AEFC40] py-2 px-4 w-full mt-[2px]"
                     onclick={() => navigate(`/event/${event.id}`)}
                   />
-                </li>
+                </li> */}
               </ul>
 
               <section className="sm:flex hidden flex-col justify-between text-end h-[100px]">
-                <h6 className="text-[#8A9191] text-[12px] font-[500]">
+                <h6 className="text-[#8A9191] text-[12px] font-[500] text-nowrap">
                   {timeAgo(event?.respondedAt)}
                 </h6>
-                <SiteBtn
+                {/* <SiteBtn
                   name="manage"
                   colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
                   onclick={() => navigate(`/event/${event.id}`)}
-                />
+                /> */}
               </section>
             </section>
           ))}
