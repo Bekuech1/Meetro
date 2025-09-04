@@ -17,19 +17,23 @@ const NormalHome = () => {
           <h1 className="paytone capitalize text-[#055962] sm:text-[30px] text-[20px] font-[400]">
             my events
           </h1>
-          <div className="bg-white text-[12px] p-0.5 font-bold rounded-[20px] flex ">
-            {homeBtn.map((btn) => (
-              <button
-                key={btn.name}
-                onClick={btn.onClick}
-                className={`satoshi py-1 pr-2.5 pl-2 rounded-[24px] text-[#010E1F] ${
-                  activeTab === btn.name ? "bg-[#BEFD66] " : ""
-                }`}
-              >
-                {btn.name}
-              </button>
-            ))}
-          </div>
+          <div
+              style={{
+                boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
+                backdropFilter: "blur(16px)",
+              }}
+              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-fit"
+            >
+              {homeBtn.map((btn) => (
+              <div key={btn.name}
+                onClick={btn.onClick} 
+                className={`items-center py-2 px-[10px] rounded-3xl cursor-pointer w-fit text-center ${activeTab === btn.name ? "bg-[#BEFD66]" : "bg-white"}`}>
+                <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
+                  {btn.name}
+                </h5>
+              </div>
+              ))}
+            </div>
         </section>
 
         <div>{activeTab === "created" ? <MyEvent /> : <AttendedEvents />}</div>

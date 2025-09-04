@@ -638,12 +638,12 @@ const Private = ({ onPublic }) => {
             /> ) : (<div className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] bg-white/60 flex items-center justify-center"><LoadingSpinner size={40} color="#61B42D" /></div>)
             }
             
-            { !isImageLoading && <div
+            {/* { !isImageLoading && <div
               className="absolute cursor-pointer top-[275px] left-[275px] sm:top-[303px] sm:left-[302px] rounded-full flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors"
               onClick={openImageModal}
             >
               <img src="/image.svg" className="z-10" alt="" />
-            </div> }
+            </div> } */}
           </div>
           
           <div className="flex justify-center p-2 items-start bg-[#F3F0FB]">
@@ -656,7 +656,7 @@ const Private = ({ onPublic }) => {
         {/* right section */}
         <section className="gap-6 items-start flex flex-col w-full lg:w-[553px] h-fit mx-auto">
           <div className="grid gap-2 w-full">
-            <div
+          <div
               style={{
                 boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
                 backdropFilter: "blur(16px)",

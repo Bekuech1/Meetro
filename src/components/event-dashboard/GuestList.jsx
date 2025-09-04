@@ -13,7 +13,6 @@ export default function GuestList({ guests }) {
   return (
     <div className="flex flex-col gap-6 w-full">
       {/* two btns at the top */}
-      <div></div>
 
       {/* notice to event creators */}
       {/* <div className="bg-[#F3F0FB] border border-[#D9D1F1] rounded-2xl p-2 flex flex-col gap-2 text-[#7A60BF] items-center justify-center">
@@ -24,17 +23,13 @@ export default function GuestList({ guests }) {
         </p>
       </div> */}
 
-      <div></div>
-
-      <div></div>
-
       {/* guest list display  */}
       <div className="flex flex-col gap-4">
         <div>
           <h2 className="text-sm text-[#001010] font-bold satoshi">
             Guest List
           </h2>
-          <p className="text-[12px] font-medium text-[#8A9191]">
+          <p className="text-[12px] font-medium text-[#8A9191] satoshi">
             Your Event, Your Guests, Stay in the Know!
           </p>
         </div>
@@ -45,14 +40,14 @@ export default function GuestList({ guests }) {
             <p className="text-[#001010] text-lg font-bold satoshi">
               No guests yet, let's change that!
             </p>
-            <p className="text-[#8A9191] text-[16px] font-medium text-center">
+            <p className="text-[#8A9191] text-[16px] font-medium text-center satoshi">
               Invite your friends or share the event link to start filling up
               this list.
             </p>
           </div>
         ) : (
           // table to render guestlist
-          <Table className="bg-[#FFFFFE80] rounded-t-2xl border border-[#FFFFFF] overflow-clip">
+          <Table className="bg-[#FFFFFE80] rounded-t-2xl border border-[#FFFFFF] overflow-clip satoshi">
             <TableHeader>
               <TableRow className={"border-b border-[#FFFFFF] rounded-t-2xl"}>
                 <TableHead className={"text-[#8A9191] text-[12px] font-medium"}>
