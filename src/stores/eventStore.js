@@ -1,38 +1,68 @@
 import { create } from "zustand";
 import API from "@/lib/axios";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-const useEventStore = create((set, get) => ({
-  events: [],
-  eventDetails: {},
-  loading: false,
-  error: null,
-  totalEvents: 0,
-  totalAttendees: 0,
-  shouldRefetch: false,
+const useEventStore = create(persist((set, get) => ({
+ myEvents: [],
+      attendedEvents: [],
+      eventDetails: {},
+
+      loadingMyEvents: false,
+      loadingAttendedEvents: false,
+      loadingEventDetails: false,
+
+      error: null,
+      myEventsTotal: 0,
+      totalAttendees: 0,
+      attendedEventsTotal: 0,
+      shouldRefetch: false,
 
   setShouldRefetch: (value) => set({ shouldRefetch: value }),
 
   fetchEvents: async () => {
-    if (get().events.length > 0 && !get().shouldRefetch) return get().events;
+    if (get().myEvents.length > 0 && !get().shouldRefetch) return get().myEvents;
 
-    set({ loading: true });
+    set({ loadingMyEvents: true });
 
     try {
       const res = await API.get("/my-events");
       const { events = [], totalEvents = 0, totalAttendees = 0 } = res.data;
 
       set({
-        events,
-        totalEvents,
+        myEvents: events,
+        myEventsTotal: totalEvents,
         totalAttendees,
-        loading: false,
+        loadingMyEvents: false,
         error: null,
         shouldRefetch: false,
       });
 
       return events;
     } catch (err) {
-      set({ loading: false, error: err.message });
+      set({ myEvents: [], myEventsTotal: 0, totalAttendees: 0, loadingMyEvents: false, error: err.message });
+    }
+  },
+
+  fetchAttendedEvents: async () => {
+    if (get().attendedEvents.length > 0 && !get().shouldRefetch) return get().attendedEvents;
+
+    set({ loadingAttendedEvents: true });
+
+    try {
+      const res = await API.get("/attended-events");
+      const { events = [], total = 0 } = res.data;
+
+      set({
+        attendedEvents: events,
+        attendedEventsTotal: total,
+        loadingAttendedEvents: false,
+        error: null,
+        // shouldRefetch: false,
+      });
+
+      return events;
+    } catch (err) {
+      set({attendedEvents: [], attendedEventsTotal: 0, loadingAttendedEvents: false, error: err.message });
     }
   },
 
@@ -56,6 +86,17 @@ const useEventStore = create((set, get) => ({
       console.error("Error fetching event by ID:", err);
     }
   },
+}), {
+  name: "event-store",
+  storage: createJSONStorage(() => localStorage),
+  partialize: (state) => ({
+    myEvents: state.myEvents,
+    attendedEvents: state.attendedEvents,
+    eventDetails: state.eventDetails,
+    myEventsTotal: state.myEventsTotal,
+    totalAttendees: state.totalAttendees,
+    attendedEventsTotal: state.attendedEventsTotal,
+  }),
 }));
 
 export default useEventStore;

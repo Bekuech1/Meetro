@@ -5,15 +5,19 @@ import useEventStore from "@/stores/eventStore";
 import { LoadingSpinner } from "@/components/create-event/Private";
 
 export default function Home() {
-  const events = useEventStore((state) => state.events);
-  const loading = useEventStore((state) => state.loading);
+  // const myEventsTotal = useEventStore((state) => state.myEventsTotal);
+  // const attendedEventsTotal = useEventStore((state) => state.attendedEventsTotal);
+  const loadingMyEvents = useEventStore((state) => state.loadingMyEvents);
+  const loadingAttendedEvents = useEventStore((state) => state.loadingAttendedEvents);
   const fetchEvents = useEventStore((state) => state.fetchEvents);
+  const fetchAttendedEvents = useEventStore((state) => state.fetchAttendedEvents);
 
   useEffect(() => {
     fetchEvents();
+    fetchAttendedEvents();
   }, []); // only once on mount
 
-  if (loading) {
+  if (loadingMyEvents || loadingAttendedEvents) {
     return (
       <main className="bg-[#F0F0F0] flex flex-col px-20 py-10 gap-[43px] h-[90vh] max-h-[760px] relative overflow-hidden">
         <div className="h-full w-full flex flex-col gap-2 justify-center items-center text-center">
@@ -23,21 +27,23 @@ export default function Home() {
           </h1> */}
         </div>
 
-        <div class=" absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
+        <div className=" absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
           {/* <!-- Left Ellipse --> */}
-          <div class="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
+          <div className="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
 
           {/* <!-- Middle Ellipse --> */}
-          <div class="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
+          <div className="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
 
           {/* <!-- Right Ellipse --> */}
-          <div class="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
+          <div className="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
         </div>
       </main>
     );
   }
 
-  const hasEvents = Object.keys(events).length > 0;
+  // const hasEvents = myEventsTotal > 0;
+  // const hasAttendedEvents = attendedEventsTotal > 0;
 
-  return <div>{hasEvents ? <NormalHome /> : <EmptyHome />}</div>;
+  // return <div>{hasEvents || hasAttendedEvents ? <NormalHome /> : <EmptyHome />}</div>;
+  return <NormalHome />
 }

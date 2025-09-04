@@ -18,22 +18,44 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
 
-  const handleImageSelect = (imageSrc) => {
+  const handleImageSelect = async (imageSrc) => {
     // Close modal immediately first
     onClose();
     
-    setSelectedImage(imageSrc);
-    setUploadedImage(null); // Clear uploaded image if template is selected
+  const handleImageSelect = async (imageSrc) => {
+    try {
+      // Fetch the static image file from your public folder
+      const response = await fetch(imageSrc);
+      const blob = await response.blob();
 
-    // Pass data back to parent after closing modal
-    if (onSave) {
-      onSave({
-        type: "template",
-        imageSrc: imageSrc,
-        imageUrl: imageSrc,
+      // Wrap the blob in a File object
+      const file = new File([blob], `template-${Date.now()}.jpg`, {
+        type: blob.type || "image/jpeg",
       });
+
+      // Use your existing upload handler
+      const result = await handleImageUpload(file);
+
+      if (result.success) {
+        // Pass back uploaded info (same as uploaded files)
+        if (onSave) {
+          onSave({
+            type: "template",
+            file,
+            imageUrl: result.imageUrl, // URL from your storage
+            fileName: file.name,
+            imageKey: result.imageKey, // keep the key for backend
+          });
+        }
+        onClose();
+      } else {
+        console.error("Template upload failed:", result.error);
+      }
+    } catch (error) {
+      console.error("Error uploading template image:", error);
     }
   };
+
 
   const handleLocalFileRead = (event) => {
     const file = event.target.files[0];
