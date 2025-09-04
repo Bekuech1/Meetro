@@ -4,7 +4,7 @@ import AttendedEvents from "./AttendedEvents";
 
 const NormalHome = () => {
   const [activeTab, setActiveTab] = useState("going");
-
+  
   const homeBtn = [
     { name: "created", onClick: () => setActiveTab("created") },
     { name: "going", onClick: () => setActiveTab("going") },
@@ -17,7 +17,6 @@ const NormalHome = () => {
           <h1 className="paytone capitalize text-[#055962] sm:text-[30px] text-[20px] font-[400]">
             my events
           </h1>
-
           <div className="bg-white text-[12px] p-0.5 font-bold rounded-[20px] flex ">
             {homeBtn.map((btn) => (
               <button

@@ -293,18 +293,18 @@ const Header = () => {
           {/* signout confirmation modal */}
           {logoutModal && (
             <div className="fixed inset-0 w-full flex items-end md:items-center justify-center bg-[#00000080]">
-              <div className="rounded-t-3xl md:rounded-3xl overflow-clip">
+              <div className="rounded-t-3xl md:rounded-3xl overflow-clip z-50">
                 <div className="bg-[#FFFFFFE5] border-white backdrop-blur-[32px] p-6 pt-12 flex flex-col items-center justify-center gap-12">
                   <img
                     src="/signout-img.png"
                     alt="img"
                     className="w-[166px] h-[147px]"
                   />
-                  <div className="md:w-[450px] text-center">
+                  <div className="md:w-[450px] text-center grid gap-2">
                     <p className="paytone text-2xl">
                       Are you sure you want to sign out?
                     </p>
-                    <p className="text-sm font-medium text-[#8A9191]">
+                    <p className="text-sm font-medium text-[#8A9191] satoshi">
                       You'll be logged out of your Meetro account and returned
                       to the login screen.
                     </p>

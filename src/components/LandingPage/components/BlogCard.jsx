@@ -12,7 +12,7 @@ const BlogCard = ({ post, onClick, mobile }) => {
       <img
         src={post.image || "/blog-placeholder.png"}
         alt="Blog Post"
-        className="h-[326px] w-full rounded-4xl"
+        className="h-auto w-full rounded-4xl"
       />
       <div className="grid gap-4 w-full h-fit text-left satoshi">
         <div className="grid gap-2 w-full h-fit">
