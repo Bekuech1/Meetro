@@ -200,7 +200,7 @@ function Signup2() {
           </form>
         </div>
         <OnboardingButton {...button} />
-        <Text path={"/signin"} />
+        <Text path={"/login"} />
       </Layout>
       {showOptions && (
         <ShowOption

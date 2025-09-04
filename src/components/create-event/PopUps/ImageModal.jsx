@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Sample image sources - replace with your actual image URLs
 const imageSources = [
@@ -18,8 +18,12 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
 
+
   const handleImageSelect = async (imageSrc) => {
     try {
+      // Close modal immediately first
+      onClose();
+      
       // Fetch the static image file from your public folder
       const response = await fetch(imageSrc);
       const blob = await response.blob();
@@ -43,7 +47,6 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
             imageKey: result.imageKey, // keep the key for backend
           });
         }
-        onClose();
       } else {
         console.error("Template upload failed:", result.error);
       }
@@ -52,34 +55,12 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
     }
   };
 
-
-  const handleLocalFileRead = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const uploadedImageUrl = e.target.result;
-        setUploadedImage(uploadedImageUrl);
-        setSelectedImage(null); // Clear template selection if image is uploaded
-
-        // Pass data back to parent
-        if (onSave) {
-          onSave({
-            type: "upload",
-            file: file,
-            imageUrl: uploadedImageUrl,
-            fileName: file.name,
-          });
-        }
-        onClose(); // Close modal after upload
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleImageUploadLocal = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
+
+    // Close modal immediately when file upload starts
+    onClose();
 
     try {
       const result = await handleImageUpload(file);
@@ -95,9 +76,9 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
             file: file,
             imageUrl: result.imageUrl,
             fileName: file.name,
+            imageKey: result.imageKey, // Add imageKey for consistency
           });
         }
-        onClose(); // Close modal after upload
       } else {
         console.error("Image upload failed:", result.error);
       }
@@ -107,7 +88,7 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
   };
 
   return (
-    <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
+    <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-black/50 backdrop-blur-[4px]">
       <div className="size-fit max-h-[85vh] flex flex-col justify-center items-center relative rounded-3xl bg-white/90 md:p-8 p-4 md:gap-6 gap-4">
         <div className="w-full satoshi">
           <h5 className="capitalize text-black md:text-[18px] text-sm font-bold">
@@ -118,7 +99,7 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
           </p>
         </div>
 
-        <div className="grid  grid-cols-3 lg:grid-cols-4 xl:gap-4 gap-x-3 gap-y-2 h-fit">
+        <div className="grid grid-cols-3 lg:grid-cols-4 xl:gap-4 gap-x-3 gap-y-2 h-fit">
           {/* Upload Section */}
           <div className="xl:size-[248px] md:size-[180px] size-[135px] rounded-2xl flex items-center justify-center bg-[#E6E9E7] shadow-md cursor-pointer relative">
             <label className="flex flex-col justify-center items-center gap-4 size-fit cursor-pointer">
@@ -141,8 +122,9 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
           {imageSources.map((src, index) => (
             <div
               key={index}
-              className={`image-wrapper rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer`}
-              onClick={() => handleImageSelect(src)}>
+              className="image-wrapper rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer"
+              onClick={() => handleImageSelect(src)}
+            >
               <img
                 src={src}
                 alt={`Template ${index + 1}`}
@@ -156,7 +138,7 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
         <img
           src="/closePopup.svg"
           alt="close popup"
-          className="h-12 w-12 absolute md:-top-10 -top-14 md:left-[99%] left-[90%] cursor-pointer"
+          className="h-12 w-12 absolute md:-top-10 -top-14 md:left-[99%] left-[90%] rounded-full cursor-pointer"
           onClick={onClose}
         />
       </div>

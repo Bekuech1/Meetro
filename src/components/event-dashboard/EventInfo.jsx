@@ -101,8 +101,7 @@ export default function EventInfo({ eventId }) {
     return (
       <div className="text-center py-10 w-full md:w-[950px] h-full flex flex-col items-center justify-center gap-3">
         {/* <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div> */}
-        <LoadingSpinner size={32} />
-        <p>Loading event details...</p>
+        <LoadingSpinner size={40} />
       </div>
     );
   }
@@ -462,14 +461,64 @@ export default function EventInfo({ eventId }) {
 function calculateTimeRemaining(eventDate) {
   const now = new Date();
   const eventTime = new Date(eventDate);
+  
+  // Handle invalid date
+  if (isNaN(eventTime)) return "Invalid date";
+  
   const diff = eventTime - now;
 
   if (diff <= 0) return "Event has started";
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-  return `${days}d ${hours}h`;
+  // More granular display logic
+  if (days > 0) {
+    return hours > 0 ? `${days}d ${hours}h` : `${days}d`;
+  } else if (hours > 0) {
+    return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+  } else if (minutes > 0) {
+    return `${minutes}m`;
+  } else {
+    return "Starting soon";
+  }
+}
+
+// Alternative version with more detailed formatting options
+function calculateTimeRemainingDetailed(eventDate, options = {}) {
+  const {
+    showMinutes = false,
+    shortFormat = true,
+    includeSeconds = false
+  } = options;
+
+  const now = new Date();
+  const eventTime = new Date(eventDate);
+  
+  if (isNaN(eventTime)) return "Invalid date";
+  
+  const diff = eventTime - now;
+
+  if (diff <= 0) return "Event has started";
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+  const units = shortFormat 
+    ? { d: 'days', h: 'hours', m: 'minutes', s: 'seconds' }
+    : { d: 'd', h: 'h', m: 'm', s: 's' };
+
+  let result = [];
+
+  if (days > 0) result.push(`${days}${units.d}`);
+  if (hours > 0) result.push(`${hours}${units.h}`);
+  if (showMinutes && minutes > 0) result.push(`${minutes}${units.m}`);
+  if (includeSeconds && seconds > 0) result.push(`${seconds}${units.s}`);
+
+  return result.length > 0 ? result.join(' ') : "Starting soon";
 }
 
 // helper function to get attendees initials

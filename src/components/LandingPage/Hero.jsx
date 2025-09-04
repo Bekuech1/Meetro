@@ -158,7 +158,7 @@ const AnimatedCard = React.memo(({
       initial={animation.initial}
       animate={animation.animate}
       transition={animation.transition}
-      className={`backdrop-blur-2xl shadow-2xl bg-cover bg-center flex flex-col justify-between ${customClass} border-8 border-white rounded-4xl will-change-transform`}
+      className={`backdrop-blur-2xl shadow-2xl bg-center flex flex-col justify-between ${customClass} border-8 border-white rounded-4xl will-change-transform`}
       style={{ 
         backgroundImage: `url(${bgImage})`,
         // GPU acceleration hints
@@ -188,8 +188,6 @@ const AnimatedCard = React.memo(({
         </div>
       </div>
       <div className="relative flex flex-col items-center justify-between w-full h-fit p-4 gap-2 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 blur-[1px] rounded-3xl"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-transparent rounded-3xl"></div>
 
         <div className="relative z-10">
           <h6 className={`font-[400] text-base leading-[100%] capitalize ${font}`}>
@@ -265,7 +263,7 @@ const Hero = () => {
   // Memoized cards data to prevent recreation
   const cards = useMemo(() => [
     {
-      bgImage: "/hero-img1.png",
+      bgImage: "/hero-abuja.png",
       location: "Abuja",
       attendees: "+ 200",
       title: "Mad Love and Chill",
@@ -274,7 +272,7 @@ const Hero = () => {
       font: "nico-moji",
     },
     {
-      bgImage: "/hero-img5.png",
+      bgImage: "/hero-enugu.png",
       location: "enugu",
       attendees: "+ 150",
       title: "wedding ceremony",
@@ -284,7 +282,7 @@ const Hero = () => {
       font: "times-new-roman",
     },
     {
-      bgImage: "/hero-img4.png",
+      bgImage: "/hero-kano.png",
       location: "Kano",
       attendees: "+ 100",
       title: "tech convention",
@@ -293,7 +291,7 @@ const Hero = () => {
       font: "satoshi",
     },
     {
-      bgImage: "/hero-img3.png",
+      bgImage: "/hero-enugu-r.png",
       location: "Enugu",
       attendees: "+ 50",
       title: "swim & chill with friends",
@@ -302,7 +300,7 @@ const Hero = () => {
       font: "urbanist",
     },
     {
-      bgImage: "/hero-img2.png",
+      bgImage: "/hero-ph.png",
       location: "Port Harcourt",
       attendees: "+ 300",
       title: "24th Birthday Hangout",

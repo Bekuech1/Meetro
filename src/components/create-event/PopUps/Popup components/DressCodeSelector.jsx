@@ -63,9 +63,9 @@ const DressCodeSelector = ({ value, onChange }) => {
               </div>
             </div>
             <div className="grid">
-              <span className="text-[#8A9191] font-medium text-sm">
-                {option.label}
-              </span>
+            <span className={`${value === option.id ? 'text-black' : 'text-[#8A9191]'} font-medium text-sm`}>
+  {option.label}
+</span>
             </div>
             <input
               type="radio"
@@ -100,7 +100,7 @@ const DressCodeSelector = ({ value, onChange }) => {
               onChange={handleCustomInput}
               onFocus={() => !customEnabled && handleOptionChange("custom")}
               placeholder="Custom (if you have a specific dress code in mind)"
-              className="w-full bg-transparent rounded-lg font-medium text-sm placeholder:text-[#8A9191] text-[#8A9191] focus:outline-none"
+              className="w-full bg-transparent rounded-lg font-medium text-sm placeholder:text-[#8A9191] text-black focus:outline-none"
             />
           </div>
           <input

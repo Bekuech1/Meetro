@@ -19,6 +19,21 @@ export default function AttendedEvents() {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const profilePic = getProfilePicture();
 
+  useEffect(() => {
+    if (isModalOpen) {
+      // Disable scroll
+      document.body.style.overflow = "hidden";
+    } else {
+      // Re-enable scroll
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup function to reset overflow when component unmounts
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isModalOpen]);
+
   const groupEventsByDate = (eventsArray) => {
     const grouped = {};
     const today = new Date();

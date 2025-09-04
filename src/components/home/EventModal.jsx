@@ -4,7 +4,7 @@ import EventInfo from "../event-dashboard/EventInfo";
 const EventModal = ({ eventId, closeModal }) => {
   return (
     <>
-      <div className="fixed inset-0 h-full lg:h-screen lg:flex lg:items-center lg:justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px] hidden ">
+      <div className="fixed inset-0 h-full lg:h-screen lg:flex lg:items-center lg:justify-center bg-[#00000080]/50 backdrop-blur-[4px] hidden z-50">
         <div className="flex flex-col-reverse gap-2 lg:w-fit w-full h-fit">
           <div className="lg:mx-14 mx-auto w-fit lg:h-[85vh] lg:max-h-[670px] h-full p-8 rounded-3xl lg:flex grid gap-8 bg-[#E8E8E8] text-center lg:overflow-hidden">
             <EventInfo eventId={eventId} />

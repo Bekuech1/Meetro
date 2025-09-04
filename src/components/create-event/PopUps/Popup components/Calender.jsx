@@ -65,7 +65,7 @@ const Calender = ({ value, onChange, label }) => {
         month: "short",
         day: "numeric",
       })
-    : "Pick a date";
+    : "";
 
   const daysInMonth = getDaysInMonth(currentMonth);
 

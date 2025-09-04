@@ -44,7 +44,7 @@ function Location() {
             </label>
             <div className="py-1.5 rounded-2xl w-[330px] relative">
               <img
-                src={"location.svg"}
+                src={"/location.svg"}
                 alt={`location-image`}
                 className=" absolute top-3 h-6 rounded-[60px] left-1.5 bg-white z-10"
               />

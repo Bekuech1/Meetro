@@ -55,7 +55,7 @@ function LoginForm() {
       id: "email",
       placeholder: "e.g. newman@gmail.com",
       label: "Drop your email here",
-      src: "sms.svg",
+      src: "/sms.svg",
       type: "email",
       value: formData?.email ?? "",
       handleChange: handleChange,
@@ -65,7 +65,7 @@ function LoginForm() {
       id: "password",
       placeholder: "your password",
       label: "Enter your password",
-      src: "lock.svg",
+      src: "/lock.svg",
       type: "password",
       value: formData?.password ?? "",
       handleChange: handleChange,
@@ -158,7 +158,7 @@ function LoginForm() {
             New to Meetro?
             <span
               className="text-purple-400 satoshi cursor-pointer"
-              onClick={() => navigate("/sign")}
+              onClick={() => navigate("/register")}
             >
               {" "}
               Sign up here
