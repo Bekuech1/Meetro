@@ -12,6 +12,7 @@ import SiteBtn from "../Layout-conponents/SiteBtn";
 import ShareEvent from "./ShareEvent";
 import LoginModal from "../Onboarding/LoginModal";
 import { LoadingSpinner } from "../create-event/Private";
+import { getProfilePicture } from "../Profile/PersonalProfile";
 
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -24,6 +25,7 @@ export default function EventInfo({ eventId }) {
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
   const [loadingResponseType, setLoadingResponseType] = useState(null);
+  const profilePic = getProfilePicture();
 
   // const {eventId} = useParams()
 
@@ -144,7 +146,8 @@ export default function EventInfo({ eventId }) {
               {eventDetails.creator?.M && (
                 <>
                   <img
-                    src="/tiny-profile.png"
+                    // src="/tiny-profile.png"
+                    src={profilePic}
                     alt="Host"
                     className="w-6 h-6 rounded-full border border-white"
                   />
@@ -402,38 +405,41 @@ export default function EventInfo({ eventId }) {
         </div>
 
         {/* Attendees Section */}
-        {eventDetails.attendees?.L && eventDetails.attendees.L?.M?.responseType === "yes" && eventDetails.attendees.L.length > 0 && (
-          <div className="grid gap-2 w-full h-fit">
-            <ModalText
-              img="/crown.svg"
-              text={`going (${eventDetails.attendees.L.length})`}
-            />
-            <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
-              {eventDetails.attendees.L.map((attendee, index) => (
-                <div
-                  key={index}
-                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-[#FFFFFE80]"
-                >
-                  {/* <img
-                    src="/large-profile.jpg"
-                    alt="Attendee"
-                    className="size-[66px] rounded-full"
-                  /> */}
+        {eventDetails.attendees?.L &&
+          eventDetails.attendees?.L?.M?.responseType === "yes" &&
+          eventDetails.attendees.L.length > 0 && (
+            <div className="grid gap-2 w-full h-fit">
+              <ModalText
+                img="/crown.svg"
+                text={`going (${eventDetails.attendees.L.length})`}
+              />
+              <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
+                {eventDetails.attendees.L.map((attendee, index) => (
+                  <div
+                    key={index}
+                    className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-[#FFFFFE80]"
+                  >
+                    <img
+                      // src="/large-profile.jpg"
+                      src={profilePic}
+                      alt="Attendee"
+                      className="size-[66px] rounded-full"
+                    />
 
-                  <div className="size-[66px] rounded-full bg-[#077D8A] flex items-center justify-center">
-                    <p className="text-sm font-[700] leading-[18px] text-white capitalize">
-                      {getInitials(attendee.M?.name?.S)}
-                    </p>
+                    {/* <div className="size-[66px] rounded-full bg-[#077D8A] flex items-center justify-center">
+                      <p className="text-sm font-[700] leading-[18px] text-white capitalize">
+                        {getInitials(attendee.M?.name?.S)}
+                      </p>
+                    </div> */}
+
+                    <h6 className="h-fit w-full min-w-[120px] text-center capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                      {attendee.M?.name?.S}
+                    </h6>
                   </div>
-
-                  <h6 className="h-fit w-full min-w-[120px] text-center capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                    {attendee.M?.name?.S}
-                  </h6>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </section>
 
       {showLoginModal && (
@@ -516,12 +522,12 @@ function calculateTimeRemainingDetailed(eventDate, options = {}) {
 }
 
 // helper function to get attendees initials
-function getInitials(fullName) {
-  if (!fullName) return "";
+// function getInitials(fullName) {
+//   if (!fullName) return "";
 
-  const parts = fullName.trim().split(" ");
-  const firstInitial = parts[0]?.charAt(0).toUpperCase() || "";
-  const secondInitial = parts[1]?.charAt(0).toUpperCase() || "";
+//   const parts = fullName.trim().split(" ");
+//   const firstInitial = parts[0]?.charAt(0).toUpperCase() || "";
+//   const secondInitial = parts[1]?.charAt(0).toUpperCase() || "";
 
-  return `${firstInitial}${secondInitial}`;
-}
+//   return `${firstInitial}${secondInitial}`;
+// }

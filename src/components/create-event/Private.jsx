@@ -968,6 +968,8 @@ const Private = ({ onPublic }) => {
                       bgcolor="bg-[#011F0F]"
                       onClick={() => {
                         setCreatingEventPopup(false);
+                        useEventStore.getState().setShouldRefetch(true);
+                        // Navigate to share page or home with share functionality
                         navigate(`/home`);
                       }}
                     />
