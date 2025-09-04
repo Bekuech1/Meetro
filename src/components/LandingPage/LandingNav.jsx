@@ -17,8 +17,11 @@ const LandingNav = ({ activeItem, setActiveItem, onClick, onAuth }) => {
       animate={{ scale: [0, 1], opacity: [0, 1] }}
       transition={{ duration: 0.5, ease: "easeInOut", times: [0, 1] }}
     >
-      <div className="inline-flex gap-1">
+      <div className="inline-flex gap-[10px]">
         <img src="/meetroLogo.svg" alt="" />
+        <div className="bg-linear-to-r from-[#BCFF5C] to-[#C0A8FF] text-[12px] font-[700] leading-[18px] size-fit capitalize p-1 rounded-3xl text-[#011F0F] flex place-items-center">
+          Beta
+        </div>
       </div>
 
       <ul className="md:flex size-fit gap-4 hidden">
