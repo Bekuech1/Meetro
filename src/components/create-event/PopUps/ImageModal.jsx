@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Sample image sources - replace with your actual image URLs
 const imageSources = [
@@ -17,6 +17,7 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
   // State to manage selected image and uploaded image
   const [selectedImage, setSelectedImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
+
 
   const handleImageSelect = async (imageSrc) => {
     try {
