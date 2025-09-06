@@ -1,27 +1,37 @@
 import { LoadingSpinner } from "../create-event/Private";
 import EventInfo from "../event-dashboard/EventInfo";
+import ShareEvent from "../event-dashboard/ShareEvent";
 
 const EventModal = ({ eventId, closeModal }) => {
   return (
-    <>
-      <div className="fixed inset-0 h-full lg:h-screen lg:flex lg:items-center lg:justify-center bg-[#00000080]/50 backdrop-blur-[4px] hidden z-50">
-        <div className="flex flex-col-reverse gap-2 lg:w-fit w-full h-fit">
-          <div className="lg:mx-14 mx-auto w-fit lg:h-[85vh] lg:max-h-[670px] h-full p-8 rounded-3xl lg:flex grid gap-8 bg-[#E8E8E8] text-center lg:overflow-hidden">
-            <EventInfo eventId={eventId} />
+    <div className="fixed inset-0 w-full h-full lg:h-screen lg:flex lg:items-center lg:justify-center bg-[#00000080]/50 md:backdrop-blur-[4px] z-50 overflow-scroll">
+      <div className="flex flex-col-reverse gap-2 lg:w-fit w-full h-fit">
+        <div className="lg:mx-14 mx-auto w-full md:w-fit lg:h-[85vh] lg:max-h-[670px] h-full p-4 md:p-8 md:rounded-3xl lg:flex grid gap-2 bg-[#E8E8E8] text-center lg:overflow-hidden">
+          <div className="flex md:hidden justify-between items-center gap-2">
+            <button onClick={closeModal}>
+              <img src="/arrow-left.svg" alt="" />
+            </button>
+
+            <div className="flex gap-2 md:hidden">
+              <div className="h-7 w-7 flex items-center justify-center bg-white rounded-full cursor-pointer">
+                <ShareEvent eventId={eventId} className={"p-1"} />
+              </div>
+              {/* <DownloadEvent /> */}
+            </div>
           </div>
 
-          {/* Close Button */}
-          <img
-            src="/closePopup.svg"
-            alt=""
-            className="h-12 w-12 cursor-pointer ml-auto"
-            onClick={closeModal}
-          />
+          <EventInfo eventId={eventId} />
         </div>
-      </div>
 
-      {/* mobile modal */}
-    </>
+        {/* Close Button */}
+        <img
+          src="/closePopup.svg"
+          alt=""
+          className="h-12 w-12 cursor-pointer ml-auto hidden md:block"
+          onClick={closeModal}
+        />
+      </div>
+    </div>
   );
 };
 

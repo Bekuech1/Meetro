@@ -308,6 +308,7 @@ export default function EventInfo({ eventId }) {
                         <span className="text-[#866AD2]">
                           {calculateTimeRemaining(eventDetails.date.S)}
                         </span>
+                        {/* <p>{calculateTimeRemainingDetailed(eventDetails.date.S)}</p> */}
                       </div>
                     )}
                   </div>
