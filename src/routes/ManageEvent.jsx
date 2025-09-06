@@ -32,7 +32,7 @@ export default function ManageEventPage() {
 
   return (
     <>
-      <section className="bg-white  ">
+      <section className="bg-white">
         <div className="md:w-[950px] mx-auto flex flex-col p-4 gap-4 md:pt-10 md:px-0 md:pb-6 md:gap-2">
           <div className="flex items-center justify-between ">
             <img
@@ -64,7 +64,7 @@ export default function ManageEventPage() {
               <div className="flex items-center gap-2">
                 <div className="flex items-center">
                   <img src="/location.svg" alt="" />
-                  <p className="text-sm font-medium text-[#8A9191] capitalize">
+                  <p className="text-sm font-medium text-[#8A9191] capitalize satoshi">
                     {`${eventData?.location?.M?.venue?.S},
                     ${eventData?.location?.M?.state?.S},
                     ${eventData?.location?.M?.country?.S}`}
@@ -72,7 +72,7 @@ export default function ManageEventPage() {
                 </div>
                 <div className="flex items-center gap-1">
                   <img src="/timer.svg" alt="" />
-                  <p className="text-sm font-medium text-[#8A9191] capitalize">
+                  <p className="text-sm font-medium text-[#8A9191] capitalize satoshi">
                     {`${eventData?.timeFrom?.S}`}
                   </p>
                 </div>
@@ -94,7 +94,11 @@ export default function ManageEventPage() {
 
           <div className="flex items-center justify-center">
             {/* tab toggle */}
-            <div className="flex bg-[#FFFFFEFC] w-full md:w-auto border border-[#E6F2F3] md:border-none md:backdrop-blur-[32px] md:shadow-[0px_4px_24px_0px_#00000014] gap-2 rounded-[20px] p-0.5">
+            <div   style={{
+                boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
+                backdropFilter: "blur(16px)",
+              }}
+              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full">
               <button
                 className={`${
                   activeTab === "eventDetails"

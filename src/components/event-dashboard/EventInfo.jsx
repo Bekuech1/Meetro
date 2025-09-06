@@ -132,11 +132,11 @@ export default function EventInfo({ eventId }) {
             src={imagePath}
             // src={eventDetails?.imageKey?.S}
             alt="Event-poster"
-            className="rounded-3xl w-full lg:w-[393px] h-[318px] lg:h-[349px]"
+            className="rounded-3xl w-full lg:w-[343px] h-[318px] lg:h-[323px]"
           />
-          <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
+          {/* <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
             <img src="/image.svg" className="z-10" alt="Image" />
-          </div>
+          </div> */}
         </div>
 
         <section className="grid gap-4">
