@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import Button from "../Layout-conponents/Button";
-import { motion, spring } from "framer-motion";
+import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
+import { motion} from "framer-motion";
+import { useDisableScroll } from "@/hooks/useDisableScroll";
 
-const LandingNav = ({ activeItem, setActiveItem, onClick, onAuth }) => {
+const LandingNav = ({ activeItem, setActiveItem, onAuth }) => {
+  const [navOpen, setNavOpen] = useState(false);
+  
+  // Use the hook to disable scroll when mobile nav is open
+  useDisableScroll(navOpen);
+
   const navItems = [
     { id: 0, name: "how it works" },
     { id: 1, name: "pricing" },
@@ -10,43 +17,97 @@ const LandingNav = ({ activeItem, setActiveItem, onClick, onAuth }) => {
     { id: 3, name: "about us" },
   ];
 
+  // Fixed the handler function
+  const handleNavItemClick = (itemId) => {
+    setActiveItem(itemId);
+    setNavOpen(false); // Close mobile nav when item is clicked
+  };
+
   return (
-    <motion.nav
-      className="flex items-center md:size-fit h-fit w-[90%] rounded-4xl top-3 py-2 md:pl-6 pl-4 pr-4 md:gap-[60px] justify-between bg-[#011F0F] backdrop-blur-2xl satoshi z-100 fixed"
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: [0, 1], opacity: [0, 1] }}
-      transition={{ duration: 0.5, ease: "easeInOut", times: [0, 1] }}
-    >
-      <div className="inline-flex gap-[10px]">
-        <img src="/meetroLogo.svg" alt="" />
-        <div className="bg-linear-to-r from-[#BCFF5C] to-[#C0A8FF] text-[12px] font-[700] leading-[18px] size-fit capitalize p-1 rounded-3xl text-[#011F0F] flex place-items-center">
-          Beta
+    <>
+      <motion.nav
+        className="flex items-center md:size-fit h-fit w-[90%] rounded-4xl top-3 py-2 md:pl-6 pl-4 pr-4 md:gap-[60px] justify-between bg-[#011F0F] backdrop-blur-2xl satoshi z-100 fixed"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: [0, 1], opacity: [0, 1] }}
+        transition={{ duration: 0.5, ease: "easeInOut", times: [0, 1] }}
+      >
+        <div className="inline-flex gap-[10px] items-center">
+          <img src="/meetroLogo.svg" alt="" />
+          <div className="bg-linear-to-r from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] leading-tight size-fit capitalize p-1 rounded-2xl text-[#011F0F] ">
+            <span>Beta</span>
+          </div>
         </div>
-      </div>
 
-      <ul className="md:flex size-fit gap-4 hidden">
-        {navItems.map((item) => (
-          <li key={item.id}>
-            <button
-              className={`font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${
-                activeItem === item.id ? "text-[#AEFC40]" : "text-[#B0BAB5]"
-              }`}
-              onClick={() => setActiveItem(item.id)}
-            >
-              {item.name}
-            </button>
-          </li>
-        ))}
-      </ul>
+        <ul className="md:flex size-fit gap-4 hidden">
+          {navItems.map((item) => (
+            <li key={item.id}>
+              <button
+                className={`font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${
+                  activeItem === item.id ? "text-[#AEFC40]" : "text-[#B0BAB5]"
+                }`}
+                onClick={() => setActiveItem(item.id)}
+              >
+                {item.name}
+              </button>
+            </li>
+          ))}
+        </ul>
 
-      <div className="w-fit flex justify-center items-center gap-4">
-        <Button name="create event" color="bg-[#AFFC41]" onclick={onAuth} />
+        <div className="w-fit flex justify-center items-center gap-4">
+          <Button name="create event" color="bg-[#AFFC41]" onclick={onAuth} />
 
-        <button onClick={onClick} className="md:hidden size-fit">
-          <img src="/v2menu.svg" alt="" />
-        </button>
-      </div>
-    </motion.nav>
+          <button onClick={() => setNavOpen(true)} className="md:hidden size-fit">
+            <img src="/v2menu.svg" alt="" />
+          </button>
+        </div>
+      </motion.nav>
+
+      {navOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-transparent"
+          onClick={() => setNavOpen(false)}
+          role="presentation"
+        >
+          <nav
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[96%] h-[96vh] bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex flex-col rounded-4xl justify-between"
+            role="navigation"
+            aria-label="Mobile navigation"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-full flex flex-col gap-8 h-fit">
+              <div className="flex w-full h-fit justify-between">
+                <img src="meetroLogo.svg" alt="Meetro Logo" />
+                <button
+                  onClick={() => setNavOpen(false)}
+                  className="size-fit rounded-4xl p-1 bg-[#344C3F]"
+                  aria-label="Close navigation menu"
+                >
+                  <img src="/menu-active.svg" alt="" className="size-[24px]" />
+                </button>
+              </div>
+              <ul className="flex flex-col h-fit w-full">
+                {navItems.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      className="w-full h-fit py-4 paytone capitalize font-medium text-[20px] leading-6 text-white cursor-pointer text-left"
+                      onClick={() => handleNavItemClick(item.id)}
+                    >
+                      {item.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <CreateEventBtn
+              onClick={() => setNavOpen(false)}
+              bgcolor="bg-[#AEFC40]"
+              text="create event"
+              textcolor="text-[#011F0F]"
+            />
+          </nav>
+        </div>
+      )}
+    </>
   );
 };
 

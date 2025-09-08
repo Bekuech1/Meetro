@@ -9,17 +9,17 @@ const Vibe = () => {
           <img src="/statusbar.png" alt="" className="rounded-t-2xl" />
           <img src="/frame-test.png" alt="" />
         </div>
-        <section className="grid bg-white/10 border backdrop-blur-2xl border-white/20 p-3 rounded-[12px] gap-4 absolute bottom-4 sm:left-[64px] left-[57px]">
+        <section className="w-fit bg-white/10 border backdrop-blur-2xl border-white/20 p-3 rounded-[12px] gap-4 absolute bottom-4 ">
           <h6 className="satoshi font-medium text-[14px] leading-5 text-white capitalize">
             themes
           </h6>
-          <div className="flex gap-4 h-fit w-full">
-            <img src="/vibe1.png" alt="" className="md:size-15 size-9 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe2.png" alt="" className="md:size-15 size-9 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe3.png" alt="" className="md:size-15 size-9 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe4.png" alt="" className="md:size-15 size-9 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe5.png" alt="" className="md:size-15 size-9 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe6.png" alt="" className="md:size-15 size-9 rounded-[6px] object-cover border border-white" />
+          <div className="flex gap-4 h-fit w-fit">
+            <img src="/vibe1.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
+            <img src="/vibe2.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
+            <img src="/vibe3.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
+            <img src="/vibe4.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
+            <img src="/vibe5.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
+            <img src="/vibe6.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
           </div>
         </section>
       </div>

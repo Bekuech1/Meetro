@@ -1,21 +1,21 @@
 import React from "react";
 import EventsBtn from "./EventsBtn";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 
 const EmptyHome = () => {
-  const navigate = useNavigate();
-  const homeBtn = [
-    {
-      text: "all events",
-      image: "/home-arrow-down.svg",
-      onClick: () => navigate("/home"),
-    },
-    {
-      text: "march, 2025",
-      image: "/home-arrow-down.svg",
-      onClick: () => navigate("/home"),
-    },
-  ];
+  // const navigate = useNavigate();
+  // const homeBtn = [
+  //   {
+  //     text: "all events",
+  //     image: "/home-arrow-down.svg",
+  //     onClick: () => navigate("/home"),
+  //   },
+  //   {
+  //     text: "march, 2025",
+  //     image: "/home-arrow-down.svg",
+  //     onClick: () => navigate("/home"),
+  //   },
+  // ];
 
   return (
     <main className="bg-[#F0F0F0] flex flex-col px-20 py-10 gap-[43px] h-[90vh] max-h-[760px] relative overflow-hidden">

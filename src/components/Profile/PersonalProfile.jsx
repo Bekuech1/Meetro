@@ -13,13 +13,8 @@ const profilePictures = [
 
 //function to randomise profile picture selection
 export function getProfilePicture() {
-  let storedPic = localStorage.getItem("profilePic");
-
-  if (!storedPic) {
-    const randomIndex = Math.floor(Math.random() * profilePictures.length);
-    storedPic = profilePictures[randomIndex];
-    localStorage.setItem("profilePic", storedPic);
-  }
+  const randomIndex = Math.floor(Math.random() * profilePictures.length);
+  const storedPic = profilePictures[randomIndex];
 
   return storedPic;
 }
