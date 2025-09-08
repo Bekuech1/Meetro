@@ -7,7 +7,7 @@ const CreateEventBtn = ({ text, textcolor, onClick, bgcolor }) => {
       onClick={onClick}
     >
       <h6
-        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}
+        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] ${textcolor}`}
       >
         {text}
       </h6>

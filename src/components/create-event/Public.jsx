@@ -15,15 +15,15 @@ const Public = ({ onPrivate }) => {
               Upload a JPEG or PNG file with a size of 2mb or less
             </p>
           </div>
-          <div className="relative">
+          <div className="relative flex justify-center">
             <img
-              src="/private.png"
+              src="/event-ph1.png"
               alt="Event-img"
-              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[95vw] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer justify-center"
+              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer"
             />
-            <div className="hidden absolute cursor-pointer top-[303px] left-[302px] rounded-full xl:flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors">
+            {/* <div className="hidden absolute cursor-pointer top-[303px] left-[302px] rounded-full xl:flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors">
               <img src="/image.svg" className="z-10" alt="" />
-            </div>
+            </div> */}
           </div>
           <div className="flex justify-center p-2 items-start bg-[#F3F0FB]">
             <p className="text-[#7A60BF] text-[12px] font-[500] leading-[18px] satoshi capitalize">
@@ -68,24 +68,7 @@ const Public = ({ onPrivate }) => {
               happening!
             </p>
           </div>
-          {/* <div className="grid p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full">
-            <input
-              type="text"
-              placeholder="Event name"
-              class="appearance-none bg-transparent border-none text-2xl font-[400] leading-[32px] text-black placeholder-[#8A9191] focus:outline-none paytone"
-            />
-          </div>
-          <Grid title="event details">
-            <Input leftImgSrc="timer.svg" text="when is your event?" />
-            <Input leftImgSrc="location.svg" text="where is your event" />
-            <Input leftImgSrc="crown.svg" text="who is the host" />
-            <Input leftImgSrc="note-text.svg" text="event description" />
-          </Grid>
-          <Grid title="event settings">
-            <Input leftImgSrc="note-text.svg" text="RSVP settings" />
-            <Input leftImgSrc="note-text.svg" text="enter bank details" />
-            <Input leftImgSrc="note-text.svg" text="reminders" />
-          </Grid> */}
+          
           <div className="w-full md:h-[553px] h-[400px] flex flex-col justify-center align-center text-center gap-2 px-20">
             <h1 className="text-black font-bold text-[18px] capitalize satoshi">
               coming soon

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import CreateEventBtn from "../Layout-conponents/CreateEventBtn";
 import When from "./PopUps/When";
 import Where from "./PopUps/Where";
@@ -15,31 +15,28 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import useEventStore from "@/stores/eventStore";
 
-export const LoadingSpinner = ({ 
+// Optimized Loading Spinner Component
+export const LoadingSpinner = React.memo(({ 
   size = 16, 
   color = "#7A60BF", 
   speed = "0.7s" 
-}) => {
-  const spinnerSize = `${size}px`;
-  
-  return (
-    <div className="flex items-center justify-center">
-      <div
-        className="border-2 border-t-transparent rounded-full animate-spin"
-        style={{
-          width: spinnerSize,
-          height: spinnerSize,
-          borderColor: color,
-          borderTopColor: 'transparent',
-          animationDuration: speed,
-        }}
-      ></div>
-    </div>
-  );
-};
+}) => (
+  <div className="flex items-center justify-center">
+    <div
+      className="border-2 border-t-transparent rounded-full animate-spin"
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        borderColor: color,
+        borderTopColor: 'transparent',
+        animationDuration: speed,
+      }}
+    />
+  </div>
+));
 
-// Default image sources array (should match the one in ImageModal)
-const imageSources = [
+// Constants moved outside component to prevent recreation
+const DEFAULT_IMAGE_SOURCES = [
   "/event-ph1.png",
   "/event-ph2.jpg",
   "/event-ph3.jpg",
@@ -49,19 +46,33 @@ const imageSources = [
   "/event-ph7.jpg",
 ];
 
-const Grid = ({ children, title, buttom }) => {
-  return (
-    <div className="grid w-full h-fit gap-3">
-      <h4 className="text-black text-[14px] font-[700] leading-[20px] satoshi capitalize">
-        {title}
-      </h4>
-      {children}
-      <div className="flex gap-4 w-full">{buttom}</div>
-    </div>
-  );
+const MODAL_TYPES = {
+  PREVIEW: 'preview',
+  IMAGE: 'image',
+  DESCRIPTION: 'description',
+  HOST: 'host',
+  WHEN: 'when',
+  WHERE: 'where',
+  DRESS: 'dress',
+  CHIPIN: 'chipin',
+  EVENT_TYPE: 'eventType',
+  CREATE_EVENT: 'createEvent',
+  CREATING_EVENT: 'creatingEvent'
 };
 
-const Input = ({
+// Optimized Grid component
+const Grid = React.memo(({ children, title, buttom }) => (
+  <div className="grid w-full h-fit gap-3">
+    <h4 className="text-black text-[14px] font-[700] leading-[20px] satoshi capitalize">
+      {title}
+    </h4>
+    {children}
+    <div className="flex gap-4 w-full">{buttom}</div>
+  </div>
+));
+
+// Optimized Input component
+const Input = React.memo(({
   leftImgSrc,
   text,
   onClickRight,
@@ -71,411 +82,196 @@ const Input = ({
   edit,
   remove,
   className,
-}) => {
-  return (
-    <div
-      className="flex justify-between p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full max-w-[] cursor-pointer relative"
-      onClick={onClick}
-    >
-      {/* Left Image */}
-      <div className="bg-white p-1 rounded-4xl size-fit">
-        <img src={leftImgSrc} alt="" className="w-5 h-4" />
-      </div>
-
-      {/* Middle Text */}
-      <div
-        className={`text-left w-full ${className} font-medium text-[14px] capitalize satoshi whitespace-nowrap overflow-hidden text-ellipsis`}
-      >
-        {text}
-      </div>
-
-      {/* Right Image */}
-      {rightImg && (
-        <div className="grid h-fit w-fit relative">
-          <img
-            src={rightImg}
-            alt="Right Icon"
-            className="size-4 cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClickRight && onClickRight(e);
-            }}
-          />
-          {showDropdown && (
-            <div className="absolute w-[100px] grid h-fit top-6 -right-4 bg-white z-40 px-4 gap-4 py-2 rounded-[8px] text-left satoshi shadow-lg border">
-              <p
-                className="text-sm font-medium text-black hover:scale-110 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  edit && edit();
-                }}
-              >
-                Edit
-              </p>
-              <p
-                className="text-sm font-medium text-black hover:scale-110 hover:text-red-500 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  remove && remove();
-                }}
-              >
-                Remove
-              </p>
-            </div>
-          )}
-        </div>
-      )}
+}) => (
+  <div
+    className="flex justify-between p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full cursor-pointer relative"
+    onClick={onClick}
+  >
+    <div className="bg-white p-1 rounded-4xl size-fit">
+      <img src={leftImgSrc} alt="" className="w-5 h-4" />
     </div>
-  );
+
+    <div className={`text-left w-full ${className} font-medium text-[14px] capitalize satoshi whitespace-nowrap overflow-hidden text-ellipsis`}>
+      {text}
+    </div>
+
+    {rightImg && (
+      <div className="grid h-fit w-fit relative">
+        <img
+          src={rightImg}
+          alt="Right Icon"
+          className="size-4 cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClickRight?.(e);
+          }}
+        />
+        {showDropdown && (
+          <div className="absolute w-[100px] grid h-fit top-6 -right-4 bg-white z-40 px-4 gap-4 py-2 rounded-[8px] text-left satoshi shadow-lg border">
+            <p
+              className="text-sm font-medium text-black hover:scale-110 cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                edit?.();
+              }}
+            >
+              Edit
+            </p>
+            <p
+              className="text-sm font-medium text-black hover:scale-110 hover:text-red-500 cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                remove?.();
+              }}
+            >
+              Remove
+            </p>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+));
+
+// Optimized Add component
+const Add = React.memo(({ title, onOptionClick }) => (
+  <div
+    className="py-2 px-3 flex md:gap-2 w-fit gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer"
+    onClick={onOptionClick}
+  >
+    <img src="/add.svg" alt="" className="size-4" />
+    <h6 className="font-bold text-black text-[12px] capitalize satoshi">
+      {title}
+    </h6>
+  </div>
+));
+
+// Custom hook for modal management
+const useModalManager = () => {
+  const [activeModals, setActiveModals] = useState(new Set());
+  
+  const openModal = useCallback((modalType) => {
+    setActiveModals(prev => new Set([...prev, modalType]));
+  }, []);
+  
+  const closeModal = useCallback((modalType) => {
+    setActiveModals(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(modalType);
+      return newSet;
+    });
+  }, []);
+  
+  const isModalOpen = useCallback((modalType) => {
+    return activeModals.has(modalType);
+  }, [activeModals]);
+  
+  const isAnyModalOpen = useMemo(() => activeModals.size > 0, [activeModals]);
+  
+  return { openModal, closeModal, isModalOpen, isAnyModalOpen };
 };
 
-const Add = ({ title, onOptionClick }) => {
-  return (
-    <div
-      className="py-2 px-3 flex md:gap-2 w-fit gap-1 bg-white/80 rounded-[20px] size-fit border border-white justify-center items-center cursor-pointer"
-      onClick={onOptionClick}
-    >
-      <img src="/add.svg" alt="" className="size-4" />
-      <h6 className="font-bold text-black text-[12px] capitalize satoshi">
-        {title}
-      </h6>
-    </div>
-  );
+// Custom hook for dropdown management
+const useDropdownManager = () => {
+  const [activeDropdowns, setActiveDropdowns] = useState(new Set());
+  
+  const toggleDropdown = useCallback((dropdownType, e) => {
+    e?.stopPropagation();
+    setActiveDropdowns(prev => {
+      const newSet = new Set();
+      if (!prev.has(dropdownType)) {
+        newSet.add(dropdownType);
+      }
+      return newSet;
+    });
+  }, []);
+  
+  const closeAllDropdowns = useCallback(() => {
+    setActiveDropdowns(new Set());
+  }, []);
+  
+  const isDropdownOpen = useCallback((dropdownType) => {
+    return activeDropdowns.has(dropdownType);
+  }, [activeDropdowns]);
+  
+  return { toggleDropdown, closeAllDropdowns, isDropdownOpen };
+};
+
+// Custom hook for form state management
+const useFormState = () => {
+  const [formData, setFormData] = useState({
+    eventName: "",
+    hostName: "",
+    descriptionText: "",
+    descriptionDisplay: "",
+    dressCode: "",
+    location: "",
+    locationType: "",
+    state: "",
+    amount: "",
+    chipInType: "",
+    bankCode: "",
+    bankName: "",
+    accountNumber: "",
+    accountName: "",
+    startDate: "",
+    startTime: "",
+    endDate: "",
+    endTime: "",
+    selectedTypes: [],
+  });
+  
+  const updateFormData = useCallback((updates) => {
+    setFormData(prev => ({ ...prev, ...updates }));
+  }, []);
+  
+  return { formData, updateFormData };
 };
 
 const Private = ({ onPublic }) => {
-  // Basic state
-  const [eventName, setEventName] = useState("");
+  // Use custom hooks
+  const { openModal, closeModal, isModalOpen, isAnyModalOpen } = useModalManager();
+  const { toggleDropdown, closeAllDropdowns, isDropdownOpen } = useDropdownManager();
+  const { formData, updateFormData } = useFormState();
+  
+  // State for UI and API
   const [eventImage, setEventImage] = useState(null);
-  const [eventData, setEventData] = useState({});
-  const [hostName, setHostName] = useState("");
-  const [descriptionText, setDescriptionText] = useState("");
-  const [descriptionDisplay, setDescriptionDisplay] = useState("");
-  const [dressCode, setDressCode] = useState("");
-  const [location, setLocation] = useState("");
-  const [locationType, setLocationType] = useState("");
-  const [state, setState] = useState("");
-  const [amount, setAmount] = useState("");
-  const [chipInType, setChipInType] = useState("");
-  const [bankCode, setBankCode] = useState("");
-  const [bankName, setBankName] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [accountName, setAccountName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [uploadResponse, setUploadResponse] = useState(null);
-
-  // Modal states
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [imageModal, setImageModal] = useState(false);
-  const [description, setDescription] = useState(false);
-  const [host, setHost] = useState(false);
-  const [when, setWhen] = useState(false);
-  const [where, setWhere] = useState(false);
-  const [dress, setDress] = useState(false);
-  const [chipin, setChipIn] = useState(false);
-  const [eventType, setEventType] = useState(false);
-  const [createEventModal, setCreateEventModal] = useState(false);
-  const [creatingEventPopup, setCreatingEventPopup] = useState(false);
   const [response, setResponse] = useState(null);
-
-  // Image loading state
-  const [isImageLoading, setIsImageLoading] = useState(false);
-
-  // Add to List states
-  const [addDressCode, setAddDressCode] = useState(false);
-  const [addDescription, setAddDescription] = useState(false);
-  const [addChipIn, setAddChipIn] = useState(false);
-  const [addEventType, setAddEventType] = useState(false);
-
-  // Dropdown visibility states
-  const [showDressDropdown, setShowDressDropdown] = useState(false);
-  const [showDescriptionDropdown, setShowDescriptionDropdown] = useState(false);
-  const [showChipInDropdown, setShowChipInDropdown] = useState(false);
-  const [showEventTypeDropdown, setShowEventTypeDropdown] = useState(false);
-
+  
+  // Add to List states (using object for better performance)
+  const [addedComponents, setAddedComponents] = useState({
+    dressCode: false,
+    description: false,
+    chipIn: false,
+    eventType: false
+  });
+  
   const navigate = useNavigate();
-
-  // Function to check if any modal is open
-  const isAnyModalOpen = () => {
-    return (
-      isPreviewOpen ||
-      imageModal ||
-      description ||
-      host ||
-      when ||
-      where ||
-      dress ||
-      chipin ||
-      createEventModal ||
-      creatingEventPopup ||
-      eventType
-    );
-  };
-
-  // Function to check if preview should be enabled
-  const isPreviewEnabled = () => {
-    return (
-      eventName.trim() !== "" && startDate !== "" && location.trim() !== ""
-    );
-  };
-
-  // Prevent scroll when modal is open
-  useEffect(() => {
-    if (isAnyModalOpen()) {
-      // Disable scroll
-      document.body.style.overflow = "hidden";
-    } else {
-      // Re-enable scroll
-      document.body.style.overflow = "unset";
-    }
-
-    // Cleanup function to reset overflow when component unmounts
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isAnyModalOpen()]);
-
-  // Set default image on component mount
-  useEffect(() => {
-    if (!eventImage && imageSources.length > 0) {
-      setEventImage({
-        type: "template",
-        imageSrc: imageSources[0],
-        imageUrl: imageSources[0],
-      });
-    }
-  }, [eventImage]);
-
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = () => {
-      setShowDressDropdown(false);
-      setShowDescriptionDropdown(false);
-      setShowChipInDropdown(false);
-      setShowEventTypeDropdown(false);
-    };
-
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
-  // Modal control functions
-  const openPreview = () => {
-    if (isPreviewEnabled()) {
-      setIsPreviewOpen(true);
-    }
-  };
-  const closePreview = () => setIsPreviewOpen(false);
-
-  const openImageModal = () => setImageModal(true);
-  const closeImageModal = () => setImageModal(false);
-
-  const openDescription = () => setDescription(true);
-  const closeDescription = () => setDescription(false);
-
-  const openWhen = () => setWhen(true);
-  const closeWhen = () => setWhen(false);
-
-  const openWhere = () => setWhere(true);
-  const closeWhere = () => setWhere(false);
-
-  const openHost = () => setHost(true);
-  const closeHost = () => setHost(false);
-
-  const openDress = () => setDress(true);
-  const closeDress = () => setDress(false);
-
-  const openChipIn = () => setChipIn(true);
-  const closeChipIn = () => setChipIn(false);
-
-  const openEventType = () => setEventType(true);
-  const closeEventType = () => setEventType(false);
-
-  const creatingEvent = () => setCreateEventModal(true);
-  const creatingEventComplete = () => setCreateEventModal(false);
-
-  // Add List control functions
-  const putDress = () => {
-    setAddDressCode(true);
-  };
-
-  const removeDress = () => {
-    setAddDressCode(false);
-    setShowDressDropdown(false);
-    setEventData((prev) => {
-      const newData = { ...prev };
-      delete newData.dressCode;
-      return newData;
-    });
-  };
-
-  const putDescription = () => {
-    setAddDescription(true);
-  };
-
-  const removeDescription = () => {
-    setAddDescription(false);
-    setShowDescriptionDropdown(false);
-    setEventData((prev) => {
-      const newData = { ...prev };
-      delete newData.description;
-      return newData;
-    });
-  };
-
-  const putChipIn = () => {
-    setAddChipIn(true);
-  };
-
-  const removeChipIn = () => {
-    setAddChipIn(false);
-    setShowChipInDropdown(false);
-    setEventData((prev) => {
-      const newData = { ...prev };
-      delete newData.chipIn;
-      return newData;
-    });
-  };
-
-  const putEventType = () => {
-    setAddEventType(true);
-  };
-
-  const removeEventType = () => {
-    setAddEventType(false);
-    setShowEventTypeDropdown(false);
-  };
-
-  // Dropdown toggle functions
-  const toggleDressDropdown = (e) => {
-    e.stopPropagation();
-    setShowDressDropdown(!showDressDropdown);
-    setShowDescriptionDropdown(false);
-    setShowChipInDropdown(false);
-    setShowEventTypeDropdown(false);
-  };
-
-  const toggleDescriptionDropdown = (e) => {
-    e.stopPropagation();
-    setShowDescriptionDropdown(!showDescriptionDropdown);
-    setShowDressDropdown(false);
-    setShowChipInDropdown(false);
-    setShowEventTypeDropdown(false);
-  };
-
-  const toggleChipInDropdown = (e) => {
-    e.stopPropagation();
-    setShowChipInDropdown(!showChipInDropdown);
-    setShowDressDropdown(false);
-    setShowDescriptionDropdown(false);
-    setShowEventTypeDropdown(false);
-  };
-
-  const toggleEventTypeDropdown = (e) => {
-    e.stopPropagation();
-    setShowEventTypeDropdown(!showEventTypeDropdown);
-    setShowChipInDropdown(false);
-    setShowDressDropdown(false);
-    setShowDescriptionDropdown(false);
-  };
-
-  const handleImageSave = (imageData) => {
-    setEventImage(imageData);
-    // Modal is already closed by ImageModal component
+  
+  // Memoized computed values
+  const isPreviewEnabled = useMemo(() => {
+    return formData.eventName.trim() !== "" && 
+           formData.startDate !== "" && 
+           formData.location.trim() !== "";
+  }, [formData.eventName, formData.startDate, formData.location]);
+  
+  const fullDateTimeRange = useMemo(() => {
+    const { startDate, startTime, endDate, endTime } = formData;
+    if (!startDate || !startTime) return "when is your event?";
     
-    // For template selection, show loading spinner briefly
-    if (imageData.type === "template") {
-      setIsImageLoading(true);
-      setTimeout(() => {
-        setIsImageLoading(false);
-      }, 300); // Show spinner for 300ms on the image container
-    } else if (imageData.type === "upload") {
-      // For file uploads, clear the loading state after a brief delay
-      setTimeout(() => {
-        setIsImageLoading(false);
-      }, 200); // Show spinner briefly after upload completes
-    }
-  };
-
-  const handleHostNameSave = (hostName) => {
-    setHostName(hostName);
-  };
-
-  const handleDressCodeSave = (dressCode) => {
-    setDressCode(dressCode);
-  };
-
-  const handleDescriptionSave = (descriptionData) => {
-    setDescriptionText(descriptionData.data);
-    setDescriptionDisplay(descriptionData.displayText);
-  };
-
-  const handleChipInSave = async (chipInData) => {
-    setAmount(chipInData.amount);
-    setChipInType(chipInData.chipInType);
-    setBankCode(chipInData.selectedBankCode);
-    setBankName(chipInData.selectedBankName);
-    setAccountNumber(chipInData.accountNumber);
-    setAccountName(chipInData.accountName);
-
-    return null;
-  };
-
-  const handleTimeSave = (TimeData) => {
-    setStartDate(TimeData.startDate);
-    setStartTime(TimeData.startTime);
-    setEndDate(TimeData.endDate);
-    setEndTime(TimeData.endTime);
-  };
-
-  const fullDateTimeRange =
-    startDate && startTime
-      ? endDate && endTime
-        ? startDate === endDate
-          ? `${startDate}, ${startTime} - ${endTime}`
-          : `${startDate}, ${startTime} - ${endDate}, ${endTime}`
-        : `${startDate}, ${startTime}` // Only start values present
-      : "when is your event?";
-
-  const handleLocationSave = (LocationData) => {
-    setLocation(LocationData.venue);
-    setLocationType(LocationData.locationType);
-    setState(LocationData.state);
-  };
-
-  const handleEventTypeSave = (selectedEventType) => {
-    if (selectedEventType) {
-      setSelectedTypes(selectedEventType.data);
-    }
-  };
-
-  const eventTypes = () => {
-    return (
-      selectedTypes.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {selectedTypes.map((event, index) => (
-            <span
-              key={index}
-              className={`px-2 py-1 rounded-full border text-[10px] ${event.className}`}
-            >
-              {event.title}
-            </span>
-          ))}
-        </div>
-      )
-    );
-  };
-
-  // Get the location display text based on the current state
-  const getLocationDisplayText = () => {
+    if (!endDate || !endTime) return `${startDate}, ${startTime}`;
+    
+    return startDate === endDate
+      ? `${startDate}, ${startTime} - ${endTime}`
+      : `${startDate}, ${startTime} - ${endDate}, ${endTime}`;
+  }, [formData.startDate, formData.startTime, formData.endDate, formData.endTime]);
+  
+  const locationDisplayText = useMemo(() => {
+    const { locationType, location, state } = formData;
     switch (locationType) {
       case "online":
         return `Online - ${location}`;
@@ -484,19 +280,152 @@ const Private = ({ onPublic }) => {
       default:
         return "Where is your event?";
     }
-  };
-
-  // Get the current image URL - fallback to default if eventImage is null
-  const getCurrentImageUrl = () => {
-    if (eventImage && eventImage.imageUrl) {
-      return eventImage.imageUrl;
+  }, [formData.locationType, formData.location, formData.state]);
+  
+  const getCurrentImageUrl = useCallback(() => {
+    return eventImage?.imageUrl || DEFAULT_IMAGE_SOURCES[0];
+  }, [eventImage]);
+  
+  const eventTypesDisplay = useMemo(() => {
+    if (formData.selectedTypes.length === 0) return null;
+    
+    return (
+      <div className="flex flex-wrap gap-2">
+        {formData.selectedTypes.map((event, index) => (
+          <span
+            key={`${event.title}-${index}`}
+            className={`px-2 py-1 rounded-full border text-[10px] ${event.className}`}
+          >
+            {event.title}
+          </span>
+        ))}
+      </div>
+    );
+  }, [formData.selectedTypes]);
+  
+  // Prevent scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = isAnyModalOpen ? "hidden" : "unset";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isAnyModalOpen]);
+  
+  // Set default image on component mount
+  useEffect(() => {
+    if (!eventImage && DEFAULT_IMAGE_SOURCES.length > 0) {
+      setEventImage({
+        type: "template",
+        imageSrc: DEFAULT_IMAGE_SOURCES[0],
+        imageUrl: DEFAULT_IMAGE_SOURCES[0],
+      });
     }
-    return imageSources[0]; // fallback to first image
-  };
-
-  // Handle image upload
-  const handleImageUpload = async (file) => {
-    setIsImageLoading(true); // Show loading spinner on image container
+  }, [eventImage]);
+  
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    document.addEventListener("click", closeAllDropdowns);
+    return () => document.removeEventListener("click", closeAllDropdowns);
+  }, [closeAllDropdowns]);
+  
+  // Optimized handlers using useCallback
+  const handleImageSave = useCallback((imageData) => {
+    setEventImage(imageData);
+    
+    if (imageData.type === "template") {
+      setIsImageLoading(true);
+      setTimeout(() => setIsImageLoading(false), 300);
+    } else if (imageData.type === "upload") {
+      setTimeout(() => setIsImageLoading(false), 200);
+    }
+  }, []);
+  
+  const handleFormFieldSave = useCallback((field, value) => {
+    if (typeof value === 'object' && value !== null) {
+      updateFormData(value);
+    } else {
+      updateFormData({ [field]: value });
+    }
+  }, [updateFormData]);
+  
+  const handleChipInSave = useCallback(async (chipInData) => {
+    updateFormData({
+      amount: chipInData.amount,
+      chipInType: chipInData.chipInType,
+      bankCode: chipInData.selectedBankCode,
+      bankName: chipInData.selectedBankName,
+      accountNumber: chipInData.accountNumber,
+      accountName: chipInData.accountName,
+    });
+    return null;
+  }, [updateFormData]);
+  
+  const handleTimeSave = useCallback((timeData) => {
+    updateFormData({
+      startDate: timeData.startDate,
+      startTime: timeData.startTime,
+      endDate: timeData.endDate,
+      endTime: timeData.endTime,
+    });
+  }, [updateFormData]);
+  
+  const handleLocationSave = useCallback((locationData) => {
+    updateFormData({
+      location: locationData.venue,
+      locationType: locationData.locationType,
+      state: locationData.state,
+    });
+  }, [updateFormData]);
+  
+  const handleEventTypeSave = useCallback((selectedEventType) => {
+    if (selectedEventType) {
+      updateFormData({ selectedTypes: selectedEventType.data });
+    }
+  }, [updateFormData]);
+  
+  const handleDescriptionSave = useCallback((descriptionData) => {
+    updateFormData({
+      descriptionText: descriptionData.data,
+      descriptionDisplay: descriptionData.displayText,
+    });
+  }, [updateFormData]);
+  
+  // Component management handlers
+  const toggleComponent = useCallback((componentName, shouldAdd) => {
+    setAddedComponents(prev => ({
+      ...prev,
+      [componentName]: shouldAdd
+    }));
+    
+    if (!shouldAdd) {
+      closeAllDropdowns();
+      // Clear related form data when removing component
+      switch (componentName) {
+        case 'dressCode':
+          updateFormData({ dressCode: '' });
+          break;
+        case 'description':
+          updateFormData({ descriptionText: '', descriptionDisplay: '' });
+          break;
+        case 'chipIn':
+          updateFormData({ 
+            amount: '', 
+            chipInType: '', 
+            bankCode: '', 
+            bankName: '', 
+            accountNumber: '', 
+            accountName: '' 
+          });
+          break;
+        case 'eventType':
+          updateFormData({ selectedTypes: [] });
+          break;
+      }
+    }
+  }, [closeAllDropdowns, updateFormData]);
+  
+  const handleImageUpload = useCallback(async (file) => {
+    setIsImageLoading(true);
     try {
       const fileExtension = file.name.split(".").pop();
       const response = await API.post(`/upload`, {
@@ -505,115 +434,94 @@ const Private = ({ onPublic }) => {
       });
 
       const { uploadUrl, fileKey } = response.data;
-      console.log("Upload URL:", uploadUrl);
-      console.log("Uploading file:", file.name);
-      console.log("File type:", file.type);
-      console.log("Got upload URL:", uploadUrl);
-
-      // const putUrl = import.meta.env.VITE_IMAGE_TO_S3_URL;
+      
       await axios.put(uploadUrl, file, {
-        headers: {
-          "Content-Type": file.type,
-        },
+        headers: { "Content-Type": file.type },
       });
 
       const getImg = import.meta.env.VITE_IMAGE_URL;
       const evtImg = `${getImg}/${fileKey}`;
-      console.log("Image URL after upload:", evtImg);
-
+      
       setUploadResponse(response.data);
 
       return {
         success: true,
-        imageUrl: evtImg, // Remove query params from URL
+        imageUrl: evtImg,
         imageKey: fileKey,
       };
     } catch (error) {
       console.error("Image upload failed:", error);
       throw error;
-    } finally {
-      // Keep loading state active - it will be cleared by handleImageSave
     }
-  };
-
-  const handleCreateEvent = async () => {
+  }, []);
+  
+  const handleCreateEvent = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    setResponse(null); // Clear previous response
+    setResponse(null);
 
-    // Basic validation
-    if (!eventName || !startDate || !location) {
-      setError(
-        "Please fill all required fields (Event Name, Date, and Location)"
-      );
+    if (!formData.eventName || !formData.startDate || !formData.location) {
+      setError("Please fill all required fields (Event Name, Date, and Location)");
       setIsLoading(false);
       return;
     }
 
-    // Show the popup before starting the API call
-    setCreatingEventPopup(true);
+    openModal(MODAL_TYPES.CREATING_EVENT);
 
-    // Prepare the payload
     const payload = {
-      title: eventName,
-      description: descriptionText,
-      date: startDate,
-      timeFrom: startTime,
-      timeTo: endTime,
+      title: formData.eventName,
+      description: formData.descriptionText,
+      date: formData.startDate,
+      timeFrom: formData.startTime,
+      timeTo: formData.endTime,
       location: {
-        venue: location,
-        state: state,
+        venue: formData.location,
+        state: formData.state,
         country: "Nigeria",
       },
       isPrivate: true,
-      dressCode: dressCode,
-      // tempImageKey: eventImage?.imageUrl,
+      dressCode: formData.dressCode,
       tempImageKey: uploadResponse?.fileKey,
-      ...(amount && {
-        chipInAmount: amount,
-        chipInType: chipInType,
-        chipInSettings: {
-          fixedAmount: amount,
-        },
+      ...(formData.amount && {
+        chipInAmount: formData.amount,
+        chipInType: formData.chipInType,
+        chipInSettings: { fixedAmount: formData.amount },
         bankDetails: {
-          bankName: bankName,
-          accountNumber: accountNumber,
-          accountName: accountName,
-          bankCode: bankCode,
+          bankName: formData.bankName,
+          accountNumber: formData.accountNumber,
+          accountName: formData.accountName,
+          bankCode: formData.bankCode,
         },
       }),
-      eventTypes: selectedTypes.map((type) => type.title),
+      eventTypes: formData.selectedTypes.map((type) => type.title),
       theme: 1,
       fontStyle: 1,
       isLightMode: true,
     };
 
-    console.log("Sending tempImageKey:", eventImage?.imageKey);
-    console.log("NOT sending imageUrl:", eventImage?.imageUrl);
-
     try {
       const apiResponse = await API.post(`/events`, payload);
-
-      console.log("Event created successfully:", apiResponse.data);
-
-      // Store the response in state for the modal to use
       setResponse(apiResponse.data);
-
-      // Optional: Add a shorter delay or remove completely
-      // You can handle navigation from the modal buttons instead
     } catch (error) {
-      console.error(
-        "Error creating event:",
-        error.response?.data || error.message
-      );
-      setError(
-        error.response?.data?.error ||
-          "Failed to create event. Please try again."
-      );
+      console.error("Error creating event:", error.response?.data || error.message);
+      setError(error.response?.data?.error || "Failed to create event. Please try again.");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [formData, uploadResponse, openModal]);
+  
+  // Modal handlers
+  const modalHandlers = useMemo(() => ({
+    [MODAL_TYPES.PREVIEW]: () => openModal(MODAL_TYPES.PREVIEW),
+    [MODAL_TYPES.IMAGE]: () => openModal(MODAL_TYPES.IMAGE),
+    [MODAL_TYPES.DESCRIPTION]: () => openModal(MODAL_TYPES.DESCRIPTION),
+    [MODAL_TYPES.HOST]: () => openModal(MODAL_TYPES.HOST),
+    [MODAL_TYPES.WHEN]: () => openModal(MODAL_TYPES.WHEN),
+    [MODAL_TYPES.WHERE]: () => openModal(MODAL_TYPES.WHERE),
+    [MODAL_TYPES.DRESS]: () => openModal(MODAL_TYPES.DRESS),
+    [MODAL_TYPES.CHIPIN]: () => openModal(MODAL_TYPES.CHIPIN),
+    [MODAL_TYPES.EVENT_TYPE]: () => openModal(MODAL_TYPES.EVENT_TYPE),
+  }), [openModal]);
 
   return (
     <main className="bg-[#F0F0F0] min-h-[90vh] h-fit w-full grid gap-[43px] lg:pb-10 pt-10 pb-24">
@@ -630,20 +538,18 @@ const Private = ({ onPublic }) => {
           </div>
           
           <div className="relative flex justify-center">
-            { !isImageLoading ? (<img
-              src={getCurrentImageUrl()}
-              alt="Event image"
-              className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer"
-              onClick={openImageModal}
-            /> ) : (<div className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] bg-white/60 flex items-center justify-center"><LoadingSpinner size={40} color="#61B42D" /></div>)
-            }
-            
-            {/* { !isImageLoading && <div
-              className="absolute cursor-pointer top-[275px] left-[275px] sm:top-[303px] sm:left-[302px] rounded-full flex items-center justify-center h-8 w-8 bg-white shadow-lg hover:bg-gray-100 transition-colors"
-              onClick={openImageModal}
-            >
-              <img src="/image.svg" className="z-10" alt="" />
-            </div> } */}
+            {!isImageLoading ? (
+              <img
+                src={getCurrentImageUrl()}
+                alt="Event image"
+                className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] backdrop-blur-[12px] object-cover cursor-pointer"
+                onClick={modalHandlers[MODAL_TYPES.IMAGE]}
+              />
+            ) : (
+              <div className="rounded-3xl sm:w-[349px] sm:h-[349px] w-[306px] h-[306px] bg-white/60 flex items-center justify-center">
+                <LoadingSpinner size={40} color="#61B42D" />
+              </div>
+            )}
           </div>
           
           <div className="flex justify-center p-2 items-start bg-[#F3F0FB]">
@@ -652,11 +558,11 @@ const Private = ({ onPublic }) => {
             </p>
           </div>
         </section>
-  
+
         {/* right section */}
         <section className="gap-6 items-start flex flex-col w-full lg:w-[553px] h-fit mx-auto">
           <div className="grid gap-2 w-full">
-          <div
+            <div
               style={{
                 boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
                 backdropFilter: "blur(16px)",
@@ -686,8 +592,8 @@ const Private = ({ onPublic }) => {
             <input
               type="text"
               placeholder="Event name"
-              onChange={(e) => setEventName(e.target.value)}
-              value={eventName}
+              onChange={(e) => updateFormData({ eventName: e.target.value })}
+              value={formData.eventName}
               className="appearance-none bg-transparent border-none text-2xl font-[400] leading-[32px] text-black placeholder-[#8A9191] focus:outline-none paytone"
             />
           </div>
@@ -696,105 +602,106 @@ const Private = ({ onPublic }) => {
             <Input
               leftImgSrc="/timer.svg"
               text={fullDateTimeRange}
-              onClick={openWhen}
-              className={startDate || endDate ? "text-black" : "text-[#8A9191]"}
+              onClick={modalHandlers[MODAL_TYPES.WHEN]}
+              className={formData.startDate || formData.endDate ? "text-black" : "text-[#8A9191]"}
             />
             <Input
               leftImgSrc="/location-try.svg"
-              text={getLocationDisplayText()}
-              onClick={openWhere}
-              className={location ? "text-black" : "text-[#8A9191]"}
+              text={locationDisplayText}
+              onClick={modalHandlers[MODAL_TYPES.WHERE]}
+              className={formData.location ? "text-black" : "text-[#8A9191]"}
             />
             <Input
               leftImgSrc="/crown.svg"
-              text={hostName || "who is the host?"}
-              onClick={openHost}
-              className={hostName ? "text-black" : "text-[#8A9191]"}
+              text={formData.hostName || "who is the host?"}
+              onClick={modalHandlers[MODAL_TYPES.HOST]}
+              className={formData.hostName ? "text-black" : "text-[#8A9191]"}
             />
-            {addDressCode && (
+            
+            {addedComponents.dressCode && (
               <Input
                 leftImgSrc="/dress.svg"
-                text={dressCode || "enter dress code"}
-                onClick={openDress}
+                text={formData.dressCode || "enter dress code"}
+                onClick={modalHandlers[MODAL_TYPES.DRESS]}
                 rightImg="/more-circle.svg"
-                onClickRight={toggleDressDropdown}
-                showDropdown={showDressDropdown}
-                edit={openDress}
-                remove={removeDress}
-                className={dressCode ? "text-black" : "text-[#8A9191]"}
+                onClickRight={(e) => toggleDropdown('dress', e)}
+                showDropdown={isDropdownOpen('dress')}
+                edit={modalHandlers[MODAL_TYPES.DRESS]}
+                remove={() => toggleComponent('dressCode', false)}
+                className={formData.dressCode ? "text-black" : "text-[#8A9191]"}
               />
             )}
-            {addDescription && (
+            
+            {addedComponents.description && (
               <Input
                 leftImgSrc="/note-text.svg"
-                text={descriptionDisplay || "event description"}
-                onClick={openDescription}
+                text={formData.descriptionDisplay || "event description"}
+                onClick={modalHandlers[MODAL_TYPES.DESCRIPTION]}
                 rightImg="/more-circle.svg"
-                onClickRight={toggleDescriptionDropdown}
-                showDropdown={showDescriptionDropdown}
-                edit={openDescription}
-                remove={removeDescription}
-                className={descriptionDisplay ? "text-black" : "text-[#8A9191]"}
+                onClickRight={(e) => toggleDropdown('description', e)}
+                showDropdown={isDropdownOpen('description')}
+                edit={modalHandlers[MODAL_TYPES.DESCRIPTION]}
+                remove={() => toggleComponent('description', false)}
+                className={formData.descriptionDisplay ? "text-black" : "text-[#8A9191]"}
               />
             )}
-            {addChipIn && (
+            
+            {addedComponents.chipIn && (
               <Input
                 leftImgSrc="/money-add.svg"
-                text={amount ? `${chipInType} - ₦${amount}` : "chip-in"}
-                onClick={openChipIn}
+                text={formData.amount ? `${formData.chipInType} - ₦${formData.amount}` : "chip-in"}
+                onClick={modalHandlers[MODAL_TYPES.CHIPIN]}
                 rightImg="/more-circle.svg"
-                onClickRight={toggleChipInDropdown}
-                showDropdown={showChipInDropdown}
-                edit={openChipIn}
-                remove={removeChipIn}
-                className={amount ? "text-black" : "text-[#8A9191]"}
+                onClickRight={(e) => toggleDropdown('chipIn', e)}
+                showDropdown={isDropdownOpen('chipIn')}
+                edit={modalHandlers[MODAL_TYPES.CHIPIN]}
+                remove={() => toggleComponent('chipIn', false)}
+                className={formData.amount ? "text-black" : "text-[#8A9191]"}
               />
             )}
-            {addEventType && (
+            
+            {addedComponents.eventType && (
               <Input
                 leftImgSrc="/category-2.svg"
-                text={eventTypes() || "what type of event is this?"}
-                onClick={openEventType}
+                text={eventTypesDisplay || "what type of event is this?"}
+                onClick={modalHandlers[MODAL_TYPES.EVENT_TYPE]}
                 rightImg="/more-circle.svg"
-                onClickRight={toggleEventTypeDropdown}
-                showDropdown={showEventTypeDropdown}
-                edit={openEventType}
-                remove={removeEventType}
+                onClickRight={(e) => toggleDropdown('eventType', e)}
+                showDropdown={isDropdownOpen('eventType')}
+                edit={modalHandlers[MODAL_TYPES.EVENT_TYPE]}
+                remove={() => toggleComponent('eventType', false)}
                 className="text-[#8A9191]"
               />
             )}
-  
+
             <div className="flex flex-wrap gap-2 w-full">
-              {!addDressCode && (
-                <Add title="dress code" onOptionClick={putDress} />
+              {!addedComponents.dressCode && (
+                <Add title="dress code" onOptionClick={() => toggleComponent('dressCode', true)} />
               )}
-              {!addDescription && (
-                <Add title="description" onOptionClick={putDescription} />
+              {!addedComponents.description && (
+                <Add title="description" onOptionClick={() => toggleComponent('description', true)} />
               )}
-              {/* {!addChipIn && <Add title="chip-in" onOptionClick={putChipIn} />} */}
-              {!addEventType && (
-                <Add title="event type" onOptionClick={putEventType} />
+              {!addedComponents.eventType && (
+                <Add title="event type" onOptionClick={() => toggleComponent('eventType', true)} />
               )}
             </div>
           </Grid>
-  
+
           {error && (
             <div className="flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
               <img src="/info-circle.svg" alt="" />
               <span>{error}</span>
             </div>
           )}
-  
+
           {/* Create Event Buttons */}
           <section className="h-fit w-full lg:flex justify-between gap-4 hidden">
             <CreateEventBtn
               text="View Preview"
-              bgcolor={isPreviewEnabled() ? "bg-[#E6F2F3]" : "bg-gray-300"}
-              textcolor={
-                isPreviewEnabled() ? "text-[#095256]" : "text-gray-500"
-              }
-              onClick={openPreview}
-              disabled={!isPreviewEnabled()}
+              bgcolor={isPreviewEnabled ? "bg-[#E6F2F3]" : "bg-gray-300"}
+              textcolor={isPreviewEnabled ? "text-[#095256]" : "text-gray-500"}
+              onClick={modalHandlers[MODAL_TYPES.PREVIEW]}
+              disabled={!isPreviewEnabled}
             />
             <CreateEventBtn
               text={isLoading ? "Creating..." : "Create Event"}
@@ -806,16 +713,16 @@ const Private = ({ onPublic }) => {
           </section>
         </section>
       </div>
-  
+
       {/* Fixed Bottom Section for Mobile */}
       <section className="fixed bottom-0 left-0 right-0 w-full h-20 px-4 pt-6 pb-6 rounded-t-2xl bg-white/90 backdrop-blur-md lg:hidden grid gap-4 z-20 border-t border-white/20 shadow-lg">
         <section className="h-fit w-full flex justify-between gap-4">
           <CreateEventBtn
             text="View Preview"
-            bgcolor={isPreviewEnabled() ? "bg-[#E6F2F3]" : "bg-gray-300"}
-            textcolor={isPreviewEnabled() ? "text-[#095256]" : "text-gray-500"}
-            onClick={openPreview}
-            disabled={!isPreviewEnabled()}
+            bgcolor={isPreviewEnabled ? "bg-[#E6F2F3]" : "bg-gray-300"}
+            textcolor={isPreviewEnabled ? "text-[#095256]" : "text-gray-500"}
+            onClick={modalHandlers[MODAL_TYPES.PREVIEW]}
+            disabled={!isPreviewEnabled}
           />
           <CreateEventBtn
             text={isLoading ? "Creating..." : "Create Event"}
@@ -826,61 +733,71 @@ const Private = ({ onPublic }) => {
           />
         </section>
       </section>
-  
+
       {/* All Modals */}
-      <When isVisible={when} onClose={closeWhen} onSave={handleTimeSave} />
+      <When 
+        isVisible={isModalOpen(MODAL_TYPES.WHEN)} 
+        onClose={() => closeModal(MODAL_TYPES.WHEN)} 
+        onSave={handleTimeSave} 
+      />
       <Where
-        isVisible={where}
-        onClose={closeWhere}
+        isVisible={isModalOpen(MODAL_TYPES.WHERE)}
+        onClose={() => closeModal(MODAL_TYPES.WHERE)}
         onSave={handleLocationSave}
       />
-      <Host isVisible={host} onClose={closeHost} onSave={handleHostNameSave} />
+      <Host 
+        isVisible={isModalOpen(MODAL_TYPES.HOST)} 
+        onClose={() => closeModal(MODAL_TYPES.HOST)} 
+        onSave={(hostName) => handleFormFieldSave('hostName', hostName)} 
+      />
       <ImageModal
-        onClose={closeImageModal}
-        isOpen={imageModal}
+        onClose={() => closeModal(MODAL_TYPES.IMAGE)}
+        isOpen={isModalOpen(MODAL_TYPES.IMAGE)}
         onSave={handleImageSave}
         handleImageUpload={handleImageUpload}
         onUpload={handleImageUpload}
         banks={banks}
       />
       <Description
-        isVisible={description}
-        onClose={closeDescription}
+        isVisible={isModalOpen(MODAL_TYPES.DESCRIPTION)}
+        onClose={() => closeModal(MODAL_TYPES.DESCRIPTION)}
         onSave={handleDescriptionSave}
       />
       <DressCode
-        isVisible={dress}
-        onClose={closeDress}
-        onSave={handleDressCodeSave}
+        isVisible={isModalOpen(MODAL_TYPES.DRESS)}
+        onClose={() => closeModal(MODAL_TYPES.DRESS)}
+        onSave={(dressCode) => handleFormFieldSave('dressCode', dressCode)}
       />
       <ChipIn
-        isVisible={chipin}
-        onClose={closeChipIn}
+        isVisible={isModalOpen(MODAL_TYPES.CHIPIN)}
+        onClose={() => closeModal(MODAL_TYPES.CHIPIN)}
         onSave={handleChipInSave}
         banks={banks}
       />
       <EventType
-        isVisible={eventType}
-        onClose={closeEventType}
+        isVisible={isModalOpen(MODAL_TYPES.EVENT_TYPE)}
+        onClose={() => closeModal(MODAL_TYPES.EVENT_TYPE)}
         onSave={handleEventTypeSave}
       />
-      {isPreviewOpen && (
+      
+      {isModalOpen(MODAL_TYPES.PREVIEW) && (
         <Preview
-          closeModal={closePreview}
+          closeModal={() => closeModal(MODAL_TYPES.PREVIEW)}
           eventImg={getCurrentImageUrl()}
-          eventName={eventName}
-          hostName={hostName}
-          description={descriptionText}
-          dressCode={dressCode}
-          state={state}
-          location={location}
-          locationType={locationType}
-          amount={amount}
-          eventTypes={eventTypes()}
+          eventName={formData.eventName}
+          hostName={formData.hostName}
+          description={formData.descriptionText}
+          dressCode={formData.dressCode}
+          state={formData.state}
+          location={formData.location}
+          locationType={formData.locationType}
+          amount={formData.amount}
+          eventTypes={eventTypesDisplay}
           time={fullDateTimeRange}
         />
       )}
-      {creatingEventPopup && (
+      
+      {isModalOpen(MODAL_TYPES.CREATING_EVENT) && (
         <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
           <div className="sm:w-[90%] w-fit max-w-[546px] h-fit rounded-3xl border border-white/50 bg-[#F0F0F0] backdrop-blur-[32px] flex flex-col justify-center items-center">
             <div className="grid size-fit sm:gap-4 gap-2 sm:py-12 sm:px-6 p-6">
@@ -891,16 +808,16 @@ const Private = ({ onPublic }) => {
               />
               <div className="grid w-full h-fit gap-2 text-center">
                 <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">
-                  {eventName}
+                  {formData.eventName}
                 </h1>
                 <div className="flex gap-1 items-center w-fit h-fit mx-auto">
                   <img src="/calendar.svg" className="w-4 h-4" />
                   <h6 className="text-[#8A9191] text-[16px] font-[500] leading-[24px] satoshi capitalize">
-                    {startDate}
+                    {formData.startDate}
                   </h6>
                   <img src="/timer.svg" className="w-4 h-4" />
                   <h6 className="text-[#8A9191] text-[16px] font-[500] leading-[24px] satoshi capitalize">
-                    {startTime}
+                    {formData.startTime}
                   </h6>
                 </div>
               </div>
@@ -920,7 +837,7 @@ const Private = ({ onPublic }) => {
                       bgcolor="bg-[#F3F0FB]"
                       textcolor="text-[#7A60BF]"
                       onClick={() => {
-                        setCreatingEventPopup(false);
+                        closeModal(MODAL_TYPES.CREATING_EVENT);
                         setError(null);
                         setResponse(null);
                       }}
@@ -934,7 +851,7 @@ const Private = ({ onPublic }) => {
                   </section>
                 </>
               )}
-  
+
               {/* Loading State */}
               {isLoading && !error && (
                 <div className="flex text-[12px] text-[#7A60BF] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3F0FB] border border-[#D9D1F1]">
@@ -942,7 +859,7 @@ const Private = ({ onPublic }) => {
                   <span>Creating Event</span>
                 </div>
               )}
-  
+
               {/* Success State */}
               {!isLoading && !error && response && (
                 <>
@@ -956,7 +873,7 @@ const Private = ({ onPublic }) => {
                       bgcolor="bg-[#F3F0FB]"
                       textcolor="text-[#7A60BF]"
                       onClick={() => {
-                        setCreatingEventPopup(false);
+                        closeModal(MODAL_TYPES.CREATING_EVENT);
                         useEventStore.getState().setShouldRefetch(true);
                         navigate(`/home`);
                       }}
@@ -967,9 +884,8 @@ const Private = ({ onPublic }) => {
                       textcolor="text-white"
                       bgcolor="bg-[#011F0F]"
                       onClick={() => {
-                        setCreatingEventPopup(false);
+                        closeModal(MODAL_TYPES.CREATING_EVENT);
                         useEventStore.getState().setShouldRefetch(true);
-                        // Navigate to share page or home with share functionality
                         navigate(`/home`);
                       }}
                     />
