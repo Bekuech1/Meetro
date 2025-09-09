@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
 import Button from "./Button";
 import Legal from "./Legal";
+import { useDisableScroll } from "@/hooks/useDisableScroll";
 
 const SOCIAL_LINKS = [
-  { name: 'instagram', icon: '/ig', label: 'Instagram', url: 'https://instagram.com/meetro' },
-  { name: 'twitter', icon: '/x', label: 'Twitter', url: 'https://twitter.com/meetro' },
-  { name: 'facebook', icon: '/fb', label: 'Facebook', url: 'https://facebook.com/meetro' },
+  { name: 'instagram', icon: '/ig', label: 'Instagram', url: 'https://instagram.com/meetro.live' },
+  { name: 'twitter', icon: '/x', label: 'Twitter', url: 'https://twitter.com/meetro.live' },
+  { name: 'facebook', icon: '/fb', label: 'Facebook', url: 'https://facebook.com/meetro.live' },
   { name: 'linkedin', icon: '/in', label: 'LinkedIn', url: 'https://linkedin.com/company/meetro' }
 ];
 
@@ -20,6 +21,8 @@ const Footer = ({ onclick }) => {
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [activeLegalComponent, setActiveLegalComponent] = useState("");
   const [hoveredSocial, setHoveredSocial] = useState(null);
+
+  useDisableScroll(isLegalOpen);
 
   const openLegal = useCallback((component) => {
     setActiveLegalComponent(component);
@@ -43,22 +46,22 @@ const Footer = ({ onclick }) => {
   }, []);
 
   // Handle body scroll when legal modal is open
-  useEffect(() => {
-    if (isLegalOpen) {
-      document.body.style.overflow = "hidden";
-      // Focus management for accessibility
-      const firstFocusableElement = document.querySelector('[role="dialog"] button, [role="dialog"] [tabindex="0"]');
-      if (firstFocusableElement) {
-        firstFocusableElement.focus();
-      }
-    } else {
-      document.body.style.overflow = "";
-    }
+  // useEffect(() => {
+  //   if (isLegalOpen) {
+  //     document.body.style.overflow = "hidden";
+  //     // Focus management for accessibility
+  //     const firstFocusableElement = document.querySelector('[role="dialog"] button, [role="dialog"] [tabindex="0"]');
+  //     if (firstFocusableElement) {
+  //       firstFocusableElement.focus();
+  //     }
+  //   } else {
+  //     document.body.style.overflow = "";
+  //   }
 
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isLegalOpen]);
+  //   return () => {
+  //     document.body.style.overflow = "";
+  //   };
+  // }, [isLegalOpen]);
 
   // Handle escape key for modal
   useEffect(() => {
