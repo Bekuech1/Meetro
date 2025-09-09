@@ -138,7 +138,7 @@ export default function MyEvent() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       {/* No events message */}
       {/* {Object.keys(groupedEvents).length === 0 && (
         <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
