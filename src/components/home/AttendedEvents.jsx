@@ -124,7 +124,7 @@ export default function AttendedEvents() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       {/* when there's no new events */}
       {Object.keys(groupedEvents).length === 0 && (
         <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
@@ -157,7 +157,7 @@ export default function AttendedEvents() {
             </p>
           </div>
 
-          {events.map((event) => (
+          {events.map(event => (
             <section
               key={event.id}
               className="bg-[#FCFEF9]/50 backdrop-blur-[40px] rounded-[16px] p-3 flex gap-[10px] border border-white cursor-pointer"
