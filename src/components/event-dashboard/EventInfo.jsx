@@ -22,7 +22,7 @@ export default function EventInfo({ eventId }) {
   const [loading, setLoading] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingResponseType, setPendingResponseType] = useState(null);
-  const user = useAuthStore((state) => state.user);
+  const user = useAuthStore(state => state.user);
   const navigate = useNavigate();
   const [loadingResponseType, setLoadingResponseType] = useState(null);
   const profilePic = getProfilePicture();
@@ -30,10 +30,10 @@ export default function EventInfo({ eventId }) {
   // const {eventId} = useParams()
 
   const toggleReadMore = () => {
-    setIsExpanded((prev) => !prev);
+    setIsExpanded(prev => !prev);
   };
 
-  const handleConfirmAttendance = async (responseType) => {
+  const handleConfirmAttendance = async responseType => {
     if (!user || !user.userId) {
       setPendingResponseType(responseType);
       setShowLoginModal(true);
@@ -51,7 +51,7 @@ export default function EventInfo({ eventId }) {
     }
   };
 
-  const confirmAttendance = async (responseType) => {
+  const confirmAttendance = async responseType => {
     try {
       console.log("Confirming attendance for:", eventId);
       const shareResponse = await API.post(`/shares`, { eventId });
@@ -78,7 +78,7 @@ export default function EventInfo({ eventId }) {
         // check if current user is already attending event
         const attendees = event.attendees?.L || [];
         const matchedAttendee = attendees.find(
-          (attendee) => attendee.M?.userId.S === user.userId
+          attendee => attendee.M?.userId.S === user.userId
         );
 
         if (matchedAttendee) {
@@ -406,7 +406,7 @@ export default function EventInfo({ eventId }) {
 
         {/* Attendees Section */}
         {eventDetails.attendees?.L &&
-          eventDetails.attendees?.L?.M?.responseType === "yes" &&
+          // eventDetails.attendees?.L?.M?.responseType?.S === "yes" &&
           eventDetails.attendees.L.length > 0 && (
             <div className="grid gap-2 w-full h-fit">
               <ModalText
@@ -461,10 +461,10 @@ export default function EventInfo({ eventId }) {
 function calculateTimeRemaining(eventDate) {
   const now = new Date();
   const eventTime = new Date(eventDate);
-  
+
   // Handle invalid date
   if (isNaN(eventTime)) return "Invalid date";
-  
+
   const diff = eventTime - now;
 
   if (diff <= 0) return "Event has started";
@@ -490,14 +490,14 @@ function calculateTimeRemainingDetailed(eventDate, options = {}) {
   const {
     showMinutes = false,
     shortFormat = true,
-    includeSeconds = false
+    includeSeconds = false,
   } = options;
 
   const now = new Date();
   const eventTime = new Date(eventDate);
-  
+
   if (isNaN(eventTime)) return "Invalid date";
-  
+
   const diff = eventTime - now;
 
   if (diff <= 0) return "Event has started";
@@ -507,9 +507,9 @@ function calculateTimeRemainingDetailed(eventDate, options = {}) {
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-  const units = shortFormat 
-    ? { d: 'days', h: 'hours', m: 'minutes', s: 'seconds' }
-    : { d: 'd', h: 'h', m: 'm', s: 's' };
+  const units = shortFormat
+    ? { d: "days", h: "hours", m: "minutes", s: "seconds" }
+    : { d: "d", h: "h", m: "m", s: "s" };
 
   let result = [];
 
@@ -518,7 +518,7 @@ function calculateTimeRemainingDetailed(eventDate, options = {}) {
   if (showMinutes && minutes > 0) result.push(`${minutes}${units.m}`);
   if (includeSeconds && seconds > 0) result.push(`${seconds}${units.s}`);
 
-  return result.length > 0 ? result.join(' ') : "Starting soon";
+  return result.length > 0 ? result.join(" ") : "Starting soon";
 }
 
 // helper function to get attendees initials

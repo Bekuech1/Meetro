@@ -36,11 +36,11 @@ export default function GuestList({ guests }) {
 
         {guests && guests.length === 0 ? (
           // if the guest count is still zero
-          <div className="flex flex-col gap-2 items-center justify-center w-[420px] mx-auto">
+          <div className="flex flex-col gap-2 items-center justify-center w-fit md:w-[420px] mx-auto text-center">
             <p className="text-[#001010] text-lg font-bold satoshi">
               No guests yet, let's change that!
             </p>
-            <p className="text-[#8A9191] text-[16px] font-medium text-center satoshi">
+            <p className="text-[#8A9191] text-[16px] font-medium satoshi">
               Invite your friends or share the event link to start filling up
               this list.
             </p>

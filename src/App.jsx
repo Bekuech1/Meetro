@@ -23,6 +23,7 @@ import ProtectedRoute from "./components/(appState)/ProtectedRoute";
 import { useRehydrateAuth } from "./lib/useRehydrateAuth";
 import EventDetails from "./routes/EventDetails";
 import ManageEventPage from "./routes/ManageEvent";
+import NormalHome from "./components/home/NormalHome";
 
 function App() {
   useRehydrateAuth(); // This hook is used to rehydrate the auth state from local storage or session storage
@@ -69,7 +70,7 @@ function App() {
               index
               element={
                 <ProtectedRoute>
-                  <Home />
+                  <NormalHome />
                 </ProtectedRoute>
               }
             />
