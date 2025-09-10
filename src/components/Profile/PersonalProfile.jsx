@@ -23,6 +23,14 @@ export function getProfilePicture() {
   return storedPic;
 }
 
+// second helper funtion for random images if needed later
+// export function setAttendeeImage() {
+//   const randomIndex = Math.floor(Math.random() * profilePictures.length);
+//   const storedPic = profilePictures[randomIndex];
+
+//   return storedPic;
+// }
+
 const PersonalProfile = () => {
   // const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
   const user = useAuthStore((state) => state.user);

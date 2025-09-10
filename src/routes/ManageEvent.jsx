@@ -1,6 +1,8 @@
+import { LoadingSpinner } from "@/components/create-event/Private";
 import EditEvent from "@/components/event-dashboard/EditEvent";
 import GuestList from "@/components/event-dashboard/GuestList";
 import ShareEvent from "@/components/event-dashboard/ShareEvent";
+// import LoadingSpinner from "@/components/Layout-conponents/LoadingSpinner";
 import API from "@/lib/axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -8,16 +10,17 @@ import { useParams } from "react-router-dom";
 // this is the page for added mangement feature to each Events
 export default function ManageEventPage() {
   const { eventId } = useParams();
-  console.log(useParams());
   const [eventData, setEventData] = useState(null);
-
-  const [activeTab, setActiveTab] = useState("guests");
-  const handleTabChange = (tab) => {
+  const [activeTab, setActiveTab] = useState("eventDetails");
+  const [loading, setLoading] = useState(false);
+  const handleTabChange = tab => {
     setActiveTab(tab);
   };
 
   useEffect(() => {
     const fetchEvent = async () => {
+      setLoading(true);
+
       try {
         const response = await API.get(`/events/${eventId}`);
         const event = response.data;
@@ -25,10 +28,15 @@ export default function ManageEventPage() {
         console.log("evet data:", event);
       } catch (error) {
         console.error("Error fetching event data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchEvent();
   }, [eventId]);
+
+  if (loading) return <div className="bg-[#F0F0F0]  h-[100vh] flex justify-center items-center"><LoadingSpinner size={40} /></div>;  
+
 
   return (
     <>
@@ -94,11 +102,13 @@ export default function ManageEventPage() {
 
           <div className="flex items-center justify-center">
             {/* tab toggle */}
-            <div   style={{
+            <div
+              style={{
                 boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
                 backdropFilter: "blur(16px)",
               }}
-              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full">
+              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
+            >
               <button
                 className={`${
                   activeTab === "eventDetails"
@@ -124,7 +134,7 @@ export default function ManageEventPage() {
 
       <section className="min-h-[642px] px-4 pb-10 pt-6 bg-[#F0F0F0]">
         <div className="md:w-[950px] mx-auto">
-          {activeTab === "eventDetails" && <EditEvent />}
+          {activeTab === "eventDetails" && <EditEvent eventId={eventData} />}
           {activeTab === "guests" && (
             <GuestList guests={eventData?.attendees?.L || []} />
           )}
