@@ -110,7 +110,7 @@ export default function MyEvent() {
   if (myEvents.length === 0) {
     return (
       <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
-        <p className="mb-4">You haven't created any events yet.</p>
+        <p className="mb-4 satoshi">You haven't created any events yet.</p>
 
         <SiteBtn
           name="Create a new event"

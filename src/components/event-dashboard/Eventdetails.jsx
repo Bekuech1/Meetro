@@ -12,6 +12,7 @@ import API from "@/lib/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 import LoginModal from "../Onboarding/LoginModal";
+import LoadingSpinner from "../Layout-conponents/LoadingSpinner";
 
 const Eventdetails = () => {
   const { eventId } = useParams(); // Assuming you're using react-router for routing
@@ -86,16 +87,16 @@ const Eventdetails = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-10">Loading event details...</div>;
+    return <div className="text-center py-10"><LoadingSpinner color="border-[#866AD2]"/></div>;
   }
 
   if (error) {
-    return <div className="text-red-500 text-center py-10">{error}</div>;
+    return <div className="text-red-500 text-center py-10 satoshi">{error}</div>;
   }
 
   //empty state
   if (!eventData) {
-    return <div className="text-center py-10">Event not found</div>;
+    return <div className="text-center py-10 satoshi">Event not found</div>;
   }
 
   // const imageUrl = import.meta.env.VITE_IMAGE_URL;

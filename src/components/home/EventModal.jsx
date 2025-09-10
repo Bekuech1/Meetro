@@ -4,7 +4,7 @@ import ShareEvent from "../event-dashboard/ShareEvent";
 
 const EventModal = ({ eventId, closeModal }) => {
   return (
-    <div className="fixed inset-0 w-full h-full lg:flex lg:items-center lg:justify-center bg-[#00000080]/50 md:backdrop-blur-[4px] z-[9999] overflow-auto">
+    <div className="fixed inset-0 w-full h-full lg:pt-0 pt-16 lg:h-screen lg:flex lg:items-center lg:justify-center bg-[#00000080]/50 md:backdrop-blur-[4px] z-50 overflow-auto scrollbar-hide">
       <div className="flex flex-col-reverse gap-2 lg:w-fit w-full h-fit">
         <div className="lg:mx-14 mx-auto w-full md:w-fit lg:h-[85vh] lg:max-h-[670px] h-full p-4 md:p-8 md:rounded-3xl lg:flex grid gap-2 bg-[#E8E8E8] text-center lg:overflow-hidden">
          
