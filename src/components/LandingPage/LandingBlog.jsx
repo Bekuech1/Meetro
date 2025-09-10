@@ -3,8 +3,10 @@ import CtaButton from "../Layout-conponents/CtaButton";
 import BlogCard from "./components/BlogCard";
 import { blogPosts } from "@/utils/blogs";
 
+const latestPosts = blogPosts.slice(0, 3);
+
 const LandingBlog = ({ onClick, goToBlog }) => {
-  const latestPosts = blogPosts.slice(0, 3);
+  
   return (
     <div className="bg-[#F0F0F0] flex flex-col py-15 gap-15 h-fit relative justify-center items-center w-full overflow-hidden">
       <div className="flex flex-col gap-12 w-full h-fit justify-center text-center">

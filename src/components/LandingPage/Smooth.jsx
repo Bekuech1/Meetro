@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../Layout-conponents/Button";
 
-const Smooth = () => {
+const Smooth = ( {onClick} ) => {
   return (
     <div className="bg-[#03353A] xl:h-screen h-fit xl:flex grid justify-center gap-[60px] items-center py-12">
       <div className="md:w-[600px] w-[90%] md:mx-0 mx-auto relative min-h-[300px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[532px] rounded-4xl bg-[linear-gradient(180deg,rgba(208,235,243,0.1)_0%,rgba(121,137,141,0.1)_100%)] backdrop-blur-[32px] flex justify-center items-center">
@@ -24,7 +24,7 @@ const Smooth = () => {
           </div>
         </div>
         <div className="flex gap-4 w-fit">
-          <Button name="create events" color="bg-white" />
+          <Button name="create events" color="bg-white" onclick={onClick}/>
         </div>
       </div>
     </div>

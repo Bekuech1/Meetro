@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import Button from "../Layout-conponents/Button";
 import SplineComponent from "../Layout-conponents/SplineComp";
 
+
+const featureItems = [
+  "Discover local events",
+  "Match with people attending",
+  "Join communities you vibe with",
+  "Create public events & grow your tribe",
+];
+
 const FutureFeatures = ({ onclick }) => {
-  const featureItems = [
-    "Discover local events",
-    "Match with people attending",
-    "Join communities you vibe with",
-    "Create public events & grow your tribe",
-  ];
 
   return (
     <div className="bg-[#F3F0FB] xl:h-screen h-fit flex flex-col-reverse justify-center gap-[60px] items-center py-12 xl:flex-row">
@@ -17,7 +19,7 @@ const FutureFeatures = ({ onclick }) => {
           <img
             src="/illustration-rotating-card.gif"
             alt="Descriptive Text"
-            className="lg:scale-350 scale-200"
+            className="lg:scale-350 scale-250"
           />
         </div>
       </div>

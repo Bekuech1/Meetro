@@ -4,15 +4,16 @@ import Lottie from "react-lottie";
 import animationData from "../Layout-conponents/bgmove.json";
 import CtaButton from "../Layout-conponents/CtaButton";
 
-const JoinToday = ({ onclick }) => {
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+
+const JoinToday = ({ onClick }) => {
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -36,7 +37,7 @@ const JoinToday = ({ onclick }) => {
             >
               <Button name="Join Community" color="bg-white" />
             </a>
-            <CtaButton name="create event" />
+            <CtaButton name="create event" onClick={onClick}/>
           </div>
         </div>
       </div>

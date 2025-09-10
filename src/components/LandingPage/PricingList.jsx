@@ -1,7 +1,32 @@
 import React from "react";
 import Button from "../Layout-conponents/Button";
 
-const PricingComponent = ({ heading, subtext, features }) => (
+const PRICING_DATA = [
+  {
+    id: 1,
+    heading: "It's all Free",
+    features: [
+      "Create and manage private events",
+      "Invite friends and track RSVPs", 
+      "Customize your event details",
+      "Choose from themes to match the vibe",
+      "Chip In options for guests to contribute",
+      "Event dashboard with attendee management",
+      "Social links and updates",
+    ]
+  },
+  {
+    id: 2,
+    heading: "Our pricing is simple",
+    subtext: "We only charge when money moves and we keep it simple:",
+    features: [
+      "7% + ₦200 fee for paid event",
+      "Fees are paid by ticket buyers on paid tickets, unless you choose to cover them.",
+    ]
+  }
+];
+
+const PricingComponent = ({ heading, subtext, features, onClick }) => (
   <div className="md:w-[515px] w-[90%] md:h-[434px] h-[490px] rounded-4xl border border-[#C7BAEA] backdrop-blur-2xl bg-[#D9D1F1]/40 flex flex-col justify-between p-8">
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2 h-fit">
@@ -25,11 +50,12 @@ const PricingComponent = ({ heading, subtext, features }) => (
         ))}
       </ul>
     </div>
-    <Button name="get started" color="bg-white" />
+    <Button name="Get Started" color="bg-white" onClick={onClick} />
   </div>
 );
 
-const PricingList = () => {
+const PricingList = ( {onClick} ) => {
+
   return (
     <div className="relative w-full h-fit py-24 min-h-[780px] flex flex-col gap-10 bg-[#FCFEF9] satoshi ">
       <div className="flex flex-col gap-6 md:w-[563px] w-[90%] h-fit justify-center text-center mx-auto mt-6">
@@ -41,27 +67,16 @@ const PricingList = () => {
           small fees on ticket sales or Chip In contributions.
         </p>
       </div>
-      <div className="flex flex-col md:flex-row gap-10 justify-center items-center w-fit mx-auto max-w-[1200px]">
-        <PricingComponent
-          heading="It’s all Free"
-          features={[
-            "Create and manage private events",
-            "Invite friends and track RSVPs",
-            "Customize your event details",
-            "Choose from themes to match the vibe",
-            "Chip In options for guests to contribute",
-            "Event dashboard with attendee management",
-            "Social links and updates",
-          ]}
-        />
-        <PricingComponent
-          heading="Our pricing is simple"
-          subtext="We only charge when money moves and we keep it simple:"
-          features={[
-            "7% + ₦200 fee for paid event",
-            "Fees are paid by ticket buyers on paid tickets, unless you choose to cover them.",
-          ]}
-        />
+      <div className="flex flex-col lg:flex-row gap-10 justify-center items-center w-fit mx-auto max-w-[1200px]">
+        {PRICING_DATA.map((plan) => (
+          <PricingComponent
+            key={plan.id}
+            heading={plan.heading}
+            subtext={plan.subtext}
+            features={plan.features}
+            onClick={onClick}
+          />
+        ))}
       </div>
       <div className="absolute flex justify-between items-center w-full h-fit bg-transparent -bottom-[250px]">
         <div className="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>

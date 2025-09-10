@@ -45,25 +45,6 @@ const Footer = ({ onclick }) => {
     }
   }, []);
 
-  // Handle body scroll when legal modal is open
-  // useEffect(() => {
-  //   if (isLegalOpen) {
-  //     document.body.style.overflow = "hidden";
-  //     // Focus management for accessibility
-  //     const firstFocusableElement = document.querySelector('[role="dialog"] button, [role="dialog"] [tabindex="0"]');
-  //     if (firstFocusableElement) {
-  //       firstFocusableElement.focus();
-  //     }
-  //   } else {
-  //     document.body.style.overflow = "";
-  //   }
-
-  //   return () => {
-  //     document.body.style.overflow = "";
-  //   };
-  // }, [isLegalOpen]);
-
-  // Handle escape key for modal
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape' && isLegalOpen) {
@@ -133,12 +114,12 @@ const Footer = ({ onclick }) => {
           >
             <Button name="Join Community" color="bg-white" />
           </a>
-          <Button 
+          {/* <Button 
             name="Join waitlist" 
             color="bg-[#AFFC41]" 
             onclick={onclick}
             aria-label="Join our waitlist"
-          />
+          /> */}
         </div>
       </div>
 

@@ -2,9 +2,10 @@ import React from "react";
 import BlogCard from "./components/BlogCard";
 import { blogPosts } from "@/utils/blogs";
 
+
+const latestPosts = blogPosts.slice(0, 3);
+
 const MainBlog = ({ onClick }) => {
-  // Optionally filter or limit posts to create `latestPosts`
-  const latestPosts = blogPosts.slice(0, 3); // Example: take the first 6 posts
 
   return (
     <div className="relative w-full h-fit min-h-[600px] flex flex-col gap-10 bg-[#FCFEF9] satoshi py-24">

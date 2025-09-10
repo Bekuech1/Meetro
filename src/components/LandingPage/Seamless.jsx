@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
-import Button from "../Layout-conponents/Button";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import SeamlessAni from "../Layout-conponents/SeamlessAni";
 import CtaButton from "../Layout-conponents/CtaButton";
 
-const Seamless = ({ onclick }) => {
+const Seamless = ({ onClick }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
@@ -38,6 +37,13 @@ const Seamless = ({ onclick }) => {
     };
   }, []);
 
+  const animationContent = useMemo(() => {
+    if (isVisible) {
+      return <SeamlessAni />;
+    }
+    return <div className="lg:w-[600px] relative rounded-4xl bg-[linear-gradient(180deg,rgba(123,173,52,0.1)_0%,rgba(122,161,91,0.1)_100%)] backdrop-blur-[32px] flex justify-center items-center"></div>;
+  }, [isVisible]);
+
   return (
     <div
       ref={sectionRef}
@@ -59,15 +65,11 @@ const Seamless = ({ onclick }) => {
           </div>
         </div>
         <div className="flex gap-4 w-fit">
-          <CtaButton name="create event" onclick={onclick} />
+          <CtaButton name="create event" onclick={onClick} />
         </div>
       </div>
       <div className="min-h-[300px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[532px]">
-        {isVisible ? (
-          <SeamlessAni />
-        ) : (
-          <div className="lg:w-[600px] relative rounded-4xl bg-[linear-gradient(180deg,rgba(123,173,52,0.1)_0%,rgba(122,161,91,0.1)_100%)] backdrop-blur-[32px] flex justify-center items-center"></div>
-        )}
+      {animationContent}
       </div>
     </div>
   );

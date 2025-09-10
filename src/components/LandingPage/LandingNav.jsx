@@ -4,7 +4,6 @@ import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
 import { motion} from "framer-motion";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
 
-// Move static data outside component to prevent recreating on each render
 const NAV_ITEMS = [
   { id: 0, name: "how it works" },
   { id: 1, name: "pricing" },
@@ -12,7 +11,6 @@ const NAV_ITEMS = [
   { id: 3, name: "about us" },
 ];
 
-// Pre-define animation variants to avoid recreating objects
 const navVariants = {
   initial: { scale: 0, opacity: 0 },
   animate: { 
@@ -86,22 +84,24 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
         initial="initial"
         animate="animate"
       >
-        <div className="inline-flex gap-[10px] items-center">
+        <div className="inline-flex gap-[10px] items-center w-fit">
           <img src="/meetroLogo.svg" alt="Meetro Logo" loading="lazy" />
           <div className="bg-linear-to-r from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] leading-tight size-fit capitalize p-1 rounded-2xl text-[#011F0F]">
-            <span>Beta</span>
+            <p>Beta</p>
           </div>
         </div>
 
-        <ul className="md:flex size-fit gap-4 hidden">
-          {desktopNavItems}
-        </ul>
-
-        <div className="w-fit flex justify-center items-center gap-4">
-          <Button name="create event" color="bg-[#AFFC41]" onclick={onAuth} />
-          <button onClick={handleMenuOpen} className="md:hidden size-fit">
-            <img src="/v2menu.svg" alt="Open menu" loading="lazy" />
-          </button>
+        <div className="w-full flex justify-end items-center gap-4">
+          <ul className="md:flex size-fit gap-4 hidden">
+            {desktopNavItems}
+          </ul>
+  
+          <div className="flex justify-center items-center gap-4">
+            <Button name="create event" color="bg-[#AFFC41]" onclick={onAuth} />
+            <button onClick={handleMenuOpen} className="md:hidden size-fit">
+              <img src="/v2menu.svg" alt="Open menu" loading="lazy" />
+            </button>
+          </div>
         </div>
       </motion.nav>
 
@@ -114,7 +114,7 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
         >
           <div className="w-full flex flex-col gap-8 h-fit">
             <div className="flex w-full h-fit justify-between">
-              <img src="meetroLogo.svg" alt="Meetro Logo" loading="lazy" />
+              <img src="/meetroLogo.svg" alt="Meetro Logo" loading="lazy" />
               <button
                 onClick={handleMenuClose}
                 className="size-fit rounded-4xl p-1 bg-[#344C3F]"

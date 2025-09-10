@@ -2,7 +2,9 @@ import React from "react";
 
 const BlogCard = ({ post, onClick, mobile }) => {
   const handleCardClick = () => {
-    onClick(post.id); // Pass the post ID to parent
+    if (typeof onClick === "function") {
+      onClick(post.id);
+    }
   };
   return (
     <div
@@ -33,10 +35,14 @@ const BlogCard = ({ post, onClick, mobile }) => {
           {post.subtext}
         </p>
         <div className="w-full h-fit items-center justify-between flex">
-          <button className="text-[14px] leading-5 text-[#7A60BF] font-[700]">
+          <button
+            className="text-[14px] leading-5 text-[#7A60BF] font-[700]"
+            onClick={handleCardClick}
+            aria-label="Read more"
+          >
             Read More
           </button>
-          <button>
+          <button onClick={handleCardClick} aria-label="Open post">
             <img src="/blog-arrow.svg" alt="" />
           </button>
         </div>

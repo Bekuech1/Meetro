@@ -11,18 +11,18 @@ import JoinToday from "@/components/LandingPage/JoinToday";
 
 
 
-const HowItWorks = ( {onClick, goToBlog} ) => {
+const HowItWorks = ( {onClick, goToBlog, openBlog} ) => {
   return (
     <>
-      <Hero />
-      <Seamless />
-      <Vibe />
-      <Guests />
-      <Smooth />
-      <FutureFeatures />
-      <Simple />
-      <LandingBlog onClick={onClick} goToBlog={goToBlog} />
-      <JoinToday />
+      <Hero onClick={onClick}/>
+      <Seamless onClick={onClick}/>
+      <Vibe onClick={onClick}/>
+      <Guests onClick={onClick}/>
+      <Smooth onClick={onClick}/>
+      <FutureFeatures onclick={onClick}/>
+      <Simple onClick={onClick}/>
+      <LandingBlog onClick={openBlog} goToBlog={goToBlog} />
+      <JoinToday onClick={onClick}/>
     </>
   );
 };

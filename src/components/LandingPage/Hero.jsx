@@ -161,9 +161,6 @@ const AnimatedCard = React.memo(({
       className={`backdrop-blur-2xl shadow-2xl bg-center flex flex-col justify-between ${customClass} border-8 border-white rounded-4xl will-change-transform`}
       style={{ 
         backgroundImage: `url(${bgImage})`,
-        // GPU acceleration hints
-        transform: 'translate3d(0, 0, 0)',
-        backfaceVisibility: 'hidden',
       }}
     >
       <div className="flex items-center justify-between w-full h-fit p-4 bg-transparent">
@@ -202,7 +199,7 @@ const AnimatedCard = React.memo(({
 
 AnimatedCard.displayName = 'AnimatedCard';
 
-const Hero = () => {
+const Hero = ( { onClick } ) => {
   const { width: screenWidth } = useScreenSize();
   
   // Memoized animations to prevent recalculation
@@ -341,7 +338,7 @@ const Hero = () => {
               effortlessly.
             </motion.span>
           </motion.h1>
-          <CtaButton name="create event" />
+          <CtaButton name="create event" onclick={onClick}/>
         </div>
       </div>
       

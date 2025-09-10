@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Layout-conponents/Footer";
 import LandingNav from "@/components/LandingPage/LandingNav";
@@ -12,22 +12,23 @@ function Homepage() {
   const [activeItem, setActiveItem] = useState(0);
   const navigate = useNavigate();
 
-  const handleCardClick = (postId) => {
+  const handleCardClick = useCallback((postId) => {
     navigate(`/blog/${postId}`);
-  };
+  }, [navigate]);
 
-  const handleNavItemClick = (itemIndex) => {
-    setActiveItem(itemIndex);
-    setNavOpen(false);
-  };
+  // Removed unused buggy handler referencing undefined setNavOpen
 
-  const renderContent = () => {
+  const goToAuth = useCallback(() => navigate("/authentication"), [navigate]);
+  const goToBlogTab = useCallback(() => setActiveItem(2), []);
+
+  const content = useMemo(() => {
     switch (activeItem) {
       case 0:
         return (
           <HowItWorks
-            onClick={handleCardClick}
-            goToBlog={() => setActiveItem(2)}
+            openBlog={handleCardClick}
+            goToBlog={goToBlogTab}
+            onClick={goToAuth}
           />
         );
       case 1:
@@ -39,45 +40,34 @@ function Homepage() {
       default:
         return (
           <HowItWorks
-            onClick={handleCardClick}
-            goToBlog={() => setActiveItem(2)}
+            onClick={goToAuth}
+            goToBlog={goToBlogTab}
+            openBlog={handleCardClick}
           />
         );
     }
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "auto",
-    });
-  };
+  }, [activeItem, handleCardClick, goToAuth, goToBlogTab]);
 
   // Scroll to top whenever activeItem changes
   useEffect(() => {
-    scrollToTop();
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [activeItem]);
 
 
-  const navItems = [
-    { label: "How it Works", index: 0 },
-    { label: "Pricing", index: 1 },
-    { label: "Blog", index: 2 },
-    { label: "About Us", index: 3 }
-  ];
+  // (navItems removed; not used here)
 
   return (
     <div className='scroll-smooth relative'>
 
       <div className="top-0 sticky z-20 justify-center items-center flex">
         <LandingNav
-          onAuth={() => navigate("/authentication")}
+          onAuth={goToAuth}
           setActiveItem={setActiveItem}
           activeItem={activeItem}
         />
       </div>
       
-      <main>{renderContent()}</main>
+      <main>{content}</main>
       
       <Footer />
     </div>
