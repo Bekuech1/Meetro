@@ -35,6 +35,10 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
 
   const handleMenuOpen = useCallback(() => setNavOpen(true), []);
   const handleMenuClose = useCallback(() => setNavOpen(false), []);
+  const handleCreateEvent = useCallback(() => {
+    setNavOpen(false);
+    if (onAuth) onAuth();
+  }, [onAuth]);
   
   // Prevent event bubbling on mobile nav
   const handleNavClick = useCallback((e) => e.stopPropagation(), []);
@@ -69,7 +73,8 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
 
   // Memoize mobile nav class to prevent string concatenation on each render
   const mobileNavClass = useMemo(() => 
-    `fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[96%] h-[96vh] bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex-col rounded-4xl justify-between z-[100] ${navOpen ? "flex" : "hidden"}`,
+    `fixed inset-4 bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex-col rounded-4xl justify-between z-[100] max-h-[calc(100vh-2rem)] 
+   ${navOpen ? "flex" : "hidden"}`,
     [navOpen]
   );
 
@@ -100,6 +105,7 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
         </div>
       </motion.nav>
 
+      {navOpen && (
         <nav
           className={mobileNavClass}
           role="navigation"
@@ -122,12 +128,13 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
             </ul>
           </div>
           <CreateEventBtn
-            onClick={handleMenuClose}
+            onClick={handleCreateEvent}
             bgcolor="bg-[#AEFC40]"
             text="create event"
             textcolor="text-[#011F0F]"
           />
         </nav>
+      )}
     </>
   );
 });
