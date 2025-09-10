@@ -99,20 +99,19 @@ export default function EventInfo({ eventId }) {
 
   if (loading) {
     return (
-      <div className="text-center py-10 w-full md:w-[950px] h-full flex flex-col items-center justify-center gap-3">
-        {/* <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#866AD2]"></div> */}
-        <LoadingSpinner size={40} />
-      </div>
+      <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3">
+  <LoadingSpinner size={40} />
+</div>
     );
   }
 
   if (error) {
-    return <div className="text-red-500 text-center py-10">{error}</div>;
+    return <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3"><p className="text-red-500 text-center py-10 satoshi">{error}</p></div>;
   }
 
   //empty state
   if (!eventDetails) {
-    return <div className="text-center py-10">Event not found</div>;
+    return <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3"><p className="text-center py-10 satoshi">Event not found</p></div>;
   }
 
   // const imageUrl = import.meta.env.VITE_IMAGE_URL;
@@ -124,15 +123,15 @@ export default function EventInfo({ eventId }) {
     : "/events-modal.png"; // or some placeholder
 
   return (
-    <div className="mt-4 flex flex-col md:flex-row gap-4 md:gap-8 w-full md:w-[950px] mx-auto">
+    <div className="mt-4 flex flex-col md:flex-row gap-4 md:gap-8 w-full lg:w-[950px] mx-auto">
       {/* Left Section - Event Image and Host Info */}
-      <section className="w-full lg:w-[349px] h-full grid gap-8 relative overflow-y-auto scrollbar-hide">
-        <div className="relative">
+      <section className="w-full lg:w-[349px] h-full grid gap-8 relative">
+        <div>
           <img
             src={imagePath}
             // src={eventDetails?.imageKey?.S}
             alt="Event-poster"
-            className="rounded-3xl w-full lg:w-[343px] h-[318px] lg:h-[323px]"
+            className="rounded-3xl size-[306px] lg:w-[343px] lg:h-[323px] mx-auto"
           />
           {/* <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
             <img src="/image.svg" className="z-10" alt="Image" />
@@ -177,7 +176,7 @@ export default function EventInfo({ eventId }) {
       </section>
 
       {/* Right Section - Event Details */}
-      <section className="w-full lg:w-[569px] sm:h-full h-fit sm:overflow-y-auto scrollbar-hide flex flex-col gap-6">
+      <section className="w-full md:w-[569px] md:h-full h-fit md:overflow-y-auto scrollbar-hide flex flex-col gap-6">
         <div className="flex w-full h-fit gap-2">
           <div className="grid w-full h-fit gap-2 text-start">
             <h1 className="paytone capitalize text-black font-[400] text-[30px] leading-[38px]">

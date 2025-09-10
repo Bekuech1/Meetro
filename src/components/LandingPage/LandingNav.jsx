@@ -62,9 +62,8 @@ const LandingNav = ({ activeItem, setActiveItem, onAuth }) => {
         </div>
       </motion.nav>
 
-      {navOpen && (
         <nav
-          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[96%] h-[96vh] bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex flex-col rounded-4xl justify-between z-[100]"
+          className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[96%] h-[96vh] bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex-col rounded-4xl justify-between z-[100] ${navOpen ? "flex" : "hidden"}`}
           role="navigation"
           aria-label="Mobile navigation"
           onClick={(e) => e.stopPropagation()}
@@ -100,7 +99,6 @@ const LandingNav = ({ activeItem, setActiveItem, onAuth }) => {
             textcolor="text-[#011F0F]"
           />
         </nav>
-      )}
     </>
   );
 };
