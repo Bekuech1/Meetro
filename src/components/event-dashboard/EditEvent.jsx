@@ -65,9 +65,9 @@ export default function EditEvent({ eventId }) {
               icon={"/location-try.svg"}
             />
 
-            <Input data={eventData?.description?.S} icon={"/note-text.svg"} />
+            <Input placeholder={"Description"} data={eventData?.description?.S} icon={"/note-text.svg"} />
             
-            <Input data={eventData?.dressCode?.S} icon={"/dress.svg"}/>
+            <Input placeholder={"Dress Code"} data={eventData?.dressCode?.S} icon={"/dress.svg"}/>
           </div>
 
           <div>
@@ -108,13 +108,14 @@ export default function EditEvent({ eventId }) {
   );
 }
 
-const Input = ({ icon, data }) => {
+const Input = ({ icon, data, placeholder }) => {
   return (
     <div className="w-full bg-[#FFFFFE80] border border-white backdrop-blur-2xl flex items-center gap-2 px-2 py-3 rounded-[12px]">
       <img src={icon} alt="" className=" bg-white rounded-full p-1" />
       <input
         type="text"
         value={data}
+        placeholder={placeholder}
         className="w-full bg-transparent outline-none font-medium text-sm"
       />
     </div>
