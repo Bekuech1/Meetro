@@ -68,37 +68,45 @@ const LandingNav = ({ activeItem, setActiveItem, onAuth }) => {
           aria-label="Mobile navigation"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="w-full flex flex-col gap-8 h-fit">
-            <div className="flex w-full h-fit justify-between">
-              <img src="meetroLogo.svg" alt="Meetro Logo" />
-              <button
-                onClick={() => setNavOpen(false)}
-                className="size-fit rounded-4xl p-1 bg-[#344C3F]"
-                aria-label="Close navigation menu"
-              >
-                <img src="/menu-active.svg" alt="" className="size-[24px]" />
-              </button>
+          <nav
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[96%] h-[96vh] bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex flex-col rounded-4xl justify-between"
+            role="navigation"
+            aria-label="Mobile navigation"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-full flex flex-col gap-8 h-fit">
+              <div className="flex w-full h-fit justify-between">
+                <img src="meetroLogo.svg" alt="Meetro Logo" />
+                <button
+                  onClick={() => setNavOpen(false)}
+                  className="size-fit rounded-4xl p-1 bg-[#344C3F]"
+                  aria-label="Close navigation menu"
+                >
+                  <img src="/menu-active.svg" alt="" className="size-[24px]" />
+                </button>
+              </div>
+              <ul className="flex flex-col h-fit w-full">
+                {navItems.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      className="w-full h-fit py-4 paytone capitalize font-medium text-[20px] leading-6 text-white cursor-pointer text-left"
+                      onClick={() => handleNavItemClick(item.id)}
+                    >
+                      {item.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="flex flex-col h-fit w-full">
-              {navItems.map((item) => (
-                <li key={item.id}>
-                  <button
-                    className="w-full h-fit py-4 paytone capitalize font-medium text-[20px] leading-6 text-white cursor-pointer text-left"
-                    onClick={() => handleNavItemClick(item.id)}
-                  >
-                    {item.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <CreateEventBtn
-            onClick={() => setNavOpen(false)}
-            bgcolor="bg-[#AEFC40]"
-            text="create event"
-            textcolor="text-[#011F0F]"
-          />
-        </nav>
+            <CreateEventBtn
+              onClick={() => setNavOpen(false)}
+              bgcolor="bg-[#AEFC40]"
+              text="create event"
+              textcolor="text-[#011F0F]"
+            />
+          </nav>
+        </div>
+      )}
     </>
   );
 };
