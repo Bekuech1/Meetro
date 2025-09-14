@@ -68,6 +68,7 @@ export default function MyEvent() {
         return acc;
       }, {});
 
+    console.log("Grouped Events:", sortedGrouped);
     return sortedGrouped;
   };
 
