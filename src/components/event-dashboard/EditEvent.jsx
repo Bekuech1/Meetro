@@ -133,7 +133,11 @@ export default function EditEvent({ eventId }) {
             {/* description input */}
             <Input
               placeholder={"Description"}
-              data={event.description}
+              data={
+                event.description.length > 50
+                  ? event.description.substring(0, 50) + "..."
+                  : event.description
+              }
               icon={"/note-text.svg"}
               onClick={() => setDescriptionModal(true)}
             />
@@ -143,7 +147,7 @@ export default function EditEvent({ eventId }) {
               onSave={updatedDescription => {
                 setEvent(prev => ({
                   ...prev,
-                  description: updatedDescription,
+                  description: updatedDescription.data,
                 }));
               }}
             />
