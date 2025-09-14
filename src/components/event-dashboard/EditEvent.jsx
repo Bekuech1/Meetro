@@ -1,23 +1,51 @@
 import API from "@/lib/axios";
+import { useState } from "react";
+import When from "../create-event/PopUps/When";
+import Where from "../create-event/PopUps/Where";
+import { LoadingSpinner } from "../create-event/Private";
+import Description from "../create-event/PopUps/Description";
 // import { useEffect, useState } from "react";
 
 export default function EditEvent({ eventId }) {
-  // const [eventData, setEventData] = useState(null);
   const eventData = eventId;
-  console.log(eventId);
+  const [loading, setLoading] = useState(false);
+  // local editable state
+  const [event, setEvent] = useState({
+    title: eventData?.title?.S || "",
+    description: eventData?.description?.S || "",
+    date: eventData?.date?.S || "",
+    timeFrom: eventData?.timeFrom?.S || "",
+    timeTo: eventData?.timeTo?.S || "",
+    location: {
+      venue: eventData?.location?.M?.venue?.S || "",
+      state: eventData?.location?.M?.state?.S || "",
+      country: eventData?.location?.M?.country?.S || "",
+      type: eventData?.location?.M?.type?.S || "offline",
+    },
+    dressCode: eventData?.dressCode?.S || "",
+    imageKey: eventData?.imageKey?.S || "",
+  });
+
+  const [whenModal, setWhenModal] = useState(false);
+  const [whereModal, setWhereModal] = useState(false);
+  const [descriptionModal, setDescriptionModal] = useState(false);
 
   const imagePath = eventData?.imageKey?.S
     ? new URL(eventData.imageKey.S, import.meta.env.VITE_IMAGE_URL).toString()
     : "/events-modal.png"; // or some placeholder
 
-  // const updateEvent = async (updatedData) => {
-  //   try {
-  //     const response = await API.put(`/events/${eventId}/state`, updatedData);
-  //     console.log("Event updated successfully:", response.data);
-  //   } catch (error) {
-  //     console.error("Error updating event:", error);
-  //   }
-  // };
+  const updateEvent = async () => {
+    console.log("event data", event);
+    setLoading(true);
+    try {
+      const response = await API.put(`/events/${eventId}/state`, event);
+      console.log("Event updated successfully:", response.data);
+    } catch (error) {
+      console.error("Error updating event:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="md:w-[950px] mx-auto flex gap-12">
@@ -47,7 +75,13 @@ export default function EditEvent({ eventId }) {
           <div>
             <input
               type="text"
-              value={eventData?.title?.S}
+              value={event.title}
+              onChange={e =>
+                setEvent(prev => ({
+                  ...prev,
+                  title: e.target.value,
+                }))
+              }
               className="w-full bg-[#FFFFFE80] border border-white backdrop-blur-2xl paytone p-3 rounded-[12px] text-2xl"
             />
           </div>
@@ -55,19 +89,70 @@ export default function EditEvent({ eventId }) {
           <div className="flex flex-col gap-3">
             <p className="font-bold satoshi">Event Details</p>
 
+            {/* input and modal for date and time */}
             <Input
-              data={`${eventData?.date?.S}, ${eventData?.timeFrom?.S}`}
+              data={`${event.date}, ${event.timeFrom}`}
               icon={"/timer.svg"}
+              onClick={() => setWhenModal(true)}
+            />
+            <When
+              isVisible={whenModal}
+              onClose={() => setWhenModal(false)}
+              onSave={updatedWhen => {
+                setEvent(prev => ({
+                  ...prev,
+                  date: updatedWhen.startDate,
+                  timeFrom: updatedWhen.startTime,
+                  timeTo: updatedWhen.endTime,
+                }));
+              }}
+            />
+
+            {/* input and modal for loaction */}
+            <Input
+              data={`${event.location.venue}, ${event.location.state}, ${event.location.country}`}
+              icon={"/location-try.svg"}
+              onClick={() => setWhereModal(true)}
+            />
+            <Where
+              isVisible={whereModal}
+              onClose={() => setWhereModal(false)}
+              onSave={updatedLocation => {
+                setEvent(prev => ({
+                  ...prev,
+                  location: {
+                    venue: updatedLocation.venue,
+                    state: updatedLocation.state,
+                    country: prev.location.country, // keep existing country if not in modal
+                    type: updatedLocation.locationType,
+                  },
+                }));
+              }}
+            />
+
+            {/* description input */}
+            <Input
+              placeholder={"Description"}
+              data={event.description}
+              icon={"/note-text.svg"}
+              onClick={() => setDescriptionModal(true)}
+            />
+            <Description
+              isVisible={descriptionModal}
+              onClose={() => setDescriptionModal(false)}
+              onSave={updatedDescription => {
+                setEvent(prev => ({
+                  ...prev,
+                  description: updatedDescription,
+                }));
+              }}
             />
 
             <Input
-              data={`${eventData?.location?.M?.venue?.S}, ${eventData?.location?.M?.state?.S}, ${eventData?.location?.M?.country?.S}`}
-              icon={"/location-try.svg"}
+              placeholder={"Dress Code"}
+              data={eventData?.dressCode?.S}
+              icon={"/dress.svg"}
             />
-
-            <Input placeholder={"Description"} data={eventData?.description?.S} icon={"/note-text.svg"} />
-            
-            <Input placeholder={"Dress Code"} data={eventData?.dressCode?.S} icon={"/dress.svg"}/>
           </div>
 
           <div>
@@ -78,13 +163,13 @@ export default function EditEvent({ eventId }) {
                 <p className="text-[16px] satoshi font-bold">
                   ✏️ Heads up, Creator!
                 </p>
-                <p className="text-sm font-bold satoshi">0/3 edits</p>
+                <p className="text-sm font-bold satoshi">0/2 edits</p>
               </div>
 
               <p className="font-medium text-sm">
                 You can update your event details but not forever 😅 <br />
-                To keep things neat for your guests, you can only make up to 3 major
-                edits (like name, date, or location).
+                To keep things neat for your guests, you can only make up to 3
+                major edits (like name, date, or location).
               </p>
             </div>
           </div>
@@ -99,8 +184,11 @@ export default function EditEvent({ eventId }) {
             View Preview
           </button>
 
-          <button className="bg-[#011F0F] rounded-[60px] w-full p-3 text-[#AEFC40] paytone">
-            Save Changes
+          <button
+            className="bg-[#011F0F] rounded-[60px] w-full p-3 text-[#AEFC40] paytone"
+            onClick={updateEvent}
+          >
+            {loading ? <LoadingSpinner /> : "Save Changes"}
           </button>
         </div>
       </div>
@@ -108,9 +196,12 @@ export default function EditEvent({ eventId }) {
   );
 }
 
-const Input = ({ icon, data, placeholder }) => {
+const Input = ({ icon, data, placeholder, onClick }) => {
   return (
-    <div className="w-full bg-[#FFFFFE80] border border-white backdrop-blur-2xl flex items-center gap-2 px-2 py-3 rounded-[12px]">
+    <div
+      className="w-full bg-[#FFFFFE80] border border-white backdrop-blur-2xl flex items-center gap-2 px-2 py-3 rounded-[12px]"
+      onClick={onClick}
+    >
       <img src={icon} alt="" className=" bg-white rounded-full p-1" />
       <input
         type="text"

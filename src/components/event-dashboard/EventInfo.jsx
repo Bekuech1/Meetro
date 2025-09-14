@@ -12,7 +12,7 @@ import SiteBtn from "../Layout-conponents/SiteBtn";
 import ShareEvent from "./ShareEvent";
 import LoginModal from "../Onboarding/LoginModal";
 import { LoadingSpinner } from "../create-event/Private";
-import { getProfilePicture } from "../Profile/PersonalProfile";
+import { getProfilePicture, setAttendeeImage } from "../Profile/PersonalProfile";
 
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -26,6 +26,7 @@ export default function EventInfo({ eventId }) {
   const navigate = useNavigate();
   const [loadingResponseType, setLoadingResponseType] = useState(null);
   const profilePic = getProfilePicture();
+  const attendeeImage = setAttendeeImage()
 
   // const {eventId} = useParams()
 
@@ -421,7 +422,7 @@ export default function EventInfo({ eventId }) {
                   >
                     <img
                       // src="/large-profile.jpg"
-                      src={profilePic}
+                      src={attendeeImage}
                       alt="Attendee"
                       className="size-[66px] rounded-full"
                     />
