@@ -196,7 +196,7 @@ export default function AttendedEvents() {
                     className="w-4 h-4 rounded-full"
                   />
                   <h6 className="text-black text-xs font-medium capitalize">
-                    {event.creator?.name}
+                    {event.hostName}
                   </h6>
                 </li>
 

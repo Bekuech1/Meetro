@@ -474,6 +474,7 @@ const Private = ({ onPublic }) => {
       date: formData.startDate,
       timeFrom: formData.startTime,
       timeTo: formData.endTime,
+      hostName: formData.hostName,
       location: {
         venue: formData.location,
         state: formData.state,
