@@ -1,6 +1,7 @@
 import OnboardingButton from "./OnboardingButton";
 
 function ShowOption({ onclick1, onclick2 }) {
+
   const mybtn = [
     {
       title: "Cancel onboarding",
@@ -15,6 +16,7 @@ function ShowOption({ onclick1, onclick2 }) {
       onclick: onclick2,
     },
   ];
+  
   return (
     <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
       <div className="bg-white/90 z-30 p-6 sm:p-12 h-[217px] sm:h-[253px] rounded-3xl w-[343px] sm:w-[546px] mx-4 relative">

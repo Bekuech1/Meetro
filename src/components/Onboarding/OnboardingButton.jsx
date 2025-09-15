@@ -3,7 +3,7 @@ import LoadingSpinner from "../Layout-conponents/LoadingSpinner";
 function OnboardingButton({ title, onclick, className, type, isLoading }) {
   return (
     <button
-      className={`paytone text-sm rounded-[60px] ${className}`}
+      className={`paytone text-sm rounded-[60px] ${className} hover:bg-[#BEFD66] hover:text-[#095256]`}
       onClick={onclick}
       type={type}
       disabled={isLoading}

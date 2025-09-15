@@ -280,7 +280,6 @@ export default function EventInfo({ eventId }) {
             <div className="flex gap-4 items-center">
               <Attendance
                 text="Not sure"
-                bgHover="#011F0F"
                 img="/timer-modal.svg"
                 textcolor="#7A60BF"
                 texthover="#C7BAEA"
@@ -289,7 +288,6 @@ export default function EventInfo({ eventId }) {
               />
               <Attendance
                 text="Going"
-                bgHover="#011F0F"
                 img="/tick-circle-green.svg"
                 textcolor="#61B42D"
                 texthover="#BEFD66"
@@ -381,19 +379,17 @@ export default function EventInfo({ eventId }) {
                       /> */}
                     </div>
 
-                    <div className="bg-white rounded-[60px] w-full flex items-center justify-center border border-[#E5E7E3]">
+                    
                       <ModalBtn
                         onClick={() =>
                           handleConfirmAttendance("yes") &&
                           useEventStore.getState().setShouldRefetch(true)
                         }
-                        // bgcolor="bg-white"
+                        bgcolor="bg-white"
                         image="/tick-circle.svg"
                         textcolor="text-[#61B42D]"
                         text="Change to Going"
-                        // className="w-full"
                       />
-                    </div>
                   </div>
                 </div>
               )}

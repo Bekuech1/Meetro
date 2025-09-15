@@ -1,13 +1,13 @@
 import React from "react";
 
-const CreateEventBtn = ({ text, textcolor, onClick, bgcolor }) => {
+const CreateEventBtn = ({ text, textcolor, onClick, bgcolor, hoverbg, hovertext }) => {
   return (
     <button
-      className={`w-full h-fit rounded-[60px] flex gap-2 p-[10px] justify-center items-center cursor-pointer ${bgcolor} capitalize`}
+      className={`w-full h-fit rounded-[60px] flex gap-2 p-[10px] justify-center items-center cursor-pointer ${bgcolor} capitalize ${hoverbg}`}
       onClick={onClick}
     >
       <h6
-        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] ${textcolor}`}
+        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] ${textcolor} ${hovertext}`}
       >
         {text}
       </h6>

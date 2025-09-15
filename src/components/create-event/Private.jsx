@@ -84,7 +84,7 @@ const Input = React.memo(({
   className,
 }) => (
   <div
-    className="flex justify-between p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full cursor-pointer relative"
+    className="flex justify-between p-3 gap-4 rounded-[12px] bg-white/50 border border-white items-center w-full max-w-[92vw] lg:max-w-[553px] cursor-pointer relative"
     onClick={onClick}
   >
     <div className="bg-white p-1 rounded-4xl size-fit">
@@ -283,7 +283,7 @@ const Private = ({ onPublic }) => {
   }, [formData.locationType, formData.location, formData.state]);
   
   const getCurrentImageUrl = useCallback(() => {
-    return eventImage?.imageUrl || DEFAULT_IMAGE_SOURCES[0];
+    return eventImage?.imageUrl;
   }, [eventImage]);
   
   const eventTypesDisplay = useMemo(() => {
@@ -502,6 +502,7 @@ const Private = ({ onPublic }) => {
 
     try {
       const apiResponse = await API.post(`/events`, payload);
+      console.log("Event creation response:", apiResponse.data);
       setResponse(apiResponse.data);
     } catch (error) {
       console.error("Error creating event:", error.response?.data || error.message);
@@ -801,7 +802,7 @@ const Private = ({ onPublic }) => {
       {isModalOpen(MODAL_TYPES.CREATING_EVENT) && (
         <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px]">
           <div className="sm:w-[90%] w-fit max-w-[546px] h-fit rounded-3xl border border-white/50 bg-[#F0F0F0] backdrop-blur-[32px] flex flex-col justify-center items-center">
-            <div className="grid size-fit sm:gap-4 gap-2 sm:py-12 sm:px-6 p-6">
+            <div className="grid size-fit sm:gap-4 gap-2 sm:py-12 sm:px-6 px-10 py-4">
               <img
                 src={getCurrentImageUrl()}
                 alt=""
@@ -813,22 +814,22 @@ const Private = ({ onPublic }) => {
                 </h1>
                 <div className="flex gap-1 items-center w-fit h-fit mx-auto">
                   <img src="/calendar.svg" className="w-4 h-4" />
-                  <h6 className="text-[#8A9191] text-[16px] font-[500] leading-[24px] satoshi capitalize">
+                  <h6 className="text-[#8A9191] sm:text-[16px] text-[12px] font-[500] sm:leading-[24px] satoshi capitalize">
                     {formData.startDate}
                   </h6>
                   <img src="/timer.svg" className="w-4 h-4" />
-                  <h6 className="text-[#8A9191] text-[16px] font-[500] leading-[24px] satoshi capitalize">
+                  <h6 className="text-[#8A9191] sm:text-[16px] text-[12px] font-[500] sm:leading-[24px] satoshi capitalize">
                     {formData.startTime}
                   </h6>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white w-full h-fit grid gap-4 py-6 px-12 rounded-b-3xl">
+            <div className="bg-white w-full h-fit grid sm:gap-4 sm:py-6 sm:px-12 gap-4 p-4 rounded-b-3xl">
               {/* Error State */}
               {error && (
                 <>
-                  <div className="flex text-[12px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
+                  <div className="flex sm:text-[12px] text-[10px] text-[#C7245A] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#FBEAEF] border border-[#F4BCCF]">
                     <img src="/info-circle.svg" alt="" />
                     <span>{error}</span>
                   </div>
@@ -855,23 +856,22 @@ const Private = ({ onPublic }) => {
 
               {/* Loading State */}
               {isLoading && !error && (
-                <div className="flex text-[12px] text-[#7A60BF] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3F0FB] border border-[#D9D1F1]">
+                <div className="flex sm:text-[12px] text-[10px] text-[#7A60BF] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3F0FB] border border-[#D9D1F1]">
                   <LoadingSpinner />
-                  <span>Creating Event</span>
                 </div>
               )}
 
               {/* Success State */}
               {!isLoading && !error && response && (
                 <>
-                  <div className="flex text-[12px] text-[#61B42D] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3FFEC] border border-[#C8FEA7]">
+                  <div className="flex sm:text-[12px] text-[10px] text-[#61B42D] rounded-2xl p-2 gap-2 satoshi font-medium bg-[#F3FFEC] border border-[#C8FEA7]">
                     <img src="/tick-circle.svg" alt="" />
                     <span>Event has been created successfully</span>
                   </div>
                   <section className="h-fit w-full flex justify-between gap-4">
                     <CreateEventBtn
-                      text="Manage"
-                      bgcolor="bg-[#F3F0FB]"
+                      text="Home"
+                      bgcolor="bg-[#F3F0FB] hover:opacity-50"
                       textcolor="text-[#7A60BF]"
                       onClick={() => {
                         closeModal(MODAL_TYPES.CREATING_EVENT);
@@ -880,16 +880,23 @@ const Private = ({ onPublic }) => {
                       }}
                       disabled={!response?.id}
                     />
-                    <CreateEventBtn
-                      text="Share Event"
+                    {/* <CreateEventBtn
+                      text="Manage Event"
                       textcolor="text-white"
                       bgcolor="bg-[#011F0F]"
                       onClick={() => {
                         closeModal(MODAL_TYPES.CREATING_EVENT);
                         useEventStore.getState().setShouldRefetch(true);
-                        navigate(`/home`);
+                      
+                        if (response?.id) {
+                          navigate(`/event/${response.id}`); // Navigate only if ID exists
+                          console.log("Navigated to event:", response.id);
+                        } else {
+                          console.error("No event ID found in response");
+                        }
                       }}
-                    />
+
+                    /> */}
                   </section>
                 </>
               )}
