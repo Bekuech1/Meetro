@@ -11,10 +11,10 @@ import { useDisableScroll } from "@/hooks/useDisableScroll";
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const WEEKDAY_REGEX = /^.*?,\s*/;
 
-// Utility functions (moved outside component to prevent recreation)
+// Utility functions
 const parseEventDate = (rawDate) => {
   if (!rawDate || typeof rawDate !== "string") return null;
-  
+
   const cleanedDateStr = rawDate.replace(WEEKDAY_REGEX, "");
   const parsed = new Date(cleanedDateStr);
   return isNaN(parsed) ? null : parsed;
@@ -28,18 +28,17 @@ const formatDateKey = (date) => {
 };
 
 const formatAttendeesDisplay = (attendees = []) => {
-  // Filter and deduplicate "yes" responses
   const uniqueYes = Array.from(
     new Map(
       attendees
-        .filter(a => a.response === "yes")
-        .map(a => [a.userId, a])
+        .filter((a) => a.response === "yes")
+        .map((a) => [a.userId, a])
     ).values()
   );
 
   if (uniqueYes.length === 0) return "no one going yet";
 
-  const firstNames = uniqueYes.map(a => a.name.split(" ")[0]);
+  const firstNames = uniqueYes.map((a) => a.name.split(" ")[0]);
   const displayNames = firstNames.slice(0, 2).join(", ");
   const extraCount = firstNames.length - 2;
 
@@ -65,19 +64,22 @@ const timeAgo = (createdAt) => {
   return `${diffYears}y ago`;
 };
 
-
+// Event item card
 const EventItem = ({ event, profilePic, onOpenModal, onManage }) => {
   const handleCardClick = useCallback(() => {
     onOpenModal(event.id);
   }, [event.id, onOpenModal]);
 
-  const handleManageClick = useCallback((e) => {
-    e.stopPropagation(); // Prevent card click
-    onManage(event.id);
-  }, [event.id, onManage]);
+  const handleManageClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onManage(event.id);
+    },
+    [event.id, onManage]
+  );
 
-  const imageUrl = event?.imageUrl?.S 
-    ? `${import.meta.env.VITE_IMAGE_URL}/${event.imageUrl.S}` 
+  const imageUrl = event?.imageUrl?.S
+    ? `${import.meta.env.VITE_IMAGE_URL}/${event.imageUrl.S}`
     : "/event-ph1.png";
 
   const locationText = `${event?.location?.venue?.S}, ${event?.location?.state?.S}`;
@@ -96,38 +98,32 @@ const EventItem = ({ event, profilePic, onOpenModal, onManage }) => {
           loading="lazy"
         />
       </div>
-      
+
       <ul className="w-full grid sm:gap-[2px] gap-[2px] satoshi">
         <li className="flex justify-between">
           <h4 className="capitalize satoshi text-[#001010] text-base font-medium leading-tight">
             {event.title}
           </h4>
         </li>
-        
+
         <li className="flex gap-1 items-center">
           <h6 className="text-[#8A9191] text-xs font-bold capitalize satoshi">
             host
           </h6>
           <img src={profilePic} className="w-4 h-4 rounded-full" alt="host" />
-          <h6 className="text-black text-xs font-medium capitalize">
-            {hostName}
-          </h6>
+          <h6 className="text-black text-xs font-medium capitalize">{hostName}</h6>
         </li>
-        
+
         <li className="flex gap-1 items-center">
           <img src="/event-timer.svg" className="w-4 h-4" alt="time" />
-          <h6 className="text-[#8A9191] text-xs font-medium">
-            {event.timeFrom}
-          </h6>
+          <h6 className="text-[#8A9191] text-xs font-medium">{event.timeFrom}</h6>
         </li>
-        
+
         <li className="flex gap-1 items-center">
           <img src="/event-location.svg" className="w-4 h-4" alt="location" />
-          <h6 className="text-[#8A9191] text-xs font-medium capitalize">
-            {locationText}
-          </h6>
+          <h6 className="text-[#8A9191] text-xs font-medium capitalize">{locationText}</h6>
         </li>
-        
+
         <li className="flex gap-1 items-center">
           <div className="w-full flex">
             <h6 className="text-[#8A9191] text-xs font-bold capitalize satoshi">
@@ -140,11 +136,9 @@ const EventItem = ({ event, profilePic, onOpenModal, onManage }) => {
           </div>
         </li>
       </ul>
-      
+
       <section className="flex flex-col justify-between text-end h-[100px]">
-        <h6 className="text-[#8A9191] text-[12px] font-[500]">
-          {timeAgo(event?.createdAt)}
-        </h6>
+        <h6 className="text-[#8A9191] text-[12px] font-[500]">{timeAgo(event?.createdAt)}</h6>
         <SiteBtn
           name="manage"
           colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
@@ -173,13 +167,12 @@ export default function MyEvent() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
-  
+
   const profilePic = useMemo(() => getProfilePicture(), []);
 
-  // Memoized grouped events calculation
   const groupedEvents = useMemo(() => {
     if (!myEvents || myEvents.length === 0) return {};
-    
+
     const grouped = {};
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -187,16 +180,15 @@ export default function MyEvent() {
     for (const event of myEvents) {
       const parsed = parseEventDate(event.date);
       if (!parsed) continue;
-      
+
       parsed.setHours(0, 0, 0, 0);
-      if (parsed < today) continue; // Skip past events
+      if (parsed < today) continue;
 
       const key = formatDateKey(parsed);
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(event);
     }
 
-    // Sort by date
     return Object.keys(grouped)
       .sort((a, b) => new Date(a) - new Date(b))
       .reduce((acc, date) => {
@@ -205,15 +197,13 @@ export default function MyEvent() {
       }, {});
   }, [myEvents]);
 
-  // Handle body scroll lock for modal using custom hook
+  // Disable body scroll when modal is open
   useDisableScroll(isModalOpen);
 
-  // Fetch events on mount
   useEffect(() => {
     fetchEvents();
   }, [fetchEvents]);
 
-  // Callback functions
   const handleCreateEvent = useCallback(() => {
     navigate("/create-event");
   }, [navigate]);
@@ -228,11 +218,13 @@ export default function MyEvent() {
     setSelectedEventId(null);
   }, []);
 
-  const handleManageEvent = useCallback((id) => {
-    navigate(`/event/${id}`);
-  }, [navigate]);
+  const handleManageEvent = useCallback(
+    (id) => {
+      navigate(`/event/${id}`);
+    },
+    [navigate]
+  );
 
-  // Loading state
   if (loadingMyEvents) {
     return (
       <div className="h-full w-full mt-5 flex flex-col gap-2 justify-center items-center text-center">
@@ -241,20 +233,18 @@ export default function MyEvent() {
     );
   }
 
-  // No events created
   if (myEvents.length === 0) {
     return (
-      <NoEventsMessage 
+      <NoEventsMessage
         message="You haven't created any events yet."
         onCreateEvent={handleCreateEvent}
       />
     );
   }
 
-  // All events are past
   if (Object.keys(groupedEvents).length === 0) {
     return (
-      <NoEventsMessage 
+      <NoEventsMessage
         message="You have no upcoming events. All your events are in the past."
         onCreateEvent={handleCreateEvent}
       />
@@ -291,9 +281,7 @@ export default function MyEvent() {
         </div>
       ))}
 
-      {isModalOpen && (
-        <EventModal eventId={selectedEventId} closeModal={handleCloseModal} />
-      )}
+      {isModalOpen && <EventModal eventId={selectedEventId} closeModal={handleCloseModal} />}
     </div>
   );
 }

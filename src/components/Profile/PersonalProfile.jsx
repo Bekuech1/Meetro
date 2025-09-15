@@ -11,18 +11,6 @@ const profilePictures = [
   "/Profile-3.svg",
 ];
 
-//function to randomise profile picture selection
-export function getProfilePicture() {
- let storedPic = localStorage.getItem("profilePic");
-
- if (!storedPic) {
-   const randomIndex = Math.floor(Math.random() * profilePictures.length);
-   storedPic = profilePictures[randomIndex];
-   localStorage.setItem("profilePic", storedPic);
- }
-  return storedPic;
-}
-
 const PersonalProfile = () => {
   // const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
   const user = useAuthStore((state) => state.user);
@@ -187,3 +175,24 @@ const PersonalProfile = () => {
 };
 
 export default PersonalProfile;
+
+
+//function to randomise profile picture selection
+export function getProfilePicture() {
+ let storedPic = localStorage.getItem("profilePic");
+
+ if (!storedPic) {
+   const randomIndex = Math.floor(Math.random() * profilePictures.length);
+   storedPic = profilePictures[randomIndex];
+   localStorage.setItem("profilePic", storedPic);
+ }
+  return storedPic;
+}
+
+// second helper funtion for random images if needed later
+export function setAttendeeImage() {
+  const randomIndex = Math.floor(Math.random() * profilePictures.length);
+  const attendeePic = profilePictures[randomIndex];
+
+  return attendeePic;
+}

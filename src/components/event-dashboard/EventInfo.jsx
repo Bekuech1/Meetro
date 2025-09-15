@@ -12,7 +12,11 @@ import SiteBtn from "../Layout-conponents/SiteBtn";
 import ShareEvent from "./ShareEvent";
 import LoginModal from "../Onboarding/LoginModal";
 import { LoadingSpinner } from "../create-event/Private";
-import { getProfilePicture } from "../Profile/PersonalProfile";
+import {
+  getProfilePicture,
+  setAttendeeImage,
+} from "../Profile/PersonalProfile";
+import useEventStore from "@/stores/eventStore";
 
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -26,6 +30,7 @@ export default function EventInfo({ eventId }) {
   const navigate = useNavigate();
   const [loadingResponseType, setLoadingResponseType] = useState(null);
   const profilePic = getProfilePicture();
+  const attendeeImage = setAttendeeImage();
 
   // const {eventId} = useParams()
 
@@ -100,18 +105,26 @@ export default function EventInfo({ eventId }) {
   if (loading) {
     return (
       <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3">
-  <LoadingSpinner size={40} />
-</div>
+        <LoadingSpinner size={40} />
+      </div>
     );
   }
 
   if (error) {
-    return <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3"><p className="text-red-500 text-center py-10 satoshi">{error}</p></div>;
+    return (
+      <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3">
+        <p className="text-red-500 text-center py-10 satoshi">{error}</p>
+      </div>
+    );
   }
 
   //empty state
   if (!eventDetails) {
-    return <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3"><p className="text-center py-10 satoshi">Event not found</p></div>;
+    return (
+      <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3">
+        <p className="text-center py-10 satoshi">Event not found</p>
+      </div>
+    );
   }
 
   // const imageUrl = import.meta.env.VITE_IMAGE_URL;
@@ -151,7 +164,7 @@ export default function EventInfo({ eventId }) {
                     className="w-6 h-6 rounded-full border border-white"
                   />
                   <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                    {eventDetails.creator.M.name?.S || "Event Host"}
+                    {eventDetails.hostName?.S || eventDetails.creator.M.name?.S}
                   </h6>
                 </>
               )}
@@ -279,7 +292,10 @@ export default function EventInfo({ eventId }) {
                 textcolor="#61B42D"
                 texthover="#BEFD66"
                 loading={loadingResponseType === "yes"}
-                onClick={() => handleConfirmAttendance("yes")}
+                onClick={() =>
+                  handleConfirmAttendance("yes") &&
+                  useEventStore.getState().setShouldRefetch(true)
+                }
               />
             </div>
           )}
@@ -365,7 +381,10 @@ export default function EventInfo({ eventId }) {
 
                     
                       <ModalBtn
-                        onClick={() => handleConfirmAttendance("yes")}
+                        onClick={() =>
+                          handleConfirmAttendance("yes") &&
+                          useEventStore.getState().setShouldRefetch(true)
+                        }
                         bgcolor="bg-white"
                         image="/tick-circle.svg"
                         textcolor="text-[#61B42D]"
@@ -402,7 +421,7 @@ export default function EventInfo({ eventId }) {
 
         {/* Attendees Section */}
         {eventDetails.attendees?.L &&
-          // eventDetails.attendees?.L?.M?.responseType?.S === "yes" &&
+          // eventDetails.attendees?.L?.M?.responseType === "yes" &&
           eventDetails.attendees.L.length > 0 && (
             <div className="grid gap-2 w-full h-fit">
               <ModalText
@@ -417,7 +436,7 @@ export default function EventInfo({ eventId }) {
                   >
                     <img
                       // src="/large-profile.jpg"
-                      src={profilePic}
+                      src={attendeeImage}
                       alt="Attendee"
                       className="size-[66px] rounded-full"
                     />
