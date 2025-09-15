@@ -6,10 +6,8 @@ import { LoadingSpinner } from "../create-event/Private";
 import Description from "../create-event/PopUps/Description";
 // import { useEffect, useState } from "react";
 
-export default function EditEvent({ eventId }) {
-  const eventData = eventId;
+export default function EditEvent({ eventData }) {
   const [loading, setLoading] = useState(false);
-  // local editable state
   const [event, setEvent] = useState({
     title: eventData?.title?.S || "",
     description: eventData?.description?.S || "",
@@ -34,6 +32,8 @@ export default function EditEvent({ eventId }) {
     ? new URL(eventData.imageKey.S, import.meta.env.VITE_IMAGE_URL).toString()
     : "/events-modal.png"; // or some placeholder
 
+  
+  const eventId = eventData?.id?.S
   const updateEvent = async () => {
     console.log("event data", event);
     setLoading(true);
@@ -48,8 +48,8 @@ export default function EditEvent({ eventId }) {
   };
 
   return (
-    <div className="md:w-[950px] mx-auto flex gap-12">
-      <div className="w-[349px] flex flex-col gap-4">
+    <div className="md:w-[950px] mx-auto flex flex-col md:flex-row gap-12">
+      <div className="md:w-[349px] flex flex-col gap-4">
         <div>
           <h4 className="satoshi text-sm font-bold">Event Image</h4>
           <p className="text-[#8A9191] text-xs font-medium">
@@ -64,7 +64,7 @@ export default function EditEvent({ eventId }) {
         </p>
       </div>
 
-      <div className="flex flex-col gap-8 w-[553px]">
+      <div className="flex flex-col gap-8 md:w-[553px]">
         {/* input for data */}
         <div className="flex flex-col gap-6">
           {/* toggle for either public or private event */}
@@ -210,6 +210,7 @@ const Input = ({ icon, data, placeholder, onClick }) => {
       <input
         type="text"
         value={data}
+        readOnly
         placeholder={placeholder}
         className="w-full bg-transparent outline-none font-medium text-sm"
       />

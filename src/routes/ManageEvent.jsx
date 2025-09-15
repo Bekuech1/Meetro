@@ -1,4 +1,5 @@
 import { LoadingSpinner } from "@/components/create-event/Private";
+import DeleteEvent from "@/components/event-dashboard/DeleteEvent";
 import EditEvent from "@/components/event-dashboard/EditEvent";
 import GuestList from "@/components/event-dashboard/GuestList";
 import ShareEvent from "@/components/event-dashboard/ShareEvent";
@@ -35,8 +36,12 @@ export default function ManageEventPage() {
     fetchEvent();
   }, [eventId]);
 
-  if (loading) return <div className="bg-[#F0F0F0]  h-[100vh] flex justify-center items-center"><LoadingSpinner size={40} /></div>;  
-
+  if (loading)
+    return (
+      <div className="bg-[#F0F0F0]  h-[100vh] flex justify-center items-center">
+        <LoadingSpinner size={40} />
+      </div>
+    );
 
   return (
     <>
@@ -51,15 +56,9 @@ export default function ManageEventPage() {
             />
 
             <div className="flex gap-4 md:hidden">
-              {/* <div className="h-7 w-7 flex items-center justify-center bg-[#F0F0F0] rounded-full cursor-pointer"> */}
               <ShareEvent eventId={eventId} className={`bg-[#F0F0F0]`} />
-              {/* </div> */}
 
-              <img
-                src="/delete.svg"
-                alt="delete-icon"
-                className="w-7 h-7 md:w-auto md:h-auto"
-              />
+              <DeleteEvent eventId={eventId} />
             </div>
           </div>
 
@@ -88,15 +87,9 @@ export default function ManageEventPage() {
             </div>
 
             <div className="hidden md:flex gap-4 items-center ">
-              {/* <div className="h-10 w-10 p-2 flex items-center justify-center bg-[#F0F0F0] rounded-full cursor-pointer"> */}
               <ShareEvent eventId={eventId} className={`bg-[#F0F0F0]`} />
-              {/* </div> */}
 
-              <img
-                src="/delete.svg"
-                alt="delete-icon"
-                className="w-7 h-7 md:w-auto md:h-auto"
-              />
+              <DeleteEvent eventId={eventId} />
             </div>
           </div>
 
@@ -107,7 +100,7 @@ export default function ManageEventPage() {
                 boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
                 backdropFilter: "blur(16px)",
               }}
-              className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
+              className="flex p-[4px] rounded-[20px] bg-white md:w-fit h-fit w-full"
             >
               <button
                 className={`${
@@ -119,6 +112,7 @@ export default function ManageEventPage() {
               >
                 Event Details
               </button>
+
               <button
                 className={`${
                   activeTab === "guests" ? "bg-[#AEFC40] " : "bg-[#FFFFFEFC] "
@@ -134,7 +128,7 @@ export default function ManageEventPage() {
 
       <section className="min-h-[642px] px-4 pb-10 pt-6 bg-[#F0F0F0]">
         <div className="md:w-[950px] mx-auto">
-          {activeTab === "eventDetails" && <EditEvent eventId={eventData} />}
+          {activeTab === "eventDetails" && <EditEvent eventData={eventData} />}
           {activeTab === "guests" && (
             <GuestList guests={eventData?.attendees?.L || []} />
           )}
