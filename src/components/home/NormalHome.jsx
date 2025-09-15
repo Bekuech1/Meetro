@@ -16,7 +16,7 @@ const NormalHome = () => {
       {/* <Header /> */}
 
       <main className="bg-[#F0F0F0] relative min-h-[90vh] w-full grid gap-[43px] md:px-20 px-4 py-10">
-        <div className="grid md:w-[680px] w-full h-fit mx-auto gap-6 z-10">
+        <div className="grid md:w-[680px] w-full h-fit mx-auto gap-6 z-9">
           <section className="flex justify-between items-center h-fit">
             <h1 className="paytone capitalize text-[#055962] sm:text-[30px] text-[20px] font-[400]">
               my events

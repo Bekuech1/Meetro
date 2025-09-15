@@ -4,6 +4,25 @@ import { useNavigate } from "react-router";
 import API from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 
+const loginInput = [
+  {
+    type: "email",
+    label: "Email Address",
+    icon: "/sms.svg",
+    placeholder: "Email",
+    name: "email",
+    required: true,
+  },
+  {
+    type: "password",
+    label: "Password",
+    icon: "/lock.svg",
+    placeholder: "Password",
+    name: "password",
+    required: true,
+  },
+];
+
 export default function LoginModal({ onSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,24 +56,7 @@ export default function LoginModal({ onSuccess }) {
     }
   };
 
-  const loginInput = [
-    {
-      type: "email",
-      label: "Email Address",
-      icon: "/sms.svg",
-      placeholder: "Email",
-      name: "email",
-      required: true,
-    },
-    {
-      type: "password",
-      label: "Password",
-      icon: "/lock.svg",
-      placeholder: "Password",
-      name: "password",
-      required: true,
-    },
-  ];
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#00000080] backdrop-blur-xs z-50 p-2">

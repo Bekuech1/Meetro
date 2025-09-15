@@ -47,8 +47,8 @@ function Form({
       <div className="relative">
         {error && (
           <span
-            className="text-red-400 text-xs absolute left-0 satoshi
-           max-w-full">
+            className="text-red-400 text-xs absolute left-0 satoshi max-w-full"
+          >
             {error}
           </span>
         )}

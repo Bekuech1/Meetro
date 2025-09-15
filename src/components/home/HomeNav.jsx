@@ -74,13 +74,19 @@ const Header = () => {
     <header className="flex sm:px-8 sm:py-3 p-4 justify-between bg-[#011F0F] items-center z-20 sticky top-0 shadow-md w-full">
       {/* Logo and My Events */}
       <section className="flex items-center sm:gap-6 gap-2">
-        <button onClick={() => navigate("/home")}>
-          <img
-            src="/Logo.svg"
-            alt="Logo"
-            className="sm:w-[30px] sm:h-8 w-5 h-4"
-          />
-        </button>
+        <div className="inline-flex gap-[10px] items-center w-fit">
+          <button onClick={() => navigate("/home")}>
+            <img
+              src="/Logo.svg"
+              alt="Logo"
+              className="sm:w-[30px] sm:h-8 w-5 h-4"
+            />
+          </button>
+          <div className="bg-linear-to-r from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] leading-tight size-fit capitalize p-1 rounded-2xl text-[#011F0F]">
+              <p>Beta</p>
+          </div>
+        </div>
+        
 
         <div className="flex gap-1 py-1 px-2 h-fit w-fit">
           <img src="/ticket-star.svg" alt="My Events Icon" />
