@@ -81,7 +81,7 @@ const ShareEvent = ({ eventId, text, className }) => {
           <div className="w-full md:w-[546px] h-fit relative">
             {/* main shar pop up */}
 
-            <div className="bg-[#FFFFFFE5] backdrop-blur-xl border border-[#FFFFFE] md:rounded-3xl overflow-clip rounded-t-[12px] flex flex-col items-center justify-center">
+            <div className="bg-[#FFFFFFE5] backdrop-blur-xl border border-[#FFFFFE] md:rounded-3xl overflow-clip rounded-t-[12px] flex flex-col items-center justify-center relative">
               {isLoading ? (
                 // Loading state
                 <div className="flex flex-col items-center justify-center gap-4 h-80 md:w-80 pt-9 pb-6">
@@ -105,7 +105,7 @@ const ShareEvent = ({ eventId, text, className }) => {
                 <div className="text-center text-red-500">{error}</div>
               ) : (
                 // Actual content after load
-                <div className="md:w-80 pt-9 pb-6 flex flex-col items-center justify-center gap-4">
+                <div className="md:w-80 pt-9 pb-6 flex flex-col items-center justify-center gap-4 ">
                   <img
                     src={imagePath}
                     alt="Event"
@@ -128,6 +128,13 @@ const ShareEvent = ({ eventId, text, className }) => {
                       />
                     </div>
                   </div>
+
+                  <img
+                    src="/close-circle.svg"
+                    alt="mobile close icon"
+                    className="md:hidden absolute top-2 right-2"
+                    onClick={() => setIsOpen(false)}
+                  />
                 </div>
               )}
 

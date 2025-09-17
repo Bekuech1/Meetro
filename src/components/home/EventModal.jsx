@@ -87,7 +87,7 @@ export const ModalBtn = memo(({
   return (
     <button
       type="button"
-      className={`w-full h-fit rounded-[60px] flex gap-2 p-[10px] justify-center items-center cursor-pointer hover:bg-gray-200 transition-colors duration-200 ${bgcolor}`}
+      className={`w-full h-fit rounded-[60px] flex gap-2 p-1 md:p-[10px] justify-center items-center cursor-pointer hover:bg-gray-200 transition-colors duration-200 ${bgcolor}`}
       onClick={handleClick}
     >
       <img src={image} className="size-[22px]" alt="" />
