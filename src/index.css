@@ -11,10 +11,6 @@
   border: 1px solid red;
 }
 
-button {
-  cursor: pointer;
-}
-
 .scrollbar-hide {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
