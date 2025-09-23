@@ -40,15 +40,13 @@ const VARIANTS = {
   },
 };
 
-const TextButton = ({
+const IconButton = ({
   variant = "primary",
   state = "default",
   disabled = false,
   onClick,
   className = "",
-  text,
-  leftImg,
-  rightImg,
+  icon,
   smallButton = false,
   ...props
 }) => {
@@ -64,22 +62,15 @@ const TextButton = ({
       ? "bgHover"
       : "bgDefault";
 
-  // Define size-related variables first
   const sizeClasses = smallButton
-    ? "text-[10px] h-6"
-    : "text-base sm:text-sm h-[44px] sm:h-[36px]";
-
-  const paddingSize = smallButton ? "px-2" : "px-4";
-  const spinnerSize = smallButton ? 12 : 16;
-  const contentGap = smallButton ? "gap-1" : "gap-[6px]";
-  const iconSize = smallButton ? "size-4" : "size-4";
+    ? "p-1 size-6"
+    : "p-[10px] sm:p-2 size-[44px] sm:size-[36px]";
 
   const buttonClasses = [
     "paytone flex items-center justify-center",
-    "font-medium w-fit capitalize border min-w-[100px] rounded-[60px]",
+    "font-medium w-fit h-fit capitalize border rounded-[60px]",
     "transition-all duration-200 ease-in-out",
     sizeClasses,
-    paddingSize,
     config.colors[bgKey],
     config.colors.text,
     config.colors.borderColor,
@@ -87,7 +78,11 @@ const TextButton = ({
     className,
   ].join(" ");
 
-  const hasContent = text || leftImg || rightImg;
+  const hasContent = icon;
+
+  const spinnerSize = smallButton ? 14 : 20
+
+  const iconSize = smallButton ? "size-[14px]" : "size-6"
 
   return (
     <button
@@ -104,14 +99,11 @@ const TextButton = ({
           />
         </div>
       ) : hasContent ? (
-        <div className={`w-fit flex items-center ${contentGap} h-fit`}>
-          {leftImg && <img src={leftImg} alt="" className={iconSize} />}
-          {text && <span>{text}</span>}
-          {rightImg && <img src={rightImg} alt="" className={iconSize} />}
+        <div className={`flex items-center size-fit`}>
+            <img src={icon} alt="" className={iconSize}/>
         </div>
       ) : null}
     </button>
   );
 };
-
-export default TextButton;
+export default IconButton;

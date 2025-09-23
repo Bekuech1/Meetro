@@ -1,8 +1,21 @@
 import React from "react";
-import ConfirmationButton from "../Layout-conponents/Buttons/ConfirmationButton";
-import TextButton from "../Layout-conponents/Buttons/TextButtons";
+import { useState } from "react";
+import TagButton from "../Layout-conponents/Buttons/TagButton";
+import { AddSquare } from "iconsax-reactjs";
 
 const MainAbout = () => {
+  const [loadingStates, setLoadingStates] = useState({});
+
+  const handleClick = id => {
+    setLoadingStates(prev => ({ ...prev, [id]: true }));
+    setTimeout(() => {
+      setLoadingStates(prev => ({ ...prev, [id]: false }));
+    }, 2000);
+  };
+
+  const variants = ["light-purple", "light-green", "white", "green", "purple"];
+  const sizes = ["lg", "md", "sm", "xs"];
+
   return (
     <div className="relative w-full h-fit min-h-[600px] flex flex-col gap-10 bg-[#FCFEF9] satoshi py-24">
       <div className="flex flex-col gap-6 md:w-[702px] w-[90%] h-fit justify-center text-center mx-auto mt-6">
@@ -33,13 +46,89 @@ const MainAbout = () => {
           stress-free.
         </p>
       </div>
-      <div className="fix w-full h-[200px] pt-10 flex gap-4 flex-wrap">
-        <TextButton variant="primary" text='levels' rightImg='/trash.svg'/>
-        <TextButton variant="secondary" text='women'/>
-        <TextButton variant="tertiary" text="sex" state="loading"/>
-        <TextButton text="bjhbjh" disabled/>
-      </div>
+      <div className="fix w-full h-[800px] pt-10 flex gap-4 flex-wrap">
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold text-gray-700">
+            Color Variants (Medium Size)
+          </h2>
+          <div className="flex flex-wrap gap-4">
+            {variants.map(variant => (
+              <TagButton
+                key={variant}
+                variant={variant}
+                text={variant.replace("-", " ")}
+                onClick={() => handleClick(variant)}
+                state={loadingStates[variant] ? "loading" : "default"}
+              />
+            ))}
+          </div>
+        </div>
 
+        {/* All Sizes */}
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold text-gray-700">
+            Size Variants (Purple)
+          </h2>
+          <div className="flex flex-wrap items-center gap-4">
+            {sizes.map(size => (
+              <TagButton
+                key={size}
+                variant="purple"
+                size={size}
+                text={`${size.toUpperCase()} Size`}
+                onClick={() => handleClick(`size-${size}`)}
+                state={loadingStates[`size-${size}`] ? "loading" : "default"}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* With Icons */}
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold text-gray-700">With Icons</h2>
+          <div className="flex flex-wrap gap-4">
+            <TagButton
+              variant="light-green"
+              text="With Left Icon"
+              rightIcon={AddSquare}
+              onClick={() => handleClick("left-icon")}
+              state={loadingStates["left-icon"] ? "loading" : "default"} 
+            />
+            <TagButton
+              variant="green"
+              text="With Right Icon"
+              rightImg="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7' /%3E%3C/svg%3E"
+              onClick={() => handleClick("right-icon")}
+              state={loadingStates["right-icon"] ? "loading" : "default"}
+            />
+            <TagButton
+              variant="purple"
+              text="Both Icons"
+              leftImg="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' /%3E%3C/svg%3E"
+              rightImg="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7' /%3E%3C/svg%3E"
+              onClick={() => handleClick("both-icons")}
+              state={loadingStates["both-icons"] ? "loading" : "default"}
+            />
+          </div>
+        </div>
+
+        {/* Disabled State */}
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold text-gray-700">
+            Disabled State
+          </h2>
+          <div className="flex flex-wrap gap-4">
+            <TagButton variant="purple" text="Disabled Button" disabled />
+            <TagButton
+              variant="green"
+              size="lg"
+              text="Large Disabled"
+              disabled
+              leftImg='/trash.svg'
+            />
+          </div>
+        </div>
+      </div>
       <div className="absolute flex justify-between items-center w-full h-fit bg-transparent -top-[250px]">
         <div className="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
         <div className="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
