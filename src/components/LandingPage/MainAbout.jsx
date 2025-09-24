@@ -1,8 +1,8 @@
 import React from "react";
 import Tooltip from "../Layout-conponents/Tooltip";
+import Alert from "../Layout-conponents/Alert";
 
 const MainAbout = () => {
-
   return (
     <div className="relative w-full h-fit min-h-[600px] flex flex-col gap-10 bg-[#FCFEF9] satoshi py-24">
       <div className="flex flex-col gap-6 md:w-[702px] w-[90%] h-fit justify-center text-center mx-auto mt-6">
@@ -32,9 +32,6 @@ const MainAbout = () => {
           event, we’re here to make meeting up easy, intentional, and
           stress-free.
         </p>
-      </div>
-      <div className="fix w-full h-[800px] pt-10 flex gap-4 flex-wrap">
-        <Tooltip />
       </div>
       <div className="absolute flex justify-between items-center w-full h-fit bg-transparent -top-[250px]">
         <div className="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
