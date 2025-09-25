@@ -1,7 +1,6 @@
-import Button from "../Layout-conponents/Button"; 
+import Button from "../Layout-conponents/Button";
 
 const Navbar = ({ visibility, absolute, typeS, onclick, onAuth }) => {
-
   return (
     <div className={`h-fit z-20 ${visibility} ${absolute}`}>
       <div
@@ -11,7 +10,7 @@ const Navbar = ({ visibility, absolute, typeS, onclick, onAuth }) => {
           <img src="/meetroLogo.svg" alt="" />
         </div>
         <div className="hidden md:inline-flex gap-4">
-          <Button name="Join Community" color="bg-white" onclick={onAuth}/>
+          <Button name="Join Community" color="bg-white" onclick={onAuth} />
           <Button name="join waitlist" color="bg-[#AFFC41]" onclick={onclick} />
         </div>
         <div className="md:hidden block gap-4 text-xs">

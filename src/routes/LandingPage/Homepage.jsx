@@ -1,20 +1,22 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import LandingNav from "@/components/LandingPage/LandingNav";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Layout-conponents/Footer";
-import LandingNav from "@/components/LandingPage/LandingNav";
+import AboutUs from "./AboutUs";
+import BlogPage from "./BlogPage";
 import HowItWorks from "./HowItWorks";
 import Pricing from "./Pricing";
-import BlogPage from "./BlogPage";
-import AboutUs from "./AboutUs";
 
 function Homepage() {
-  
   const [activeItem, setActiveItem] = useState(0);
   const navigate = useNavigate();
 
-  const handleCardClick = useCallback((postId) => {
-    navigate(`/blog/${postId}`);
-  }, [navigate]);
+  const handleCardClick = useCallback(
+    postId => {
+      navigate(`/blog/${postId}`);
+    },
+    [navigate]
+  );
 
   // Removed unused buggy handler referencing undefined setNavOpen
 
@@ -53,12 +55,10 @@ function Homepage() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, [activeItem]);
 
-
   // (navItems removed; not used here)
 
   return (
-    <div className='scroll-smooth relative'>
-
+    <div className="scroll-smooth relative">
       <div className="top-0 sticky z-20 justify-center items-center flex">
         <LandingNav
           onAuth={goToAuth}
@@ -66,9 +66,7 @@ function Homepage() {
           activeItem={activeItem}
         />
       </div>
-      
       <main>{content}</main>
-      
       <Footer />
     </div>
   );

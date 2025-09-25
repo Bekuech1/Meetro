@@ -39,7 +39,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   // Function to set event type based on activeTab
-  const setChipInType = (activeTab) => {
+  const setChipInType = activeTab => {
     switch (activeTab) {
       case 0:
         return "Price";
@@ -53,14 +53,14 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
   };
 
   // Handle tab change from InputModals
-  const handleTabChange = (tabIndex) => {
+  const handleTabChange = tabIndex => {
     setActiveTab(tabIndex);
   };
 
   // Filter banks based on search input using the helper function
   const filteredBanks = searchBanks(searchInput);
 
-  const handleBankSelect = (bank) => {
+  const handleBankSelect = bank => {
     setSelectedBank(bank.name);
     setSearchInput(bank.name);
     setSelectedBankCode(bank.code);
@@ -68,7 +68,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
     setErrorMessage(""); // Clear any previous error messages
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const value = e.target.value;
     setSearchInput(value);
     setSelectedBank("");
@@ -91,7 +91,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
     }
   };
 
-  const handleAmountChange = (e) => {
+  const handleAmountChange = e => {
     let input = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
 
     if (input === "") {
@@ -188,7 +188,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                     type="text"
                     value={accountNumber}
                     maxLength={10}
-                    onChange={(e) => {
+                    onChange={e => {
                       const value = e.target.value;
                       // Allow only numeric input
                       if (/^\d*$/.test(value)) {
@@ -208,7 +208,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                 </label>
                 <div
                   className="w-full h-fit bg-[#FFFFFE]/50 flex pr-2 pl-4 py-3 rounded-[12px] border border-white cursor-pointer"
-                  onClick={() => setShowBankList((prev) => !prev)}
+                  onClick={() => setShowBankList(prev => !prev)}
                 >
                   <input
                     type="text"
@@ -222,7 +222,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                 </div>
                 {showBankList && (
                   <ul className="absolute bg-white border rounded-[12px] shadow-lg top-[68px] -right-0 w-full z-10 text-center max-h-[164px] h-fit py-1 overflow-y-auto scrollbar-hide scroll-smooth">
-                    {filteredBanks.map((bank) => (
+                    {filteredBanks.map(bank => (
                       <li
                         key={bank.code}
                         className="flex items-center px-4 py-2 cursor-pointer hover:scale-105 transition-transform justify-between font-medium text-[14px]"

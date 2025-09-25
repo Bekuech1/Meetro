@@ -23,7 +23,7 @@ const Eventdetails = () => {
   const [attendanceStatus, setAttendanceStatus] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingResponseType, setPendingResponseType] = useState(null);
-  const user = useAuthStore((state) => state.user);
+  const user = useAuthStore(state => state.user);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const Eventdetails = () => {
         // check if current user is already attending event
         const attendees = event.attendees?.L || [];
         const matchedAttendee = attendees.find(
-          (attendee) => attendee.M?.userId.S === user.userId
+          attendee => attendee.M?.userId.S === user.userId
         );
 
         if (matchedAttendee) {
@@ -55,10 +55,10 @@ const Eventdetails = () => {
   }, [eventId]);
 
   const toggleReadMore = () => {
-    setIsExpanded((prev) => !prev);
+    setIsExpanded(prev => !prev);
   };
 
-  const handleConfirmAttendance = async (responseType) => {
+  const handleConfirmAttendance = async responseType => {
     if (!user || !user.userId) {
       setPendingResponseType(responseType);
       setShowLoginModal(true);
@@ -68,7 +68,7 @@ const Eventdetails = () => {
     await confirmAttendance(responseType);
   };
 
-  const confirmAttendance = async (responseType) => {
+  const confirmAttendance = async responseType => {
     try {
       console.log("Confirming attendance for:", eventId);
       const shareResponse = await API.post(`/shares`, { eventId });
@@ -87,11 +87,17 @@ const Eventdetails = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-10"><LoadingSpinner color="border-[#866AD2]"/></div>;
+    return (
+      <div className="text-center py-10">
+        <LoadingSpinner color="border-[#866AD2]" />
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-red-500 text-center py-10 satoshi">{error}</div>;
+    return (
+      <div className="text-red-500 text-center py-10 satoshi">{error}</div>
+    );
   }
 
   //empty state

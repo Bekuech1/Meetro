@@ -8,11 +8,19 @@ import { LoadingSpinner } from "@/components/create-event/Private";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
 
 // Constants
-const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const WEEKDAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 const WEEKDAY_REGEX = /^.*?,\s*/;
 
 // Utility functions
-const parseEventDate = (rawDate) => {
+const parseEventDate = rawDate => {
   if (!rawDate || typeof rawDate !== "string") return null;
 
   const cleanedDateStr = rawDate.replace(WEEKDAY_REGEX, "");
@@ -20,7 +28,7 @@ const parseEventDate = (rawDate) => {
   return isNaN(parsed) ? null : parsed;
 };
 
-const formatDateKey = (date) => {
+const formatDateKey = date => {
   const yyyy = date.getFullYear();
   const mm = String(date.getMonth() + 1).padStart(2, "0");
   const dd = String(date.getDate()).padStart(2, "0");
@@ -30,22 +38,20 @@ const formatDateKey = (date) => {
 const formatAttendeesDisplay = (attendees = []) => {
   const uniqueYes = Array.from(
     new Map(
-      attendees
-        .filter((a) => a.response === "yes")
-        .map((a) => [a.userId, a])
+      attendees.filter(a => a.response === "yes").map(a => [a.userId, a])
     ).values()
   );
 
   if (uniqueYes.length === 0) return "no one going yet";
 
-  const firstNames = uniqueYes.map((a) => a.name.split(" ")[0]);
+  const firstNames = uniqueYes.map(a => a.name.split(" ")[0]);
   const displayNames = firstNames.slice(0, 2).join(", ");
   const extraCount = firstNames.length - 2;
 
   return extraCount > 0 ? `${displayNames} +${extraCount}` : displayNames;
 };
 
-const timeAgo = (createdAt) => {
+const timeAgo = createdAt => {
   const diffMs = Date.now() - new Date(createdAt);
   const diffSec = Math.floor(diffMs / 1000);
   const diffMin = Math.floor(diffSec / 60);
@@ -71,7 +77,7 @@ const EventItem = ({ event, profilePic, onOpenModal, onManage }) => {
   }, [event.id, onOpenModal]);
 
   const handleManageClick = useCallback(
-    (e) => {
+    e => {
       e.stopPropagation();
       onManage(event.id);
     },
@@ -111,17 +117,23 @@ const EventItem = ({ event, profilePic, onOpenModal, onManage }) => {
             host
           </h6>
           <img src={profilePic} className="w-4 h-4 rounded-full" alt="host" />
-          <h6 className="text-black text-xs font-medium capitalize">{hostName}</h6>
+          <h6 className="text-black text-xs font-medium capitalize">
+            {hostName}
+          </h6>
         </li>
 
         <li className="flex gap-1 items-center">
           <img src="/event-timer.svg" className="w-4 h-4" alt="time" />
-          <h6 className="text-[#8A9191] text-xs font-medium">{event.timeFrom}</h6>
+          <h6 className="text-[#8A9191] text-xs font-medium">
+            {event.timeFrom}
+          </h6>
         </li>
 
         <li className="flex gap-1 items-center">
           <img src="/event-location.svg" className="w-4 h-4" alt="location" />
-          <h6 className="text-[#8A9191] text-xs font-medium capitalize">{locationText}</h6>
+          <h6 className="text-[#8A9191] text-xs font-medium capitalize">
+            {locationText}
+          </h6>
         </li>
 
         <li className="flex gap-1 items-center">
@@ -129,7 +141,11 @@ const EventItem = ({ event, profilePic, onOpenModal, onManage }) => {
             <h6 className="text-[#8A9191] text-xs font-bold capitalize satoshi">
               going
             </h6>
-            <img src={profilePic} className="w-4 h-4 rounded-full" alt="attendees" />
+            <img
+              src={profilePic}
+              className="w-4 h-4 rounded-full"
+              alt="attendees"
+            />
             <h6 className="text-black text-xs font-medium">
               {formatAttendeesDisplay(event.attendees)}
             </h6>
@@ -138,7 +154,9 @@ const EventItem = ({ event, profilePic, onOpenModal, onManage }) => {
       </ul>
 
       <section className="flex flex-col justify-between text-end h-[100px]">
-        <h6 className="text-[#8A9191] text-[12px] font-[500]">{timeAgo(event?.createdAt)}</h6>
+        <h6 className="text-[#8A9191] text-[12px] font-[500]">
+          {timeAgo(event?.createdAt)}
+        </h6>
         <SiteBtn
           name="manage"
           colorPadding="bg-[#AEFC40] py-[4px] px-[16px]"
@@ -208,7 +226,7 @@ export default function MyEvent() {
     navigate("/create-event");
   }, [navigate]);
 
-  const handleOpenModal = useCallback((id) => {
+  const handleOpenModal = useCallback(id => {
     setSelectedEventId(id);
     setIsModalOpen(true);
   }, []);
@@ -219,7 +237,7 @@ export default function MyEvent() {
   }, []);
 
   const handleManageEvent = useCallback(
-    (id) => {
+    id => {
       navigate(`/event/${id}`);
     },
     [navigate]
@@ -269,7 +287,7 @@ export default function MyEvent() {
             </p>
           </div>
 
-          {events.map((event) => (
+          {events.map(event => (
             <EventItem
               key={event.id}
               event={event}
@@ -281,7 +299,9 @@ export default function MyEvent() {
         </div>
       ))}
 
-      {isModalOpen && <EventModal eventId={selectedEventId} closeModal={handleCloseModal} />}
+      {isModalOpen && (
+        <EventModal eventId={selectedEventId} closeModal={handleCloseModal} />
+      )}
     </div>
   );
 }

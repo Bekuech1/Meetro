@@ -68,14 +68,15 @@ const Public = ({ onPrivate }) => {
               happening!
             </p>
           </div>
-          
+
           <div className="w-full md:h-[553px] h-[400px] flex flex-col justify-center align-center text-center gap-2 px-20">
             <h1 className="text-black font-bold text-[18px] capitalize satoshi">
               coming soon
             </h1>
             <p className="text-[#8A9191] font-medium text-[16px] capitalize satoshi">
-              Soon, you’ll be able to create tickets and host events <br className="sm:block hidden"/> for
-              everyone to discover and join.
+              Soon, you’ll be able to create tickets and host events{" "}
+              <br className="sm:block hidden" /> for everyone to discover and
+              join.
             </p>
           </div>
           {/* <section className="h-fit w-full flex justify-between gap-4">

@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 import LoadingSpinner from "../LoadingSpinner";
 
 const VARIANTS = {
@@ -150,9 +150,29 @@ const TagButton = ({
         </div>
       ) : hasContent ? (
         <div className={`w-fit flex items-center gap-1 h-fit`}>
-          {leftImg && <img src={leftImg} alt="" className={sizeConfig.iconSize} />}
+          {leftImg && (
+            <>
+              {typeof leftImg === "string" ? (
+                <img src={leftImg} alt="" className={sizeConfig.iconSize} />
+              ) : (
+                <span className={`[&>svg]:${sizeConfig.iconSize}`}>
+                  {leftImg}
+                </span>
+              )}
+            </>
+          )}
           {text && <span className="whitespace-nowrap">{text}</span>}
-          {rightImg && <img src={rightImg} alt="" className={sizeConfig.iconSize} />}
+          {rightImg && (
+            <>
+              {typeof rightImg === "string" ? (
+                <img src={rightImg} alt="" className={sizeConfig.iconSize} />
+              ) : (
+                <span className={`[&>svg]:${sizeConfig.iconSize}`}>
+                  {rightImg}
+                </span>
+              )}
+            </>
+          )}
         </div>
       ) : null}
     </button>

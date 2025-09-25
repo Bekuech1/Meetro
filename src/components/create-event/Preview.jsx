@@ -32,7 +32,9 @@ const Preview = ({
       }
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hours = Math.floor(
+        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
@@ -46,7 +48,7 @@ const Preview = ({
   }, [time]);
 
   const toggleReadMore = () => {
-    setIsExpanded((prev) => !prev);
+    setIsExpanded(prev => !prev);
   };
 
   const handleManageClick = () => {
@@ -190,7 +192,8 @@ const Preview = ({
               <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
                 <div className="w-full h-fit flex justify-between">
                   <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-                    Starting in <span className="text-[#866AD2]">{countdown}</span>
+                    Starting in{" "}
+                    <span className="text-[#866AD2]">{countdown}</span>
                   </div>
                 </div>
               </div>
@@ -208,10 +211,10 @@ const Preview = ({
                 <div className="grid gap-2 w-full h-fit">
                   <ModalText img="/modal-location.svg" text="location" />
                   <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                  {location} 
+                    {location}
                   </h6>
                   <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                  {state}
+                    {state}
                   </p>
                 </div>
               )}
@@ -245,9 +248,6 @@ const Preview = ({
           </div>
         </div>
       </div>
-
-
-
 
       {/* Mobile Modal */}
       <div className="fixed inset-0 h-full z-30 bg-transparent flex lg:hidden">
@@ -351,7 +351,8 @@ const Preview = ({
             <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
               <div className="w-full h-fit flex justify-between">
                 <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-                  Starting in <span className="text-[#866AD2]">{countdown}</span>
+                  Starting in{" "}
+                  <span className="text-[#866AD2]">{countdown}</span>
                 </div>
               </div>
               {/* <div className="satoshi w-full h-fit grid gap-[10px] items-center">
@@ -374,10 +375,10 @@ const Preview = ({
               <div className="grid gap-2 w-full h-fit">
                 <ModalText img="/modal-location.svg" text="location" />
                 <h6 className="satoshi text-[16px] font-[500] leading-[24px] text-black capitalize w-fit">
-                {location} 
+                  {location}
                 </h6>
                 <p className="satoshi text-[12px] font-[700] leading-[18px] text-black capitalize w-fit">
-                {state}
+                  {state}
                 </p>
               </div>
             )}

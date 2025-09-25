@@ -379,17 +379,16 @@ export default function EventInfo({ eventId }) {
                       /> */}
                     </div>
 
-                    
-                      <ModalBtn
-                        onClick={() =>
-                          handleConfirmAttendance("yes") &&
-                          useEventStore.getState().setShouldRefetch(true)
-                        }
-                        bgcolor="bg-white"
-                        image="/tick-circle.svg"
-                        textcolor="text-[#61B42D]"
-                        text="Change to Going"
-                      />
+                    <ModalBtn
+                      onClick={() =>
+                        handleConfirmAttendance("yes") &&
+                        useEventStore.getState().setShouldRefetch(true)
+                      }
+                      bgcolor="bg-white"
+                      image="/tick-circle.svg"
+                      textcolor="text-[#61B42D]"
+                      text="Change to Going"
+                    />
                   </div>
                 </div>
               )}

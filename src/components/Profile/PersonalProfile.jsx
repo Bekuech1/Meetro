@@ -13,11 +13,11 @@ const profilePictures = [
 
 const PersonalProfile = () => {
   // const [activeTab, setActiveTab] = useState("events"); // "events" or "invites"
-  const user = useAuthStore((state) => state.user);
+  const user = useAuthStore(state => state.user);
   const formattedDate = dayjs(user?.createdAt).format("D MMMM, YYYY");
   const profilePic = getProfilePicture();
-  const myEventsTotal = useEventStore((state) => state.myEventsTotal);
-  const totalAttendees = useEventStore((state) => state.totalAttendees);
+  const myEventsTotal = useEventStore(state => state.myEventsTotal);
+  const totalAttendees = useEventStore(state => state.totalAttendees);
 
   return (
     <div className="w-full md:w-[680px] md:h-[470px] px-4 pt-6 pb-12 md:p-0 flex flex-col gap-6 satoshi">
@@ -176,16 +176,15 @@ const PersonalProfile = () => {
 
 export default PersonalProfile;
 
-
 //function to randomise profile picture selection
 export function getProfilePicture() {
- let storedPic = localStorage.getItem("profilePic");
+  let storedPic = localStorage.getItem("profilePic");
 
- if (!storedPic) {
-   const randomIndex = Math.floor(Math.random() * profilePictures.length);
-   storedPic = profilePictures[randomIndex];
-   localStorage.setItem("profilePic", storedPic);
- }
+  if (!storedPic) {
+    const randomIndex = Math.floor(Math.random() * profilePictures.length);
+    storedPic = profilePictures[randomIndex];
+    localStorage.setItem("profilePic", storedPic);
+  }
   return storedPic;
 }
 

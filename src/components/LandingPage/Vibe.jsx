@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../Layout-conponents/Button";
 
-const Vibe = ( {onClick} ) => {
+const Vibe = ({ onClick }) => {
   return (
     <div className="bg-[#011F0F] xl:h-screen h-fit xl:flex grid justify-center gap-[60px] items-center py-12">
       <div className="md:w-[600px] w-[90%] relative min-h-[300px] sm:min-h-[300px] md:min-h-[400px] md:mx-0 mx-auto lg:min-h-[532px] max-h-[562px] overflow-y-hidden bg-[linear-gradient(180deg,rgba(123,173,52,0.1)_0%,rgba(122,161,91,0.1)_100%)] backdrop-blur-[32px] flex justify-center rounded-4xl">
@@ -14,12 +14,36 @@ const Vibe = ( {onClick} ) => {
             themes
           </h6>
           <div className="flex gap-4 h-fit w-fit">
-            <img src="/vibe1.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe2.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe3.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe4.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe5.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
-            <img src="/vibe6.png" alt="" className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white" />
+            <img
+              src="/vibe1.png"
+              alt=""
+              className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white"
+            />
+            <img
+              src="/vibe2.png"
+              alt=""
+              className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white"
+            />
+            <img
+              src="/vibe3.png"
+              alt=""
+              className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white"
+            />
+            <img
+              src="/vibe4.png"
+              alt=""
+              className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white"
+            />
+            <img
+              src="/vibe5.png"
+              alt=""
+              className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white"
+            />
+            <img
+              src="/vibe6.png"
+              alt=""
+              className="aspect-square w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-[6px] object-cover border border-white"
+            />
           </div>
         </section>
       </div>
@@ -38,7 +62,7 @@ const Vibe = ( {onClick} ) => {
           </div>
         </div>
         <div className="flex gap-4 w-fit">
-          <Button name="explore themes" color="bg-white" onclick={onClick}/>
+          <Button name="explore themes" color="bg-white" onclick={onClick} />
         </div>
       </div>
     </div>

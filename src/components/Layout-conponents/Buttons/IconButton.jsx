@@ -80,9 +80,9 @@ const IconButton = ({
 
   const hasContent = icon;
 
-  const spinnerSize = smallButton ? 14 : 20
+  const spinnerSize = smallButton ? 14 : 20;
 
-  const iconSize = smallButton ? "size-[14px]" : "size-6"
+  const iconSize = smallButton ? "size-[14px]" : "size-6";
 
   return (
     <button
@@ -100,7 +100,11 @@ const IconButton = ({
         </div>
       ) : hasContent ? (
         <div className={`flex items-center size-fit`}>
-            <img src={icon} alt="" className={iconSize}/>
+          {typeof icon === "string" ? (
+            <img src={icon} alt="" className={iconSize} />
+          ) : (
+            <span className={`[&>svg]:${iconSize}`}>{icon}</span>
+          )}
         </div>
       ) : null}
     </button>

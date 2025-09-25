@@ -6,7 +6,6 @@ import { blogPosts } from "@/utils/blogs";
 const latestPosts = blogPosts.slice(0, 3);
 
 const LandingBlog = ({ onClick, goToBlog }) => {
-  
   return (
     <div className="bg-[#F0F0F0] flex flex-col py-15 gap-15 h-fit relative justify-center items-center w-full overflow-hidden">
       <div className="flex flex-col gap-12 w-full h-fit justify-center text-center">
@@ -26,7 +25,7 @@ const LandingBlog = ({ onClick, goToBlog }) => {
 
         {/* Horizontal Scroll Container */}
         <div className="flex gap-4 w-full overflow-x-auto pb-4 px-4 scrollbar-hide mr-6 justify-start lg:justify-center">
-          {latestPosts.map((post) => (
+          {latestPosts.map(post => (
             <div key={post.id} className="flex-shrink-0">
               <BlogCard post={post} mobile="w-[330px]" onClick={onClick} />
             </div>

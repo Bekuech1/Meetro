@@ -9,7 +9,7 @@ const Seamless = ({ onclick }) => {
   useEffect(() => {
     // Create intersection observer to detect when section is visible
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         // Update state when visibility changes
         if (entries[0].isIntersecting) {
           setIsVisible(true);

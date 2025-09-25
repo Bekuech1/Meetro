@@ -14,7 +14,6 @@ const defaultOptions = {
 };
 
 const JoinToday = ({ onClick }) => {
-
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <div className="absolute inset-0">
@@ -37,7 +36,7 @@ const JoinToday = ({ onClick }) => {
             >
               <Button name="Join Community" color="bg-white" />
             </a>
-            <CtaButton name="create event" onClick={onClick}/>
+            <CtaButton name="create event" onClick={onClick} />
           </div>
         </div>
       </div>
