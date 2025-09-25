@@ -1,5 +1,5 @@
 import React from "react";
-import Footer from "../components/Layout-conponents/Footer";
+import Footer from "../components/Layout-components/Footer";
 import PersonalProfile from "../components/Profile/PersonalProfile";
 import Header from "@/components/home/HomeNav";
 

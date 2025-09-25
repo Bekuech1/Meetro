@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import Button from "../Layout-conponents/Button";
-import SplineComponent from "../Layout-conponents/SplineComp";
+import Button from "../Layout-components/Button";
+import SplineComponent from "../Layout-components/SplineComp";
 
 const FutureFeatures = ({ onclick }) => {
   const [shouldLoadIframe, setShouldLoadIframe] = useState(false);
   const iframeContainerRef = useRef(null);
-  
+
   useEffect(() => {
     // Wait for the window load event which fires when all resources have loaded
     const handleAllContentLoaded = () => {
       // Check if the iframe container is in viewport
       const observer = new IntersectionObserver(
-        (entries) => {
+        entries => {
           if (entries[0].isIntersecting) {
             // Set a small delay to ensure UI is responsive after main content load
             setTimeout(() => setShouldLoadIframe(true), 100);
@@ -27,15 +27,15 @@ const FutureFeatures = ({ onclick }) => {
     };
 
     // If document is already loaded, execute immediately
-    if (document.readyState === 'complete') {
+    if (document.readyState === "complete") {
       handleAllContentLoaded();
     } else {
       // Otherwise wait for the load event
-      window.addEventListener('load', handleAllContentLoaded);
+      window.addEventListener("load", handleAllContentLoaded);
     }
 
     return () => {
-      window.removeEventListener('load', handleAllContentLoaded);
+      window.removeEventListener("load", handleAllContentLoaded);
       // Clean up the observer if it exists
       const observer = new IntersectionObserver(() => {});
       if (iframeContainerRef.current) {
@@ -48,12 +48,12 @@ const FutureFeatures = ({ onclick }) => {
     "Discover local events",
     "Match with people attending",
     "Join communities you vibe with",
-    "Create public events & grow your tribe"
+    "Create public events & grow your tribe",
   ];
 
   return (
     <div className="bg-[#F3F0FB] xl:h-screen h-fit flex flex-col-reverse justify-center gap-[60px] items-center py-12 xl:flex-row">
-      <div 
+      <div
         ref={iframeContainerRef}
         className="relative md:w-[666px] md:h-[562px] w-[90%] h-[300px] md:overflow-hidden overflow-visible flex justify-center items-center mx-auto md:mx-0 pointer-events-none"
       >
@@ -73,11 +73,24 @@ const FutureFeatures = ({ onclick }) => {
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-[#F3F0FB]">
             <div className="animate-pulse text-[#4A3A74] flex flex-col items-center">
-              <svg className="w-12 h-12 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+              <svg
+                className="w-12 h-12 mb-3"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"
+                />
               </svg>
               <span>Loading 3D model...</span>
-              <span className="text-sm mt-1 text-[#4A3A7A]">Waiting for page content to finish loading</span>
+              <span className="text-sm mt-1 text-[#4A3A7A]">
+                Waiting for page content to finish loading
+              </span>
             </div>
           </div>
         )}
@@ -97,7 +110,7 @@ const FutureFeatures = ({ onclick }) => {
                 Soon, you'll be able to:
               </h6>
             </div>
-            
+
             {featureItems.map((item, index) => (
               <div key={index} className="flex gap-2">
                 <img src="tick-square.svg" alt="" loading="lazy" />
@@ -108,7 +121,7 @@ const FutureFeatures = ({ onclick }) => {
             ))}
           </div>
         </div>
-        
+
         <div className="grid gap-4">
           <h6 className="font-[700] text-[16px] leading-6 text-black satoshi">
             Stay tuned for more exciting updates!

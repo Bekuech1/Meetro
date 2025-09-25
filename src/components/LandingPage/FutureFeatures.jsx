@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import Button from "../Layout-conponents/Button";
-import SplineComponent from "../Layout-conponents/SplineComp";
-
+import Button from "../Layout-components/Button";
+import SplineComponent from "../Layout-components/SplineComp";
 
 const featureItems = [
   "Discover local events",
@@ -11,7 +10,6 @@ const featureItems = [
 ];
 
 const FutureFeatures = ({ onclick }) => {
-
   return (
     <div className="bg-[#F3F0FB] xl:h-screen h-fit flex flex-col-reverse justify-center gap-[60px] items-center py-12 xl:flex-row">
       <div className="fixrelative md:w-[666px] md:h-[562px] w-[90%] h-[300px] md:overflow-hidden overflow-visible flex justify-center items-center mx-auto md:mx-0 pointer-events-none">

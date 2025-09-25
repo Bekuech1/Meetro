@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import SeamlessAni from "../Layout-conponents/SeamlessAni";
-import CtaButton from "../Layout-conponents/CtaButton";
+import SeamlessAni from "../Layout-components/SeamlessAni";
+import CtaButton from "../Layout-components/CtaButton";
 
 const Seamless = ({ onClick }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,7 +9,7 @@ const Seamless = ({ onClick }) => {
   useEffect(() => {
     // Create intersection observer to detect when section is visible
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         // Update state when visibility changes
         if (entries[0].isIntersecting) {
           setIsVisible(true);
@@ -41,7 +41,9 @@ const Seamless = ({ onClick }) => {
     if (isVisible) {
       return <SeamlessAni />;
     }
-    return <div className="lg:w-[600px] relative rounded-4xl bg-[linear-gradient(180deg,rgba(123,173,52,0.1)_0%,rgba(122,161,91,0.1)_100%)] backdrop-blur-[32px] flex justify-center items-center"></div>;
+    return (
+      <div className="lg:w-[600px] relative rounded-4xl bg-[linear-gradient(180deg,rgba(123,173,52,0.1)_0%,rgba(122,161,91,0.1)_100%)] backdrop-blur-[32px] flex justify-center items-center"></div>
+    );
   }, [isVisible]);
 
   return (
@@ -69,7 +71,7 @@ const Seamless = ({ onClick }) => {
         </div>
       </div>
       <div className="min-h-[300px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[532px]">
-      {animationContent}
+        {animationContent}
       </div>
     </div>
   );

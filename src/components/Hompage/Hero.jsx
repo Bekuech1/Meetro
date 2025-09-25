@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../Layout-conponents/Button";
+import Button from "../Layout-components/Button";
 import Navbar from "./Navbar";
 
 const Hero = ({ onclick }) => {

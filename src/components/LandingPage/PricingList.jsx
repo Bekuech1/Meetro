@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../Layout-conponents/Button";
+import Button from "../Layout-components/Button";
 
 const PRICING_DATA = [
   {
@@ -7,13 +7,13 @@ const PRICING_DATA = [
     heading: "It's all Free",
     features: [
       "Create and manage private events",
-      "Invite friends and track RSVPs", 
+      "Invite friends and track RSVPs",
       "Customize your event details",
       "Choose from themes to match the vibe",
       "Chip In options for guests to contribute",
       "Event dashboard with attendee management",
       "Social links and updates",
-    ]
+    ],
   },
   {
     id: 2,
@@ -22,8 +22,8 @@ const PRICING_DATA = [
     features: [
       "7% + ₦200 fee for paid event",
       "Fees are paid by ticket buyers on paid tickets, unless you choose to cover them.",
-    ]
-  }
+    ],
+  },
 ];
 
 const PricingComponent = ({ heading, subtext, features, onClick }) => (
@@ -54,8 +54,7 @@ const PricingComponent = ({ heading, subtext, features, onClick }) => (
   </div>
 );
 
-const PricingList = ( {onClick} ) => {
-
+const PricingList = ({ onClick }) => {
   return (
     <div className="relative w-full h-fit py-24 min-h-[780px] flex flex-col gap-10 bg-[#FCFEF9] satoshi ">
       <div className="flex flex-col gap-6 md:w-[563px] w-[90%] h-fit justify-center text-center mx-auto mt-6">
@@ -68,7 +67,7 @@ const PricingList = ( {onClick} ) => {
         </p>
       </div>
       <div className="flex flex-col lg:flex-row gap-10 justify-center items-center w-fit mx-auto max-w-[1200px]">
-        {PRICING_DATA.map((plan) => (
+        {PRICING_DATA.map(plan => (
           <PricingComponent
             key={plan.id}
             heading={plan.heading}

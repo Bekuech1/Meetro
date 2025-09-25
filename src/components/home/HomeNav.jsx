@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import SiteBtn from "../Layout-conponents/SiteBtn";
+import SiteBtn from "../Layout-components/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
 import useEventStore from "@/stores/eventStore";
 import { Button } from "../ui/button";
@@ -13,14 +13,14 @@ const Header = () => {
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
   const navigate = useNavigate();
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore(state => state.user);
+  const logout = useAuthStore(state => state.logout);
   const profilePic = getProfilePicture();
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
-  const toggleNotification = () => setIsNotificationOpen((prev) => !prev);
+  const toggleDropdown = () => setIsOpen(prev => !prev);
+  const toggleNotification = () => setIsNotificationOpen(prev => !prev);
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = event => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
@@ -67,8 +67,8 @@ const Header = () => {
     },
   ];
 
-  const myEventsTotal = useEventStore((state) => state.myEventsTotal);
-  const totalAttendees = useEventStore((state) => state.totalAttendees);
+  const myEventsTotal = useEventStore(state => state.myEventsTotal);
+  const totalAttendees = useEventStore(state => state.totalAttendees);
 
   return (
     <header className="flex sm:px-8 sm:py-3 p-4 justify-between bg-[#011F0F] items-center z-20 sticky top-0 shadow-md w-full">
@@ -83,10 +83,9 @@ const Header = () => {
             />
           </button>
           <div className="bg-linear-to-r from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] leading-tight size-fit capitalize p-1 rounded-2xl text-[#011F0F]">
-              <p>Beta</p>
+            <p>Beta</p>
           </div>
         </div>
-        
 
         <div className="flex gap-1 py-1 px-2 h-fit w-fit">
           <img src="/ticket-star.svg" alt="My Events Icon" />

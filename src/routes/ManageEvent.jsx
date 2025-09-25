@@ -3,7 +3,7 @@ import DeleteEvent from "@/components/event-dashboard/DeleteEvent";
 import EditEvent from "@/components/event-dashboard/EditEvent";
 import GuestList from "@/components/event-dashboard/GuestList";
 import ShareEvent from "@/components/event-dashboard/ShareEvent";
-// import LoadingSpinner from "@/components/Layout-conponents/LoadingSpinner";
+// import LoadingSpinner from "@/components/Layout-components/LoadingSpinner";
 import API from "@/lib/axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";

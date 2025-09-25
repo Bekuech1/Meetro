@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from "react";
-import Button from "../Layout-conponents/Button";
-import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
-import { motion} from "framer-motion";
+import Button from "../Layout-components/Button";
+import CreateEventBtn from "@/components/Layout-components/CreateEventBtn";
+import { motion } from "framer-motion";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
 
 const NAV_ITEMS = [
@@ -13,23 +13,26 @@ const NAV_ITEMS = [
 
 const navVariants = {
   initial: { scale: 0, opacity: 0 },
-  animate: { 
-    scale: [0, 1], 
+  animate: {
+    scale: [0, 1],
     opacity: [0, 1],
-    transition: { duration: 0.5, ease: "easeInOut", times: [0, 1] }
-  }
+    transition: { duration: 0.5, ease: "easeInOut", times: [0, 1] },
+  },
 };
 
 const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
   const [navOpen, setNavOpen] = useState(false);
-  
+
   useDisableScroll(navOpen);
 
   // Memoize callbacks to prevent unnecessary re-renders
-  const handleNavItemClick = useCallback((itemId) => {
-    setActiveItem(itemId);
-    setNavOpen(false);
-  }, [setActiveItem]);
+  const handleNavItemClick = useCallback(
+    itemId => {
+      setActiveItem(itemId);
+      setNavOpen(false);
+    },
+    [setActiveItem]
+  );
 
   const handleMenuOpen = useCallback(() => setNavOpen(true), []);
   const handleMenuClose = useCallback(() => setNavOpen(false), []);
@@ -37,41 +40,48 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
     setNavOpen(false);
     if (onAuth) onAuth();
   }, [onAuth]);
-  
+
   // Prevent event bubbling on mobile nav
-  const handleNavClick = useCallback((e) => e.stopPropagation(), []);
+  const handleNavClick = useCallback(e => e.stopPropagation(), []);
 
   // Memoize the desktop navigation items to prevent re-rendering
-  const desktopNavItems = useMemo(() => 
-    NAV_ITEMS.map((item) => (
-      <li key={item.id}>
-        <button
-          className={`font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${
-            activeItem === item.id ? "text-[#AEFC40]" : "text-[#B0BAB5]"
-          }`}
-          onClick={() => setActiveItem(item.id)}
-        >
-          {item.name}
-        </button>
-      </li>
-    )), [activeItem, setActiveItem]);
+  const desktopNavItems = useMemo(
+    () =>
+      NAV_ITEMS.map(item => (
+        <li key={item.id}>
+          <button
+            className={`font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${
+              activeItem === item.id ? "text-[#AEFC40]" : "text-[#B0BAB5]"
+            }`}
+            onClick={() => setActiveItem(item.id)}
+          >
+            {item.name}
+          </button>
+        </li>
+      )),
+    [activeItem, setActiveItem]
+  );
 
   // Memoize mobile navigation items
-  const mobileNavItems = useMemo(() =>
-    NAV_ITEMS.map((item) => (
-      <li key={item.id}>
-        <button
-          className="w-full h-fit py-4 paytone capitalize font-medium text-[20px] leading-6 text-white cursor-pointer text-left"
-          onClick={() => handleNavItemClick(item.id)}
-        >
-          {item.name}
-        </button>
-      </li>
-    )), [handleNavItemClick]);
+  const mobileNavItems = useMemo(
+    () =>
+      NAV_ITEMS.map(item => (
+        <li key={item.id}>
+          <button
+            className="w-full h-fit py-4 paytone capitalize font-medium text-[20px] leading-6 text-white cursor-pointer text-left"
+            onClick={() => handleNavItemClick(item.id)}
+          >
+            {item.name}
+          </button>
+        </li>
+      )),
+    [handleNavItemClick]
+  );
 
   // Memoize mobile nav class to prevent string concatenation on each render
-  const mobileNavClass = useMemo(() => 
-    `fixed inset-4 bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex-col rounded-4xl justify-between z-[100] max-h-[calc(100vh-2rem)] 
+  const mobileNavClass = useMemo(
+    () =>
+      `fixed inset-4 bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex-col rounded-4xl justify-between z-[100] max-h-[calc(100vh-2rem)] 
    ${navOpen ? "flex" : "hidden"}`,
     [navOpen]
   );
@@ -92,10 +102,8 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
         </div>
 
         <div className="w-full flex justify-end items-center gap-4">
-          <ul className="md:flex size-fit gap-4 hidden">
-            {desktopNavItems}
-          </ul>
-  
+          <ul className="md:flex size-fit gap-4 hidden">{desktopNavItems}</ul>
+
           <div className="flex justify-center items-center gap-4">
             <Button name="create event" color="bg-[#AFFC41]" onclick={onAuth} />
             <button onClick={handleMenuOpen} className="md:hidden size-fit">
@@ -120,12 +128,15 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
                 className="size-fit rounded-4xl p-1 bg-[#344C3F]"
                 aria-label="Close navigation menu"
               >
-                <img src="/menu-active.svg" alt="" className="size-[24px]" loading="lazy" />
+                <img
+                  src="/menu-active.svg"
+                  alt=""
+                  className="size-[24px]"
+                  loading="lazy"
+                />
               </button>
             </div>
-            <ul className="flex flex-col h-fit w-full">
-              {mobileNavItems}
-            </ul>
+            <ul className="flex flex-col h-fit w-full">{mobileNavItems}</ul>
           </div>
           <CreateEventBtn
             onClick={handleCreateEvent}

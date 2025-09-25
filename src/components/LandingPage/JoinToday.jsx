@@ -1,8 +1,8 @@
 import React from "react";
-import Button from "../Layout-conponents/Button";
+import Button from "../Layout-components/Button";
 import Lottie from "react-lottie";
-import animationData from "../Layout-conponents/bgmove.json";
-import CtaButton from "../Layout-conponents/CtaButton";
+import animationData from "../Layout-components/bgmove.json";
+import CtaButton from "../Layout-components/CtaButton";
 
 const defaultOptions = {
   loop: true,
@@ -14,7 +14,6 @@ const defaultOptions = {
 };
 
 const JoinToday = ({ onClick }) => {
-
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <div className="absolute inset-0">
@@ -37,7 +36,7 @@ const JoinToday = ({ onClick }) => {
             >
               <Button name="Join Community" color="bg-white" />
             </a>
-            <CtaButton name="create event" onClick={onClick}/>
+            <CtaButton name="create event" onClick={onClick} />
           </div>
         </div>
       </div>

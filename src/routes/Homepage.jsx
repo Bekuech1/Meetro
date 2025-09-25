@@ -3,11 +3,12 @@ import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import Hero from "../components/Hompage/Hero";
 import JoinToday from "../components/Hompage/JoinToday";
-import Footer from "../components/Layout-conponents/Footer";
+import Footer from "../components/Layout-components/Footer";
 import FutureFeatures from "../components/Hompage/FutureFeatures";
 import Seamless from "../components/Hompage/Seamless";
 import Navbar from "../components/Hompage/Navbar";
 import Popup from "../components/Hompage/PopUp";
+import InputField from "@/components/Layout-components/Inputs/InputField";
 
 function Homepage() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -68,7 +69,7 @@ function Homepage() {
     return () => window.removeEventListener("scroll", debounceScroll);
   }, []);
 
-  const validateEmail = (email) => {
+  const validateEmail = email => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return pattern.test(email.toLowerCase());
   };
@@ -133,6 +134,7 @@ function Homepage() {
       <FutureFeatures onclick={openPopup} />
       <JoinToday onclick={openPopup} />
       <Footer onclick={openPopup} />
+      <InputField />
 
       {/* Popup */}
       <Popup

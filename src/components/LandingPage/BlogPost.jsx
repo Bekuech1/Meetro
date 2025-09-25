@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { blogPosts } from "@/utils/blogs";
 import LandingNav from "@/components/LandingPage/LandingNav";
-import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
+import CreateEventBtn from "@/components/Layout-components/CreateEventBtn";
 
 const HEADING_CLASSES = {
   1: "text-[18px] font-[700] text-[#001010] leading-[28px] satoshi mb-6",
@@ -85,7 +85,8 @@ const ContentRenderer = React.memo(({ content }) => {
                 "li",
                 {
                   key: itemIndex,
-                  className: "text-[#334040] leading-[24px] text-[16px] font-[500] satoshi",
+                  className:
+                    "text-[#334040] leading-[24px] text-[16px] font-[500] satoshi",
                 },
                 item
               )
@@ -112,23 +113,29 @@ const ContentRenderer = React.memo(({ content }) => {
   return <div className="max-w-none">{renderedContent}</div>;
 });
 
-ContentRenderer.displayName = 'ContentRenderer';
+ContentRenderer.displayName = "ContentRenderer";
 
 const MobileNavigation = React.memo(({ navOpen, onClose, onNavigate }) => {
-  const handleNavItemClick = useCallback((itemId) => {
-    onNavigate(itemId);
-  }, [onNavigate]);
+  const handleNavItemClick = useCallback(
+    itemId => {
+      onNavigate(itemId);
+    },
+    [onNavigate]
+  );
 
-  const navItems = useMemo(() => 
-    NAV_ITEMS.map((item) => (
-      <li
-        key={item.id}
-        className="w-full h-fit py-4 paytone font-medium text-[24px] leading-6 text-white cursor-pointer"
-        onClick={() => handleNavItemClick(item.id)}
-      >
-        {item.name}
-      </li>
-    )), [handleNavItemClick]);
+  const navItems = useMemo(
+    () =>
+      NAV_ITEMS.map(item => (
+        <li
+          key={item.id}
+          className="w-full h-fit py-4 paytone font-medium text-[24px] leading-6 text-white cursor-pointer"
+          onClick={() => handleNavItemClick(item.id)}
+        >
+          {item.name}
+        </li>
+      )),
+    [handleNavItemClick]
+  );
 
   if (!navOpen) return null;
 
@@ -151,9 +158,7 @@ const MobileNavigation = React.memo(({ navOpen, onClose, onNavigate }) => {
               />
             </button>
           </div>
-          <ul className="flex flex-col h-fit w-full">
-            {navItems}
-          </ul>
+          <ul className="flex flex-col h-fit w-full">{navItems}</ul>
         </div>
         <CreateEventBtn
           onClick={onClose}
@@ -166,15 +171,15 @@ const MobileNavigation = React.memo(({ navOpen, onClose, onNavigate }) => {
   );
 });
 
-MobileNavigation.displayName = 'MobileNavigation';
+MobileNavigation.displayName = "MobileNavigation";
 
 const BlogPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [navOpen, setNavOpen] = useState(false);
-  
-  const post = useMemo(() => 
-    blogPosts.find(p => p.id === id || p.id === parseInt(id, 10)), 
+
+  const post = useMemo(
+    () => blogPosts.find(p => p.id === id || p.id === parseInt(id, 10)),
     [id]
   );
 
@@ -190,21 +195,27 @@ const BlogPost = () => {
     setNavOpen(true);
   }, []);
 
-  const handleNavigation = useCallback((itemIndex) => {
-    setNavOpen(false);
-    navigate("/", { state: { id: itemIndex } });
-  }, [navigate]);
+  const handleNavigation = useCallback(
+    itemIndex => {
+      setNavOpen(false);
+      navigate("/", { state: { id: itemIndex } });
+    },
+    [navigate]
+  );
 
   const handleBackToHome = useCallback(() => {
     navigate("/");
   }, [navigate]);
 
-  const handleSetActiveItem = useCallback((item) => {
-    navigate("/", { state: { id: item } });
-  }, [navigate]);
+  const handleSetActiveItem = useCallback(
+    item => {
+      navigate("/", { state: { id: item } });
+    },
+    [navigate]
+  );
 
-  const containerClass = useMemo(() => 
-    `min-h-screen bg-white ${navOpen ? "shadow-lg" : ""} relative`,
+  const containerClass = useMemo(
+    () => `min-h-screen bg-white ${navOpen ? "shadow-lg" : ""} relative`,
     [navOpen]
   );
 
@@ -212,7 +223,9 @@ const BlogPost = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4 satoshi">Blog Post Not Found</h1>
+          <h1 className="text-2xl font-bold mb-4 satoshi">
+            Blog Post Not Found
+          </h1>
           <button
             onClick={handleBackToHome}
             className="text-[#7A60BF] hover:text-[#6B4EAF] font-bold satoshi"
@@ -227,7 +240,7 @@ const BlogPost = () => {
   return (
     <div className={containerClass}>
       {/* Mobile Navigation */}
-      <MobileNavigation 
+      <MobileNavigation
         navOpen={navOpen}
         onClose={handleNavClose}
         onNavigate={handleNavigation}
@@ -260,7 +273,7 @@ const BlogPost = () => {
           <h1 className="paytone text-4xl md:text-5xl leading-tight text-[#161618] font-[400] text-center mb-4">
             {post.title}
           </h1>
-          
+
           {/* Author Info */}
           <div className="flex size-fit mx-auto gap-2 justify-center items-center mb-6">
             <img

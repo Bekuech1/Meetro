@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import Button from "../Layout-conponents/Button";
-import SeamlessAni from "../Layout-conponents/SeamlessAni";
+import Button from "../Layout-components/Button";
+import SeamlessAni from "../Layout-components/SeamlessAni";
 
 const Seamless = ({ onclick }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,7 +9,7 @@ const Seamless = ({ onclick }) => {
   useEffect(() => {
     // Create intersection observer to detect when section is visible
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         // Update state when visibility changes
         if (entries[0].isIntersecting) {
           setIsVisible(true);

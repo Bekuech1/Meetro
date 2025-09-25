@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import Button from "../Layout-conponents/Button";
+import Button from "../Layout-components/Button";
 
-const Simple = ( { onClick } ) => {
+const Simple = ({ onClick }) => {
   const videoRef = useRef(null);
   const [isInView, setIsInView] = useState(false);
 
@@ -10,8 +10,8 @@ const Simple = ( { onClick } ) => {
     if (!node) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             setIsInView(true);
             observer.disconnect();
@@ -38,7 +38,7 @@ const Simple = ( { onClick } ) => {
           </p>
         </div>
         <div className="flex justify-center">
-          <Button name="try it out" color="bg-white" onclick={onClick}/>
+          <Button name="try it out" color="bg-white" onclick={onClick} />
         </div>
       </div>
       <video

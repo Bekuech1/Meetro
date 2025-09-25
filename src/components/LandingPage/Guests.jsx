@@ -1,7 +1,7 @@
 import React from "react";
-import CtaButton from "../Layout-conponents/CtaButton";
+import CtaButton from "../Layout-components/CtaButton";
 
-const Guests = ( {onClick} ) => {
+const Guests = ({ onClick }) => {
   return (
     <div className="bg-[#E6FEC4] xl:h-screen h-fit xl:flex grid justify-center gap-[60px] xl:gap-[150px] items-center py-12">
       <div className="grid gap-12 xl:w-[45%] w-[90%] mx-auto xl:mx-0 max-w-[500px]">

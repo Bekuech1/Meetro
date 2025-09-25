@@ -8,7 +8,7 @@ import {
   ModalBtn,
   ModalText,
 } from "../home/EventModal";
-import SiteBtn from "../Layout-conponents/SiteBtn";
+import SiteBtn from "../Layout-components/SiteBtn";
 import ShareEvent from "./ShareEvent";
 import LoginModal from "../Onboarding/LoginModal";
 import { LoadingSpinner } from "../create-event/Private";
@@ -379,17 +379,16 @@ export default function EventInfo({ eventId }) {
                       /> */}
                     </div>
 
-                    
-                      <ModalBtn
-                        onClick={() =>
-                          handleConfirmAttendance("yes") &&
-                          useEventStore.getState().setShouldRefetch(true)
-                        }
-                        bgcolor="bg-white"
-                        image="/tick-circle.svg"
-                        textcolor="text-[#61B42D]"
-                        text="Change to Going"
-                      />
+                    <ModalBtn
+                      onClick={() =>
+                        handleConfirmAttendance("yes") &&
+                        useEventStore.getState().setShouldRefetch(true)
+                      }
+                      bgcolor="bg-white"
+                      image="/tick-circle.svg"
+                      textcolor="text-[#61B42D]"
+                      text="Change to Going"
+                    />
                   </div>
                 </div>
               )}

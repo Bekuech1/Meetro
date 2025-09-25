@@ -1,5 +1,5 @@
 import Header from "@/components/home/HomeNav";
-import Footer from "@/components/Layout-conponents/Footer";
+import Footer from "@/components/Layout-components/Footer";
 import { Outlet } from "react-router-dom";
 
 function HomepageLayout() {

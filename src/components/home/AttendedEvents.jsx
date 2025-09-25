@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import useEventStore from "@/stores/eventStore";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import EventModal from "./EventModal";
-import SiteBtn from "../Layout-conponents/SiteBtn";
+import SiteBtn from "../Layout-components/SiteBtn";
 import { LoadingSpinner } from "@/components/create-event/Private";
 import { getProfilePicture } from "../Profile/PersonalProfile";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
@@ -10,15 +10,15 @@ import { useDisableScroll } from "@/hooks/useDisableScroll";
 // Constants
 const WEEKDAY_REGEX = /^.*?,\s*/;
 
-const parseEventDate = (rawDate) => {
+const parseEventDate = rawDate => {
   if (!rawDate || typeof rawDate !== "string") return null;
-  
+
   const cleanedDateStr = rawDate.replace(WEEKDAY_REGEX, "");
   const parsed = new Date(cleanedDateStr);
   return isNaN(parsed) ? null : parsed;
 };
 
-const formatDateKey = (date) => {
+const formatDateKey = date => {
   const yyyy = date.getFullYear();
   const mm = String(date.getMonth() + 1).padStart(2, "0");
   const dd = String(date.getDate()).padStart(2, "0");
@@ -29,9 +29,7 @@ const formatAttendeesDisplay = (attendees = []) => {
   // Filter and deduplicate "yes" responses
   const uniqueYes = Array.from(
     new Map(
-      attendees
-        .filter(a => a.response === "yes")
-        .map(a => [a.userId, a])
+      attendees.filter(a => a.response === "yes").map(a => [a.userId, a])
     ).values()
   );
 
@@ -44,7 +42,7 @@ const formatAttendeesDisplay = (attendees = []) => {
   return extraCount > 0 ? `${displayNames} +${extraCount}` : displayNames;
 };
 
-const timeAgo = (respondedAt) => {
+const timeAgo = respondedAt => {
   const diffMs = Date.now() - new Date(respondedAt);
   const diffSec = Math.floor(diffMs / 1000);
   const diffMin = Math.floor(diffSec / 60);
@@ -69,8 +67,8 @@ const AttendedEventItem = ({ event, profilePic, onOpenModal }) => {
     onOpenModal(event.id);
   }, [event.id, onOpenModal]);
 
-  const imageUrl = event?.imageUrl 
-    ? `${import.meta.env.VITE_IMAGE_URL}/${event.imageUrl}` 
+  const imageUrl = event?.imageUrl
+    ? `${import.meta.env.VITE_IMAGE_URL}/${event.imageUrl}`
     : "/event-ph1.png";
 
   const locationText = `${event?.location?.venue}, ${event?.location?.state}`;
@@ -129,7 +127,11 @@ const AttendedEventItem = ({ event, profilePic, onOpenModal }) => {
           <h6 className="text-[#8A9191] text-xs font-bold capitalize satoshi">
             going
           </h6>
-          <img src={profilePic} className="w-4 h-4 rounded-full" alt="attendees" />
+          <img
+            src={profilePic}
+            className="w-4 h-4 rounded-full"
+            alt="attendees"
+          />
           <h6 className="text-black text-xs font-medium">
             {formatAttendeesDisplay(event.attendees)}
           </h6>
@@ -159,11 +161,12 @@ const NoEventsMessage = ({ message, onCreateEvent }) => (
 
 export default function AttendedEvents() {
   const navigate = useNavigate();
-  const { fetchAttendedEvents, loadingAttendedEvents, attendedEvents } = useEventStore();
+  const { fetchAttendedEvents, loadingAttendedEvents, attendedEvents } =
+    useEventStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
-  
+
   const profilePic = useMemo(() => getProfilePicture(), []);
 
   // Handle body scroll lock for modal using custom hook
@@ -172,7 +175,7 @@ export default function AttendedEvents() {
   // Memoized grouped events calculation
   const groupedEvents = useMemo(() => {
     if (!attendedEvents || attendedEvents.length === 0) return {};
-    
+
     const grouped = {};
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -180,7 +183,7 @@ export default function AttendedEvents() {
     for (const event of attendedEvents) {
       const parsed = parseEventDate(event.date);
       if (!parsed) continue;
-      
+
       parsed.setHours(0, 0, 0, 0);
       if (parsed < today) continue; // Skip past events
 
@@ -208,7 +211,7 @@ export default function AttendedEvents() {
     navigate("/create-event");
   }, [navigate]);
 
-  const handleOpenModal = useCallback((id) => {
+  const handleOpenModal = useCallback(id => {
     setSelectedEventId(id);
     setIsModalOpen(true);
   }, []);
@@ -230,7 +233,7 @@ export default function AttendedEvents() {
   // No events attended
   if (attendedEvents.length === 0) {
     return (
-      <NoEventsMessage 
+      <NoEventsMessage
         message="You haven't been invited to any events yet."
         onCreateEvent={handleCreateEvent}
       />
@@ -240,7 +243,7 @@ export default function AttendedEvents() {
   // All attended events are past
   if (Object.keys(groupedEvents).length === 0) {
     return (
-      <NoEventsMessage 
+      <NoEventsMessage
         message="You have no upcoming events. Get invited to new events or create your own new event."
         onCreateEvent={handleCreateEvent}
       />
