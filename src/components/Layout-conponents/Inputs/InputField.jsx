@@ -6,7 +6,7 @@ export default function InputField({
   ...rest
 }) {
   return (
-    <div className="flex satoshi gap-x-2 border input items-center hover:shadow-[0_4px_32px_0_rgba(0,0,0,0.06)] bg-[#f2f3f0] transition-all border-white rounded-[12px] px-[6px] py-[10px] md:py-[8px] max-h-11 md:max-h-9 backdrop-blur-xs">
+    <div className="flex satoshi gap-x-2 border input items-center hover:shadow-[0_4px_32px_0_rgba(0,0,0,0.06)] bg-[#f8f8f7] transition-all border-white rounded-[12px] px-[6px] py-[10px] md:py-[8px] max-h-11 md:max-h-9 backdrop-blur-xs">
       {/* Left icon */}
       {leftIcon && <span className="[&>svg]:size-6">{leftIcon}</span>}
       {/* Input element */}

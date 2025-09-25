@@ -1,15 +1,11 @@
 import LandingNav from "@/components/LandingPage/LandingNav";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BiSolidInfoCircle } from "react-icons/bi";
-import { BsChevronRight } from "react-icons/bs";
 import Footer from "../../components/Layout-conponents/Footer";
 import AboutUs from "./AboutUs";
 import BlogPage from "./BlogPage";
 import HowItWorks from "./HowItWorks";
 import Pricing from "./Pricing";
-import ListInput from "@/components/Layout-conponents/Inputs/ListInput";
-import FormGroup from "@/components/Layout-conponents/Inputs/FormGroup";
 
 function Homepage() {
   const [activeItem, setActiveItem] = useState(0);

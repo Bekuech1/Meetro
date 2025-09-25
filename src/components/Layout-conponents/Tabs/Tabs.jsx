@@ -51,6 +51,7 @@ const useTabs = () => {
 //   { id: "settings", label: "Settings" },
 //   { id: "analytics", label: "Analytics" },
 // ];
+
 function List({ list, size = "md" }) {
   const { setActiveTab, activeTab } = useTabs();
 
