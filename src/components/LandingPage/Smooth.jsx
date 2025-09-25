@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../Layout-components/Button";
+import Button from "../Layout-conponents/Button";
 
 const Smooth = ({ onClick }) => {
   return (

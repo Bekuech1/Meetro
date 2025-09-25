@@ -1,8 +1,8 @@
 import React from "react";
-import Button from "../Layout-components/Button";
+import Button from "../Layout-conponents/Button";
 import Lottie from "react-lottie";
-import animationData from "../Layout-components/bgmove.json";
-import CtaButton from "../Layout-components/CtaButton";
+import animationData from "../Layout-conponents/bgmove.json";
+import CtaButton from "../Layout-conponents/CtaButton";
 
 const defaultOptions = {
   loop: true,

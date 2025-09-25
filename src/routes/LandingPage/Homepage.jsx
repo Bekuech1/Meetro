@@ -3,13 +3,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiSolidInfoCircle } from "react-icons/bi";
 import { BsChevronRight } from "react-icons/bs";
-import Footer from "../../components/Layout-components/Footer";
+import Footer from "../../components/Layout-conponents/Footer";
 import AboutUs from "./AboutUs";
 import BlogPage from "./BlogPage";
 import HowItWorks from "./HowItWorks";
 import Pricing from "./Pricing";
-import ListInput from "@/components/Layout-components/Inputs/ListInput";
-import FormGroup from "@/components/Layout-components/Inputs/FormGroup";
+import ListInput from "@/components/Layout-conponents/Inputs/ListInput";
+import FormGroup from "@/components/Layout-conponents/Inputs/FormGroup";
 
 function Homepage() {
   const [activeItem, setActiveItem] = useState(0);
@@ -70,42 +70,8 @@ function Homepage() {
           activeItem={activeItem}
         />
       </div>
-
       <main>{content}</main>
-
       <Footer />
-      <div className="p-2 bg-[#F0F0F0]">
-        <FormGroup
-          message={{
-            type: "success",
-            text: "Success",
-          }}
-        >
-          <ListInput
-            title="When is your event"
-            placeholder="When is your event"
-            leftIcon={<BiSolidInfoCircle />}
-            rightIcon={<BsChevronRight />}
-            tags={[
-              {
-                leftIcon: <BiSolidInfoCircle />,
-                text: "Tag",
-                rightIcon: <BiSolidInfoCircle />,
-              },
-              {
-                leftIcon: <BiSolidInfoCircle />,
-                text: "Tag",
-                rightIcon: <BiSolidInfoCircle />,
-              },
-              {
-                leftIcon: <BiSolidInfoCircle />,
-                text: "Tag",
-                rightIcon: <BiSolidInfoCircle />,
-              },
-            ]}
-          />
-        </FormGroup>
-      </div>
     </div>
   );
 }

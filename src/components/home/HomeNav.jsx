@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import SiteBtn from "../Layout-components/SiteBtn";
+import SiteBtn from "../Layout-conponents/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
 import useEventStore from "@/stores/eventStore";
 import { Button } from "../ui/button";

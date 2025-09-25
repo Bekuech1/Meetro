@@ -1,5 +1,5 @@
 import React from "react";
-import CtaButton from "../Layout-components/CtaButton";
+import CtaButton from "../Layout-conponents/CtaButton";
 import BlogCard from "./components/BlogCard";
 import { blogPosts } from "@/utils/blogs";
 

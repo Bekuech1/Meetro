@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import useEventStore from "@/stores/eventStore";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import EventModal from "./EventModal";
-import SiteBtn from "../Layout-components/SiteBtn";
+import SiteBtn from "../Layout-conponents/SiteBtn";
 import { LoadingSpinner } from "@/components/create-event/Private";
 import { getProfilePicture } from "../Profile/PersonalProfile";
 import { useDisableScroll } from "@/hooks/useDisableScroll";

@@ -1,4 +1,4 @@
-import LoadingSpinner from "../Layout-components/LoadingSpinner";
+import LoadingSpinner from "../Layout-conponents/LoadingSpinner";
 
 function OnboardingButton({ title, onclick, className, type, isLoading }) {
   return (

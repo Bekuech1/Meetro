@@ -1,4 +1,4 @@
-// import SiteBtn from "../Layout-components/SiteBtn";
+// import SiteBtn from "../Layout-conponents/SiteBtn";
 import { useAuthStore } from "@/stores/useAuthStore";
 import dayjs from "dayjs";
 import useEventStore from "@/stores/eventStore";

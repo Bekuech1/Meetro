@@ -1,5 +1,5 @@
 import React from "react";
-import CreateEventBtn from "../Layout-components/CreateEventBtn";
+import CreateEventBtn from "../Layout-conponents/CreateEventBtn";
 
 const Public = ({ onPrivate }) => {
   return (

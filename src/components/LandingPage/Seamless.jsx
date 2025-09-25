@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import SeamlessAni from "../Layout-components/SeamlessAni";
-import CtaButton from "../Layout-components/CtaButton";
+import SeamlessAni from "../Layout-conponents/SeamlessAni";
+import CtaButton from "../Layout-conponents/CtaButton";
 
 const Seamless = ({ onClick }) => {
   const [isVisible, setIsVisible] = useState(false);

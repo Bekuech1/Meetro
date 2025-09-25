@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { blogPosts } from "@/utils/blogs";
 import LandingNav from "@/components/LandingPage/LandingNav";
-import CreateEventBtn from "@/components/Layout-components/CreateEventBtn";
+import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
 
 const HEADING_CLASSES = {
   1: "text-[18px] font-[700] text-[#001010] leading-[28px] satoshi mb-6",

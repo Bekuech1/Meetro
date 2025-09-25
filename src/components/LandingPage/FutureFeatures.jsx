@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import Button from "../Layout-components/Button";
-import SplineComponent from "../Layout-components/SplineComp";
+import Button from "../Layout-conponents/Button";
+import SplineComponent from "../Layout-conponents/SplineComp";
 
 const featureItems = [
   "Discover local events",

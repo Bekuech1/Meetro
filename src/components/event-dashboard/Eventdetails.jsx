@@ -7,12 +7,12 @@ import {
   ModalBtn,
   ModalText,
 } from "../home/EventModal";
-import SiteBtn from "../Layout-components/SiteBtn";
+import SiteBtn from "../Layout-conponents/SiteBtn";
 import API from "@/lib/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 import LoginModal from "../Onboarding/LoginModal";
-import LoadingSpinner from "../Layout-components/LoadingSpinner";
+import LoadingSpinner from "../Layout-conponents/LoadingSpinner";
 
 const Eventdetails = () => {
   const { eventId } = useParams(); // Assuming you're using react-router for routing

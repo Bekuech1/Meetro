@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Button from "../Layout-components/Button";
+import Button from "../Layout-conponents/Button";
 
 const Simple = ({ onClick }) => {
   const videoRef = useRef(null);

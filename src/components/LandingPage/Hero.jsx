@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import CtaButton from "../Layout-components/CtaButton";
+import CtaButton from "../Layout-conponents/CtaButton";
 import {
   motion,
   AnimatePresence,

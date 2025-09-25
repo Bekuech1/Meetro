@@ -8,7 +8,7 @@ import {
   ModalBtn,
   ModalText,
 } from "../home/EventModal";
-import SiteBtn from "../Layout-components/SiteBtn";
+import SiteBtn from "../Layout-conponents/SiteBtn";
 import ShareEvent from "./ShareEvent";
 import LoginModal from "../Onboarding/LoginModal";
 import { LoadingSpinner } from "../create-event/Private";

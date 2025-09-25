@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SiteBtn from "../Layout-components/SiteBtn";
+import SiteBtn from "../Layout-conponents/SiteBtn";
 import EventType from "./PopUps/EventType";
 
 const Preview = ({

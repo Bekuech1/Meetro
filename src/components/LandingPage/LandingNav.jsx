@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from "react";
-import Button from "../Layout-components/Button";
-import CreateEventBtn from "@/components/Layout-components/CreateEventBtn";
+import Button from "../Layout-conponents/Button";
+import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
 import { motion } from "framer-motion";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
 

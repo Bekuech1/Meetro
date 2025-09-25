@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LandingNav from "@/components/LandingPage/LandingNav";
-import CreateEventBtn from "@/components/Layout-components/CreateEventBtn";
+import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
 
 const NavigationWrapper = ({
   children,

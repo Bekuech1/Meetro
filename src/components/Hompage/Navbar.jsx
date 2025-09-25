@@ -1,4 +1,4 @@
-import Button from "../Layout-components/Button";
+import Button from "../Layout-conponents/Button";
 
 const Navbar = ({ visibility, absolute, typeS, onclick, onAuth }) => {
   return (
