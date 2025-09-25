@@ -1,6 +1,6 @@
 import React from "react";
-import ConfirmationButton from "../Layout-components/Buttons/ConfirmationButton";
-import TextButton from "../Layout-components/Buttons/TextButtons";
+import Tooltip from "../Layout-conponents/Tooltip";
+import Alert from "../Layout-conponents/Alert";
 
 const MainAbout = () => {
   return (
@@ -33,13 +33,6 @@ const MainAbout = () => {
           stress-free.
         </p>
       </div>
-      <div className="fix w-full h-[200px] pt-10 flex gap-4 flex-wrap">
-        <TextButton variant="primary" text="levels" rightImg="/trash.svg" />
-        <TextButton variant="secondary" text="women" />
-        <TextButton variant="tertiary" text="sex" state="loading" />
-        <TextButton text="bjhbjh" disabled />
-      </div>
-
       <div className="absolute flex justify-between items-center w-full h-fit bg-transparent -top-[250px]">
         <div className="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
         <div className="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
