@@ -1,4 +1,5 @@
 import InputField from "./InputField";
+import Dropdown from "./Dropdown";
 import { BiSolidTrash } from "react-icons/bi";
 import { useState } from "react";
 
@@ -31,7 +32,7 @@ export default function SearchSelect({ options, placeholder, onSelect }) {
   };
 
   // Icon shown in the input field (if any)
-  const img = selectedIcon ? selectedIcon : null;
+  const icon = selectedIcon ? selectedIcon : null;
 
   return (
     <div>
@@ -44,33 +45,15 @@ export default function SearchSelect({ options, placeholder, onSelect }) {
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          leftIcon={img}
+          leftIcon={icon}
         />
         {open && query && (
-          <div className="mt-1 satoshi rounded-[8px] absolute left-0 w-full top-full border shadow-[0px_10px_22px_rgba(45,77,108,0.15)] bg-white">
-            <div className="overflow-y-auto p-1 pt-0 max-h-[152px] ">
-              <div className="text-sm sticky text-[#8A9191] bg-white pt-3 p-2 font-bold top-0">
-                Select
-              </div>
-              {filtered.length > 0 ? (
-                filtered.map(opt => (
-                  <div
-                    key={opt.id}
-                    onClick={() => handleSelect(opt)}
-                    className={`flex items-center gap-2 p-2 max-h-9 rounded-[8px] cursor-pointer hover:bg-[#E6FEC4] ${
-                      selected?.id === opt.id ? "bg-[#DAFEA7]" : ""
-                    }`}
-                  >
-                    {opt.leftIcon && opt.leftIcon}
-                    <span className="text-sm flex-1 font-bold">{opt.name}</span>
-                    {opt.rightIcon && opt.rightIcon}
-                  </div>
-                ))
-              ) : (
-                <div className="p-2 text-sm text-gray-500">No results</div>
-              )}
-            </div>
-          </div>
+          <Dropdown
+            className="top-full left-0 absolute"
+            active={selected}
+            onSelect={handleSelect}
+            items={filtered}
+          />
         )}
       </div>
       {/* Remove button - clears selection */}
