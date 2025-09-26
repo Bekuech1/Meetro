@@ -105,9 +105,27 @@ const TextButton = ({
         </div>
       ) : hasContent ? (
         <div className={`w-fit flex items-center ${contentGap} h-fit`}>
-          {leftImg && <img src={leftImg} alt="" className={iconSize} />}
+          {/* Left icon */}
+          {leftImg && (
+            <>
+              {typeof leftImg === "string" ? (
+                <img src={leftImg} alt="left-icon" className={iconSize} />
+              ) : (
+                <span className={`[&>svg]:${iconSize}`}>{leftImg}</span>
+              )}
+            </>
+          )}
           {text && <span>{text}</span>}
-          {rightImg && <img src={rightImg} alt="" className={iconSize} />}
+          {/* Right icon */}
+          {rightImg && (
+            <>
+              {typeof rightImg === "string" ? (
+                <img src={rightImg} alt="right-icon" className={iconSize} />
+              ) : (
+                <span className={`[&>svg]:${iconSize}`}>{rightImg}</span>
+              )}
+            </>
+          )}
         </div>
       ) : null}
     </button>

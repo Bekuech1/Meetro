@@ -3,7 +3,6 @@
 
 import IconButton from "../Buttons/IconButton";
 import TagButton from "../Buttons/TagButton";
-import { BiSolidInfoCircle } from "react-icons/bi";
 
 export default function ListInput({
   content = "",
@@ -57,9 +56,15 @@ export default function ListInput({
       </div>
       {/* Right icon */}
       {rightIcon && (
-        <span className="[&>svg]:size-4 [&>svg]:fill-[#8A9191]">
-          {rightIcon}
-        </span>
+        <>
+          {typeof rightIcon === "string" ? (
+            <img src={rightIcon} alt="right-icon" className="size-4" />
+          ) : (
+            <span className="[&>svg]:size-4 [&>svg]:fill-[#8A9191]">
+              {rightIcon}
+            </span>
+          )}
+        </>
       )}
     </div>
   );

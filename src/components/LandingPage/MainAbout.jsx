@@ -11,6 +11,35 @@ import Checkbox from "../Layout-conponents/Selectors/Checkbox";
 import Radio from "../Layout-conponents/Selectors/Radio";
 import Tabs from "../Layout-conponents/Tabs/Tabs";
 import ListInput from "../Layout-conponents/Inputs/ListInput";
+import SearchSelect from "../Layout-conponents/Inputs/SearchSelect";
+import Dropdown from "../Layout-conponents/Inputs/Dropdown";
+
+const items = [
+  {
+    id: 1,
+    leftIcon: <BiSolidInfoCircle />,
+    name: "Newman Ogbo",
+    rightIcon: <BiSolidInfoCircle />,
+  },
+  {
+    id: 2,
+    leftIcon: <BiSolidInfoCircle />,
+    name: "Nesky",
+    rightIcon: <BiSolidInfoCircle />,
+  },
+  {
+    id: 3,
+    leftIcon: <BiSolidInfoCircle />,
+    name: "Nesky",
+    rightIcon: <BiSolidInfoCircle />,
+  },
+  {
+    id: 4,
+    leftIcon: <BiSolidInfoCircle />,
+    name: "Tochukwu",
+    rightIcon: <BiSolidInfoCircle />,
+  },
+];
 
 const MainAbout = () => {
   return (
@@ -342,6 +371,16 @@ const MainAbout = () => {
               rightIcon={<BsChevronRight />}
             />
           </FormGroup>
+          <Dropdown
+            active={{
+              id: 2,
+              leftIcon: <BiSolidInfoCircle />,
+              name: "Nesky",
+              rightIcon: <BiSolidInfoCircle />,
+            }}
+            items={items}
+          />
+          <SearchSelect placeholder="Enter cohost" options={items} />
         </div>
       </div>
     </div>

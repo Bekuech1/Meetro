@@ -63,7 +63,16 @@ export default function FormGroup({
       {label && (
         <label className="flex justify-between gap-x-2 items-center [&>svg]:fill-[#8A9191]">
           <span className="text-xs font-bold">{label}</span>
-          {labelIcon && labelIcon}
+          {/* Label icon */}
+          {labelIcon && (
+            <>
+              {typeof labelIcon === "string" ? (
+                <img src={labelIcon} alt="label-icon" className="size-4" />
+              ) : (
+                <span className="[&>svg]:size-4">{labelIcon}</span>
+              )}
+            </>
+          )}
         </label>
       )}
       {children}
