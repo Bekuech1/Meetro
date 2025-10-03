@@ -23,7 +23,7 @@ const VARIANTS = {
   tertiary: {
     colors: {
       text: "text-[#011F0F]",
-      bgDefault: "bg-white hover:bg-[#F0F0F0]",
+      bgDefault: "bg-white hover:bg-[#E5E7E3]",
       bgLoading: "bg-white",
       borderColor: "border-[#E5E7E3] hover:border-[#E5E7E3]",
     },
@@ -47,6 +47,7 @@ const IconButton = ({
   onClick,
   className = "",
   icon,
+  children,
   smallButton = false,
   ...props
 }) => {
@@ -78,7 +79,7 @@ const IconButton = ({
     className,
   ].join(" ");
 
-  const hasContent = icon;
+  const hasContent = icon || children;
 
   const spinnerSize = smallButton ? 14 : 20;
 
@@ -99,12 +100,13 @@ const IconButton = ({
           />
         </div>
       ) : hasContent ? (
-        <div className={`flex items-center size-fit`}>
+        <div className={`flex items-center justify-center size-fit`}>
           {typeof icon === "string" ? (
             <img src={icon} alt="" className={iconSize} />
           ) : (
             <span className={`[&>svg]:${iconSize}`}>{icon}</span>
           )}
+          {children}
         </div>
       ) : null}
     </button>
