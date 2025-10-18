@@ -1,8 +1,4 @@
-import {
-  BiSolidCheckCircle,
-  BiSolidInfoCircle,
-  BiSolidXCircle,
-} from "react-icons/bi";
+import { CloseCircle, TickCircle, InfoCircle } from "iconsax-reactjs";
 
 export default function FormGroup({
   label,
@@ -14,16 +10,16 @@ export default function FormGroup({
   // Status configuration (icon + text color)
   const statusConfig = {
     error: {
-      icon: <BiSolidXCircle className="text-[#DB2863]" />,
+      icon: <CloseCircle size={16} color="#DB2863" variant="Bold" />,
       textClass: "text-[#DB2863]",
     },
     success: {
-      icon: <BiSolidCheckCircle className="text-[#7CB32D]" />,
+      icon: <TickCircle size={16} color="#7CB32D" variant="Bold" />,
       textClass: "text-[#7CB32D]",
     },
     helper: {
-      icon: <BiSolidInfoCircle fill="#8A9191" />,
-      textClass: "text-gray-700",
+      icon: <InfoCircle size={16} color="#8A9191" variant="Bold" />,
+      textClass: "text-[#001010]",
     },
   };
 

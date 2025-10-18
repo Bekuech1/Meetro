@@ -1,11 +1,9 @@
-import Map from "@/assets/icons/MapIcon";
+import { ArrowDown2, ArrowUp2, Map1, Notification } from "iconsax-reactjs";
+import { useState } from "react";
+import Avatar from "../Avatar";
 import IconButton from "../Buttons/IconButton";
 import Notifications from "./Notifications";
 import ProfileModal from "./ProfileModal";
-import Avatar from "../Avatar";
-import { useState } from "react";
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import { MdNotifications } from "react-icons/md";
 
 // Notification
 const notifications = [
@@ -57,29 +55,36 @@ export default function TopNavigation() {
       {/* Logo */}
       <div className="flex items-center gap-x-2">
         <img src="/meetroLogoAlt.svg" alt="Meetro logo" />
-        <span class="bg-linear-to-r satoshi flex justify-center items-center from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] min-w-[26px] leading-[6px] size-fit capitalize p-1 rounded-2xl text-[#011F0F]">
+        <span className="bg-linear-to-r satoshi flex justify-center items-center from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] min-w-[26px] size-fit capitalize px-1 h-[14px] leading-[14px] rounded-2xl text-[#011F0F]">
           Beta
         </span>
       </div>
       {/* State select */}
-      <div className="rounded-full hidden md:flex items-center max-h-11 justify-between bg-[#f8f8f7] border border-[#E5E7E3] cursor-pointer py-[10px] min-w-[282px] px-[6px]">
-        <div className="flex items-center gap-x-2">
-          <IconButton variant="tertiary" icon={<Map />} smallButton />
-          <span className="text-[#B0B5B5] font-medium">FCT</span>
+      <div className="rounded-full hidden md:flex items-center max-h-11 justify-between bg-[#f8f8f7] border border-[#E5E7E3] py-[10px] min-w-[282px] px-[6px]">
+        <div className="flex items-center">
+          <IconButton
+            variant="tertiary"
+            icon={<Map1 variant="Bold" size={16} color="#001010" />}
+            smallButton
+          />
+          <input
+            placeholder="FCT"
+            className="placeholder:font-medium border-0 outline-0 px-2 placeholder:text-[#B0B5B5]"
+          />
         </div>
-        <BsChevronDown size={16} fill="#8A9191" />
+        <ArrowDown2 variant="Outline" size={16} color="#8A9191" />
       </div>
       {/* Nav menu */}
       <div className="flex items-center gap-4">
         <IconButton
           variant="tertiary"
-          icon={<Map size={24} />}
+          icon={<Map1 variant="Bold" size={24} color="#001010" />}
           className="md:hidden size-9!"
         />
         <div className="relative">
           <IconButton
             variant="tertiary"
-            icon={<MdNotifications />}
+            icon={<Notification variant="Bold" size={24} color="#001010" />}
             onClick={() => {
               setOpenNotifications(s => !s);
               setOpenProfile(false);
@@ -107,9 +112,9 @@ export default function TopNavigation() {
             <div className="flex items-center gap-1">
               <Avatar size="xs" />
               {openProfile ? (
-                <BsChevronUp size={12} />
+                <ArrowUp2 variant="Outline" size={12} color="#001010" />
               ) : (
-                <BsChevronDown size={12} />
+                <ArrowDown2 variant="Outline" size={12} color="#001010" />
               )}
             </div>
           </IconButton>

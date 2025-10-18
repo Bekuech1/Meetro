@@ -1,34 +1,30 @@
-import React from "react";
-import { CloseCircle, InfoCircle, Warning2, TickCircle } from "iconsax-reactjs";
+import TriangleAlert from "@/assets/icons/TriangleAlert";
+import { InfoCircle, TickCircle } from "iconsax-reactjs";
+import { X } from "lucide-react";
 
 const typeConfig = {
   error: {
-    iconColor: "#DB2863",
-    closeColor: "#781636",
     icon: InfoCircle,
-    base: "text-[#781636] border-[#FBEAEF] bg-[#FBEAEF]",
-    outline: "text-[#781636] border border-[#DB2863] bg-[#FBEAEF]",
+    base: "text-[#781636] [&>div>svg]:text-[#DB2863] border-[#FBEAEF] bg-[#FBEAEF]",
+    outline:
+      "text-[#781636] [&>div>svg]:text-[#DB2863] border border-[#DB2863] bg-[#FBEAEF]",
     filled: "text-white bg-[#DB2863] border-[#DB2863]",
   },
   info: {
-    iconColor: "#7A60BF",
-    closeColor: "#4A3A74",
     icon: InfoCircle,
-    base: "text-[#4A3A74] border-[#F3F0FB] bg-[#F3F0FB]",
-    outline: "text-[#4A3A74] border border-[#7A60BF] bg-[#F3F0FB]",
+    base: "text-[#4A3A74] [&>div>svg]:text-[#7A60BF] border-[#F3F0FB] bg-[#F3F0FB]",
+    outline:
+      "text-[#4A3A74] [&>div>svg]:text-[#7A60BF] border border-[#7A60BF] bg-[#F3F0FB]",
     filled: "text-white bg-[#7A60BF] border-[#7A60BF]",
   },
   warning: {
-    iconColor: "#FFC107", 
-    closeColor: "#997404", 
-    icon: Warning2,
-    base: "text-[#997404] border-[#FFC1073D] bg-[#FFC1073D]",
-    outline: "text-[#997404] border border-[#FFC107] bg-[#FFC1073D]",
-    filled: "text-white bg-[#FFC107] border-[#FFC107]",
+    icon: TriangleAlert,
+    base: "text-[#997404] [&>div>svg]:text-[#FFC107] bg-[#FFC1073D]",
+    outline:
+      "text-[#997404] [&>div>svg]:text-[#FFC107] border border-[#FFC107] bg-[#FFC1073D]",
+    filled: "text-[#212529] bg-[#FFC107] border-[#FFC107]",
   },
   success: {
-    iconColor: "#61B42D", 
-    closeColor: "#4B8B23", 
     icon: TickCircle,
     base: "text-[#4B8B23] border-[#F3FFEC] bg-[#F3FFEC]",
     outline: "text-[#4B8B23] border border-[#61B42D] bg-[#F3FFEC]",
@@ -37,8 +33,8 @@ const typeConfig = {
 };
 
 const sizeConfig = {
-  sm: " p-2",
-  lg: " px-3 py-4",
+  sm: "p-2",
+  lg: "px-3 py-4",
 };
 
 const Alert = ({
@@ -46,21 +42,11 @@ const Alert = ({
   size = "sm",
   option = "default",
   onClick,
-  children,
+  title,
+  subtitle,
 }) => {
   const typeStyles = typeConfig[type];
   const sizeStyles = sizeConfig[size];
-  
-  // Get the appropriate colors based on option
-  const getIconColor = () => {
-    if (option === "filled") return "white";
-    return typeStyles.iconColor;
-  };
-  
-  const getCloseColor = () => {
-    if (option === "filled") return "white";
-    return typeStyles.closeColor;
-  };
 
   let styles = "";
   if (option === "default") styles = typeStyles.base;
@@ -69,35 +55,33 @@ const Alert = ({
 
   // Dynamic icon component
   const IconComponent = typeStyles.icon;
-  
+
   // Handle different icon props based on library
   const getIconProps = () => {
-    if (IconComponent === InfoCircle) {
-      return {
-        size: "16",
-        color: getIconColor(),
-        variant: "Bold"
-      };
-    }
-    // For lucide-react icons (Triangle, CheckCircle2)
     return {
-      className: "h-4 w-4",
-      color: getIconColor()
+      size: 24,
+      variant: "Bold",
+      className: "min-w-6",
     };
   };
 
   return (
     <div
-      className={`flex place-items-center border ${sizeStyles} ${styles} rounded-[100px] transition-all h-fit w-full max-w-[400px] satoshi text-[14px] font-bold`}
+      className={`flex place-items-center border ${sizeStyles} ${styles} rounded-[16px] md:rounded-[100px] transition-all h-fit w-full satoshi`}
       role="alert"
     >
       <div className="w-full flex place-items-center gap-2">
         <IconComponent {...getIconProps()} />
-        <span>{children}</span>
+        <p className="text-sm flex flex-col gap-y-1">
+          <h3 className="font-bold">{title}</h3>
+          {subtitle && <span className="font-normal">{subtitle}</span>}
+        </p>
       </div>
-      <button className="cursor-pointer" onClick={onClick}>
-        <CloseCircle size="16" color={getCloseColor()} />
-      </button>
+      {onClick && (
+        <button className="cursor-pointer" type="button" onClick={onClick}>
+          <X size={20} />
+        </button>
+      )}
     </div>
   );
 };

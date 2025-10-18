@@ -3,6 +3,11 @@ import TopNavigation from "../Layout-conponents/Navigation/TopNavigation";
 import AvatarGroup from "../Layout-conponents/AvatarGroup";
 import BottomNav from "../Layout-conponents/Navigation/BottomNav";
 import Avatar from "../Layout-conponents/Avatar";
+import Modal from "../Layout-conponents/Modal/Modal";
+import TextButton from "../Layout-conponents/Buttons/TextButtons";
+import LoginModal from "../Layout-conponents/Authentication/LoginModal";
+import SignUpModal from "../Layout-conponents/Authentication/SignUpModal";
+import DeleteEventModal from "../Layout-conponents/Events/DeleteEventModal";
 
 const MainAbout = () => {
   return (
@@ -54,6 +59,17 @@ const MainAbout = () => {
           <Avatar size="lg" />
           <Avatar size="xl" src="/v2-tinyprofile.jpg" />
           <BottomNav />
+          <Modal>
+            <Modal.Open opens="login">
+              <TextButton text="Login" />
+            </Modal.Open>
+            <LoginModal />
+            <SignUpModal />
+            <Modal.Open opens="delete-event">
+              <TextButton text="Delete Event" />
+            </Modal.Open>
+            <DeleteEventModal eventId={1000} />
+          </Modal>
         </div>
       </div>
     </div>

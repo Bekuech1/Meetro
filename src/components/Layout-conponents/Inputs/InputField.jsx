@@ -13,7 +13,7 @@ export default function InputField({
           {typeof leftIcon === "string" ? (
             <img src={leftIcon} alt="left-icon" className="size-6" />
           ) : (
-            <span className="[&>svg]:size-6">{leftIcon}</span>
+            <span className="[&_svg]:size-6">{leftIcon}</span>
           )}
         </>
       )}
@@ -30,7 +30,7 @@ export default function InputField({
           {typeof rightIcon === "string" ? (
             <img src={rightIcon} alt="right-icon" className="size-6" />
           ) : (
-            <span className="[&>svg]:size-6">{rightIcon}</span>
+            <span className="[&_svg]:size-6">{rightIcon}</span>
           )}
         </>
       )}
