@@ -72,6 +72,7 @@ const MainAbout = () => {
           </Modal>
         </div>
       </div>
+      <EventDetail />
     </div>
   );
 };
