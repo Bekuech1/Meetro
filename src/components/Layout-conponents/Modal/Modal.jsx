@@ -1,7 +1,7 @@
 import IconButton from "../Buttons/IconButton";
 import React, { cloneElement, useState } from "react";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
-import { CloseCircle } from "iconsax-react";
+import { CloseCircle } from "iconsax-reactjs";
 import { createPortal } from "react-dom";
 import { ModalContext, useModalContext } from "./ModalContext";
 
