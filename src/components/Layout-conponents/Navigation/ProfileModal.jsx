@@ -1,13 +1,10 @@
-import Avatar from "../Avatar";
-import TextButton from "../Buttons/TextButtons";
-import CloseIcon from "@/assets/icons/CloseIcon";
-import ProfileIcon from "@/assets/icons/ProfileIcon";
-import SettingsIcon from "@/assets/icons/SettingsIcon";
-import SupportIcon from "@/assets/icons/SupportIcon";
-import LogoutIcon from "@/assets/icons/LogoutIcon";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
+import { I24Support, Logout, Setting4, User } from "iconsax-reactjs";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
+import CloseIcon from "@/assets/icons/CloseIcon";
+import Avatar from "../Avatar";
+import TextButton from "../Buttons/TextButtons";
 
 export default function ProfileModal({ open, setOpen }) {
   // IsMobile
@@ -76,7 +73,11 @@ export default function ProfileModal({ open, setOpen }) {
                     }`
                   }
                 >
-                  <ProfileIcon className="md:size-4" />
+                  <User
+                    className="size-5 md:size-4"
+                    color="#077D8A"
+                    variant="Bold"
+                  />
                   <span className="text-sm font-bold md:font-medium md:text-[12px] leading-[18px]">
                     My Profile
                   </span>
@@ -92,7 +93,11 @@ export default function ProfileModal({ open, setOpen }) {
                     }`
                   }
                 >
-                  <SettingsIcon className="md:size-4" />
+                  <Setting4
+                    color="#866AD2"
+                    variant="Bold"
+                    className="size-5 md:size-4"
+                  />
                   <span className="text-sm font-bold md:font-medium md:text-[12px] leading-[18px]">
                     Settings
                   </span>
@@ -108,7 +113,12 @@ export default function ProfileModal({ open, setOpen }) {
                     }`
                   }
                 >
-                  <SupportIcon className="md:size-4" />
+                  <I24Support
+                    size="32"
+                    color="#218FFD"
+                    variant="Bold"
+                    className="size-5 md:size-4"
+                  />
                   <span className="text-sm font-bold md:font-medium md:text-[12px] leading-[18px]">
                     Contact us
                   </span>
@@ -118,7 +128,11 @@ export default function ProfileModal({ open, setOpen }) {
           </div>
           {/* Log out */}
           <button className="flex gap-x-1 cursor-pointer items-center px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0]">
-            <LogoutIcon className="md:size-4" />
+            <Logout
+              className="size-5 md:size-4"
+              color="#DB2863"
+              variant="Bold"
+            />
             <span className="text-sm text-[#DB2863] font-bold md:font-medium md:text-[12px] leading-[18px]">
               Sign Out
             </span>

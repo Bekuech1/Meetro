@@ -1,6 +1,6 @@
 import ImageIcon from "@/assets/icons/ImageIcon";
 import StrokeOutline from "@/assets/icons/strokeOutline";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export default function ImageInput({ size = "lg", onUpload }) {
   const inputRef = useRef(null);

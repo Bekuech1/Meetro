@@ -2,12 +2,12 @@ import StrokeOutline from "@/assets/icons/StrokeOutline";
 
 // Avatar sizes config
 const SIZES = {
-  xxs: "w-[17px] min-h-[18px]",
-  xs: "w-[23px] min-h-6",
-  sm: "w-[31px] min-h-8",
-  md: "w-[38px] min-h-10",
-  lg: "w-[46px] min-h-12",
-  xl: "w-[63px] min-h-[66px]",
+  xxs: "w-[17px] h-[18px]",
+  xs: "w-[23px] h-6",
+  sm: "w-[31px] h-8",
+  md: "w-[38px] h-10",
+  lg: "w-[46px] h-12",
+  xl: "w-[63px] h-[66px]",
 };
 
 const Avatar = ({

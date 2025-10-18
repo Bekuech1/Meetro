@@ -23,11 +23,20 @@ const VARIANTS = {
   tertiary: {
     colors: {
       text: "text-[#011F0F]",
-      bgDefault: "bg-white hover:bg-[#F0F0F0]",
+      bgDefault: "bg-white hover:bg-[#E5E7E3]",
       bgLoading: "bg-white",
       borderColor: "border-[#E5E7E3] hover:border-[#E5E7E3]",
     },
     spinnerColor: "border-[#61B42D]",
+  },
+  red: {
+    colors: {
+      text: "text-[#ffffff]",
+      bgDefault: "bg-[#DB2863] hover:bg-[#C02156]",
+      bgLoading: "bg-[#DB2863]",
+      borderColor: "border-[#DB2863] hover:border-[#DB2863]",
+    },
+    spinnerColor: "border-[#ffffff]",
   },
   disabled: {
     colors: {
