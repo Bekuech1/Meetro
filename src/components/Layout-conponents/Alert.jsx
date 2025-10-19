@@ -1,6 +1,7 @@
 import TriangleAlert from "@/assets/icons/TriangleAlert";
 import { InfoCircle, TickCircle } from "iconsax-reactjs";
 import { X } from "lucide-react";
+import React from 'react'
 
 const typeConfig = {
   error: {
@@ -41,7 +42,8 @@ const Alert = ({
   type = "info",
   size = "sm",
   option = "default",
-  onClick,
+  onClick,          // close handler
+  button,      // 👈 optional custom close button (IconButton or any element)
   title,
   subtitle,
 }) => {
@@ -53,17 +55,13 @@ const Alert = ({
   if (option === "outline") styles = typeStyles.outline;
   if (option === "filled") styles = typeStyles.filled;
 
-  // Dynamic icon component
   const IconComponent = typeStyles.icon;
 
-  // Handle different icon props based on library
-  const getIconProps = () => {
-    return {
-      size: 24,
-      variant: "Bold",
-      className: "min-w-6",
-    };
-  };
+  const getIconProps = () => ({
+    size: 24,
+    variant: "Bold",
+    className: "min-w-6",
+  });
 
   return (
     <div
@@ -72,15 +70,26 @@ const Alert = ({
     >
       <div className="w-full flex place-items-center gap-2">
         <IconComponent {...getIconProps()} />
-        <p className="text-sm flex flex-col gap-y-1">
-          <h3 className="font-bold">{title}</h3>
+        <div className="text-sm flex flex-col gap-y-1">
+          <h3 className="font-bold capitalize">{title}</h3>
           {subtitle && <span className="font-normal">{subtitle}</span>}
-        </p>
+        </div>
       </div>
+
+      {/* 👇 Close button logic */}
       {onClick && (
-        <button className="cursor-pointer" type="button" onClick={onClick}>
-          <X size={20} />
-        </button>
+        button ? (
+          // Use custom close button if provided
+          React.cloneElement(button, { onClick })
+        ) : (
+          // Default X button
+          <button
+            className="cursor-pointer hover:opacity-70 ml-2"
+            onClick={onClick}
+          >
+            <X size={20} />
+          </button>
+        )
       )}
     </div>
   );

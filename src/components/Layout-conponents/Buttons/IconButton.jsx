@@ -42,8 +42,8 @@ const VARIANTS = {
 
 const IconButton = ({
   variant = "primary",
-  state = "default",
   disabled = false,
+  loading = false, // ✅ new prop
   onClick,
   className = "",
   icon,
@@ -51,17 +51,11 @@ const IconButton = ({
   smallButton = false,
   ...props
 }) => {
-  const isLoading = state === "loading";
-  const isDisabled = disabled || isLoading;
-
+  const isDisabled = disabled || loading;
   const effectiveVariant = disabled ? "disabled" : variant;
   const config = VARIANTS[effectiveVariant] || VARIANTS["primary"];
 
-  const bgKey = isLoading
-    ? "bgLoading"
-    : state === "hover"
-      ? "bgHover"
-      : "bgDefault";
+  const bgKey = loading ? "bgLoading" : "bgDefault";
 
   const sizeClasses = smallButton
     ? "p-1 size-6"
@@ -80,9 +74,7 @@ const IconButton = ({
   ].join(" ");
 
   const hasContent = icon || children;
-
   const spinnerSize = smallButton ? 14 : 20;
-
   const iconSize = smallButton ? "size-[14px]" : "size-6";
 
   return (
@@ -92,7 +84,7 @@ const IconButton = ({
       disabled={isDisabled}
       {...props}
     >
-      {isLoading ? (
+      {loading ? (
         <div>
           <LoadingSpinner
             size={spinnerSize}
@@ -112,4 +104,5 @@ const IconButton = ({
     </button>
   );
 };
+
 export default IconButton;

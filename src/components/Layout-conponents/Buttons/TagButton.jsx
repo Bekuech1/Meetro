@@ -77,8 +77,8 @@ const SIZES = {
   sm: {
     text: "text-[10px]",
     height: "h-[22px]",
-    padding: "px-1",
-    iconSize: "size-4",
+    padding: "px-1.5",
+    iconSize: "size-1",
     spinnerSize: 10,
     minWidth: "min-w-[60px]",
   },
@@ -118,7 +118,7 @@ const TagButton = ({
       : "bgDefault";
 
   const buttonClasses = [
-    "font-medium flex items-center justify-center w-fit capitalize border rounded-[60px]",
+    "font-medium flex items-center justify-center w-fit capitalize border rounded-[60px] paytone",
     "transition-all duration-200 ease-in-out",
     sizeConfig.text,
     sizeConfig.height,
@@ -160,7 +160,7 @@ const TagButton = ({
               )}
             </>
           )}
-          {text && <span className="whitespace-nowrap">{text}</span>}
+          {text && <span className="whitespace-nowrap leading-tight">{text}</span>}
           {rightImg && (
             <>
               {typeof rightImg === "string" ? (
