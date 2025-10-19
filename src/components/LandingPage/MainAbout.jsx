@@ -8,6 +8,7 @@ import TextButton from "../Layout-conponents/Buttons/TextButtons";
 import LoginModal from "../Layout-conponents/Authentication/LoginModal";
 import SignUpModal from "../Layout-conponents/Authentication/SignUpModal";
 import DeleteEventModal from "../Layout-conponents/Events/DeleteEventModal";
+import { EventDetail } from "../Layout-conponents/EventDetail";
 
 const MainAbout = () => {
   return (
@@ -72,6 +73,7 @@ const MainAbout = () => {
           </Modal>
         </div>
       </div>
+      <EventDetail/>
     </div>
   );
 };

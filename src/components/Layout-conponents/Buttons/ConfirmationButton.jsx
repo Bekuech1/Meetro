@@ -1,7 +1,6 @@
 import React from "react";
 import LoadingSpinner from "../LoadingSpinner";
 
-// Configuration constants moved outside component
 const VARIANTS = {
   "not-sure": {
     colors: {
@@ -27,18 +26,14 @@ const VARIANTS = {
 
 const ConfirmationButton = ({
   variant = "not-sure",
-  state = "default",
+  loading = false, // ✅ new boolean prop
   onClick,
   className = "",
   ...props
 }) => {
   const config = VARIANTS[variant] || VARIANTS["not-sure"];
-  const isLoading = state === "loading";
 
-  // Map state to background color key
-  const bgKey = isLoading
-    ? "bgLoading"
-    : "bgDefault";
+  const bgKey = loading ? "bgLoading" : "bgDefault";
 
   const buttonClasses = [
     "paytone flex flex-col rounded-[60px] gap-2 justify-center items-center",
@@ -46,7 +41,7 @@ const ConfirmationButton = ({
     "drop-shadow-[0px_4px_16px_rgba(0,0,0,0.04)]",
     config.colors[bgKey],
     config.colors.text,
-    isLoading
+    loading
       ? "cursor-not-allowed bg-white"
       : "cursor-pointer active:scale-95",
     className,
@@ -55,11 +50,11 @@ const ConfirmationButton = ({
   return (
     <button
       className={buttonClasses}
-      onClick={isLoading ? undefined : onClick}
-      disabled={isLoading}
+      onClick={loading ? undefined : onClick}
+      disabled={loading}
       {...props}
     >
-      {!isLoading ? (
+      {!loading ? (
         <>
           <img src={config.icon} alt="" className="size-8" />
           <span className="capitalize text-[12px] font-normal leading-4">

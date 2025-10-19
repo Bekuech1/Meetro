@@ -9,6 +9,9 @@
 /* urbanist */
 @import url('https://fonts.googleapis.com/css?family=Urbanist');
 
+/* digital font */
+@import url('https://fonts.cdnfonts.com/css/digital-numbers');
+
 
 /* visbycf */
 
@@ -90,4 +93,8 @@
 
 .urbanist{
   font-family: 'Urbanist', sans-serif;
+}
+
+.digital-font {
+  font-family: 'Digital Numbers';
 }
