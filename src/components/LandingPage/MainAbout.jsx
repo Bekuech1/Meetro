@@ -1,13 +1,7 @@
 import React from "react";
-import TopNavigation from "../Layout-conponents/Navigation/TopNavigation";
-import AvatarGroup from "../Layout-conponents/AvatarGroup";
-import BottomNav from "../Layout-conponents/Navigation/BottomNav";
-import Avatar from "../Layout-conponents/Avatar";
+
 import Modal from "../Layout-conponents/Modal/Modal";
 import TextButton from "../Layout-conponents/Buttons/TextButtons";
-import LoginModal from "../Layout-conponents/Authentication/LoginModal";
-import SignUpModal from "../Layout-conponents/Authentication/SignUpModal";
-import DeleteEventModal from "../Layout-conponents/Events/DeleteEventModal";
 import FixedChipInModal from "../Layout-conponents/ChipInModals/FixedChipInModal";
 import TargetChipInModal from "../Layout-conponents/ChipInModals/TargetChipInModal";
 import MinChipInModal from "../Layout-conponents/ChipInModals/MinChipInModal";
