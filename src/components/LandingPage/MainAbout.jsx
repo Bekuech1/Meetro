@@ -11,6 +11,7 @@ import DeleteEventModal from "../Layout-conponents/Events/DeleteEventModal";
 import FixedChipInModal from "../Layout-conponents/ChipInModals/FixedChipInModal";
 import TargetChipInModal from "../Layout-conponents/ChipInModals/TargetChipInModal";
 import MinChipInModal from "../Layout-conponents/ChipInModals/MinChipInModal";
+import { EventDetail } from "../Layout-conponents/EventDetail";
 
 const MainAbout = () => {
   return (
@@ -68,6 +69,7 @@ const MainAbout = () => {
           </Modal>
         </div>
       </div>
+      <EventDetail />
     </div>
   );
 };
