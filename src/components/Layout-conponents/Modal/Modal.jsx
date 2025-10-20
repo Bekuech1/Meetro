@@ -1,9 +1,10 @@
 import IconButton from "../Buttons/IconButton";
 import React, { cloneElement, useState } from "react";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
-import { CloseCircle } from "iconsax-reactjs";
+import { CloseCircle, InfoCircle } from "iconsax-reactjs";
 import { createPortal } from "react-dom";
 import { ModalContext, useModalContext } from "./ModalContext";
+import TextButton from "../Buttons/TextButtons";
 
 // Modal
 function Modal({ children }) {
@@ -47,7 +48,7 @@ function StopScroll() {
 }
 
 // Window
-function Window({ name, children, space = true }) {
+function Window({ name, children, title = "", showIcon = true }) {
   // Get context
   const { active, close } = useModalContext();
 
@@ -68,9 +69,29 @@ function Window({ name, children, space = true }) {
           />
           {/* Content */}
           <div
-            className={`border-2 border-white rounded-t-[24px] md:rounded-[24px] bg-[#EDEDED] ${space ? "p-6 pb-12 md:p-12" : ""}`}
+            className={`border-2 border-white rounded-t-[24px] md:rounded-[24px] bg-[#EDEDED] ${title ? "" : "p-6 pb-12 md:p-12"}`}
           >
-            {children}
+            {showIcon && !title && (
+              <IconButton
+                className="pointer-events-none size-11! mb-6"
+                variant="tertiary"
+                icon={<InfoCircle color="#077D8A" size={24} variant="Bold" />}
+              />
+            )}
+            {title && (
+              <div className="p-2">
+                <TextButton
+                  className="w-full !justify-start pointer-events-none"
+                  text={title}
+                  variant="tertiary"
+                />
+              </div>
+            )}
+            <div
+              className={`${title ? "py-12 px-4 md:pt-4 md:px-6 md:pb-6" : ""}`}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </div>

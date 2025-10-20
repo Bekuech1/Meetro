@@ -1,13 +1,12 @@
-import { ArrowDown2, InfoCircle, Sms } from "iconsax-reactjs";
-import { useState } from "react";
-import { useModalContext } from "../Modal/ModalContext";
 import InputIcon from "@/assets/icons/InputIcon";
-import IconButton from "../Buttons/IconButton";
+import { ArrowDown2, Sms } from "iconsax-reactjs";
+import { useState } from "react";
 import TextButton from "../Buttons/TextButtons";
 import FormGroup from "../Inputs/FormGroup";
 import InputField from "../Inputs/InputField";
 import PasswordField from "../Inputs/PasswordField";
 import Modal from "../Modal/Modal";
+import { useModalContext } from "../Modal/ModalContext";
 import GoogleButton from "./GoogleButton";
 
 export default function LoginModal() {
@@ -19,11 +18,6 @@ export default function LoginModal() {
     <Modal.Window name="login">
       {/* Login form or content goes here */}
       <div className="satoshi font-bold text-sm">
-        <IconButton
-          className="pointer-events-none size-11! mb-6"
-          variant="tertiary"
-          icon={<InfoCircle color="#077D8A" size={24} variant="Bold" />}
-        />
         <h3 className="paytone text-[18px] mb-2 leading-[28px] font-normal">
           Log In
         </h3>

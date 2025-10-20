@@ -8,6 +8,9 @@ import TextButton from "../Layout-conponents/Buttons/TextButtons";
 import LoginModal from "../Layout-conponents/Authentication/LoginModal";
 import SignUpModal from "../Layout-conponents/Authentication/SignUpModal";
 import DeleteEventModal from "../Layout-conponents/Events/DeleteEventModal";
+import FixedChipInModal from "../Layout-conponents/ChipInModals/FixedChipInModal";
+import TargetChipInModal from "../Layout-conponents/ChipInModals/TargetChipInModal";
+import MinChipInModal from "../Layout-conponents/ChipInModals/MinChipInModal";
 
 const MainAbout = () => {
   return (
@@ -46,29 +49,22 @@ const MainAbout = () => {
         <div className="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
       </div>
       <div className="bg-[#f0f0f0] py-4">
-        <TopNavigation />
         <div className="max-w-[1400px] py-3 px-4 md:px-8 gap-y-4 mx-auto w-full flex flex-col items-start">
-          <AvatarGroup size="xs" count={100} src="/v2-tinyprofile.jpg" />
-          <AvatarGroup size="sm" count={100} src="/v2-tinyprofile.jpg" />
-          <AvatarGroup size="md" count={100} src="/v2-tinyprofile.jpg" />
-          <AvatarGroup size="lg" count={100} src="/v2-tinyprofile.jpg" />
-          <AvatarGroup size="xl" count={100} src="/v2-tinyprofile.jpg" />
-          <Avatar size="xs" src="/v2-tinyprofile.jpg" />
-          <Avatar size="sm" />
-          <Avatar size="md" src="/v2-tinyprofile.jpg" />
-          <Avatar size="lg" />
-          <Avatar size="xl" src="/v2-tinyprofile.jpg" />
-          <BottomNav />
           <Modal>
-            <Modal.Open opens="login">
-              <TextButton text="Login" />
-            </Modal.Open>
-            <LoginModal />
-            <SignUpModal />
-            <Modal.Open opens="delete-event">
-              <TextButton text="Delete Event" />
-            </Modal.Open>
-            <DeleteEventModal eventId={1000} />
+            <div className="flex gap-4">
+              <Modal.Open opens="fixed-chip-in">
+                <TextButton text="Fixed Chip In" />
+              </Modal.Open>
+              <Modal.Open opens="target-chip-in">
+                <TextButton text="Target Chip In" />
+              </Modal.Open>
+              <Modal.Open opens="min-chip-in">
+                <TextButton text="Minimum Chip In" />
+              </Modal.Open>
+            </div>
+            <FixedChipInModal />
+            <TargetChipInModal />
+            <MinChipInModal amount={1000} />
           </Modal>
         </div>
       </div>

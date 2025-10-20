@@ -26,3 +26,8 @@ export function timeAgo(dateString) {
   if (months < 12) return `${months}mo ago`;
   return `${years}y ago`;
 }
+
+export function formatCurrency(amount) {
+  if (isNaN(amount)) return "Invalid amount";
+  return "₦ " + Number(amount).toLocaleString("en-NG");
+}

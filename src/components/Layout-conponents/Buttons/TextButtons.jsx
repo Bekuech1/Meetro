@@ -58,6 +58,7 @@ const TextButton = ({
   text,
   leftImg,
   rightImg,
+  iconSize = "size-4",
   smallButton = false,
   ...props
 }) => {
@@ -81,7 +82,6 @@ const TextButton = ({
   const paddingSize = smallButton ? "px-2" : "px-4";
   const spinnerSize = smallButton ? 12 : 16;
   const contentGap = smallButton ? "gap-1" : "gap-[6px]";
-  const iconSize = smallButton ? "size-4" : "size-4";
 
   const buttonClasses = [
     "paytone flex items-center justify-center",
