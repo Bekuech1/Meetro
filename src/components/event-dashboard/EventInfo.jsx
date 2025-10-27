@@ -379,17 +379,16 @@ export default function EventInfo({ eventId }) {
                       /> */}
                     </div>
 
-                    
-                      <ModalBtn
-                        onClick={() =>
-                          handleConfirmAttendance("yes") &&
-                          useEventStore.getState().setShouldRefetch(true)
-                        }
-                        bgcolor="bg-white"
-                        image="/tick-circle.svg"
-                        textcolor="text-[#61B42D]"
-                        text="Change to Going"
-                      />
+                    <ModalBtn
+                      onClick={() =>
+                        handleConfirmAttendance("yes") &&
+                        useEventStore.getState().setShouldRefetch(true)
+                      }
+                      bgcolor="bg-white"
+                      image="/tick-circle.svg"
+                      textcolor="text-[#61B42D]"
+                      text="Change to Going"
+                    />
                   </div>
                 </div>
               )}
@@ -420,41 +419,40 @@ export default function EventInfo({ eventId }) {
         </div>
 
         {/* Attendees Section */}
-        {eventDetails.attendees?.L &&
-          // eventDetails.attendees?.L?.M?.responseType === "yes" &&
-          eventDetails.attendees.L.length > 0 && (
-            <div className="grid gap-2 w-full h-fit">
-              <ModalText
-                img="/crown.svg"
-                text={`going (${eventDetails.attendees.L.length})`}
-              />
-              <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
-                {eventDetails.attendees.L.map((attendee, index) => (
+        {eventDetails.attendees?.L && eventDetails.attendees.L.length > 0 && (
+          <div className="grid gap-2 w-full h-fit">
+            <ModalText
+              img="/crown.svg"
+              text={`going (${
+                eventDetails.attendees.L.filter(
+                  attendee => attendee.M?.responseType?.S === "yes"
+                ).length
+              })`}
+            />
+
+            <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
+              {eventDetails.attendees.L
+                // Only include attendees who said "yes"
+                .filter(attendee => attendee.M?.responseType?.S === "yes")
+                // Then map them all
+                .map((attendee, index) => (
                   <div
                     key={index}
                     className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-[#FFFFFE80]"
                   >
                     <img
-                      // src="/large-profile.jpg"
                       src={attendeeImage}
                       alt="Attendee"
                       className="size-[66px] rounded-full"
                     />
-
-                    {/* <div className="size-[66px] rounded-full bg-[#077D8A] flex items-center justify-center">
-                      <p className="text-sm font-[700] leading-[18px] text-white capitalize">
-                        {getInitials(attendee.M?.name?.S)}
-                      </p>
-                    </div> */}
-
                     <h6 className="h-fit w-full min-w-[120px] text-center capitalize satoshi font-[700] text-[12px] leading-[18px]">
                       {attendee.M?.name?.S}
                     </h6>
                   </div>
                 ))}
-              </div>
             </div>
-          )}
+          </div>
+        )}
       </section>
 
       {showLoginModal && (
