@@ -7,7 +7,6 @@ import ImageTemplatesModal from "../Layout-conponents/Events/ImageTemplatesModal
 import Modal from "../Layout-conponents/Modal/Modal";
 import { EventDetail } from "../Layout-conponents/EventDetail";
 import { useState } from "react";
-import ImageInput from "../Layout-conponents/Inputs/ImageInput";
 
 const MainAbout = () => {
   const [file, setFile] = useState(null);
