@@ -30,6 +30,7 @@ export default function LoginModal() {
             <TextButton
               variant="secondary"
               text="Continue with Email"
+              className="min-w-full sm:min-w-0"
               rightImg={
                 <ArrowDown2 variant="Outline" size={16} color="#011F0F" />
               }
@@ -60,7 +61,7 @@ export default function LoginModal() {
               </button>
               <TextButton
                 text="Let's gooo!"
-                className="min-w-[123px] mt-3 mb-2"
+                className="sm:min-w-[123px] mt-3 mb-2 min-w-full"
               />
             </form>
           )}

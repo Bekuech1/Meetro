@@ -5,9 +5,13 @@ import Modal from "../Modal/Modal";
 import Alert from "../Alert";
 import TextButton from "../Buttons/TextButtons";
 
-export default function DeleteEventModal({ eventId, showAlert = false }) {
+export default function DeleteEventModal({
+  eventId,
+  showAlert = false,
+  onSave,
+}) {
   // Modal context
-  const { setActive } = useModalContext();
+  const { close } = useModalContext();
   return (
     <Modal.Window name="delete-event">
       <div className="satoshi font-bold text-sm">
@@ -35,11 +39,7 @@ export default function DeleteEventModal({ eventId, showAlert = false }) {
           </div>
         )}
         <div className="flex mt-12 gap-4">
-          <TextButton
-            variant="tertiary"
-            text="No, Cancel"
-            onClick={() => setActive(null)}
-          />
+          <TextButton variant="tertiary" text="No, Cancel" onClick={close} />
           <TextButton variant="red" text="Yes, Delete" />
         </div>
       </div>

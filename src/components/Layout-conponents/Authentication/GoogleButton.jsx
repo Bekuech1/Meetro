@@ -7,6 +7,7 @@ export default function GoogleButton() {
       rightImg={<GoogleIcon />}
       variant="tertiary"
       text="Continue with Google"
+      className="min-w-full sm:min-w-0"
     />
   );
 }

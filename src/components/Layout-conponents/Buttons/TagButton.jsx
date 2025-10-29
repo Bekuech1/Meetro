@@ -160,7 +160,9 @@ const TagButton = ({
               )}
             </>
           )}
-          {text && <span className="whitespace-nowrap leading-tight">{text}</span>}
+          {text && (
+            <span className="whitespace-nowrap leading-tight">{text}</span>
+          )}
           {rightImg && (
             <>
               {typeof rightImg === "string" ? (

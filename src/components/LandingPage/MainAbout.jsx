@@ -1,13 +1,16 @@
-import React from "react";
-
-import Modal from "../Layout-conponents/Modal/Modal";
 import TextButton from "../Layout-conponents/Buttons/TextButtons";
-import FixedChipInModal from "../Layout-conponents/ChipInModals/FixedChipInModal";
-import TargetChipInModal from "../Layout-conponents/ChipInModals/TargetChipInModal";
-import MinChipInModal from "../Layout-conponents/ChipInModals/MinChipInModal";
+import PaymentDetailModal from "../Layout-conponents/ChipInModals/PaymentDetailModal";
+import CreateEventModal from "../Layout-conponents/Events/CreateEventModal";
+import EventDateModal from "../Layout-conponents/Events/EventDateModal";
+import GuestDetailModal from "../Layout-conponents/Events/GuestDetailModal";
+import ImageTemplatesModal from "../Layout-conponents/Events/ImageTemplatesModal";
+import Modal from "../Layout-conponents/Modal/Modal";
 import { EventDetail } from "../Layout-conponents/EventDetail";
+import { useState } from "react";
 
 const MainAbout = () => {
+  const [file, setFile] = useState(null);
+  const [image, setImage] = useState("/event-ph1.png");
   return (
     <div className="relative w-full h-fit min-h-[600px] flex flex-col gap-10 bg-[#FCFEF9] satoshi py-24">
       <div className="flex flex-col gap-6 md:w-[702px] w-[90%] h-fit justify-center text-center mx-auto mt-6">
@@ -46,20 +49,54 @@ const MainAbout = () => {
       <div className="bg-[#f0f0f0] py-4">
         <div className="max-w-[1400px] py-3 px-4 md:px-8 gap-y-4 mx-auto w-full flex flex-col items-start">
           <Modal>
-            <div className="flex gap-4">
-              <Modal.Open opens="fixed-chip-in">
-                <TextButton text="Fixed Chip In" />
+            <div className="mt-6 flex flex-wrap gap-4">
+              <Modal.Open opens="event-date">
+                <TextButton text="Event Date" />
               </Modal.Open>
-              <Modal.Open opens="target-chip-in">
-                <TextButton text="Target Chip In" />
+              <Modal.Open opens="guest-detail">
+                <TextButton text="Guest Detail" />
               </Modal.Open>
-              <Modal.Open opens="min-chip-in">
-                <TextButton text="Minimum Chip In" />
+              <Modal.Open opens="create-event">
+                <TextButton text="Create Event" />
+              </Modal.Open>
+              <Modal.Open opens="image-templates">
+                <TextButton text="Select Image" />
               </Modal.Open>
             </div>
-            <FixedChipInModal />
-            <TargetChipInModal />
-            <MinChipInModal amount={1000} />
+            <PaymentDetailModal
+              transaction={{
+                amount: 3000,
+                status: "failed",
+                event: {
+                  guest: "Nesky",
+                  guestStatus: "going",
+                  location: "5 Mabushi way, Abuja",
+                  date: new Date("2025-03-01T16:30:00"),
+                  title: "Tech Unwind",
+                },
+              }}
+            />
+            <GuestDetailModal
+              guestDetail={{
+                name: "Newman Ogbo",
+                email: "newman@gmail.com",
+                chipIn: 50000,
+                status: "going",
+                profileImg: "/v2-tinyprofile.jpg",
+              }}
+            />
+            <EventDateModal />
+            <CreateEventModal />
+            <div className="size-[200px] rounded-[24px] overflow-hidden">
+              <img src={image} alt="" className="size-full block" />
+            </div>
+            <ImageTemplatesModal
+              onSelect={url => {
+                setFile(null);
+                setImage(url);
+              }}
+              onUpload={file => setFile(file)}
+            />
           </Modal>
         </div>
       </div>

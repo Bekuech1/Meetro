@@ -1,4 +1,5 @@
 import { createContext, useState, useContext } from "react";
+import TagButton from "../Buttons/TagButton";
 
 // ---------------------------------------------------------
 // Create a context to share tab state (active tab + setter)
@@ -9,23 +10,18 @@ const TabContext = createContext();
 // ---------------------------------------------------------
 // Tailwind-based size presets for the tab buttons
 // ---------------------------------------------------------
-const sizes = {
-  sm: "font-medium text-[10px] leading-[14px] py-[2px] px-[8px]",
-  md: "text-[12px] leading-[18px] font-medium px-3 py-[6px]",
-  lg: "px-3 py-2 font-bold text-sm",
-};
 
 // ---------------------------------------------------------
 // Tabs root component
 // Provides context and keeps track of the active tab
 // ---------------------------------------------------------
-function Tabs({ defaultTab, children }) {
+function Tabs({ defaultTab, children, className = "" }) {
   // Store the current active tab in local state
   const [activeTab, setActiveTab] = useState(defaultTab);
 
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
-      <div className="satoshi">{children}</div>
+      <div className={`satoshi ${className}`}>{children}</div>
     </TabContext.Provider>
   );
 }
@@ -52,7 +48,7 @@ const useTabs = () => {
 //   { id: "analytics", label: "Analytics" },
 // ];
 
-function List({ list, size = "md" }) {
+function List({ list, size = "md", btnStyles = "" }) {
   const { setActiveTab, activeTab } = useTabs();
 
   return (
@@ -60,18 +56,14 @@ function List({ list, size = "md" }) {
       {/* Container for tab buttons */}
       <div className="p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
         {list?.map((item, i) => (
-          <button
+          <TagButton
             key={i}
-            // Highlight active tab, dim inactive ones
-            className={`${
-              activeTab === item.id
-                ? "bg-white text-[#011F0F]"
-                : "text-[#B0B5B5]"
-            } ${sizes[size]} cursor-pointer rounded-full`}
+            text={item.label}
+            variant="tertiary"
+            size={size === "sm" ? "xs" : size}
+            className={`${item.id !== activeTab ? "!bg-transparent !text-[#B0B5B5] !border-transparent" : "hover:!bg-white"} satoshi min-w-[87px]`}
             onClick={() => setActiveTab(item.id)}
-          >
-            {item.label}
-          </button>
+          />
         ))}
       </div>
       <br />

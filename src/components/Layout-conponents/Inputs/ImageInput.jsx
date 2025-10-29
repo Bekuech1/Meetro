@@ -1,8 +1,13 @@
 import ImageIcon from "@/assets/icons/ImageIcon";
-import StrokeOutline from "@/assets/icons/strokeOutline";
+import StrokeOutline from "@/assets/icons/StrokeOutline";
 import { useRef, useState } from "react";
 
-export default function ImageInput({ size = "lg", onUpload }) {
+export default function ImageInput({
+  size = "lg",
+  onUpload,
+  showUpload = true,
+  className = "",
+}) {
   const inputRef = useRef(null);
   const [stage, setStage] = useState("idle");
   const [progress, setProgress] = useState(0);
@@ -11,8 +16,8 @@ export default function ImageInput({ size = "lg", onUpload }) {
 
   // Sizes
   const sizes = {
-    lg: "h-[349px] max-w-[349px]",
-    md: "max-w-[200px] h-[200px]",
+    lg: "aspect-square max-w-[349px]",
+    md: "max-w-[200px] aspect-square",
     sm: "max-w-[117px] h-[122px]",
   };
 
@@ -22,6 +27,9 @@ export default function ImageInput({ size = "lg", onUpload }) {
 
     // Set file
     onUpload?.(file);
+
+    // Alternate image input
+    if (!showUpload) return;
 
     // Set file name
     setFileName(file.name);
@@ -51,7 +59,7 @@ export default function ImageInput({ size = "lg", onUpload }) {
 
   return (
     <div
-      className={`w-full ${sizes[size]} ${size === "sm" ? "clip-star" : ""} satoshi rounded-[24px] border border-[#fbfbfb] bg-[#f9f9f9] flex items-center justify-center relative overflow-hidden backdrop-blur-[24px]`}
+      className={`w-full ${sizes[size]} ${className} ${size === "sm" ? "clip-star" : ""} satoshi rounded-[24px] border border-[#fbfbfb] bg-[#f9f9f9] flex items-center justify-center relative overflow-hidden backdrop-blur-[24px]`}
     >
       {/* Stroke outline */}
       {size === "sm" && <StrokeOutline />}
