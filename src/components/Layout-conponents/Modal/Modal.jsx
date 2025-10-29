@@ -1,10 +1,10 @@
 import IconButton from "../Buttons/IconButton";
 import React, { cloneElement, useState } from "react";
+import TextButton from "../Buttons/TextButtons";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
 import { CloseCircle, InfoCircle } from "iconsax-reactjs";
 import { createPortal } from "react-dom";
 import { ModalContext, useModalContext } from "./ModalContext";
-import TextButton from "../Buttons/TextButtons";
 
 // Modal
 function Modal({ children }) {
@@ -48,7 +48,13 @@ function StopScroll() {
 }
 
 // Window
-function Window({ name, children, title = "", showIcon = true }) {
+function Window({
+  name,
+  children,
+  title = "",
+  desktopWidth = "sm:max-w-[546px]",
+  showIcon = true,
+}) {
   // Get context
   const { active, close } = useModalContext();
 
@@ -59,18 +65,21 @@ function Window({ name, children, title = "", showIcon = true }) {
     <React.Fragment>
       <StopScroll />
       <div className="fixed -inset-4 z-40 bg-[#ABABAB80] backdrop-blur-[32px]" />
-      <div className="w-full fixed z-50 h-full flex items-end md:items-center left-0 top-0">
-        <div className="flex flex-col gap-[10px] max-w-[546px] w-full mx-auto">
+      <div className="w-full fixed z-50 h-full flex items-end sm:items-center left-0 top-0">
+        <div
+          className={`flex flex-col gap-[10px] ${desktopWidth} w-full mx-auto`}
+        >
           {/* Close button */}
           <IconButton
             onClick={close}
-            className="size-11! border-white! self-end mr-2 md:mr-0 bg-[#EDEDED]! hover:bg-[#E5E7E3]!"
+            className="size-11! border-white! self-end mr-2 sm:mr-0 bg-[#EDEDED]! hover:bg-[#E5E7E3]!"
             icon={<CloseCircle color="#DB2863" variant="Bold" size={24} />}
           />
           {/* Content */}
           <div
-            className={`border-2 border-white rounded-t-[24px] md:rounded-[24px] bg-[#EDEDED] ${title ? "" : "p-6 pb-12 md:p-12"}`}
+            className={`border-2 border-white rounded-t-[24px] sm:rounded-[24px] bg-[#EDEDED] ${title ? "" : "p-6 pb-12 sm:p-12"}`}
           >
+            {/* Show info icon */}
             {showIcon && !title && (
               <IconButton
                 className="pointer-events-none size-11! mb-6"
@@ -78,6 +87,7 @@ function Window({ name, children, title = "", showIcon = true }) {
                 icon={<InfoCircle color="#077D8A" size={24} variant="Bold" />}
               />
             )}
+            {/* Show title */}
             {title && (
               <div className="p-2">
                 <TextButton
@@ -88,7 +98,7 @@ function Window({ name, children, title = "", showIcon = true }) {
               </div>
             )}
             <div
-              className={`${title ? "py-12 px-4 md:pt-4 md:px-6 md:pb-6" : ""}`}
+              className={`${title ? "py-12 px-4 sm:pt-4 sm:px-6 sm:pb-6" : ""}`}
             >
               {children}
             </div>

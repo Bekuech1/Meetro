@@ -1,26 +1,65 @@
+import { useEffect, useRef } from "react";
+
 export default function Dropdown({
   placeholder = "Select",
   items,
   className = "",
   onSelect,
   active,
+  onClose,
+  buttonRef,
+  closeOnOutsideClick = true,
+  modal = false,
 }) {
+  /* Dropdown ref */
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      const dropdownEl = dropdownRef.current;
+      const buttonEl = buttonRef?.current;
+      // Ignore if clicking inside dropdown or button (including children)
+      if (
+        dropdownEl?.contains(event.target) ||
+        buttonEl?.contains(event.target)
+      ) {
+        return;
+      }
+      // Close dropdown
+      onClose?.();
+    }
+    if (closeOnOutsideClick)
+      document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
   return (
     <div
-      className={`mt-1 satoshi rounded-t-[24px] md:rounded-[8px] overflow-hidden ${className} w-full shadow-[0px_10px_22px_rgba(45,77,108,0.15)] bg-white`}
+      ref={dropdownRef}
+      className={`satoshi animate-in slide-in-from-bottom-20 ${modal ? "max-sm:rounded-t-[24px] max-sm:rounded-b-none max-sm:fixed max-sm:top-auto max-sm:bottom-0" : ""} left-0 top-full absolute rounded-[8px] z-20 text-left w-full overflow-hidden ${className} shadow-[0px_10px_22px_rgba(45,77,108,0.15)] bg-white`}
     >
-      <div className="md:overflow-y-auto md:p-1 md:pt-0 md:max-h-[188px]">
-        <div className="text-sm shadow-[inset_0_4px_24px_rgba(2,142,75,0.08)] md:shadow-none md:sticky text-[#8A9191] mb-[2px] md:mb-0 bg-white md:pt-3 px-4 py-3 md:p-2 font-bold md:top-0">
+      <div
+        className={`overflow-y-auto ${modal ? "max-sm:max-h-[435px] max-sm:p-0" : ""} p-1 pt-0 max-h-[188px]`}
+      >
+        {/* Placeholder */}
+        <div
+          className={`text-sm ${modal ? "max-sm:shadow-[inset_0_4px_24px_rgba(2,142,75,0.08)] max-sm:mb-[2px] max-sm:px-4 max-sm:py-3" : ""} sticky text-[#8A9191] mb-0 bg-white pt-3 p-2 font-bold top-0`}
+        >
           {placeholder}
         </div>
-        <div className="p-1 md:p-0">
+        <div className={`${modal ? "max-sm:p-1" : ""}`}>
+          {/* Render options */}
           {items.length > 0 ? (
             items.map(opt => (
               <div
                 key={opt.id}
                 onClick={() => onSelect(opt)}
-                className={`flex items-center gap-2 py-3 px-2 md:py-2 max-h-12 md:max-h-9 rounded-[8px] cursor-pointer hover:bg-[#E6FEC4] ${
-                  active?.id === opt.id ? "bg-[#DAFEA7]" : ""
+                className={`flex ${modal ? "max-sm:max-h-12 max-sm:py-3" : ""} items-center gap-2 px-2 py-2 max-h-9 rounded-[8px] cursor-pointer hover:bg-[#E5E7E3] ${
+                  active?.id === opt.id
+                    ? "bg-[#DAFEA7] hover:!bg-[#DAFEA7]"
+                    : ""
                 }`}
               >
                 {/* Left icon */}
@@ -37,9 +76,12 @@ export default function Dropdown({
                     )}
                   </>
                 )}
-                <span className="text-base md:text-sm flex-1 font-medium md:font-bold">
+                <span
+                  className={`${modal ? "max-sm:text-base max-sm:font-medium" : ""} text-sm flex-1 font-bold`}
+                >
                   {opt.name}
                 </span>
+                {/* Right icon */}
                 {opt.rightIcon && (
                   <>
                     {typeof opt.rightIcon === "string" ? (

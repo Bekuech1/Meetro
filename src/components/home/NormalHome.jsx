@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import MyEvent from "./MyEvent";
 import AttendedEvents from "./AttendedEvents";
-import Header from "./HomeNav";
-import Avatar from "../Layout-conponents/Avatar";
-import DateTimePicker from "../Layout-conponents/DateAndTime";
 import EmptyState from "../Layout-conponents/Title";
 
 const NormalHome = () => {
@@ -49,38 +46,6 @@ const NormalHome = () => {
           <div>
             {activeTab === "created" ? <MyEvent /> : <AttendedEvents />}
           </div>
-
-          {/* here just for testing */}
-          <div className="flex gap-4 mt-20">
-            <Avatar type="profile" src="/Profile.svg" size="sm" />
-            <Avatar type="profile" src="/Profile.svg" size="lg" />
-            {/* <Avatar type="initial" name="Chris Cole" size="md" /> */}
-            <Avatar
-              type="group"
-              groupMembers={[
-                { src: "/Profile.svg" },
-                { src: "/Profile-2.svg" },
-              ]}
-              count={200}
-              size="lg"
-            />
-          </div>
-          <DateTimePicker
-            mode="range"
-            selected={range}
-            onSelect={setRange}
-            showTime={false}
-            minDate={new Date()}
-          />
-
-          <DateTimePicker
-            mode="single"
-            // selected={range}
-            // onSelect={setRange}
-            showTime={false}
-            minDate={new Date()}
-          />
-
           <EmptyState
             title="No Events Yet"
             description="Looks like there’s nothing happening right now. Be the first to create an event."

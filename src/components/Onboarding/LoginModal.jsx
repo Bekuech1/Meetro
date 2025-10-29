@@ -39,7 +39,7 @@ export default function LoginModal({ onSuccess }) {
     try {
       const response = await API.post("/login", formData);
       const { accessToken, idToken, refreshToken } = response.data;
-      // console.log(response.data);
+      // console.log(response.data);-
 
       setAccessToken(accessToken);
       setIdToken(idToken);
@@ -56,8 +56,6 @@ export default function LoginModal({ onSuccess }) {
     }
   };
 
-  
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#00000080] backdrop-blur-xs z-50 p-2">
       <div className="bg-[#FFFFFFE5] p-6 md:p-12 border border-white backdrop-blur-[32px] rounded-3xl flex flex-col items-center gap-12 w-full md:w-[546px]">
@@ -70,7 +68,7 @@ export default function LoginModal({ onSuccess }) {
 
         <div className="flex flex-col gap-6 w-full">
           <form
-            onSubmit={(e) => {
+            onSubmit={e => {
               e.preventDefault();
               handleLogin();
             }}
@@ -96,7 +94,7 @@ export default function LoginModal({ onSuccess }) {
                     name={input.name}
                     placeholder={input.placeholder}
                     required={input.required}
-                    onChange={(e) =>
+                    onChange={e =>
                       setFormData({ ...formData, [input.name]: e.target.value })
                     }
                     className="ml-8 text-sm bg-transparent font-medium text-[#B0B5B5
@@ -107,7 +105,7 @@ export default function LoginModal({ onSuccess }) {
                       src={showPassword ? "/eye-slash.svg" : "/open-eye.svg"}
                       alt="toggle visibility"
                       className="absolute right-4 top-1/4 cursor-pointer"
-                      onClick={() => setShowPassword((prev) => !prev)}
+                      onClick={() => setShowPassword(prev => !prev)}
                     />
                   )}
                 </div>

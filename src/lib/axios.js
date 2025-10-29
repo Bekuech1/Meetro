@@ -11,7 +11,7 @@ const API = axios.create({
 
 // ----- REQUEST INTERCEPTOR -----
 API.interceptors.request.use(
-  (config) => {
+  config => {
     const { idToken, logout } = useAuthStore.getState(); // 👈 read from Zustand, not localStorage
     if (idToken) {
       if (isTokenExpired(idToken)) {
@@ -22,7 +22,7 @@ API.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
@@ -36,16 +36,17 @@ function subscribeTokenRefresh(cb) {
 }
 
 function onRefreshed(token) {
-  subscribers.forEach((cb) => cb(token));
+  subscribers.forEach(cb => cb(token));
   subscribers = [];
 }
 
 // ----- RESPONSE INTERCEPTOR -----
 API.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     const originalRequest = error.config;
-    const { refreshToken, logout, setAccessToken, setRefreshToken } = useAuthStore.getState();
+    const { refreshToken, logout, setAccessToken, setRefreshToken } =
+      useAuthStore.getState();
 
     if (
       error.response?.status === 401 &&
@@ -53,8 +54,8 @@ API.interceptors.response.use(
       refreshToken
     ) {
       if (isRefreshing) {
-        return new Promise((resolve) => {
-          subscribeTokenRefresh((newToken) => {
+        return new Promise(resolve => {
+          subscribeTokenRefresh(newToken => {
             originalRequest.headers.Authorization = `Bearer ${newToken}`;
             resolve(API(originalRequest));
           });

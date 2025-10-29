@@ -65,7 +65,7 @@ export default function SignUpModal() {
               {/* Alert message goes here */}
               <TextButton
                 text="Let's gooo!"
-                className="min-w-[123px] mt-3 mb-2"
+                className="sm:min-w-[123px] mt-3 mb-2 min-w-full"
               />
             </form>
           )}

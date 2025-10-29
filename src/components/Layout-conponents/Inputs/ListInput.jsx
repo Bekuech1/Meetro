@@ -57,7 +57,7 @@ export default function ListInput({
       </div>
       {/* Right icon */}
       {rightIcon && (
-        <>
+        <div>
           {typeof rightIcon === "string" ? (
             <img src={rightIcon} alt="right-icon" className="size-4" />
           ) : (
@@ -65,7 +65,7 @@ export default function ListInput({
               {rightIcon}
             </span>
           )}
-        </>
+        </div>
       )}
     </div>
   );

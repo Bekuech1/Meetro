@@ -2,6 +2,7 @@ import StrokeOutline from "@/assets/icons/StrokeOutline";
 
 // Avatar sizes config
 const SIZES = {
+  xxxs: "w-4 h-4",
   xxs: "w-[17px] h-[18px]",
   xs: "w-[23px] h-6",
   sm: "w-[31px] h-8",
