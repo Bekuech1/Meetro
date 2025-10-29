@@ -1,5 +1,5 @@
 import ImageIcon from "@/assets/icons/ImageIcon";
-import StrokeOutline from "@/assets/icons/strokeOutline";
+import StrokeOutline from "@/assets/icons/StrokeOutline";
 import { useRef, useState } from "react";
 
 export default function ImageInput({

@@ -1,7 +1,5 @@
-import IconButton from "../Buttons/IconButton";
 import Modal from "../Modal/Modal";
 import PaystackButton from "./PaystackButton";
-import { InfoCircle } from "iconsax-reactjs";
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "react-router";
 
