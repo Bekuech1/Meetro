@@ -74,7 +74,7 @@ const useEventStore = create(
             attendedEventsTotal: total,
             loadingAttendedEvents: false,
             error: null,
-            // shouldRefetch: false,
+            shouldRefetch: false,
           });
 
           return events;
@@ -91,6 +91,8 @@ const useEventStore = create(
       fetchEventById: async id => {
         const existing = get().eventDetails[id];
         if (existing) return existing;
+
+        set({ loadingEventDetails: true });
 
         try {
           const res = await API.get(`/events/${id}`);

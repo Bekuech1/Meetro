@@ -14,26 +14,9 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({ password: "", email: "" });
-  // const [formData, setFormData] = useState(() => {
-  //   const data = JSON.parse(sessionStorage.getItem("login"));
-  //   if (!data) {
-  //     return { name: "", password: "", email: "" };
-  //   } else {
-  //     return {
-  //       name: data?.name,
-  //       password: data?.password,
-  //       email: data?.email,
-  //     };
-  //   }
-  // });
 
   const [errorMessages, setErrorMessages] = useState({});
   const [showOptions, setShowOptions] = useState(false);
-
-  // useEffect(() => {
-  //   const newForm = { ...formData };
-  //   sessionStorage.setItem("login", JSON.stringify(newForm));
-  // }, [formData]);
 
   const navigate = useNavigate();
   const text = (
@@ -43,12 +26,13 @@ function LoginForm() {
   );
 
   const button = {
-  title: "Let's gooo!",
-  className: "w-full bg-[#011F0F] text-[#BEFD66] px-6 rounded-[60px] h-[36px]",
-  onclick: handleSubmit,
-  type: "submit",
-  isLoading: loading,
-};
+    title: "Let's gooo!",
+    className:
+      "w-full bg-[#011F0F] text-[#BEFD66] px-6 rounded-[60px] h-[36px]",
+    onclick: handleSubmit,
+    type: "submit",
+    isLoading: loading,
+  };
 
   const forms = [
     {
@@ -75,7 +59,7 @@ function LoginForm() {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   }
 
   async function handleSubmit(e) {
@@ -110,16 +94,12 @@ function LoginForm() {
       };
 
       try {
-        const response = await API.post("/login", payload); // 🔁 Replace with real endpoint
+        const response = await API.post("/login", payload);
         const { accessToken, refreshToken, idToken } = response.data;
 
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setIdToken(idToken);
-
-        // const user = jwtDecode(idToken);
-        // setUser(user);
-        // console.log(user);
 
         const userResponse = await API.get("/profile");
         setUser(userResponse.data);
@@ -128,7 +108,7 @@ function LoginForm() {
         navigate("/home");
       } catch (err) {
         const msg = err.response?.data?.error || "Login failed";
-        setErrorMessages((prev) => ({ ...prev, email: msg }));
+        setErrorMessages(prev => ({ ...prev, email: msg }));
       } finally {
         setLoading(false);
       }
