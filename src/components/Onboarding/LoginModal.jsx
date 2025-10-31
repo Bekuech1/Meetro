@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import API from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -30,7 +29,7 @@ export default function LoginModal({ onSuccess }) {
     email: "",
     password: "",
   });
-  const { setUser, setAccessToken, setRefreshToken, setIdToken } =
+  const { setUser, setAccessToken, user, setRefreshToken, setIdToken } =
     useAuthStore();
   const navigate = useNavigate();
 
@@ -39,24 +38,22 @@ export default function LoginModal({ onSuccess }) {
     try {
       const response = await API.post("/login", formData);
       const { accessToken, idToken, refreshToken } = response.data;
-      // console.log(response.data);
 
       setAccessToken(accessToken);
       setIdToken(idToken);
       setRefreshToken(refreshToken);
 
-      const user = await API.get("/profile");
-      // console.log(user);
-      if (user) {
-        setUser(user);
-        onSuccess?.();
-      }
+      const userProfile = await API.get("/profile");
+
+      if (userProfile) setUser(userProfile.data);
     } catch (error) {
       console.log("Login failed:", error.response?.data || error);
     }
   };
 
-  
+  useEffect(() => {
+    if (user) onSuccess?.();
+  }, [user]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#00000080] backdrop-blur-xs z-50 p-2">
@@ -70,7 +67,7 @@ export default function LoginModal({ onSuccess }) {
 
         <div className="flex flex-col gap-6 w-full">
           <form
-            onSubmit={(e) => {
+            onSubmit={e => {
               e.preventDefault();
               handleLogin();
             }}
@@ -96,7 +93,7 @@ export default function LoginModal({ onSuccess }) {
                     name={input.name}
                     placeholder={input.placeholder}
                     required={input.required}
-                    onChange={(e) =>
+                    onChange={e =>
                       setFormData({ ...formData, [input.name]: e.target.value })
                     }
                     className="ml-8 text-sm bg-transparent font-medium text-[#B0B5B5
@@ -107,7 +104,7 @@ export default function LoginModal({ onSuccess }) {
                       src={showPassword ? "/eye-slash.svg" : "/open-eye.svg"}
                       alt="toggle visibility"
                       className="absolute right-4 top-1/4 cursor-pointer"
-                      onClick={() => setShowPassword((prev) => !prev)}
+                      onClick={() => setShowPassword(prev => !prev)}
                     />
                   )}
                 </div>

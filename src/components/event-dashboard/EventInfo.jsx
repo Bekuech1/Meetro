@@ -1,75 +1,132 @@
+import useEventStore from "@/stores/eventStore";
 import API from "@/lib/axios";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Attendance,
-  EventCategories,
-  ModalBtn,
-  ModalText,
-} from "../home/EventModal";
 import SiteBtn from "../Layout-conponents/SiteBtn";
 import ShareEvent from "./ShareEvent";
 import LoginModal from "../Onboarding/LoginModal";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { EventCategories, ModalBtn, ModalText } from "../home/EventModal";
 import { LoadingSpinner } from "../create-event/Private";
 import {
   getProfilePicture,
   setAttendeeImage,
 } from "../Profile/PersonalProfile";
-import useEventStore from "@/stores/eventStore";
+import { AttendBtn } from "./AttendBtn";
+import { calculateTimeRemaining } from "@/lib/utils";
 
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
-  const [attendanceStatus, setAttendanceStatus] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingResponseType, setPendingResponseType] = useState(null);
   const user = useAuthStore(state => state.user);
+  const [attendanceStatus, setAttendanceStatus] = useState(null);
   const navigate = useNavigate();
   const [loadingResponseType, setLoadingResponseType] = useState(null);
   const profilePic = getProfilePicture();
   const attendeeImage = setAttendeeImage();
 
-  // const {eventId} = useParams()
+  // Get description text
+  const description =
+    eventDetails?.description?.S || "No description available for this event.";
 
-  const toggleReadMore = () => {
-    setIsExpanded(prev => !prev);
-  };
+  // Shortened text
+  const shortText = description.slice(0, 150);
 
+  // Attendees
+  const attendees = eventDetails?.attendees.L.filter(
+    attendee => attendee.M.responseType.S === "yes"
+  );
+
+  // Time remaining
+  const timeRemaining = calculateTimeRemaining(eventDetails?.date.S);
+
+  // Toggle function
+  const toggleReadMore = () => setIsExpanded(s => !s);
+
+  // Handles user confirming attendance
   const handleConfirmAttendance = async responseType => {
+    // If no user is logged in, show the login modal and remember which response they tried
     if (!user || !user.userId) {
       setPendingResponseType(responseType);
       setShowLoginModal(true);
       return;
     }
 
+    // Indicate which response type is currently loading (for UI feedback)
     setLoadingResponseType(responseType);
+
     try {
+      // Attempt to confirm attendance
       await confirmAttendance(responseType);
     } catch (error) {
-      // console.error("Confirm attendance error:", error.response?.data || error);
+      // If something goes wrong, show a readable error message
       setError(error.response?.data?.error || "Failed to confirm attendance");
     } finally {
+      // Stop loading indicator regardless of success or failure
       setLoadingResponseType(null);
     }
   };
 
+  // Makes the actual API requests to confirm the user's attendance
   const confirmAttendance = async responseType => {
     try {
-      console.log("Confirming attendance for:", eventId);
+      // First, create a "share" entry for the event
       const shareResponse = await API.post(`/shares`, { eventId });
-      console.log("Share created:", shareResponse.data);
 
+      // Extract the shareId from the response
       const shareId = shareResponse.data?.shareId;
       if (!shareId) throw new Error("shareId not returned");
 
+      // Then confirm attendance for that specific share
       await API.post(`/shares/${shareId}/confirm`, { responseType });
 
+      // Update the UI to reflect the new attendance status
       setAttendanceStatus(responseType);
+
+      if (responseType === "yes") {
+        setEventDetails(prev => {
+          // Check if user already in attendees
+          const existingIndex = prev.attendees.L.findIndex(
+            attendee => attendee.M.userId.S === user.userId
+          );
+
+          // Add new attendee
+          const newAttendee = {
+            M: {
+              userId: { S: user.userId },
+              email: { S: user.email },
+              name: { S: `${user.firstName} ${user.lastName}` },
+              responseType: { S: "yes" },
+              respondedAt: { S: new Date().toISOString() },
+            },
+          };
+
+          let updatedAttendees;
+
+          if (existingIndex !== -1) {
+            // Replace existing attendee
+            updatedAttendees = [...prev.attendees.L];
+            updatedAttendees[existingIndex] = newAttendee;
+          } else {
+            // Add new attendee
+            updatedAttendees = [...prev.attendees.L, newAttendee];
+          }
+
+          return {
+            ...prev,
+            attendees: {
+              ...prev.attendees,
+              L: updatedAttendees,
+            },
+          };
+        });
+      }
     } catch (err) {
-      console.error("Confirm attendance error:", err.response?.data || err);
+      // Handle and display any errors from the API
       setError(err.response?.data?.error || "Failed to confirm attendance");
     }
   };
@@ -80,19 +137,34 @@ export default function EventInfo({ eventId }) {
         const response = await API.get(`/events/${eventId}`);
         const event = response.data;
 
-        // check if current user is already attending event
-        const attendees = event.attendees?.L || [];
-        const matchedAttendee = attendees.find(
-          attendee => attendee.M?.userId.S === user.userId
-        );
-
-        if (matchedAttendee) {
-          // set status directly based on responseType
-          setAttendanceStatus(matchedAttendee.M?.responseType.S || null);
+        // Check if user is creator or if user has responded and set attendance status
+        if (user && event) {
+          console.log(user);
+          if (user.userId === event.creator.M.id.S) setAttendanceStatus("yes");
+          const eventAttendees = event.attendees.L;
+          // Find the "yes" first
+          let matchAttendee = eventAttendees.find(
+            attendee =>
+              attendee.M.userId.S === user.userId &&
+              attendee.M.responseType.S === "yes"
+          );
+          // Set attendance status
+          if (matchAttendee) {
+            setAttendanceStatus("yes");
+          } else {
+            // If no "yes" found, fall back to "maybe"
+            matchAttendee = eventAttendees.find(
+              attendee =>
+                attendee.M.userId.S === user.userId &&
+                attendee.M.responseType.S === "maybe"
+            );
+            if (matchAttendee) setAttendanceStatus("maybe");
+          }
         }
-
+        console.log(event);
         setEventDetails(event);
       } catch (err) {
+        console.log(err);
         setError(err.response?.data?.error || "Failed to load event details");
       } finally {
         setLoading(false);
@@ -102,14 +174,16 @@ export default function EventInfo({ eventId }) {
     fetchEventDetails();
   }, [eventId]);
 
+  // Loading event
   if (loading) {
     return (
-      <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3">
+      <div className="text-center flex-1 py-10 w-full md:w-[950px] flex flex-col items-center justify-center gap-3">
         <LoadingSpinner size={40} />
       </div>
     );
   }
 
+  // Error
   if (error) {
     return (
       <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3">
@@ -118,7 +192,7 @@ export default function EventInfo({ eventId }) {
     );
   }
 
-  //empty state
+  // Empty state
   if (!eventDetails) {
     return (
       <div className="text-center py-10 w-full md:w-[950px] h-[calc(100vh-132px)] flex flex-col items-center justify-center gap-3">
@@ -127,13 +201,13 @@ export default function EventInfo({ eventId }) {
     );
   }
 
-  // const imageUrl = import.meta.env.VITE_IMAGE_URL;
+  // Event image URL
   const imagePath = eventDetails?.imageKey?.S
     ? new URL(
         eventDetails.imageKey.S,
         import.meta.env.VITE_IMAGE_URL
       ).toString()
-    : "/events-modal.png"; // or some placeholder
+    : "/event-ph1.png"; // or some placeholder
 
   return (
     <div className="mt-4 flex flex-col md:flex-row gap-4 md:gap-8 w-full lg:w-[950px] mx-auto">
@@ -142,33 +216,26 @@ export default function EventInfo({ eventId }) {
         <div>
           <img
             src={imagePath}
-            // src={eventDetails?.imageKey?.S}
             alt="Event-poster"
             className="rounded-3xl size-[306px] lg:w-[343px] lg:h-[323px] mx-auto"
           />
-          {/* <div className="absolute hidden top-[303px] left-[302px] rounded-full lg:flex items-center justify-center h-8 w-8 bg-white">
-            <img src="/image.svg" className="z-10" alt="Image" />
-          </div> */}
         </div>
 
         <section className="grid gap-4">
           <div className="gap-1 grid">
             <ModalText img="/crown.svg" text="hosts" />
-            <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70 justify-center items-center">
-              {eventDetails.creator?.M && (
-                <>
-                  <img
-                    // src="/tiny-profile.png"
-                    src={profilePic}
-                    alt="Host"
-                    className="w-6 h-6 rounded-full border border-white"
-                  />
-                  <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
-                    {eventDetails.hostName?.S || eventDetails.creator.M.name?.S}
-                  </h6>
-                </>
-              )}
-            </div>
+            {(eventDetails.creator?.M || eventDetails.hostName?.S) && (
+              <div className="rounded-[12px] p-2 flex gap-1 border-[2px] border-white bg-white/70 justify-center items-center">
+                <img
+                  src={profilePic}
+                  alt="Host"
+                  className="w-6 h-6 rounded-full border border-white"
+                />
+                <h6 className="satoshi text-[16px] font-[500] capitalize w-full text-left">
+                  {eventDetails.hostName?.S || eventDetails.creator.M.name?.S}
+                </h6>
+              </div>
+            )}
           </div>
 
           <div>
@@ -180,7 +247,7 @@ export default function EventInfo({ eventId }) {
                 <SiteBtn
                   name="manage"
                   colorPadding="py-2 px-3 bg-[#AEFC40]"
-                  onclick={() => navigate("/manage-event/" + eventId)}
+                  onclick={() => navigate(`/manage-event/${eventId}`)}
                 />
               </div>
             )}
@@ -199,6 +266,7 @@ export default function EventInfo({ eventId }) {
               img="/timer.svg"
               text={`${eventDetails?.date?.S} - ${eventDetails?.timeFrom?.S}`}
             />
+            {/* Event categories */}
             <div className="w-full min-w-[100px] h-fit flex gap-2">
               {eventDetails.categories?.L?.map((category, index) => (
                 <EventCategories
@@ -213,45 +281,36 @@ export default function EventInfo({ eventId }) {
               ))}
             </div>
           </div>
+          {/* Share event */}
           <div className="hidden md:flex">
-            {/* <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full"> */}
             <ShareEvent eventId={eventId} className={`bg-white`} />
-            {/* </div> */}
-
-            {/* <DownloadEvent /> */}
           </div>
         </div>
 
-        {eventDetails.description?.S && (
+        {/* Event description */}
+        {description && (
           <div className="w-full h-fit grid gap-2">
             <ModalText img="/note-text.svg" text="about event" />
-
-            <h4
-              className={`${
-                isExpanded ? "" : "line-clamp-3"
-              } text-[#011F0F] font-[500] text-[16px] leading-[24px] text-left satoshi transition-all duration-300 ease-in-out`}
-            >
-              {eventDetails.description?.S ||
-                "No description available for this event."}
+            <h4 className="text-[#011F0F] font-[500] text-[16px] break-all whitespace-normal leading-[24px] text-left satoshi transition-all duration-300 ease-in-out">
+              {isExpanded ? description : shortText}
+              {!isExpanded && description.length > 150 ? "..." : ""}
             </h4>
 
-            {/* ✅ Show the toggle button only if description is long */}
-            {eventDetails.description?.S &&
-              eventDetails.description.S.length > 150 && (
-                <button
-                  onClick={toggleReadMore}
-                  className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
-                >
-                  {isExpanded ? "Show less" : "Read more"}
-                </button>
-              )}
+            {/* Show the toggle button only if description is long */}
+            {description.length > 150 && (
+              <button
+                onClick={toggleReadMore}
+                className="text-[#7A60BF] font-[700] text-[16px] leading-[24px] satoshi w-fit"
+              >
+                {isExpanded ? "Show less" : "Read more"}
+              </button>
+            )}
           </div>
         )}
 
-        {/* chip in */}
+        {/* Chip in */}
         <div className="flex flex-col gap-2">
           <ModalText img="/money-add.svg" text="chip in" />
-
           {eventDetails?.chipInType?.S === "FIXED" ? (
             <div className="rounded-[12px] p-4 border-[2px] border-white text-left bg-white/70">
               <p className="text-[#8A9191]">{eventDetails?.chipInType?.S}</p>
@@ -267,30 +326,24 @@ export default function EventInfo({ eventId }) {
             </div>
           ) : (
             <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-              <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi ">
+              <p className="capitalize text-[#8A9191] font-[500] text-[14px] satoshi">
                 {eventDetails?.chipInType?.S || "Free event"}
               </p>
             </div>
           )}
         </div>
 
-        {/* attendance confirmation section */}
+        {/* Attendance confirmation section */}
         <div>
           {!attendanceStatus && (
             <div className="flex gap-4 items-center">
-              <Attendance
-                text="Not sure"
-                img="/timer-modal.svg"
-                textcolor="#7A60BF"
-                texthover="#C7BAEA"
+              <AttendBtn
+                type="maybe"
                 loading={loadingResponseType === "maybe"}
                 onClick={() => handleConfirmAttendance("maybe")}
               />
-              <Attendance
-                text="Going"
-                img="/tick-circle-green.svg"
-                textcolor="#61B42D"
-                texthover="#BEFD66"
+              <AttendBtn
+                type="yes"
                 loading={loadingResponseType === "yes"}
                 onClick={() =>
                   handleConfirmAttendance("yes") &&
@@ -317,49 +370,36 @@ export default function EventInfo({ eventId }) {
 
                     {eventDetails.date?.S && (
                       <div className="h-fit w-fit min-w-[100px] rounded-[20px] p-2 bg-[#866AD2]/10 satoshi text-[10px] font-[500] leading-[14px]">
-                        Starting in{" "}
                         <span className="text-[#866AD2]">
-                          {calculateTimeRemaining(eventDetails.date.S)}
+                          {new Date(eventDetails.date.S) > new Date() && (
+                            <span className="text-black">Starting in </span>
+                          )}
+                          {timeRemaining}
                         </span>
-                        {/* <p>{calculateTimeRemainingDetailed(eventDetails.date.S)}</p> */}
                       </div>
                     )}
                   </div>
-
                   <div className="flex justify-between items-center">
                     <h5 className="text-[14px] font-[700] leading-[20px] text-black">
                       Invite a friend too 👉
                     </h5>
-                    {/* <ModalBtn
-                      onClick={() => console.log("Invite a friend")}
-                      bgcolor="bg-[#E6F2F3]"
-                      image="/send.svg"
-                      textcolor="text-black"
-                      text="Invite a Friend"
-                    /> */}
-                    {/* <div className="w-fit rounded-[60px] bg-[#E6F2F3] flex items-center justify-center p-2.5 gap-2"> */}
                     <ShareEvent
                       eventId={eventId}
                       text={"Invite a friend"}
                       className={"bg-[#E6F2F3] paytone"}
                     />
-                    {/* <p className="text-sm font-bold">Invite a Friend</p> */}
-                    {/* </div> */}
                   </div>
                 </div>
               )}
-
               {attendanceStatus === "maybe" && (
                 <div className="rounded-[12px] p-4 grid gap-4 border-[2px] border-white text-left bg-white/70">
-                  <>
-                    <h5 className="text-[16px] font-[700] leading-[24px] text-[#001010]">
-                      👀 Got it you're thinking about it!
-                    </h5>
-                    <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
-                      We'll remind you as the date gets closer, just in case you
-                      decide to come.
-                    </p>
-                  </>
+                  <h5 className="text-[16px] font-[700] leading-[24px] text-[#001010]">
+                    👀 Got it you're thinking about it!
+                  </h5>
+                  <p className="text-[14px] font-[500] leading-[20px] text-[#8A9191]">
+                    We'll remind you as the date gets closer, just in case you
+                    decide to come.
+                  </p>
                   <div className="flex items-center gap-4">
                     <div className="w-full">
                       <ShareEvent
@@ -367,29 +407,18 @@ export default function EventInfo({ eventId }) {
                         text={"Invite a friend"}
                         className={`bg-[#E6F2F3] w-full text-center paytone`}
                       />
-                      {/* <p className="paytone">Invite a Friend</p> */}
-
-                      {/* <ModalBtn
-                        // onClick={() => console.log("Invite a friend")}
-                        bgcolor="bg-[#E6F2F3]"
-                        image="/send.svg"
-                        textcolor="text-black"
-                        text="Invite a Friend"
-                        className="w-full"
-                      /> */}
                     </div>
 
-                    
-                      <ModalBtn
-                        onClick={() =>
-                          handleConfirmAttendance("yes") &&
-                          useEventStore.getState().setShouldRefetch(true)
-                        }
-                        bgcolor="bg-white"
-                        image="/tick-circle.svg"
-                        textcolor="text-[#61B42D]"
-                        text="Change to Going"
-                      />
+                    <ModalBtn
+                      onClick={() =>
+                        handleConfirmAttendance("yes") &&
+                        useEventStore.getState().setShouldRefetch(true)
+                      }
+                      bgcolor="bg-white"
+                      image="/tick-circle.svg"
+                      textcolor="text-[#61B42D]"
+                      text="Change to Going"
+                    />
                   </div>
                 </div>
               )}
@@ -420,129 +449,43 @@ export default function EventInfo({ eventId }) {
         </div>
 
         {/* Attendees Section */}
-        {eventDetails.attendees?.L &&
-          // eventDetails.attendees?.L?.M?.responseType === "yes" &&
-          eventDetails.attendees.L.length > 0 && (
-            <div className="grid gap-2 w-full h-fit">
-              <ModalText
-                img="/crown.svg"
-                text={`going (${eventDetails.attendees.L.length})`}
-              />
-              <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
-                {eventDetails.attendees.L.map((attendee, index) => (
-                  <div
-                    key={index}
-                    className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-[#FFFFFE80]"
-                  >
-                    <img
-                      // src="/large-profile.jpg"
-                      src={attendeeImage}
-                      alt="Attendee"
-                      className="size-[66px] rounded-full"
-                    />
+        {attendees && attendees.length > 0 && (
+          <div className="grid gap-2 w-full h-fit">
+            <ModalText img="/crown.svg" text={`going (${attendees.length})`} />
+            <div className="flex gap-4 w-full h-fit overflow-x-auto scrollbar-hide">
+              {attendees.map((attendee, index) => (
+                <div
+                  key={index}
+                  className="rounded-[12px] p-5 flex flex-col gap-1 border-[2px] border-white justify-center items-center bg-[#FFFFFE80]"
+                >
+                  <img
+                    src={attendeeImage}
+                    alt="Attendee"
+                    className="size-[66px] rounded-full"
+                  />
 
-                    {/* <div className="size-[66px] rounded-full bg-[#077D8A] flex items-center justify-center">
-                      <p className="text-sm font-[700] leading-[18px] text-white capitalize">
-                        {getInitials(attendee.M?.name?.S)}
-                      </p>
-                    </div> */}
-
-                    <h6 className="h-fit w-full min-w-[120px] text-center capitalize satoshi font-[700] text-[12px] leading-[18px]">
-                      {attendee.M?.name?.S}
-                    </h6>
-                  </div>
-                ))}
-              </div>
+                  <h6 className="h-fit w-full min-w-[120px] text-center capitalize satoshi font-[700] text-[12px] leading-[18px]">
+                    {attendee.M?.name?.S}
+                  </h6>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+        )}
       </section>
 
+      {/* Toggle login modal */}
       {showLoginModal && (
         <LoginModal
           onSuccess={async () => {
-            setShowLoginModal(false);
             if (pendingResponseType) {
               await confirmAttendance(pendingResponseType);
               setPendingResponseType(null);
             }
+            setShowLoginModal(false);
           }}
         />
       )}
     </div>
   );
 }
-
-// Helper function to calculate time remaining
-function calculateTimeRemaining(eventDate) {
-  const now = new Date();
-  const eventTime = new Date(eventDate);
-
-  // Handle invalid date
-  if (isNaN(eventTime)) return "Invalid date";
-
-  const diff = eventTime - now;
-
-  if (diff <= 0) return "Event has started";
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-  // More granular display logic
-  if (days > 0) {
-    return hours > 0 ? `${days}d ${hours}h` : `${days}d`;
-  } else if (hours > 0) {
-    return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
-  } else if (minutes > 0) {
-    return `${minutes}m`;
-  } else {
-    return "Starting soon";
-  }
-}
-
-// Alternative version with more detailed formatting options
-function calculateTimeRemainingDetailed(eventDate, options = {}) {
-  const {
-    showMinutes = false,
-    shortFormat = true,
-    includeSeconds = false,
-  } = options;
-
-  const now = new Date();
-  const eventTime = new Date(eventDate);
-
-  if (isNaN(eventTime)) return "Invalid date";
-
-  const diff = eventTime - now;
-
-  if (diff <= 0) return "Event has started";
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-  const units = shortFormat
-    ? { d: "days", h: "hours", m: "minutes", s: "seconds" }
-    : { d: "d", h: "h", m: "m", s: "s" };
-
-  let result = [];
-
-  if (days > 0) result.push(`${days}${units.d}`);
-  if (hours > 0) result.push(`${hours}${units.h}`);
-  if (showMinutes && minutes > 0) result.push(`${minutes}${units.m}`);
-  if (includeSeconds && seconds > 0) result.push(`${seconds}${units.s}`);
-
-  return result.length > 0 ? result.join(" ") : "Starting soon";
-}
-
-// helper function to get attendees initials
-// function getInitials(fullName) {
-//   if (!fullName) return "";
-
-//   const parts = fullName.trim().split(" ");
-//   const firstInitial = parts[0]?.charAt(0).toUpperCase() || "";
-//   const secondInitial = parts[1]?.charAt(0).toUpperCase() || "";
-
-//   return `${firstInitial}${secondInitial}`;
-// }
