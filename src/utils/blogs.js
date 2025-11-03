@@ -83,13 +83,13 @@ export const blogPosts = [
 ];
 
 // Helper function to get a blog post by ID
-export const getBlogPostById = (id) => {
-  return blogPosts.find((post) => post.id === parseInt(id));
+export const getBlogPostById = id => {
+  return blogPosts.find(post => post.id === parseInt(id));
 };
 
 // Helper function to get related posts
 export const getRelatedPosts = (currentPostId, limit = 3) => {
   return blogPosts
-    .filter((post) => post.id !== parseInt(currentPostId))
+    .filter(post => post.id !== parseInt(currentPostId))
     .slice(0, limit);
 };

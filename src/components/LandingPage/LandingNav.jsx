@@ -1,77 +1,88 @@
-import React, { useState, useCallback, useMemo } from "react";
-import Button from "../Layout-conponents/Button";
-import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
-import { motion} from "framer-motion";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
+import { motion } from "framer-motion";
+import React, { useCallback, useMemo, useState } from "react";
+import { NavLink, useNavigate } from "react-router";
+import Button from "../Layout-conponents/Button";
 
 const NAV_ITEMS = [
-  { id: 0, name: "how it works" },
-  { id: 1, name: "pricing" },
-  { id: 2, name: "blog" },
-  { id: 3, name: "about us" },
+  { id: 0, name: "how it works", path: "/" },
+  { id: 1, name: "pricing", path: "/pricing" },
+  { id: 2, name: "blog", path: "/blog" },
+  { id: 3, name: "about us", path: "/about" },
 ];
 
 const navVariants = {
   initial: { scale: 0, opacity: 0 },
-  animate: { 
-    scale: [0, 1], 
+  animate: {
+    scale: [0, 1],
     opacity: [0, 1],
-    transition: { duration: 0.5, ease: "easeInOut", times: [0, 1] }
-  }
+    transition: { duration: 0.5, ease: "easeInOut", times: [0, 1] },
+  },
 };
 
-const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
+const LandingNav = React.memo(() => {
+  // Menu open state
   const [navOpen, setNavOpen] = useState(false);
-  
+  // Disable scroll if nav is open
   useDisableScroll(navOpen);
-
-  // Memoize callbacks to prevent unnecessary re-renders
-  const handleNavItemClick = useCallback((itemId) => {
-    setActiveItem(itemId);
-    setNavOpen(false);
-  }, [setActiveItem]);
-
+  // Navigate hook
+  const navigate = useNavigate();
+  // Open menu
   const handleMenuOpen = useCallback(() => setNavOpen(true), []);
+  // Close menu
   const handleMenuClose = useCallback(() => setNavOpen(false), []);
+  // Navigate to create event page
   const handleCreateEvent = useCallback(() => {
+    navigate("/create-event");
     setNavOpen(false);
-    if (onAuth) onAuth();
-  }, [onAuth]);
-  
-  // Prevent event bubbling on mobile nav
-  const handleNavClick = useCallback((e) => e.stopPropagation(), []);
+  }, []);
 
   // Memoize the desktop navigation items to prevent re-rendering
-  const desktopNavItems = useMemo(() => 
-    NAV_ITEMS.map((item) => (
-      <li key={item.id}>
-        <button
-          className={`font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${
-            activeItem === item.id ? "text-[#AEFC40]" : "text-[#B0BAB5]"
-          }`}
-          onClick={() => setActiveItem(item.id)}
-        >
-          {item.name}
-        </button>
-      </li>
-    )), [activeItem, setActiveItem]);
+  const desktopNavItems = useMemo(
+    () =>
+      NAV_ITEMS.map(item => (
+        <li key={item.id}>
+          <NavLink
+            to={item.path}
+            className={({ isActive }) =>
+              `font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${
+                isActive ? "text-[#AEFC40]" : "text-[#B0BAB5]"
+              }`
+            }
+            onClick={handleMenuClose}
+          >
+            {item.name}
+          </NavLink>
+        </li>
+      )),
+    []
+  );
 
   // Memoize mobile navigation items
-  const mobileNavItems = useMemo(() =>
-    NAV_ITEMS.map((item) => (
-      <li key={item.id}>
-        <button
-          className="w-full h-fit py-4 paytone capitalize font-medium text-[20px] leading-6 text-white cursor-pointer text-left"
-          onClick={() => handleNavItemClick(item.id)}
-        >
-          {item.name}
-        </button>
-      </li>
-    )), [handleNavItemClick]);
+  const mobileNavItems = useMemo(
+    () =>
+      NAV_ITEMS.map(item => (
+        <li key={item.id}>
+          <NavLink
+            to={item.path}
+            onClick={handleMenuClose}
+            className={({ isActive }) =>
+              `w-full h-fit flex py-4 paytone capitalize font-medium text-[20px] leading-6 cursor-pointer text-left transition-colors duration-200 ${
+                isActive ? "text-[#AEFC40]" : "text-white"
+              }`
+            }
+          >
+            {item.name}
+          </NavLink>
+        </li>
+      )),
+    []
+  );
 
   // Memoize mobile nav class to prevent string concatenation on each render
-  const mobileNavClass = useMemo(() => 
-    `fixed inset-4 bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 pr-4 pl-6 flex-col rounded-4xl justify-between z-[100] max-h-[calc(100vh-2rem)] 
+  const mobileNavClass = useMemo(
+    () =>
+      `fixed top-3 inset-4 w-[calc(100%-32px)] left-1/2 max-w-[712px] -translate-x-1/2 bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 px-4 flex-col rounded-4xl justify-between z-[100] max-h-[calc(100vh-2rem)] 
    ${navOpen ? "flex" : "hidden"}`,
     [navOpen]
   );
@@ -79,25 +90,35 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
   return (
     <>
       <motion.nav
-        className="flex items-center md:size-fit h-fit w-[90%] rounded-4xl top-3 py-2 md:pl-6 pl-4 pr-4 md:gap-[60px] justify-between bg-[#011F0F] backdrop-blur-2xl satoshi z-100 fixed"
+        className="flex items-center h-fit w-[calc(100%-32px)] max-w-[712px] rounded-4xl top-3 py-[7px] md:pl-6 pl-4 pr-4 md:gap-[60px] justify-between bg-[#011F0F] backdrop-blur-2xl satoshi z-100 fixed"
         variants={navVariants}
         initial="initial"
         animate="animate"
       >
         <div className="inline-flex gap-[10px] items-center w-fit">
-          <img src="/meetroLogo.svg" alt="Meetro Logo" loading="lazy" />
-          <div className="bg-linear-to-r from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] leading-tight size-fit capitalize p-1 rounded-2xl text-[#011F0F]">
-            <p>Beta</p>
-          </div>
+          <img
+            src="/meetroLogo.svg"
+            alt="Meetro Logo"
+            loading="lazy"
+            className="w-[97px]"
+          />
+          <span className="bg-linear-to-r satoshi flex justify-center items-center from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] min-w-[26px] size-fit capitalize px-1 h-[14px] leading-[14px] rounded-2xl text-[#011F0F]">
+            Beta
+          </span>
         </div>
 
         <div className="w-full flex justify-end items-center gap-4">
-          <ul className="md:flex size-fit gap-4 hidden">
+          <ul className="md:flex flex-1 justify-center size-fit gap-4 hidden">
             {desktopNavItems}
           </ul>
-  
+
           <div className="flex justify-center items-center gap-4">
-            <Button name="create event" color="bg-[#AFFC41]" onclick={onAuth} />
+            <Button
+              name="create event"
+              color="bg-[#AFFC41]"
+              className="!px-3 min-[400px]:!px-6"
+              onclick={handleCreateEvent}
+            />
             <button onClick={handleMenuOpen} className="md:hidden size-fit">
               <img src="/v2menu.svg" alt="Open menu" loading="lazy" />
             </button>
@@ -110,28 +131,36 @@ const LandingNav = React.memo(({ activeItem, setActiveItem, onAuth }) => {
           className={mobileNavClass}
           role="navigation"
           aria-label="Mobile navigation"
-          onClick={handleNavClick}
+          onClick={handleMenuClose}
         >
           <div className="w-full flex flex-col gap-8 h-fit">
             <div className="flex w-full h-fit justify-between">
-              <img src="/meetroLogo.svg" alt="Meetro Logo" loading="lazy" />
+              <img
+                src="/meetroLogo.svg"
+                alt="Meetro Logo"
+                loading="lazy"
+                className="w-[97px]"
+              />
               <button
                 onClick={handleMenuClose}
                 className="size-fit rounded-4xl p-1 bg-[#344C3F]"
                 aria-label="Close navigation menu"
               >
-                <img src="/menu-active.svg" alt="" className="size-[24px]" loading="lazy" />
+                <img
+                  src="/menu-active.svg"
+                  alt=""
+                  className="size-[24px]"
+                  loading="lazy"
+                />
               </button>
             </div>
-            <ul className="flex flex-col h-fit w-full">
-              {mobileNavItems}
-            </ul>
+            <ul className="flex flex-col h-fit w-full">{mobileNavItems}</ul>
           </div>
-          <CreateEventBtn
-            onClick={handleCreateEvent}
-            bgcolor="bg-[#AEFC40]"
-            text="create event"
-            textcolor="text-[#011F0F]"
+          <Button
+            className="w-full"
+            name="create event"
+            color="bg-[#AFFC41]"
+            onclick={handleCreateEvent}
           />
         </nav>
       )}

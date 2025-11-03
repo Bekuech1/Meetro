@@ -11,7 +11,6 @@ import { useAuthStore } from "@/stores/useAuthStore";
 function Signup2() {
   const { setAccessToken, setUser, setRefreshToken, setIdToken } =
     useAuthStore();
-  // const setUser = useAuthStore((state) => state.setUser);
 
   const [formData, setFormData] = useState(() => {
     const data = JSON.parse(sessionStorage.getItem("signup"));
@@ -34,7 +33,6 @@ function Signup2() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const newForm = { ...formData };
     sessionStorage.setItem("signup", JSON.stringify(formData));
   }, [formData]);
 
@@ -46,7 +44,7 @@ function Signup2() {
       "w-full bg-[#011F0F] text-[#BEFD66] px-6 rounded-[60px] h-[36px]",
     onclick: handleSubmit,
     type: "submit",
-    isLoading: loading
+    isLoading: loading,
   };
 
   const forms = [
@@ -98,7 +96,7 @@ function Signup2() {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   }
 
   async function handleSubmit(e) {
@@ -107,13 +105,6 @@ function Signup2() {
     setLoading(true);
 
     let error = {};
-    // if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(formData.firstName)) {
-    //   error.firstName = "Enter a valid name";
-    // }
-
-    // if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(formData.lastName)) {
-    //   error.lastName = "Enter a valid name";
-    // }
 
     if (!formData?.firstName.trim()) {
       error.firstName = "First name is required";
@@ -163,10 +154,6 @@ function Signup2() {
         setRefreshToken(refreshToken);
         setIdToken(idToken);
 
-        // console.log("Signup response:", response.data);
-        // setToken(token);
-        // localStorage.setItem("token", token);
-
         const userResponse = await API.get("/profile", {
           headers: {
             Authorization: `Bearer ${idToken}`,
@@ -177,7 +164,7 @@ function Signup2() {
         navigate("/home");
       } catch (err) {
         const msg = err.response?.data?.error || "Signup failed";
-        setErrorMessages((prev) => ({ ...prev, email: msg }));
+        setErrorMessages(prev => ({ ...prev, email: msg }));
       } finally {
         setLoading(false);
       }
@@ -187,11 +174,12 @@ function Signup2() {
   }
 
   return (
-    <div>
+    <React.Fragment>
       <Layout
         text={text}
-        width={"w-[255px]  sm:w-[450px]"}
-        handleClick2={() => setShowOptions(true)}>
+        width={"w-[255px] sm:w-[450px]"}
+        handleClick2={() => setShowOptions(true)}
+      >
         <div className="sm:w-[312px] w-[343px] mb-12">
           <form onSubmit={handleSubmit}>
             {forms.map((form, index) => (
@@ -212,7 +200,7 @@ function Signup2() {
           onclick2={() => setShowOptions(false)}
         />
       )}
-    </div>
+    </React.Fragment>
   );
 }
 

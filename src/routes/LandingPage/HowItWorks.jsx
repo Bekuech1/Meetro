@@ -9,21 +9,19 @@ import Simple from "@/components/LandingPage/Simple";
 import LandingBlog from "@/components/LandingPage/LandingBlog";
 import JoinToday from "@/components/LandingPage/JoinToday";
 
-
-
-const HowItWorks = ( {onClick, goToBlog, openBlog} ) => {
+const HowItWorks = () => {
   return (
-    <>
-      <Hero onClick={onClick}/>
-      <Seamless onClick={onClick}/>
-      <Vibe onClick={onClick}/>
-      <Guests onClick={onClick}/>
-      <Smooth onClick={onClick}/>
-      <FutureFeatures onclick={onClick}/>
-      <Simple onClick={onClick}/>
-      <LandingBlog onClick={openBlog} goToBlog={goToBlog} />
-      <JoinToday onClick={onClick}/>
-    </>
+    <React.Fragment>
+      <Hero />
+      <Seamless />
+      <Vibe />
+      <Guests />
+      <Smooth />
+      <FutureFeatures />
+      <Simple />
+      <LandingBlog />
+      <JoinToday />
+    </React.Fragment>
   );
 };
 

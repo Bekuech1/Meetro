@@ -5,11 +5,11 @@ import PricingList from "@/components/LandingPage/PricingList";
 
 const Pricing = () => {
   return (
-    <>
+    <React.Fragment>
       <PricingList />
       <JoinToday />
       <FutureFeatures />
-    </>
+    </React.Fragment>
   );
 };
 

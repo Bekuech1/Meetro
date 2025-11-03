@@ -13,14 +13,14 @@ const Header = () => {
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
   const navigate = useNavigate();
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore(state => state.user);
+  const logout = useAuthStore(state => state.logout);
   const profilePic = getProfilePicture();
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
-  const toggleNotification = () => setIsNotificationOpen((prev) => !prev);
+  const toggleDropdown = () => setIsOpen(prev => !prev);
+  const toggleNotification = () => setIsNotificationOpen(prev => !prev);
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = event => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
@@ -67,8 +67,8 @@ const Header = () => {
     },
   ];
 
-  const myEventsTotal = useEventStore((state) => state.myEventsTotal);
-  const totalAttendees = useEventStore((state) => state.totalAttendees);
+  const myEventsTotal = useEventStore(state => state.myEventsTotal);
+  const totalAttendees = useEventStore(state => state.attendedEventsTotal);
 
   return (
     <header className="flex sm:px-8 sm:py-3 p-4 justify-between bg-[#011F0F] items-center z-20 sticky top-0 shadow-md w-full">
@@ -82,11 +82,10 @@ const Header = () => {
               className="sm:w-[30px] sm:h-8 w-5 h-4"
             />
           </button>
-          <div className="bg-linear-to-r from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] leading-tight size-fit capitalize p-1 rounded-2xl text-[#011F0F]">
-              <p>Beta</p>
-          </div>
+          <span className="bg-linear-to-r satoshi flex justify-center items-center from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] min-w-[26px] size-fit capitalize px-1 h-[14px] leading-[14px] rounded-2xl text-[#011F0F]">
+            Beta
+          </span>
         </div>
-        
 
         <div className="flex gap-1 py-1 px-2 h-fit w-fit">
           <img src="/ticket-star.svg" alt="My Events Icon" />

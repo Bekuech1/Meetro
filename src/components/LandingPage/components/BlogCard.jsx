@@ -1,15 +1,12 @@
-import React from "react";
+import { useNavigate } from "react-router";
 
-const BlogCard = ({ post, onClick, mobile }) => {
-  const handleCardClick = () => {
-    if (typeof onClick === "function") {
-      onClick(post.id);
-    }
-  };
+const BlogCard = ({ post, mobile }) => {
+  // Navigate hook
+  const navigate = useNavigate();
   return (
     <div
-      className={`lg:w-[416px] ${mobile} h-fit grid gap-6`}
-      onClick={handleCardClick}
+      className={`lg:w-[416px] cursor-pointer ${mobile} h-fit grid gap-6`}
+      onClick={() => navigate(`/blog/${post.id}`)}
     >
       <img
         src={post.image || "/blog-placeholder.png"}
@@ -37,12 +34,11 @@ const BlogCard = ({ post, onClick, mobile }) => {
         <div className="w-full h-fit items-center justify-between flex">
           <button
             className="text-[14px] leading-5 text-[#7A60BF] font-[700]"
-            onClick={handleCardClick}
             aria-label="Read more"
           >
             Read More
           </button>
-          <button onClick={handleCardClick} aria-label="Open post">
+          <button aria-label="Open post">
             <img src="/blog-arrow.svg" alt="" />
           </button>
         </div>
