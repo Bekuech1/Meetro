@@ -2,6 +2,8 @@ import { create } from "zustand";
 import API from "@/lib/axios";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+const CACHE_EXPIRY_MINUTES = 5; // ⏳ set expiry time here
+
 const useEventStore = create(
   persist(
     (set, get) => ({
@@ -19,14 +21,24 @@ const useEventStore = create(
       attendedEventsTotal: 0,
       shouldRefetch: false,
 
+      lastFetched: null, // 🕒 store timestamp of last fetch
+
       setShouldRefetch: value => set({ shouldRefetch: value }),
       setEvents: events => set({ myEvents: events }),
 
+      isCacheExpired: () => {
+        const { lastFetched } = get();
+        if (!lastFetched) return true;
+        const now = Date.now();
+        const diffMins = (now - lastFetched) / (1000 * 60);
+        return diffMins >= CACHE_EXPIRY_MINUTES;
+      },
+
       fetchEvents: async () => {
-        const { myEvents, shouldRefetch } = get();
+        const { myEvents, shouldRefetch, isCacheExpired } = get();
 
         // only skip if we *already have events in memory* and no refetch
-        if (myEvents.length > 0 && !shouldRefetch) {
+        if (myEvents.length > 0 && !shouldRefetch && !isCacheExpired()) {
           return myEvents;
         }
 
@@ -43,6 +55,7 @@ const useEventStore = create(
             loadingMyEvents: false,
             error: null,
             shouldRefetch: false,
+            lastFetched: Date.now(),
           });
 
           return events;
@@ -58,8 +71,8 @@ const useEventStore = create(
       },
 
       fetchAttendedEvents: async () => {
-        const { attendedEvents, shouldRefetch } = get();
-        if (attendedEvents.length > 0 && !shouldRefetch) {
+        const { attendedEvents, shouldRefetch, isCacheExpired } = get();
+        if (attendedEvents.length > 0 && !shouldRefetch && !isCacheExpired()) {
           return attendedEvents;
         }
 
@@ -67,14 +80,17 @@ const useEventStore = create(
 
         try {
           const res = await API.get("/attended-events");
-          const { events = [], total = 0 } = res.data;
+          const { events = [] } = res.data;
 
           set({
             attendedEvents: events,
-            attendedEventsTotal: total,
+            attendedEventsTotal: events.filter(
+              event => event.response === "yes"
+            ).length,
             loadingAttendedEvents: false,
             error: null,
             shouldRefetch: false,
+            lastFetched: Date.now(),
           });
 
           return events;
@@ -121,6 +137,7 @@ const useEventStore = create(
         myEventsTotal: state.myEventsTotal,
         totalAttendees: state.totalAttendees,
         attendedEventsTotal: state.attendedEventsTotal,
+        lastFetched: state.lastFetched, // persist the timestamp
       }),
     }
   )

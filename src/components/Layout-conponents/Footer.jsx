@@ -4,27 +4,47 @@ import Legal from "./Legal";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
 
 const SOCIAL_LINKS = [
-  { name: 'instagram', icon: '/ig', label: 'Instagram', url: 'https://instagram.com/meetro.live' },
-  { name: 'twitter', icon: '/x', label: 'Twitter', url: 'https://twitter.com/meetro.live' },
-  { name: 'facebook', icon: '/fb', label: 'Facebook', url: 'https://facebook.com/meetro.live' },
-  { name: 'linkedin', icon: '/in', label: 'LinkedIn', url: 'https://linkedin.com/company/meetro' }
+  {
+    name: "instagram",
+    icon: "/ig",
+    label: "Instagram",
+    url: "https://instagram.com/meetro.live",
+  },
+  {
+    name: "twitter",
+    icon: "/x",
+    label: "Twitter",
+    url: "https://twitter.com/meetro.live",
+  },
+  {
+    name: "facebook",
+    icon: "/fb",
+    label: "Facebook",
+    url: "https://facebook.com/meetro.live",
+  },
+  {
+    name: "linkedin",
+    icon: "/in",
+    label: "LinkedIn",
+    url: "https://linkedin.com/company/meetro",
+  },
 ];
 
 const LEGAL_LINKS = [
-  { key: 'Terms', label: 'Terms of Service' },
-  { key: 'Privacy', label: 'Privacy Policy' },
-  { key: 'Data', label: 'Data Policy' },
-  { key: 'Cookies', label: 'Cookies' }
+  { key: "Terms", label: "Terms of Service" },
+  { key: "Privacy", label: "Privacy Policy" },
+  { key: "Data", label: "Data Policy" },
+  { key: "Cookies", label: "Cookies" },
 ];
 
-const Footer = ({ onclick }) => {
+const Footer = () => {
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [activeLegalComponent, setActiveLegalComponent] = useState("");
   const [hoveredSocial, setHoveredSocial] = useState(null);
 
   useDisableScroll(isLegalOpen);
 
-  const openLegal = useCallback((component) => {
+  const openLegal = useCallback(component => {
     setActiveLegalComponent(component);
     setIsLegalOpen(true);
   }, []);
@@ -39,33 +59,37 @@ const Footer = ({ onclick }) => {
   }, []);
 
   const handleKeyPress = useCallback((event, action) => {
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       action();
     }
   }, []);
 
   useEffect(() => {
-    const handleEscape = (event) => {
-      if (event.key === 'Escape' && isLegalOpen) {
+    const handleEscape = event => {
+      if (event.key === "Escape" && isLegalOpen) {
         closeLegal();
       }
     };
 
     if (isLegalOpen) {
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
     }
   }, [isLegalOpen, closeLegal]);
 
   return (
-    <footer className="bg-[#01160B] md:px-[60px] px-4 py-[64px]" id="footer" role="contentinfo">
+    <footer
+      className="bg-[#01160B] md:px-[60px] px-4 py-[64px]"
+      id="footer"
+      role="contentinfo"
+    >
       <div className="grid md:flex border-b border-white/10 pb-10 gap-[40px] md:justify-between">
         {/* Brand Section */}
         <div className="grid gap-6 h-fit w-fit mx-auto md:mx-0">
-          <img 
-            src="/meetroLogo.svg" 
-            alt="Meetro Logo" 
+          <img
+            src="/meetroLogo.svg"
+            alt="Meetro Logo"
             className="mx-auto md:mx-0"
             width="120"
             height="40"
@@ -77,9 +101,12 @@ const Footer = ({ onclick }) => {
           >
             connect@Meetro.live
           </a>
-          
+
           {/* Social Media Links */}
-          <nav className="size-fit flex items-center gap-3 mx-auto md:mx-0" aria-label="Social media links">
+          <nav
+            className="size-fit flex items-center gap-3 mx-auto md:mx-0"
+            aria-label="Social media links"
+          >
             {SOCIAL_LINKS.map(({ name, icon, label, url }) => (
               <a
                 key={name}
@@ -94,7 +121,11 @@ const Footer = ({ onclick }) => {
                 aria-label={`Follow us on ${label}`}
               >
                 <img
-                  src={hoveredSocial === name ? `${icon}-color.svg` : `${icon}-gray.svg`}
+                  src={
+                    hoveredSocial === name
+                      ? `${icon}-color.svg`
+                      : `${icon}-gray.svg`
+                  }
                   className="size-[22px] transition-all duration-200"
                   alt=""
                   loading="lazy"
@@ -128,15 +159,18 @@ const Footer = ({ onclick }) => {
         <p className="md:text-[14px] font-[500] md:leading-[20px] text-[10px] leading-[14px] text-[#B0B5B5] mx-auto md:mx-0 satoshi">
           © {new Date().getFullYear()} Meetro All rights reserved
         </p>
-        
+
         {/* Legal Links */}
-        <nav className="flex md:gap-6 gap-2 mx-auto md:mx-0" aria-label="Legal information">
+        <nav
+          className="flex md:gap-6 gap-2 mx-auto md:mx-0"
+          aria-label="Legal information"
+        >
           {LEGAL_LINKS.map(({ key, label }) => (
             <button
               key={key}
               className="md:text-[14px] font-[500] md:leading-[20px] text-[10px] leading-[14px] text-[#B0B5B5] capitalize satoshi cursor-pointer hover:text-white transition-colors duration-200 rounded px-1 py-0.5"
               onClick={() => openLegal(key)}
-              onKeyDown={(e) => handleKeyPress(e, () => openLegal(key))}
+              onKeyDown={e => handleKeyPress(e, () => openLegal(key))}
               aria-label={`Open ${label}`}
               type="button"
             >
@@ -145,18 +179,18 @@ const Footer = ({ onclick }) => {
           ))}
         </nav>
       </div>
-      
-      <img 
-        src="/meetroFooter.svg" 
-        alt="Meetro footer decoration" 
+
+      <img
+        src="/meetroFooter.svg"
+        alt="Meetro footer decoration"
         className="w-full"
         loading="lazy"
       />
-      
+
       {/* Legal Modal */}
       {isLegalOpen && (
-        <Legal 
-          closeLegal={closeLegal} 
+        <Legal
+          closeLegal={closeLegal}
           label={activeLegalComponent}
           isOpen={isLegalOpen}
         />

@@ -24,7 +24,6 @@ button {
   display: none; /* Chrome, Safari, Opera */
 }
 
-
 @keyframes slideUp {
   from {
     transform: translateY(100%);
