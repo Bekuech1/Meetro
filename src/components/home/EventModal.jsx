@@ -1,7 +1,8 @@
 import EventInfo from "../event-dashboard/EventInfo";
 import ShareEvent from "../event-dashboard/ShareEvent";
 import { createPortal } from "react-dom";
-import { memo, useCallback } from "react";
+import React, { memo, useCallback } from "react";
+import { LoadingSpinner } from "../create-event/Private";
 
 const EventModal = memo(({ eventId, closeModal }) => {
   const handleCloseClick = useCallback(
@@ -70,27 +71,36 @@ export const EventCategories = memo(({ borderBgColor, text }) => {
   );
 });
 
-export const ModalBtn = memo(({ onClick, bgcolor, image, textcolor, text }) => {
-  const handleClick = useCallback(
-    e => {
-      e.stopPropagation();
-      onClick?.(e);
-    },
-    [onClick]
-  );
+export const ModalBtn = memo(
+  ({ onClick, bgcolor, image, textcolor, text, loading }) => {
+    const handleClick = useCallback(
+      e => {
+        e.stopPropagation();
+        onClick?.(e);
+      },
+      [onClick]
+    );
 
-  return (
-    <button
-      type="button"
-      className={`w-full h-fit rounded-[60px] flex gap-2 p-1 md:p-[10px] justify-center items-center cursor-pointer hover:bg-gray-200 transition-colors duration-200 ${bgcolor}`}
-      onClick={handleClick}
-    >
-      <img src={image} className="size-[22px]" alt="" />
-      <h6
-        className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}
+    return (
+      <button
+        type="button"
+        className={`w-full h-fit rounded-[60px] flex gap-2 p-1 md:p-[10px] justify-center items-center cursor-pointer hover:bg-gray-200 transition-colors duration-200 ${bgcolor}`}
+        onClick={handleClick}
+        disabled={loading}
       >
-        {text}
-      </h6>
-    </button>
-  );
-});
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <React.Fragment>
+            <img src={image} className="size-[22px]" alt="" />
+            <h6
+              className={`paytone sm:font-[700] font-[500] sm:text-[14px] text-[10px] sm:leading-[20px] leading-[14px] ${textcolor}`}
+            >
+              {text}
+            </h6>
+          </React.Fragment>
+        )}
+      </button>
+    );
+  }
+);

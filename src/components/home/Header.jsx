@@ -1,25 +1,36 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import SiteBtn from "../Layout-conponents/SiteBtn";
-import { useAuthStore } from "@/stores/useAuthStore";
 import useEventStore from "@/stores/eventStore";
+import SiteBtn from "../Layout-conponents/SiteBtn";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Button } from "../ui/button";
 import { getProfilePicture } from "../Profile/PersonalProfile";
 
 const Header = () => {
+  // Dropdown open state
   const [isOpen, setIsOpen] = useState(false);
+  // Notifications open state
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  // Logout modal open state
   const [logoutModal, setLogoutModal] = useState(false);
+  // Dropdown ref
   const dropdownRef = useRef(null);
+  // Notifications dropdown ref
   const notificationRef = useRef(null);
+  // Navigate hook
   const navigate = useNavigate();
+  // User state
   const user = useAuthStore(state => state.user);
-  const logout = useAuthStore(state => state.logout);
+  // Logout function
+  const logout = useAuthStore();
+  // Random profile picture
   const profilePic = getProfilePicture();
-
+  // Toggle user dropdown
   const toggleDropdown = () => setIsOpen(prev => !prev);
+  // Toggle notification dropdown
   const toggleNotification = () => setIsNotificationOpen(prev => !prev);
 
+  // Close dropdown if user clicks outside
   const handleClickOutside = event => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
@@ -32,11 +43,13 @@ const Header = () => {
     }
   };
 
+  // Add click outside event listener
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  // Menu dropdown items
   const dropdownItems = [
     {
       text: "my profile",
@@ -67,26 +80,27 @@ const Header = () => {
     },
   ];
 
+  // Get user events count
   const myEventsTotal = useEventStore(state => state.myEventsTotal);
+  // Get user attended events count
   const totalAttendees = useEventStore(state => state.attendedEventsTotal);
 
   return (
     <header className="flex sm:px-8 sm:py-3 p-4 justify-between bg-[#011F0F] items-center z-20 sticky top-0 shadow-md w-full">
       {/* Logo and My Events */}
       <section className="flex items-center sm:gap-6 gap-2">
-        <div className="inline-flex gap-[10px] items-center w-fit">
-          <button onClick={() => navigate("/home")}>
+        <Link to="/home" className="flex">
+          <div className="inline-flex gap-[10px] items-center w-fit">
             <img
               src="/Logo.svg"
               alt="Logo"
               className="sm:w-[30px] sm:h-8 w-5 h-4"
             />
-          </button>
-          <span className="bg-linear-to-r satoshi flex justify-center items-center from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] min-w-[26px] size-fit capitalize px-1 h-[14px] leading-[14px] rounded-2xl text-[#011F0F]">
-            Beta
-          </span>
-        </div>
-
+            <span className="bg-linear-to-r satoshi flex justify-center items-center from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] min-w-[26px] size-fit capitalize px-1 h-[14px] leading-[14px] rounded-2xl text-[#011F0F]">
+              Beta
+            </span>
+          </div>
+        </Link>
         <div className="flex gap-1 py-1 px-2 h-fit w-fit">
           <img src="/ticket-star.svg" alt="My Events Icon" />
           <h6 className="satoshi text-[12px] font-[500] leading-[18px] text-white capitalize my-auto">
@@ -94,7 +108,6 @@ const Header = () => {
           </h6>
         </div>
       </section>
-
       {/* Actions Section */}
       <section className="flex items-center gap-4">
         {/* Notification */}
@@ -110,7 +123,6 @@ const Header = () => {
               className="sm:w-6 sm:h-6 size-[22px]"
             />
           </button> */}
-
           {isNotificationOpen && (
             <div className="absolute top-full right-2 mt-2 pb-2 bg-white rounded-[16px] shadow-lg w-[391px] h-[815px] transform transition-transform duration-300 ease-in-out satoshi z-20 sm:block hidden overflow-clip">
               <div className="flex items-center h-12 px-2 justify-between bg-[#f4f4f4]">
@@ -125,7 +137,6 @@ const Header = () => {
                   alt="close-icon"
                 />
               </div>
-
               <div className="h-full w-full">
                 {/* <div className="h-full flex flex-col items-center justify-center gap-2">
                   <p className="satoshi text-[18px] font-bold leading-[18px] capitalize text-[#001010]">
@@ -135,17 +146,14 @@ const Header = () => {
                     Create an event first and come back to check{" "}
                   </p>
                 </div> */}
-
                 {/* would be checking for notification items here later  */}
                 <div className="h-full w-full">
-                  {/* <div className="w-full h-full "> */}
                   <div className="flex gap-2 p-2 border-b-2 border-[#F0F0F0]">
                     <img
                       src="/events-img.png"
                       alt=""
                       className="w-[41.8px] h-[38px] rounded-xl"
                     />
-
                     <div className="flex flex-col gap-2">
                       <div>
                         <p className="satoshi text-[14px] font-medium leading-[18px] capitalize text-[#001010]">
@@ -156,31 +164,26 @@ const Header = () => {
                           know if you're in.
                         </p>
                       </div>
-
                       <p className="satoshi text-[12px] font-medium leading-[18px] capitalize text-[#8A9191]">
                         2h ago
                       </p>
                     </div>
                   </div>
-                  {/* </div> */}
                 </div>
               </div>
             </div>
           )}
         </div>
-
         {/* User Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={toggleDropdown}
-            // onClick={() => navigate("/profile")}
             className={`h-fit w-fit p-1 rounded-[24px] flex items-center gap-2 transition-all duration-300 ease-in-out ${
               isOpen ? "bg-[#496A1B]" : "bg-[#344C3F]"
             }`}
           >
             <div className="rounded-full sm:w-6 sm:h-6 size-[22px] flex items-center justify-center bg-[#077D8A] text-white uppercase satoshi text-[8px] sm:text-[10px] font-[700] leading-[18px]">
-              {/* {user?.firstName?.charAt(0)}
-              {user?.lastName?.charAt(0)} */}
+              {/* Profile pic */}
               <img src={profilePic} alt="user-icon" />
             </div>
             <img
@@ -191,64 +194,19 @@ const Header = () => {
               }`}
             />
           </button>
-
-          {/* Desktop Dropdown */}
+          {/*Dropdown */}
           {isOpen && (
-            <ul className="absolute right-0 mt-3 pb-2 px-4 bg-white rounded-[16px] shadow-lg w-[264px] satoshi z-20 hidden sm:block">
-              {/* User Info */}
-              <li className="py-4 grid items-center gap-4">
-                <div className=" text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
-                  {/* {user?.firstName?.charAt(0)}
-                  {user?.lastName?.charAt(0)} */}
-                  <img src={profilePic} alt="" />
-                </div>
-                <div>
-                  <h4 className="satoshi text-[12px] font-[500] leading-[18px] capitalize">
-                    {user?.firstName} {user?.lastName}
-                  </h4>
-                  <div className="flex gap-2 text-[12px] satoshi font-[500]">
-                    <span>
-                      {myEventsTotal}{" "}
-                      <span className="text-[#8A9191] text-[10px]">Hosted</span>
-                    </span>
-                    <span>
-                      {totalAttendees}{" "}
-                      <span className="text-[#8A9191]">Attended</span>
-                    </span>
-                  </div>
-                </div>
-              </li>
-              {/* Dropdown Items */}
-              {dropdownItems.map((item, index) => (
-                <li
-                  key={index}
-                  className={`cursor-pointer flex w-full gap-1 py-2 capitalize satoshi text-[12px] font-[500] leading-[18px] items-center ${item.className}`}
-                  onClick={item.onClick}
-                >
-                  {item.image && (
-                    <img
-                      src={item.image}
-                      alt={item.text}
-                      className="my-auto w-4 h-4"
-                    />
-                  )}
-                  {item.text}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {/* Mobile Dropdown */}
-          {isOpen && (
-            <div className="fixed inset-0 h-screen flex items-center justify-center z-30 bg-[#00000080]/50 backdrop-blur-[4px] sm:hidden">
-              <ul className="ml-auto pb-2 px-4 bg-white rounded-l-[16px] shadow-lg w-[264px] satoshi z-20 h-screen">
+            <React.Fragment>
+              <div
+                className="fixed inset-0 h-screen z-10 bg-[#00000080]/50 backdrop-blur-[4px] sm:hidden"
+                onClick={() => setIsOpen(false)}
+              />
+              <ul className="fixed top-0 rounded-tl-[16px] h-full sm:h-auto sm:top-auto sm:absolute right-0 sm:mt-3 pb-2 px-4 bg-white sm:rounded-[16px] shadow-lg w-[264px] satoshi z-20">
                 {/* User Info */}
                 <li className="py-4 flex justify-between gap-4 items-start">
                   <div className="grid items-center gap-4">
                     <div className=" text-white flex items-center justify-center h-12 w-12 rounded-full uppercase satoshi text-[16px] font-[500]">
-                      {/* {user?.firstName?.charAt(0)}
-                      {user?.lastName?.charAt(0)} */}
-                      <img src={profilePic} alt="" />
+                      <img alt="" src={profilePic} />
                     </div>
                     <div>
                       <h4 className="satoshi text-[12px] font-[500] leading-[18px] capitalize">
@@ -268,18 +226,22 @@ const Header = () => {
                       </div>
                     </div>
                   </div>
-                  <img
-                    src="/close-circle.svg"
-                    alt="Close Dropdown"
-                    className="cursor-pointer"
-                    onClick={toggleDropdown}
-                  />
+                  <button
+                    className="sm:hidden"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <img
+                      alt="Close Dropdown"
+                      className="cursor-pointer"
+                      src="/close-circle.svg"
+                    />
+                  </button>
                 </li>
                 {/* Dropdown Items */}
                 {dropdownItems.map((item, index) => (
                   <li
                     key={index}
-                    className={`cursor-pointer py-2 flex w-full gap-1 capitalize satoshi text-[12px] font-[500] leading-[18px] items-center ${item.className}`}
+                    className={`cursor-pointer flex w-full gap-1 py-2 capitalize satoshi text-[12px] font-[500] leading-[18px] items-center ${item.className}`}
                     onClick={item.onClick}
                   >
                     {item.image && (
@@ -293,9 +255,9 @@ const Header = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </React.Fragment>
           )}
-          {/* signout confirmation modal */}
+          {/* Signout confirmation modal */}
           {logoutModal && (
             <div className="fixed inset-0 w-full flex items-end md:items-center justify-center bg-[#00000080]">
               <div className="rounded-t-3xl md:rounded-3xl overflow-clip z-50">
@@ -315,7 +277,6 @@ const Header = () => {
                     </p>
                   </div>
                 </div>
-
                 <div className="bg-white py-6 px-12 flex items-center gap-4">
                   <Button
                     className="w-1/2 border border-[#E5E7E3] h-9 bg-white paytone text-sm text-[#011F0F] rounded-[60px] hover:bg-[#E5E7E3]"
@@ -337,13 +298,13 @@ const Header = () => {
             </div>
           )}
         </div>
-
         {/* Create Event Button */}
-        <SiteBtn
-          name="Create Event"
-          colorPadding="bg-[#AEFC40] py-[9px] px-[10px]"
-          onclick={() => navigate("/create-event")}
-        />
+        <Link to="/create-event">
+          <SiteBtn
+            name="Create Event"
+            colorPadding="bg-[#AEFC40] py-[9px] px-[10px]"
+          />
+        </Link>
       </section>
     </header>
   );

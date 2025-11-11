@@ -18,12 +18,11 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
 
-
-  const handleImageSelect = async (imageSrc) => {
+  const handleImageSelect = async imageSrc => {
     try {
       // Close modal immediately first
       onClose();
-      
+
       // Fetch the static image file from your public folder
       const response = await fetch(imageSrc);
       const blob = await response.blob();
@@ -55,7 +54,7 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
     }
   };
 
-  const handleImageUploadLocal = async (event) => {
+  const handleImageUploadLocal = async event => {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -100,47 +99,46 @@ const ImageModal = ({ onClose, isOpen, onSave, handleImageUpload }) => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:gap-4 gap-3 overflow-y-scroll scrollbar-hide">
-  {/* Upload Section */}
-<div className="xl:size-[248px] md:size-[180px] sm:size-[135px] aspect-square rounded-2xl flex items-center justify-center bg-[#E6E9E7] shadow-md cursor-pointer relative">
-  <label className="flex flex-col justify-center items-center gap-4 size-fit cursor-pointer">
-    <div className="rounded-full flex items-center justify-center size-12 bg-white">
-      <img src="/image.svg" alt="" className="size-6" />
-    </div>
-    <div className="md:text-sm text-[10px] font-[400] size-fit rounded-[60px] py-3 px-6 capitalize text-[#077D8A] bg-white paytone">
-      upload image
-    </div>
-    <input 
-      type="file" 
-      accept="image/*" 
-      onChange={handleImageUploadLocal} 
-      className="absolute inset-0 size-full cursor-pointer opacity-0" 
-    />
-  </label>
-</div>
+          {/* Upload Section */}
+          <div className="xl:size-[248px] md:size-[180px] sm:size-[135px] aspect-square rounded-2xl flex items-center justify-center bg-[#E6E9E7] shadow-md cursor-pointer relative">
+            <label className="flex flex-col justify-center items-center gap-4 size-fit cursor-pointer">
+              <div className="rounded-full flex items-center justify-center size-12 bg-white">
+                <img src="/image.svg" alt="" className="size-6" />
+              </div>
+              <div className="md:text-sm text-[10px] font-[400] size-fit rounded-[60px] py-3 px-6 capitalize text-[#077D8A] bg-white paytone">
+                upload image
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUploadLocal}
+                className="absolute inset-0 size-full cursor-pointer opacity-0"
+              />
+            </label>
+          </div>
 
-  {/* Template Images */}
-  {imageSources.map((src, index) => (
-    <div 
-      key={index} 
-      className="xl:size-[248px] md:size-[180px] sm:size-[135px] aspect-square rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer"
-      onClick={() => handleImageSelect(src)}
-    >
-      <img 
-        src={src} 
-        alt={`Template ${index + 1}`} 
-        className="size-full object-cover rounded-2xl" 
-      />
-    </div>
-  ))}
-
-</div>
-{/* Close Button */}
-<img 
-    src="/closePopup.svg" 
-    alt="close popup" 
-    className="h-12 w-12 absolute md:-top-10 -top-14 md:left-[99%] right-[0%] rounded-full cursor-pointer" 
-    onClick={onClose} 
-  />
+          {/* Template Images */}
+          {imageSources.map((src, index) => (
+            <div
+              key={index}
+              className="xl:size-[248px] md:size-[180px] sm:size-[135px] aspect-square rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer"
+              onClick={() => handleImageSelect(src)}
+            >
+              <img
+                src={src}
+                alt={`Template ${index + 1}`}
+                className="size-full object-cover rounded-2xl"
+              />
+            </div>
+          ))}
+        </div>
+        {/* Close Button */}
+        <img
+          src="/closePopup.svg"
+          alt="close popup"
+          className="h-12 w-12 absolute md:-top-10 -top-14 md:left-[99%] right-[0%] rounded-full cursor-pointer"
+          onClick={onClose}
+        />
       </div>
     </div>
   );

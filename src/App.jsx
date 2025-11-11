@@ -15,7 +15,7 @@ import UserProfile from "./routes/UserProfile";
 
 // import GoogleAuthCallback from "./components/Onboarding/GoogleAuthCallback";
 import ScrollTop from "./components/Layout-conponents/ScrollTop";
-import NormalHome from "./components/home/NormalHome";
+import NormalHome from "./routes/NormalHome";
 import MainLayout from "./layouts/MainLayout";
 import { useRehydrateAuth } from "./lib/useRehydrateAuth";
 import EventDetails from "./routes/EventDetails";
