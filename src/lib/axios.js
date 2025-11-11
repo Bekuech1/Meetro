@@ -12,7 +12,7 @@ const API = axios.create({
 // ----- REQUEST INTERCEPTOR -----
 API.interceptors.request.use(
   (config) => {
-    const { idToken, logout } = useAuthStore.getState(); // 👈 read from Zustand, not localStorage
+    const { idToken, logout } = useAuthStore.getState();
     if (idToken) {
       if (isTokenExpired(idToken)) {
         logout(); // If token is expired, logout

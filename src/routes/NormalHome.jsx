@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import MyEvent from "./MyEvent";
-import AttendedEvents from "./AttendedEvents";
+import MyEvents from "../components/home/MyEvents";
+import AttendedEvents from "../components/home/AttendedEvents";
 
 const NormalHome = () => {
+  // Active tab state
   const [activeTab, setActiveTab] = useState("created");
 
+  // Tab list
   const homeBtn = [
     { name: "created", onClick: () => setActiveTab("created") },
     { name: "going", onClick: () => setActiveTab("going") },
@@ -37,8 +39,8 @@ const NormalHome = () => {
             ))}
           </div>
         </section>
-
-        <div>{activeTab === "created" ? <MyEvent /> : <AttendedEvents />}</div>
+        {/* Conditionally render tabs */}
+        <div>{activeTab === "created" ? <MyEvents /> : <AttendedEvents />}</div>
       </div>
     </main>
   );

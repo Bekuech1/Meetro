@@ -18,6 +18,31 @@ export default function ManageEventPage() {
     setActiveTab(tab);
   };
 
+  const attendeesList = eventData?.attendees.L || [];
+
+  // Map by unique attendee ID while prioritizing "yes"
+  const attendeeMap = new Map();
+
+  attendeesList.forEach(att => {
+    const email = att.M.email.S; // or userId
+    const response = att.M.responseType.S; // "yes", "maybe"
+
+    const existing = attendeeMap.get(email);
+
+    // If nothing exists yet, store it
+    if (!existing) {
+      attendeeMap.set(email, att);
+      return;
+    }
+
+    // If existing is maybe but new is yes → replace
+    if (existing.M.responseType.S !== "yes" && response === "yes") {
+      attendeeMap.set(email, att);
+    }
+  });
+
+  const attendees = Array.from(attendeeMap.values());
+
   useEffect(() => {
     const fetchEvent = async () => {
       setLoading(true);
@@ -129,9 +154,7 @@ export default function ManageEventPage() {
       <section className="min-h-[642px] px-4 pb-10 pt-6 bg-[#F0F0F0]">
         <div className="md:w-[950px] mx-auto">
           {activeTab === "eventDetails" && <EditEvent eventData={eventData} />}
-          {activeTab === "guests" && (
-            <GuestList guests={eventData?.attendees?.L || []} />
-          )}
+          {activeTab === "guests" && <GuestList guests={attendees || []} />}
         </div>
       </section>
     </>

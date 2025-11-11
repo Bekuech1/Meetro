@@ -331,10 +331,11 @@ const Private = ({ onPublic }) => {
   // Set default image on component mount
   useEffect(() => {
     if (!eventImage && DEFAULT_IMAGE_SOURCES.length > 0) {
+      const randomIndex = Math.floor(Math.random() * 7);
       setEventImage({
         type: "template",
-        imageSrc: DEFAULT_IMAGE_SOURCES[0],
-        imageUrl: DEFAULT_IMAGE_SOURCES[0],
+        imageSrc: DEFAULT_IMAGE_SOURCES[randomIndex],
+        imageUrl: DEFAULT_IMAGE_SOURCES[randomIndex],
       });
     }
   }, [eventImage]);

@@ -8,7 +8,7 @@ import EventModal from "./EventModal";
 import useEventStore from "@/stores/eventStore";
 import NoEvents from "./NoEvents";
 
-export default function MyEvent() {
+export default function MyEvents() {
   // Events context
   const { fetchEvents, loadingMyEvents, myEvents } = useEventStore();
 

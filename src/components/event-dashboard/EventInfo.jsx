@@ -212,7 +212,7 @@ export default function EventInfo({ eventId }) {
   return (
     <div className="mt-4 flex flex-col md:flex-row gap-4 md:gap-8 w-full lg:w-[950px] mx-auto">
       {/* Left Section - Event Image and Host Info */}
-      <section className="w-full lg:w-[349px] h-full grid gap-8 relative">
+      <section className="w-full lg:w-[349px] h-full flex flex-col gap-8 relative">
         <div>
           <img
             src={imagePath}
@@ -418,6 +418,7 @@ export default function EventInfo({ eventId }) {
                       image="/tick-circle.svg"
                       textcolor="text-[#61B42D]"
                       text="Change to Going"
+                      loading={loadingResponseType === "yes"}
                     />
                   </div>
                 </div>

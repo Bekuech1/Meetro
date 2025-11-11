@@ -6,24 +6,17 @@ import { isTokenExpired } from "@/utils/authUtils";
 export function useRehydrateAuth() {
   // const setUser = useAuthStore((state) => state.setUser);
   const { idToken, setUser } = useAuthStore.getState();
-  const logout = useAuthStore((state) => state.logout);
+  const logout = useAuthStore(state => state.logout);
 
   useEffect(() => {
     if (!idToken || isTokenExpired(idToken)) {
       logout();
       return;
-    }
-    
-    // const user = decodeToken(idToken);
-    // if (user) {
-    //   setUser(user);
-    // }
-    
-    else {
+    } else {
       console.warn("Could not decode idToken. Falling back to /profile");
       API.get("/profile")
-        .then((res) => setUser(res.data))
+        .then(res => setUser(res.data))
         .catch(() => logout());
-    }    
+    }
   }, []);
 }
