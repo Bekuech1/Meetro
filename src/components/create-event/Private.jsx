@@ -951,7 +951,7 @@ const Private = ({ onPublic }) => {
                       textcolor="text-[#7A60BF]"
                       onClick={() => {
                         closeModal(MODAL_TYPES.CREATING_EVENT);
-                        useEventStore.getState().setShouldRefetch(true);
+                        useEventStore.getState().setShouldRefetchEvents(true);
                         navigate(`/home`);
                       }}
                       disabled={!response?.id}
@@ -962,7 +962,7 @@ const Private = ({ onPublic }) => {
                       bgcolor="bg-[#011F0F]"
                       onClick={() => {
                         closeModal(MODAL_TYPES.CREATING_EVENT);
-                        useEventStore.getState().setShouldRefetch(true);
+                        useEventStore.getState().setShouldRefetchEvents(true);
 
                         if (response?.id) {
                           navigate(`/event/${response.id}`);

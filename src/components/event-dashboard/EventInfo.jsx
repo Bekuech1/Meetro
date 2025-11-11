@@ -22,6 +22,8 @@ export default function EventInfo({ eventId }) {
   const [loading, setLoading] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingResponseType, setPendingResponseType] = useState(null);
+  const { setShouldRefetchEvents, setShouldRefetchAttendedEvents } =
+    useEventStore();
   const user = useAuthStore(state => state.user);
   const [attendanceStatus, setAttendanceStatus] = useState(null);
   const navigate = useNavigate();
@@ -139,7 +141,6 @@ export default function EventInfo({ eventId }) {
 
         // Check if user is creator or if user has responded and set attendance status
         if (user && event) {
-          console.log(user);
           if (user.userId === event.creator.M.id.S) setAttendanceStatus("yes");
           const eventAttendees = event.attendees.L;
           // Find the "yes" first
@@ -161,7 +162,7 @@ export default function EventInfo({ eventId }) {
             if (matchAttendee) setAttendanceStatus("maybe");
           }
         }
-        console.log(event);
+
         setEventDetails(event);
       } catch (err) {
         console.log(err);
@@ -345,10 +346,10 @@ export default function EventInfo({ eventId }) {
               <AttendBtn
                 type="yes"
                 loading={loadingResponseType === "yes"}
-                onClick={() =>
-                  handleConfirmAttendance("yes") &&
-                  useEventStore.getState().setShouldRefetch(true)
-                }
+                onClick={() => {
+                  handleConfirmAttendance("yes");
+                  setShouldRefetchAttendedEvents(true);
+                }}
               />
             </div>
           )}
@@ -410,10 +411,10 @@ export default function EventInfo({ eventId }) {
                     </div>
 
                     <ModalBtn
-                      onClick={() =>
-                        handleConfirmAttendance("yes") &&
-                        useEventStore.getState().setShouldRefetch(true)
-                      }
+                      onClick={() => {
+                        handleConfirmAttendance("yes");
+                        setShouldRefetchAttendedEvents(true);
+                      }}
                       bgcolor="bg-white"
                       image="/tick-circle.svg"
                       textcolor="text-[#61B42D]"
