@@ -22,7 +22,7 @@ const Header = () => {
   // User state
   const user = useAuthStore(state => state.user);
   // Logout function
-  const logout = useAuthStore();
+  const logout = useAuthStore(state => state.logout);
   // Random profile picture
   const profilePic = getProfilePicture();
   // Toggle user dropdown

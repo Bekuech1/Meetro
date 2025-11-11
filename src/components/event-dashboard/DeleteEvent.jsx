@@ -9,10 +9,11 @@ export default function DeleteEvent({ eventId }) {
 
   const handleDelete = async () => {
     try {
-      await API.delete(`/events/${eventId}`); // Replace with your API endpoint
+      const response = await API.delete(`/events/${eventId}`); // Replace with your API endpoint
+      console.log(response);
       setOpen(false);
       navigate("/home");
-      useEventStore.getState().setShouldRefetch(true);
+      useEventStore.getState().setShouldRefetchEvents(true);
       alert("Event deleted successfully");
     } catch (error) {
       console.error("Error deleting event:", error);

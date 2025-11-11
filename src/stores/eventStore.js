@@ -2,43 +2,51 @@ import { create } from "zustand";
 import API from "@/lib/axios";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-const CACHE_EXPIRY_MINUTES = 5; // ⏳ set expiry time here
+const CACHE_EXPIRY_MINUTES = 2; // ⏳ set expiry time here
 
 const useEventStore = create(
   persist(
     (set, get) => ({
       myEvents: [],
       attendedEvents: [],
-      eventDetails: {},
-
       loadingMyEvents: false,
       loadingAttendedEvents: false,
-      loadingEventDetails: false,
 
       error: null,
       myEventsTotal: 0,
       totalAttendees: 0,
       attendedEventsTotal: 0,
-      shouldRefetch: false,
+      shouldRefetchEvents: false,
+      shouldRefetchAttendedEvents: false,
+      lastFetchedEvents: null,
+      lastFetchedAttendedEvents: null,
 
-      lastFetched: null, // 🕒 store timestamp of last fetch
-
-      setShouldRefetch: value => set({ shouldRefetch: value }),
+      setShouldRefetchEvents: value => set({ shouldRefetchEvents: value }),
+      setShouldRefetchAttendedEvents: value =>
+        set({ shouldRefetchAttendedEvents: value }),
       setEvents: events => set({ myEvents: events }),
 
-      isCacheExpired: () => {
-        const { lastFetched } = get();
-        if (!lastFetched) return true;
+      isCacheExpired: timestamp => {
+        if (!timestamp) return true;
         const now = Date.now();
-        const diffMins = (now - lastFetched) / (1000 * 60);
+        const diffMins = (now - timestamp) / (1000 * 60);
         return diffMins >= CACHE_EXPIRY_MINUTES;
       },
 
       fetchEvents: async () => {
-        const { myEvents, shouldRefetch, isCacheExpired } = get();
+        const {
+          myEvents,
+          shouldRefetchEvents,
+          isCacheExpired,
+          lastFetchedEvents,
+        } = get();
 
         // only skip if we *already have events in memory* and no refetch
-        if (myEvents.length > 0 && !shouldRefetch && !isCacheExpired()) {
+        if (
+          myEvents.length > 0 &&
+          !shouldRefetchEvents &&
+          !isCacheExpired(lastFetchedEvents)
+        ) {
           return myEvents;
         }
 
@@ -54,8 +62,8 @@ const useEventStore = create(
             totalAttendees,
             loadingMyEvents: false,
             error: null,
-            shouldRefetch: false,
-            lastFetched: Date.now(),
+            shouldRefetchEvents: false,
+            lastFetchedEvents: Date.now(),
           });
 
           return events;
@@ -71,8 +79,17 @@ const useEventStore = create(
       },
 
       fetchAttendedEvents: async () => {
-        const { attendedEvents, shouldRefetch, isCacheExpired } = get();
-        if (attendedEvents.length > 0 && !shouldRefetch && !isCacheExpired()) {
+        const {
+          attendedEvents,
+          shouldRefetchAttendedEvents,
+          lastFetchedAttendedEvents,
+          isCacheExpired,
+        } = get();
+        if (
+          attendedEvents.length > 0 &&
+          !shouldRefetchAttendedEvents &&
+          !isCacheExpired(lastFetchedAttendedEvents)
+        ) {
           return attendedEvents;
         }
 
@@ -89,8 +106,8 @@ const useEventStore = create(
             ).length,
             loadingAttendedEvents: false,
             error: null,
-            shouldRefetch: false,
-            lastFetched: Date.now(),
+            shouldRefetchAttendedEvents: false,
+            lastFetchedAttendedEvents: Date.now(),
           });
 
           return events;
@@ -101,29 +118,6 @@ const useEventStore = create(
             loadingAttendedEvents: false,
             error: err.message,
           });
-        }
-      },
-
-      fetchEventById: async id => {
-        const existing = get().eventDetails[id];
-        if (existing) return existing;
-
-        set({ loadingEventDetails: true });
-
-        try {
-          const res = await API.get(`/events/${id}`);
-          const event = res.data.event;
-
-          set(state => ({
-            eventDetails: {
-              ...state.eventDetails,
-              [id]: event,
-            },
-          }));
-
-          return event;
-        } catch (err) {
-          console.error("Error fetching event by ID:", err);
         }
       },
     }),
@@ -137,7 +131,8 @@ const useEventStore = create(
         myEventsTotal: state.myEventsTotal,
         totalAttendees: state.totalAttendees,
         attendedEventsTotal: state.attendedEventsTotal,
-        lastFetched: state.lastFetched, // persist the timestamp
+        lastFetchedEvents: state.lastFetchedEvents, // persist the timestamp
+        lastFetchedAttendedEvents: state.lastFetchedAttendedEvents,
       }),
     }
   )
