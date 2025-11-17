@@ -82,7 +82,7 @@ const LandingNav = React.memo(() => {
   // Memoize mobile nav class to prevent string concatenation on each render
   const mobileNavClass = useMemo(
     () =>
-      `fixed top-3 inset-4 w-[calc(100%-32px)] left-1/2 max-w-[712px] -translate-x-1/2 bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-3 pb-6 px-4 flex-col rounded-4xl justify-between z-[100] max-h-[calc(100vh-2rem)] 
+      `fixed top-3 inset-4 w-[calc(100%-32px)] left-1/2 max-w-[712px] -translate-x-1/2 bg-[#011F0FE5]/90 backdrop-blur-[100px] pt-[13px] pb-6 px-4 flex-col rounded-4xl justify-between z-[100] max-h-[calc(100vh-2rem)] 
    ${navOpen ? "flex" : "hidden"}`,
     [navOpen]
   );
@@ -90,7 +90,7 @@ const LandingNav = React.memo(() => {
   return (
     <>
       <motion.nav
-        className="flex items-center h-fit w-[calc(100%-32px)] max-w-[712px] rounded-4xl top-3 py-[7px] md:pl-6 pl-4 pr-4 md:gap-[60px] justify-between bg-[#011F0F] backdrop-blur-2xl satoshi z-100 fixed"
+        className="flex items-center h-fit w-[calc(100%-32px)] min-h-[58px] max-w-[712px] rounded-4xl top-3 py-[7px] md:pl-6 pl-4 pr-4 md:gap-[60px] justify-between bg-[#011F0F] backdrop-blur-2xl satoshi z-100 fixed"
         variants={navVariants}
         initial="initial"
         animate="animate"
@@ -112,11 +112,11 @@ const LandingNav = React.memo(() => {
             {desktopNavItems}
           </ul>
 
-          <div className="flex justify-center items-center gap-4">
+          <div className="justify-center flex items-center gap-4">
             <Button
               name="create event"
               color="bg-[#AFFC41]"
-              className="!px-3 min-[400px]:!px-6"
+              className="!px-3 min-[400px]:!px-6 hidden min-[375px]:flex"
               onclick={handleCreateEvent}
             />
             <button onClick={handleMenuOpen} className="md:hidden size-fit">
@@ -134,7 +134,7 @@ const LandingNav = React.memo(() => {
           onClick={handleMenuClose}
         >
           <div className="w-full flex flex-col gap-8 h-fit">
-            <div className="flex w-full h-fit justify-between">
+            <div className="flex w-full items-center h-fit justify-between">
               <img
                 src="/meetroLogo.svg"
                 alt="Meetro Logo"

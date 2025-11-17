@@ -28,7 +28,7 @@ const JoinToday = () => {
           <p className="text-[14px] md:text-[16px] font-[700] leading-5 md:leading-[24px] text-[#8A9191] satoshi">
             Start discovering exciting events in your area and never miss out.
           </p>
-          <div className="flex gap-4 mx-auto w-fit mt-6">
+          <div className="flex gap-4 mx-auto justify-center flex-wrap w-fit mt-6">
             <a
               href="https://chat.whatsapp.com/FLUaeqHc6oAIXNJeHilDhQ"
               target="_blank"

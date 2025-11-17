@@ -1,11 +1,27 @@
 import API from "@/lib/axios";
-import React, { useEffect, useState } from "react";
-import { BsXLg } from "react-icons/bs";
 import { useAuthStore } from "@/stores/useAuthStore";
+import React, { useEffect, useState } from "react";
 import { LoadingSpinner } from "../create-event/Private";
 import { createPortal } from "react-dom";
+import { BsXLg } from "react-icons/bs";
 
-const loginInput = [
+const signupInput = [
+  {
+    type: "text",
+    label: "First Name",
+    icon: "/user.svg",
+    placeholder: "First Name",
+    name: "firstName",
+    required: true,
+  },
+  {
+    type: "text",
+    label: "Last Name",
+    icon: "/user.svg",
+    placeholder: "Last Name",
+    name: "lastName",
+    required: true,
+  },
   {
     type: "email",
     label: "Email Address",
@@ -24,20 +40,28 @@ const loginInput = [
   },
 ];
 
-export default function LoginModal({ onSuccess, setModal, close }) {
+export default function SignupModal({ onSuccess, setModal, close }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    firstName: "",
+    lastName: "",
   });
   const { setUser, setAccessToken, user, setRefreshToken, setIdToken } =
     useAuthStore();
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     setLoading(true);
     try {
-      const response = await API.post("/login", formData);
+      await API.post("/signup", formData);
+
+      const response = await API.post("/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
       const { accessToken, idToken, refreshToken } = response.data;
 
       setAccessToken(accessToken);
@@ -58,26 +82,25 @@ export default function LoginModal({ onSuccess, setModal, close }) {
 
   return createPortal(
     <React.Fragment>
-      <div className="fixed inset-0 bg-[#00000080] backdrop-blur-xs z-70 p-2" />
+      <div className="fixed inset-0  bg-[#00000080] backdrop-blur-xs z-50 p-2" />
       <div className="bg-[#FFFFFFE5] p-6 md:p-12 border fixed top-1/2 left-1/2 -translate-1/2 z-[70] border-white backdrop-blur-[32px] rounded-3xl flex flex-col items-center gap-8 w-full md:w-[546px]">
         <button className="absolute top-6 right-6" onClick={close}>
           <BsXLg size={20} color="#8A9191" />
         </button>
         <div className=" flex flex-col items-center gap-2">
-          <h2 className="text-[#4A3A74] paytone text-2xl">Login</h2>
+          <h2 className="text-[#4A3A74] paytone text-2xl">Sign up</h2>
           <p className="text-center text-[#8A9191]">
-            login to your Meetro account
+            create your Meetro account
           </p>
         </div>
-
         <div className="flex flex-col gap-6 w-full">
           <form
             onSubmit={e => {
               e.preventDefault();
-              handleLogin();
+              handleSignup();
             }}
           >
-            {loginInput.map((input, idx) => (
+            {signupInput.map((input, idx) => (
               <div key={idx} className="mb-3">
                 <label className="text-xs font-bold text-[#001010]">
                   {input.label}
@@ -115,27 +138,26 @@ export default function LoginModal({ onSuccess, setModal, close }) {
                 </div>
               </div>
             ))}
-
             <div>
               <button
                 className={
                   "w-full text-[#095256] bg-[#AFFC41] h-9 rounded-[60px] paytone text-sm mt-3"
                 }
                 type="submit"
-                // onClick={handleLogin}
               >
                 {loading ? <LoadingSpinner /> : "Let's gooo!"}
               </button>
             </div>
           </form>
+
           <div>
             <p className="text-sm text-[#001010] text-center mt-6 satoshi font-bold ">
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <button
                 className="text-[#866AD2]"
-                onClick={() => setModal("signup")}
+                onClick={() => setModal("login")}
               >
-                Sign up
+                Log in
               </button>
             </p>
           </div>

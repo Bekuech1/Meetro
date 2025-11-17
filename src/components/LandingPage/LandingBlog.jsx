@@ -10,9 +10,9 @@ const latestPosts = blogPosts.slice(0, 3);
 const LandingBlog = () => {
   return (
     <div className="bg-[#F0F0F0] relative overflow-hidden">
-      <div className="flex flex-col py-15 mx-auto max-w-[1312px] px-4 gap-15 relative justify-center items-center w-full overflow-hidden">
+      <div className="flex flex-col py-15 mx-auto max-w-[1312px] gap-15 relative justify-center items-center w-full overflow-hidden">
         <div className="flex flex-col gap-12 w-full justify-center text-center">
-          <div className="grid max-w-[702px] gap-6 text-center mx-auto">
+          <div className="grid px-4 max-w-[702px] gap-6 text-center mx-auto">
             <h1 className="paytone lg:text-[60px] text-4xl leading-none text-[#8A9191] font-[400] capitalize">
               from ideas to invites: <br />
               <span className="text-[#001010]">the meetro blog</span>
@@ -22,14 +22,14 @@ const LandingBlog = () => {
               hosting memorable events, and navigating social life like a pro.
             </p>
           </div>
-          <div className="flex justify-center">
+          <div className="flex px-4 justify-center">
             <Link to="/blog">
               <CtaButton name="read our blog" />
             </Link>
           </div>
 
           {/* Horizontal Scroll Container */}
-          <div className="flex gap-4 w-full overflow-x-auto pb-4 scrollbar-hide mr-6 justify-start lg:justify-center">
+          <div className="flex px-4 gap-4 w-full overflow-x-auto pb-4 scrollbar-hide mr-6 justify-start lg:justify-center">
             {latestPosts.map(post => (
               <div key={post.id} className="flex-shrink-0">
                 <BlogCard post={post} mobile="w-[330px]" />
