@@ -6,12 +6,12 @@ import MainAbout from "@/components/LandingPage/MainAbout";
 
 const AboutUs = () => {
   return (
-    <>
+    <React.Fragment>
       <MainAbout />
       <Values />
       <Mission />
       <FutureFeatures />
-    </>
+    </React.Fragment>
   );
 };
 

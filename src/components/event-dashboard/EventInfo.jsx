@@ -1,29 +1,31 @@
-import useEventStore from "@/stores/eventStore";
 import API from "@/lib/axios";
-import SiteBtn from "../Layout-conponents/SiteBtn";
-import ShareEvent from "./ShareEvent";
-import LoginModal from "../Onboarding/LoginModal";
+import { calculateTimeRemaining } from "@/lib/utils";
+import useEventStore from "@/stores/eventStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { EventCategories, ModalBtn, ModalText } from "../home/EventModal";
 import { LoadingSpinner } from "../create-event/Private";
+import { EventCategories, ModalBtn, ModalText } from "../home/EventModal";
+import SiteBtn from "../Layout-conponents/SiteBtn";
+import LoginModal from "../Onboarding/LoginModal";
+import SignupModal from "../Onboarding/SignupModal";
 import {
   getProfilePicture,
   setAttendeeImage,
 } from "../Profile/PersonalProfile";
 import { AttendBtn } from "./AttendBtn";
-import { calculateTimeRemaining } from "@/lib/utils";
+import ShareEvent from "./ShareEvent";
+import { useDisableScroll } from "@/hooks/useDisableScroll";
+import { set } from "date-fns";
 
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showModal, setShowModal] = useState("");
   const [pendingResponseType, setPendingResponseType] = useState(null);
-  const { setShouldRefetchEvents, setShouldRefetchAttendedEvents } =
-    useEventStore();
+  const { setShouldRefetchAttendedEvents } = useEventStore();
   const user = useAuthStore(state => state.user);
   const [attendanceStatus, setAttendanceStatus] = useState(null);
   const navigate = useNavigate();
@@ -49,12 +51,14 @@ export default function EventInfo({ eventId }) {
   // Toggle function
   const toggleReadMore = () => setIsExpanded(s => !s);
 
+  useDisableScroll(showModal !== "");
+
   // Handles user confirming attendance
   const handleConfirmAttendance = async responseType => {
     // If no user is logged in, show the login modal and remember which response they tried
     if (!user || !user.userId) {
       setPendingResponseType(responseType);
-      setShowLoginModal(true);
+      setShowModal("login");
       return;
     }
 
@@ -475,16 +479,36 @@ export default function EventInfo({ eventId }) {
           </div>
         )}
       </section>
-
       {/* Toggle login modal */}
-      {showLoginModal && (
+      {showModal === "login" && (
         <LoginModal
+          setModal={setShowModal}
+          close={() => {
+            setPendingResponseType(null);
+            setShowModal("");
+          }}
           onSuccess={async () => {
             if (pendingResponseType) {
               await confirmAttendance(pendingResponseType);
               setPendingResponseType(null);
             }
-            setShowLoginModal(false);
+            setShowModal("");
+          }}
+        />
+      )}
+      {showModal === "signup" && (
+        <SignupModal
+          setModal={setShowModal}
+          close={() => {
+            setPendingResponseType(null);
+            setShowModal("");
+          }}
+          onSuccess={async () => {
+            if (pendingResponseType) {
+              await confirmAttendance(pendingResponseType);
+              setPendingResponseType(null);
+            }
+            setShowModal("");
           }}
         />
       )}

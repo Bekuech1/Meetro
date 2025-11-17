@@ -2,10 +2,10 @@ import React from "react";
 import JoinToday from "@/components/LandingPage/JoinToday";
 import MainBlog from "@/components/LandingPage/MainBlog";
 
-const BlogPage = ({ onClick }) => {
+const BlogPage = () => {
   return (
     <React.Fragment>
-      <MainBlog onClick={onClick} />
+      <MainBlog />
       <JoinToday />
     </React.Fragment>
   );
