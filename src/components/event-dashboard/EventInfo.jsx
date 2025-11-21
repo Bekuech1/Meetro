@@ -16,7 +16,6 @@ import {
 import { AttendBtn } from "./AttendBtn";
 import ShareEvent from "./ShareEvent";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
-import { set } from "date-fns";
 
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -316,17 +315,27 @@ export default function EventInfo({ eventId }) {
         {/* Chip in */}
         <div className="flex flex-col gap-2">
           <ModalText img="/money-add.svg" text="chip in" />
-          {eventDetails?.chipInType?.S === "FIXED" ? (
+          {eventDetails?.chipInType?.S ? (
             <div className="rounded-[12px] p-4 border-[2px] border-white text-left bg-white/70">
-              <p className="text-[#8A9191]">{eventDetails?.chipInType?.S}</p>
+              <p className="text-[#8A9191] text-sm font-medium">
+                {eventDetails?.chipInType?.S === "FIXED"
+                  ? "Target Goal"
+                  : eventDetails?.chipInType?.S === "FLEXIBLE"
+                    ? "Chip In Minimum"
+                    : "Free event"}
+              </p>
 
               <div className="flex justify-between items-center">
                 <p className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi ">
                   ₦{eventDetails?.chipInAmount?.S}
                 </p>
-                <p className="bg-[#D9D1F1] text-sm font-bold text-[#7A60BF] py-1 px-2 rounded-full">
-                  Required to join the fun
-                </p>
+                <button className="bg-[#D9D1F1] text-sm font-bold text-[#7A60BF] py-1 px-2 rounded-full">
+                  {eventDetails?.chipInType?.S === "FIXED"
+                    ? "Required to join the fun"
+                    : eventDetails?.chipInType?.S === "FLEXIBLE"
+                      ? "Give what feels right ❤️"
+                      : "Free Entry"}
+                </button>
               </div>
             </div>
           ) : (

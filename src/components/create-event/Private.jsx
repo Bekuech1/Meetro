@@ -527,7 +527,18 @@ const Private = ({ onPublic }) => {
       ...(formData.amount && {
         chipInAmount: formData.amount,
         chipInType: formData.chipInType,
-        chipInSettings: { fixedAmount: formData.amount },
+        chipInSettings:
+          formData.chipInType === "FIXED"
+            ? {
+                fixedAmount: formData.amount,
+              }
+            : formData.chipInType === "FLEXIBLE"
+              ? {
+                  minAmount: formData.amount,
+                }
+              : {
+                  targetAmount: formData.amount,
+                },
         bankDetails: {
           bankName: formData.bankName,
           accountNumber: formData.accountNumber,
@@ -542,6 +553,7 @@ const Private = ({ onPublic }) => {
     };
 
     try {
+      console.log(payload);
       const apiResponse = await API.post(`/events`, payload);
       console.log("Event creation response:", apiResponse.data);
 
@@ -748,6 +760,12 @@ const Private = ({ onPublic }) => {
                 <Add
                   title="dress code"
                   onOptionClick={() => toggleComponent("dressCode", true)}
+                />
+              )}
+              {!addedComponents.chipIn && (
+                <Add
+                  title="chip-in"
+                  onOptionClick={() => toggleComponent("chipIn", true)}
                 />
               )}
               {!addedComponents.description && (
