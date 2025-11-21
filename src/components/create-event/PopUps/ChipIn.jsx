@@ -39,28 +39,28 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   // Function to set event type based on activeTab
-  const setChipInType = (activeTab) => {
+  const setChipInType = activeTab => {
     switch (activeTab) {
       case 0:
-        return "Price";
+        return "FIXED";
       case 1:
-        return "Target Goal";
+        return "TARGET";
       case 2:
-        return "Minimum Amount";
+        return "FLEXIBLE";
       default:
         return ""; // Default case
     }
   };
 
   // Handle tab change from InputModals
-  const handleTabChange = (tabIndex) => {
+  const handleTabChange = tabIndex => {
     setActiveTab(tabIndex);
   };
 
   // Filter banks based on search input using the helper function
   const filteredBanks = searchBanks(searchInput);
 
-  const handleBankSelect = (bank) => {
+  const handleBankSelect = bank => {
     setSelectedBank(bank.name);
     setSearchInput(bank.name);
     setSelectedBankCode(bank.code);
@@ -68,7 +68,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
     setErrorMessage(""); // Clear any previous error messages
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const value = e.target.value;
     setSearchInput(value);
     setSelectedBank("");
@@ -91,7 +91,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
     }
   };
 
-  const handleAmountChange = (e) => {
+  const handleAmountChange = e => {
     let input = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
 
     if (input === "") {
@@ -188,7 +188,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                     type="text"
                     value={accountNumber}
                     maxLength={10}
-                    onChange={(e) => {
+                    onChange={e => {
                       const value = e.target.value;
                       // Allow only numeric input
                       if (/^\d*$/.test(value)) {
@@ -208,7 +208,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                 </label>
                 <div
                   className="w-full h-fit bg-[#FFFFFE]/50 flex pr-2 pl-4 py-3 rounded-[12px] border border-white cursor-pointer"
-                  onClick={() => setShowBankList((prev) => !prev)}
+                  onClick={() => setShowBankList(prev => !prev)}
                 >
                   <input
                     type="text"
@@ -222,7 +222,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
                 </div>
                 {showBankList && (
                   <ul className="absolute bg-white border rounded-[12px] shadow-lg top-[68px] -right-0 w-full z-10 text-center max-h-[164px] h-fit py-1 overflow-y-auto scrollbar-hide scroll-smooth">
-                    {filteredBanks.map((bank) => (
+                    {filteredBanks.map(bank => (
                       <li
                         key={bank.code}
                         className="flex items-center px-4 py-2 cursor-pointer hover:scale-105 transition-transform justify-between font-medium text-[14px]"
@@ -312,7 +312,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
       {[
         <div key="1">
           <Content
-            label="price"
+            label="Price"
             header="You choose a fixed amount each guest must contribute to attend. It's like a mini ticket, but more casual."
             showBank={() => setShowBank(true)}
             bankName={selectedBank || "Select Bank"}
@@ -324,7 +324,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
         </div>,
         <div key="2">
           <Content
-            label="target goal"
+            label="Target goal"
             header="You set a total amount you want to raise, and everyone can chip in to help reach it. It's like a group gift!"
             showBank={() => setShowBank(true)}
             bankName={selectedBank || "Select Bank"}
@@ -336,7 +336,7 @@ const ChipIn = ({ isVisible, onClose, onSave }) => {
         </div>,
         <div key="3">
           <Content
-            label="minimum amount"
+            label="Minimum amount"
             header="No pressure! Guests contribute whatever they feel like. It's all about the spirit of giving."
             showBank={() => setShowBank(true)}
             bankName={selectedBank || "Select Bank"}
@@ -357,6 +357,7 @@ const Content = ({
   showBank,
   accNo,
   bankName,
+  label,
   amountValue,
   onAmountChange,
   error,
@@ -372,19 +373,24 @@ const Content = ({
         onClick={showBank}
         secondary={accNo}
       />
-      <div className="w-full h-fit bg-[#FFFFFE]/50 flex p-2 items-center rounded-[12px] border border-white cursor-pointer">
-        <span className="text-gray-500 size-fit mr-2">
-          <div className="bg-white p-1 rounded-4xl size-fit">
-            <img src="naira.svg" alt="Left Icon" className="size-4" />
-          </div>
-        </span>
-        <input
-          type="text"
-          value={amountValue}
-          onChange={onAmountChange}
-          placeholder="0.00"
-          className="w-full h-fit leading-tight text-sm font-medium satoshi capitalize bg-transparent outline-none placeholder:text-gray-500 text-black"
-        />
+      <div>
+        <label className="text-[10px] mb-1 leading-[14px] font-bold satoshi text-[#8A96A3]">
+          {label}
+        </label>
+        <div className="w-full h-fit bg-[#FFFFFE]/50 flex p-2 items-center rounded-[12px] border border-white cursor-pointer">
+          <span className="text-gray-500 size-fit mr-2">
+            <div className="bg-white p-1 rounded-4xl size-fit">
+              <img src="naira.svg" alt="Left Icon" className="size-4" />
+            </div>
+          </span>
+          <input
+            type="text"
+            value={amountValue}
+            onChange={onAmountChange}
+            placeholder="0.00"
+            className="w-full h-fit leading-tight text-sm font-medium satoshi capitalize bg-transparent outline-none placeholder:text-gray-500 text-black"
+          />
+        </div>
       </div>
 
       <div className="grid text-center p-2 gap-2 rounded-[12px] border-[#D9D1F1] border bg-[#F3F0FB] text-[#7A60BF] satoshi items-center w-full cursor-pointer">
