@@ -16,6 +16,8 @@ import {
 import { AttendBtn } from "./AttendBtn";
 import ShareEvent from "./ShareEvent";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
+import { set } from "date-fns";
+import ChipInModal from "./ChipInModal";
 
 export default function EventInfo({ eventId }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -327,9 +329,16 @@ export default function EventInfo({ eventId }) {
 
               <div className="flex justify-between items-center">
                 <p className="capitalize text-black font-[700] text-[24px] leading-[32px] satoshi ">
-                  ₦{eventDetails?.chipInAmount?.S}
+                  ₦{eventDetails?.chipInAmount?.S.split(".")[0]}
                 </p>
-                <button className="bg-[#D9D1F1] text-sm font-bold text-[#7A60BF] py-1 px-2 rounded-full">
+                <button
+                  className="bg-[#D9D1F1] text-sm font-bold text-[#7A60BF] py-1 px-2 rounded-full"
+                  onClick={() => {
+                    // Check for user
+                    if (!user) return setShowModal("login");
+                    setShowModal("chipin");
+                  }}
+                >
                   {eventDetails?.chipInType?.S === "FIXED"
                     ? "Required to join the fun"
                     : eventDetails?.chipInType?.S === "FLEXIBLE"
@@ -503,6 +512,14 @@ export default function EventInfo({ eventId }) {
             }
             setShowModal("");
           }}
+        />
+      )}
+      {showModal === "chipin" && (
+        <ChipInModal
+          close={() => setShowModal("")}
+          eventId={eventId}
+          type={eventDetails?.chipInType?.S}
+          amount={eventDetails?.chipInAmount?.S}
         />
       )}
       {showModal === "signup" && (
