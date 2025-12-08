@@ -64,8 +64,8 @@ function Window({
   return createPortal(
     <React.Fragment>
       <StopScroll />
-      <div className="fixed -inset-4 z-40 bg-[#ABABAB80] backdrop-blur-[32px]" />
-      <div className="w-full fixed z-50 h-full flex items-end sm:items-center left-0 top-0">
+      <div className="fixed -inset-4 z-110 bg-[#ABABAB80] backdrop-blur-[32px]" />
+      <div className="w-full fixed z-120 h-full flex items-end sm:items-center left-0 top-0">
         <div
           className={`flex flex-col gap-[10px] ${desktopWidth} w-full mx-auto`}
         >

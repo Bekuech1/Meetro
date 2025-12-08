@@ -1,6 +1,5 @@
 import API from "@/lib/axios";
 import React, { useEffect, useState } from "react";
-import { BsXLg } from "react-icons/bs";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { LoadingSpinner } from "../create-event/Private";
 import { createPortal } from "react-dom";

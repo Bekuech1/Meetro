@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../Layout-conponents/Button";
 import { Link } from "react-router";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 
 const Simple = () => {
   const videoRef = useRef(null);
   const [isInView, setIsInView] = useState(false);
+
+  const { handleCreateEvent } = useCreateEvent();
 
   useEffect(() => {
     const node = videoRef.current;
@@ -40,9 +43,11 @@ const Simple = () => {
             </p>
           </div>
           <div className="flex justify-center">
-            <Link to="/create-event">
-              <Button name="try it out" color="bg-white" />
-            </Link>
+            <Button
+              name="try it out"
+              color="bg-white"
+              onClick={handleCreateEvent}
+            />
           </div>
         </div>
         <video

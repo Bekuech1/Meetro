@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import Button from "../Layout-conponents/Button";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 
 const Smooth = () => {
+  const { handleCreateEvent } = useCreateEvent();
   return (
     <div className="bg-[#03353A]">
       <div className="min-h-screen max-w-[1312px] px-4 mx-auto flex flex-col-reverse xl:flex-row justify-center gap-[60px] items-center py-12">
@@ -37,9 +39,11 @@ const Smooth = () => {
             </div>
           </div>
           <div className="flex gap-4 w-fit">
-            <Link to="/create-event">
-              <Button name="create events" color="bg-white" />
-            </Link>
+            <Button
+              name="create events"
+              color="bg-white"
+              onClick={handleCreateEvent}
+            />
           </div>
         </div>
       </div>

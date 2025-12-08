@@ -4,12 +4,6 @@ import BlogPost from "./components/LandingPage/BlogPost";
 import Payment from "./components/home/Payment";
 import DashboardLayout from "./layouts/DashboardLayout";
 import CreateEvent from "./routes/CreateEvent";
-import Authentication from "./routes/Onboarding/Authentication";
-import Calender from "./routes/Onboarding/Calender";
-import Interest from "./routes/Onboarding/Interest";
-import Location from "./routes/Onboarding/Location";
-import LoginForm from "./routes/Onboarding/LoginForm";
-import Signup2 from "./routes/Onboarding/Signup2";
 import Settings from "./routes/Settings";
 import UserProfile from "./routes/UserProfile";
 
@@ -69,15 +63,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Onboarding Routes */}
-        <Route path="/authentication" element={<Authentication />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<Signup2 />} />
-
-        <Route path="/location" element={<Location />} />
-        <Route path="/calendar" element={<Calender />} />
-        <Route path="/interest" element={<Interest />} />
 
         {/* Test Routes */}
         <Route path="/test" element={<Payment />} />

@@ -1,6 +1,7 @@
 import { ArrowDown2, Sms, User } from "iconsax-reactjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModalContext } from "../Modal/ModalContext";
+import { useAuthStore } from "@/stores/useAuthStore";
 import InputIcon from "@/assets/icons/InputIcon";
 import TextButton from "../Buttons/TextButtons";
 import FormGroup from "../Inputs/FormGroup";
@@ -8,12 +9,84 @@ import InputField from "../Inputs/InputField";
 import PasswordField from "../Inputs/PasswordField";
 import Modal from "../Modal/Modal";
 import GoogleButton from "./GoogleButton";
+import API from "@/lib/axios";
+import Alert from "../Alert";
 
-export default function SignUpModal() {
+export default function SignUpModal({ onSuccess }) {
   // Open email form
   const [open, setOpen] = useState(false);
+
+  // Error state
+  const [error, setError] = useState(null);
+
+  // Loading state
+  const [loading, setLoading] = useState(false);
+
   // Modal context
-  const { setActive } = useModalContext();
+  const { setActive, close } = useModalContext();
+
+  // Auth store
+  const { setUser, setAccessToken, user, setRefreshToken, setIdToken } =
+    useAuthStore();
+
+  const handleSignup = async e => {
+    // Prevent default form submission
+    e.preventDefault();
+    try {
+      // Set loading state
+      setLoading(true);
+      // Get form data
+      const formData = Object.fromEntries(new FormData(e.target).entries());
+
+      // Split full name into first and last name
+      const [firstName, lastName] = formData.name.split(" ");
+      // Assign to formData
+      formData.firstName = firstName;
+      formData.lastName = lastName;
+      // Remove the original name field
+      delete formData.name;
+      // Signup request
+      await API.post("/signup", formData);
+
+      // Login request
+      const response = await API.post("/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // Extract tokens from response
+      const { accessToken, idToken, refreshToken } = response.data;
+
+      // Store tokens
+      setAccessToken(accessToken);
+      setIdToken(idToken);
+      setRefreshToken(refreshToken);
+
+      // Fetch user profile
+      const userProfile = await API.get("/profile");
+
+      // Set user in store
+      if (userProfile) setUser(userProfile.data);
+    } catch (error) {
+      setError(
+        error?.response?.data?.error || "Signup failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      // Close the signup modal
+      close();
+
+      // Call onSuccess callback after a short delay
+      setTimeout(() => {
+        onSuccess?.();
+      }, 300);
+    }
+  }, [user]);
   return (
     <Modal.Window name="signup">
       {/* Signup form or content goes here */}
@@ -36,11 +109,12 @@ export default function SignUpModal() {
               onClick={() => setOpen(true)}
             />
           ) : (
-            <form className="flex flex-col gap-y-3">
+            <form className="flex flex-col gap-y-3" onSubmit={handleSignup}>
               <FormGroup label="What's your name?">
                 <InputField
                   type="text"
                   placeholder="Full Name"
+                  name="name"
                   leftIcon={
                     <InputIcon>
                       <User size={16} color="#001010" variant="Bold" />
@@ -52,6 +126,7 @@ export default function SignUpModal() {
                 <InputField
                   type="email"
                   placeholder="e.g. newman@gmail.com"
+                  name="email"
                   leftIcon={
                     <InputIcon>
                       <Sms size={16} color="#001010" variant="Bold" />
@@ -60,11 +135,19 @@ export default function SignUpModal() {
                 />
               </FormGroup>
               <FormGroup label="Create a password">
-                <PasswordField />
+                <PasswordField name="password" />
               </FormGroup>
               {/* Alert message goes here */}
+              {error && (
+                <Alert
+                  type="error"
+                  title={error}
+                  onClick={() => setError(null)}
+                />
+              )}
               <TextButton
-                text="Let's gooo!"
+                disabled={loading}
+                text={loading ? "Loading..." : "Let's gooo!"}
                 className="sm:min-w-[123px] mt-3 mb-2 min-w-full"
               />
             </form>

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import SeamlessAni from "../Layout-conponents/SeamlessAni";
 import CtaButton from "../Layout-conponents/CtaButton";
 import { useNavigate } from "react-router";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 
 const Seamless = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -47,8 +48,7 @@ const Seamless = () => {
     );
   }, [isVisible]);
 
-  // Navigate hook
-  const navigate = useNavigate();
+  const { handleCreateEvent } = useCreateEvent();
 
   return (
     <div className="bg-[#E6F2F3]">
@@ -72,10 +72,7 @@ const Seamless = () => {
             </div>
           </div>
           <div className="flex gap-4 w-fit">
-            <CtaButton
-              name="create event"
-              onclick={() => navigate("/create-event")}
-            />
+            <CtaButton name="create event" onClick={handleCreateEvent} />
           </div>
         </div>
         <div className="min-h-[300px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[532px]">
