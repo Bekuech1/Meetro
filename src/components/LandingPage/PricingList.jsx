@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../Layout-conponents/Button";
 import Gradient from "../Layout-conponents/Gradient";
 import { useNavigate } from "react-router";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 
 const PRICING_DATA = [
   {
@@ -53,13 +54,13 @@ const PricingComponent = ({ heading, subtext, features, onClick }) => {
           ))}
         </ul>
       </div>
-      <Button name="Get Started" color="bg-white" onclick={onClick} />
+      <Button name="Get Started" color="bg-white" onClick={onClick} />
     </div>
   );
 };
 
 const PricingList = () => {
-  const navigate = useNavigate();
+  const { handleCreateEvent } = useCreateEvent();
   return (
     <div className="relative w-full h-fit pt-[148px] pb-[66px] min-h-screen flex flex-col gap-10 bg-[#FCFEF9] satoshi">
       <div className="flex flex-col gap-6 max-w-[563px] w-full justify-center text-center mx-auto">
@@ -78,7 +79,7 @@ const PricingList = () => {
             heading={plan.heading}
             subtext={plan.subtext}
             features={plan.features}
-            onClick={() => navigate("/create-event")}
+            onClick={handleCreateEvent}
           />
         ))}
       </div>

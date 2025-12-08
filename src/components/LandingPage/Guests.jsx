@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import CtaButton from "../Layout-conponents/CtaButton";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 
 const Guests = () => {
+  const { handleCreateEvent } = useCreateEvent();
   return (
     <div className="bg-[#E6FEC4]">
       <div className="min-h-screen xl:flex grid max-w-[1312px] px-4 mx-auto justify-center gap-[60px] 2xl:gap-x-[100px] items-center py-12">
@@ -20,9 +22,7 @@ const Guests = () => {
             </div>
           </div>
           <div className="flex gap-4 w-fit">
-            <Link to="/create-event">
-              <CtaButton name="try it out!" />
-            </Link>
+            <CtaButton name="try it out!" onClick={handleCreateEvent} />
           </div>
         </div>
         <div className="max-w-[660px] relative rounded-4xl min-h-[300px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[532px] bg-[linear-gradient(180deg,rgba(123,173,52,0.1)_0%,rgba(122,161,91,0.1)_100%)] backdrop-blur-[32px] flex justify-center items-center">

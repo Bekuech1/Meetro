@@ -3,6 +3,10 @@ import { motion } from "framer-motion";
 import React, { useCallback, useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import Button from "../Layout-conponents/Button";
+import Modal from "../Layout-conponents/Modal/Modal";
+import { useModalContext } from "../Layout-conponents/Modal/ModalContext";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 
 const NAV_ITEMS = [
   { id: 0, name: "how it works", path: "/" },
@@ -25,17 +29,12 @@ const LandingNav = React.memo(() => {
   const [navOpen, setNavOpen] = useState(false);
   // Disable scroll if nav is open
   useDisableScroll(navOpen);
-  // Navigate hook
-  const navigate = useNavigate();
+
+  const { handleCreateEvent } = useCreateEvent();
   // Open menu
   const handleMenuOpen = useCallback(() => setNavOpen(true), []);
   // Close menu
   const handleMenuClose = useCallback(() => setNavOpen(false), []);
-  // Navigate to create event page
-  const handleCreateEvent = useCallback(() => {
-    navigate("/create-event");
-    setNavOpen(false);
-  }, []);
 
   // Memoize the desktop navigation items to prevent re-rendering
   const desktopNavItems = useMemo(
@@ -117,8 +116,9 @@ const LandingNav = React.memo(() => {
               name="create event"
               color="bg-[#AFFC41]"
               className="!px-3 min-[400px]:!px-6 hidden min-[375px]:flex"
-              onclick={handleCreateEvent}
+              onClick={handleCreateEvent}
             />
+
             <button onClick={handleMenuOpen} className="md:hidden size-fit">
               <img src="/v2menu.svg" alt="Open menu" loading="lazy" />
             </button>
@@ -156,12 +156,14 @@ const LandingNav = React.memo(() => {
             </div>
             <ul className="flex flex-col h-fit w-full">{mobileNavItems}</ul>
           </div>
-          <Button
-            className="w-full"
-            name="create event"
-            color="bg-[#AFFC41]"
-            onclick={handleCreateEvent}
-          />
+          <div>
+            <Button
+              className="w-full!"
+              name="create event"
+              color="bg-[#AFFC41]"
+              onClick={handleCreateEvent}
+            />
+          </div>
         </nav>
       )}
     </>

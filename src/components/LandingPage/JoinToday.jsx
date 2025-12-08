@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import animationData from "../Layout-conponents/bgmove.json";
 import Button from "../Layout-conponents/Button";
 import CtaButton from "../Layout-conponents/CtaButton";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 
 const defaultOptions = {
   loop: true,
@@ -14,6 +15,7 @@ const defaultOptions = {
 };
 
 const JoinToday = () => {
+  const { handleCreateEvent } = useCreateEvent();
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
       <div className="absolute inset-0">
@@ -36,9 +38,7 @@ const JoinToday = () => {
             >
               <Button name="Join Community" color="bg-white" />
             </a>
-            <Link to="/create-event">
-              <CtaButton name="create event" />
-            </Link>
+            <CtaButton name="create event" onClick={handleCreateEvent} />
           </div>
         </div>
       </div>

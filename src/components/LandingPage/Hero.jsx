@@ -8,6 +8,9 @@ import {
 } from "framer-motion";
 import { useNavigate } from "react-router";
 import Gradient from "../Layout-conponents/Gradient";
+import { useModalContext } from "../Layout-conponents/Modal/ModalContext";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 
 // Optimized hook with debouncing
 const useScreenSize = () => {
@@ -216,6 +219,8 @@ AnimatedCard.displayName = "AnimatedCard";
 const Hero = () => {
   const { width: screenWidth } = useScreenSize();
 
+  const { handleCreateEvent } = useCreateEvent();
+
   // Memoized animations to prevent recalculation
   const titleAnimation = useMemo(() => {
     const isMobile = screenWidth < 768;
@@ -365,10 +370,7 @@ const Hero = () => {
               effortlessly.
             </motion.span>
           </motion.h1>
-          <CtaButton
-            name="create event"
-            onclick={() => navigate("/create-event")}
-          />
+          <CtaButton name="create event" onClick={handleCreateEvent} />
         </div>
       </div>
       <div className="absolute flex justify-between items-center w-full h-fit bg-transparent -bottom-[250px]">
