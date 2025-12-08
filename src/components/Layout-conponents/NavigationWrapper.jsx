@@ -3,18 +3,18 @@ import { useNavigate } from "react-router-dom";
 import LandingNav from "@/components/LandingPage/LandingNav";
 import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
 
-const NavigationWrapper = ({ 
-  children, 
-  activeItem = 0, 
-  setActiveItem = null, 
+const NavigationWrapper = ({
+  children,
+  activeItem = 0,
+  setActiveItem = null,
   showFooter = false,
-  Footer = null 
+  Footer = null,
 }) => {
   const [navOpen, setNavOpen] = useState(false);
   const navigate = useNavigate();
 
   // Handle navigation for different contexts
-  const handleNavigation = (itemIndex) => {
+  const handleNavigation = itemIndex => {
     setNavOpen(false);
     if (setActiveItem) {
       // We're on homepage - use setActiveItem
@@ -26,7 +26,9 @@ const NavigationWrapper = ({
   };
 
   return (
-    <div className={`scroll-smooth relative ${navOpen ? "shadow-lg" : ""} relative`}>
+    <div
+      className={`scroll-smooth relative ${navOpen ? "shadow-lg" : ""} relative`}
+    >
       {/* Mobile Navigation Overlay */}
       {navOpen && (
         <nav className="w-full h-screen flex justify-center items-center z-110 absolute">
