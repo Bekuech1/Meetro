@@ -2,12 +2,15 @@ import CloseIcon from "@/assets/icons/CloseIcon";
 import TextButton from "../Buttons/TextButtons";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
 import { timeAgo } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 
 export default function Notifications({ notifications = [], open, setOpen }) {
   // IsMobile
   const [isMobile, setIsMobile] = useState(false);
+
+  // Ref for the notifications container
+  const notificationsRef = useRef(null);
 
   // Disable scroll hook
   useDisableScroll(open && isMobile);
@@ -23,9 +26,28 @@ export default function Notifications({ notifications = [], open, setOpen }) {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Handle click outside to close
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (
+        open &&
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open, setOpen]);
+
   if (!open) return null;
   return (
-    <div className="satoshi w-full z-20 md:z-auto md:min-h-[428px] h-full bg-white fixed top-0 left-0 md:top-[calc(100%+13px)] md:left-auto md:right-0 md:absolute rounded-[24px] shadow-[0_4px_24px_0_rgba(0,0,0,0.25)] md:min-w-[337px] overflow-hidden flex flex-col">
+    <div
+      ref={notificationsRef}
+      className="satoshi w-full z-20 md:z-auto md:min-h-[428px] h-full bg-white fixed top-0 left-0 md:top-[calc(100%+13px)] md:left-auto md:right-0 md:absolute rounded-t-[24px]  md:rounded-[24px] shadow-[0_4px_24px_0_rgba(0,0,0,0.25)] md:min-w-[337px] overflow-hidden flex flex-col"
+    >
       {/* Top */}
       <div className="flex justify-between items-center p-4 pb-2 bg-[#F4F4F4]">
         <h3 className="text-[#001010] text-sm font-bold">Notifications</h3>

@@ -1,18 +1,15 @@
-import { Link, useNavigate } from "react-router";
-import SiteBtn from "../Layout-conponents/SiteBtn";
+import { Link } from "react-router";
+import TextButton from "../Layout-conponents/Buttons/TextButtons";
 
 export default function NoEvents({ message }) {
-  // Navigate hook
-  const navigate = useNavigate();
   return (
     <section className="text-center mt-10 text-[#8A9191] text-sm font-semibold">
-      <p className="mb-4 satoshi">{message}</p>
-      <Link to="/create-event">
-        <SiteBtn
-          name="Create a new event"
-          colorPadding="bg-[#AEFC40] py-2 px-6 mt-4"
-        />
-      </Link>
+      <p className="mb-6 satoshi">{message}</p>
+      <div className="flex justify-center">
+        <Link to="/create-event">
+          <TextButton text="Create Event" className="h-11! !text-base" />
+        </Link>
+      </div>
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import { createContext, useState, useContext } from "react";
 import TagButton from "../Buttons/TagButton";
+import { twMerge } from "tailwind-merge";
 
 // ---------------------------------------------------------
 // Create a context to share tab state (active tab + setter)
@@ -48,20 +49,28 @@ const useTabs = () => {
 //   { id: "analytics", label: "Analytics" },
 // ];
 
-function List({ list, size = "md", btnStyles = "" }) {
+function List({ list, size = "md", btnClassName = "", className }) {
   const { setActiveTab, activeTab } = useTabs();
 
   return (
     <div>
       {/* Container for tab buttons */}
-      <div className="p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
+      <div
+        className={twMerge(
+          "p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center",
+          className && className
+        )}
+      >
         {list?.map((item, i) => (
           <TagButton
             key={i}
             text={item.label}
             variant="tertiary"
             size={size === "sm" ? "xs" : size}
-            className={`${item.id !== activeTab ? "!bg-transparent !text-[#B0B5B5] !border-transparent" : "hover:!bg-white"} satoshi min-w-[87px]`}
+            className={twMerge(
+              `${item.id !== activeTab ? "!bg-transparent !text-[#B0B5B5] !border-transparent" : "hover:!bg-white"} satoshi min-w-[87px] `,
+              btnClassName && btnClassName
+            )}
             onClick={() => setActiveTab(item.id)}
           />
         ))}

@@ -52,6 +52,7 @@ function Window({
   name,
   children,
   title = "",
+  onClose,
   desktopWidth = "sm:max-w-[546px]",
   showIcon = true,
 }) {
@@ -64,14 +65,17 @@ function Window({
   return createPortal(
     <React.Fragment>
       <StopScroll />
-      <div className="fixed -inset-4 z-110 bg-[#ABABAB80] backdrop-blur-[32px]" />
-      <div className="w-full fixed z-120 h-full flex items-end sm:items-center left-0 top-0">
+      <div className="fixed -inset-4 z-110 bg-[#ABABAB80] backdrop-blur-[32px] animate-in fade-in" />
+      <div className="w-full fixed z-120 h-full flex items-end sm:items-center animate-in slide-in-from-bottom-35 left-0 top-0">
         <div
           className={`flex flex-col gap-[10px] ${desktopWidth} w-full mx-auto`}
         >
           {/* Close button */}
           <IconButton
-            onClick={close}
+            onClick={() => {
+              close();
+              onClose?.();
+            }}
             className="size-11! border-white! self-end mr-2 sm:mr-0 bg-[#EDEDED]! hover:bg-[#E5E7E3]!"
             icon={<CloseCircle color="#DB2863" variant="Bold" size={24} />}
           />

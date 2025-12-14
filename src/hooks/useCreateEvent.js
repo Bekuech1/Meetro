@@ -8,7 +8,7 @@ export const useCreateEvent = () => {
   const { setActive } = useModalContext();
   const handleCreateEvent = () => {
     if (!user) {
-      setActive("login");
+      setActive("auth");
     } else {
       navigate("/create-event");
     }

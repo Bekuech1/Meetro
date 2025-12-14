@@ -1,6 +1,5 @@
 import LandingNav from "@/components/LandingPage/LandingNav";
-import LoginModal from "@/components/Layout-conponents/Authentication/LoginModal";
-import SignUpModal from "@/components/Layout-conponents/Authentication/SignUpModal";
+import AuthModal from "@/components/Layout-conponents/Authentication/AuthModal";
 import Footer from "@/components/Layout-conponents/Footer";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -15,8 +14,7 @@ function MainLayout() {
         <Outlet />
       </main>
       <Footer />
-      <LoginModal onSuccess={() => navigate("/create-event")} />
-      <SignUpModal />
+      <AuthModal onSuccess={() => navigate("/create-event")} />
     </div>
   );
 }

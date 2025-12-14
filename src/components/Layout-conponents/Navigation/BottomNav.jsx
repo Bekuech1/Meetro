@@ -1,5 +1,4 @@
 import { Add, Discover, TicketStar } from "iconsax-reactjs";
-import { BsPlus } from "react-icons/bs";
 import { NavLink } from "react-router";
 import IconButton from "../Buttons/IconButton";
 import TextButton from "../Buttons/TextButtons";

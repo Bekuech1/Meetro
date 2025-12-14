@@ -1,47 +1,40 @@
-import React, { useState } from "react";
+import React from "react";
 import MyEvents from "../components/home/MyEvents";
-import AttendedEvents from "../components/home/AttendedEvents";
+import Tabs from "@/components/Layout-conponents/Tabs/Tabs";
+import EmptyHome from "@/components/home/EmptyHome";
 
 const NormalHome = () => {
-  // Active tab state
-  const [activeTab, setActiveTab] = useState("created");
-
-  // Tab list
-  const homeBtn = [
-    { name: "created", onClick: () => setActiveTab("created") },
-    { name: "going", onClick: () => setActiveTab("going") },
-  ];
-
+  const events = ["jd"];
   return (
-    <main className="bg-[#F0F0F0] relative min-h-[90vh] w-full grid gap-[43px] md:px-20 px-4 py-10">
-      <div className="grid md:w-[680px] w-full h-fit mx-auto gap-6 z-9">
-        <section className="flex justify-between items-center h-fit">
-          <h1 className="paytone capitalize text-[#055962] sm:text-[30px] text-[20px] font-[400]">
-            my events
-          </h1>
-          <div
-            style={{
-              boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
-              backdropFilter: "blur(16px)",
-            }}
-            className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-fit"
-          >
-            {homeBtn.map(btn => (
-              <div
-                key={btn.name}
-                onClick={btn.onClick}
-                className={`items-center py-2 px-[10px] rounded-3xl cursor-pointer w-fit text-center ${activeTab === btn.name ? "bg-[#BEFD66]" : "bg-white"}`}
-              >
-                <h5 className="text-black text-[10px] font-[700] leading-[14px] satoshi capitalize">
-                  {btn.name}
-                </h5>
-              </div>
-            ))}
+    <main className="bg-[#F0F0F0] h-full relative flex-1 flex flex-col w-full">
+      {/* No events */}
+      {events.length === 0 ? (
+        <EmptyHome />
+      ) : (
+        <Tabs defaultTab="all">
+          <div className="max-w-[680px] w-full mx-auto">
+            <section className="flex justify-between flex-col min-[500px]:flex-row gap-4 items-center h-fit mt-10 mb-6">
+              <h1 className="paytone capitalize text-[#077D8A] leading-[22px] text-[30px] font-[400]">
+                my events
+              </h1>
+              <Tabs.List
+                list={[
+                  { id: "all", label: "All" },
+                  { id: "upcoming", label: "Upcoming" },
+                  { id: "past", label: "Past" },
+                ]}
+                size="sm"
+                btnClassName="min-w-auto px-2"
+                className="border border-[#F9F9F9]"
+              />
+            </section>
+            {/* Events list */}
+            <div>
+              <MyEvents />
+            </div>
           </div>
-        </section>
-        {/* Conditionally render tabs */}
-        <div>{activeTab === "created" ? <MyEvents /> : <AttendedEvents />}</div>
-      </div>
+        </Tabs>
+      )}
     </main>
   );
 };
