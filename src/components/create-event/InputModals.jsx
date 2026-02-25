@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import CreateEventBtn from "../Layout-conponents/CreateEventBtn";
+import CreateEventBtn from "../layout-components/CreateEventBtn";
 
 const InputModals = ({
   isVisible,
@@ -24,9 +24,9 @@ const InputModals = ({
     }
   }, [activeTab]);
 
-  const handleOptionClick = (id) => {
+  const handleOptionClick = id => {
     setActiveOption(id); // Update the active option state
-    
+
     // Notify parent component about tab change
     if (onTabChange) {
       onTabChange(parseInt(id) - 1); // Convert 1-based to 0-based
@@ -42,7 +42,11 @@ const InputModals = ({
           <h1 className="satoshi font-[700] sm:text-[20px] text-sm capitalize text-black w-full">
             {title}
           </h1>
-          <img src="/close-circle.svg" className="size-6 sm:hidden flex cursor-pointer" onClick={onClose} />
+          <img
+            src="/close-circle.svg"
+            className="size-6 sm:hidden flex cursor-pointer"
+            onClick={onClose}
+          />
         </div>
         <div className="sm:rounded-b-4xl w-full sm:h-fit h-full p-6 pt-3 flex flex-col gap-4 bg-gray-100">
           <div

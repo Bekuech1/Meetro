@@ -1,162 +1,95 @@
-import { LoadingSpinner } from "@/components/create-event/Private";
-import DeleteEvent from "@/components/event-dashboard/DeleteEvent";
-import EditEvent from "@/components/event-dashboard/EditEvent";
-import GuestList from "@/components/event-dashboard/GuestList";
-import ShareEvent from "@/components/event-dashboard/ShareEvent";
-// import LoadingSpinner from "@/components/Layout-conponents/LoadingSpinner";
-import API from "@/lib/axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import GuestsTab from "@/components/manage-event/GuestsTab";
+import OverviewTab from "@/components/manage-event/OverviewTab";
+import PayoutsTab from "@/components/manage-event/PayoutsTab";
+import WithdrawalTab from "@/components/manage-event/WithdrawalTab";
+import { eventsApi } from "@/services/eventsApi";
+import { useEventStore } from "@/stores/useEventStore";
+import { useQuery } from "@tanstack/react-query";
+import { createContext, useContext, useEffect } from "react";
+import { useLocation, useParams, useSearchParams } from "react-router";
 
-// this is the page for added mangement feature to each Events
-export default function ManageEventPage() {
-  const { eventId } = useParams();
-  const [eventData, setEventData] = useState(null);
-  const [activeTab, setActiveTab] = useState("eventDetails");
-  const [loading, setLoading] = useState(false);
-  const handleTabChange = tab => {
-    setActiveTab(tab);
-  };
+const ManageEventContext = createContext(undefined);
 
-  const attendeesList = eventData?.attendees.L || [];
+// Custom hook to use manage event context
+export const useManageEventContext = () => {
+  const context = useContext(ManageEventContext);
 
-  // Map by unique attendee ID while prioritizing "yes"
-  const attendeeMap = new Map();
+  if (context === undefined) {
+    throw new Error("ManageEventContext was used outside provider");
+  }
 
-  attendeesList.forEach(att => {
-    const email = att.M.email.S; // or userId
-    const response = att.M.responseType.S; // "yes", "maybe"
+  return context;
+};
 
-    const existing = attendeeMap.get(email);
+function ManageEvent() {
+  // Get current tab from URL search params
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { slug: eventId } = useParams();
+  const tab = searchParams.get("tab") || "overview";
+  const location = useLocation();
 
-    // If nothing exists yet, store it
-    if (!existing) {
-      attendeeMap.set(email, att);
-      return;
-    }
+  // Get event store
+  const { setActiveEvent, setIsLoading } = useEventStore();
 
-    // If existing is maybe but new is yes → replace
-    if (existing.M.responseType.S !== "yes" && response === "yes") {
-      attendeeMap.set(email, att);
-    }
+  // Fetch event data and store it in the event store
+  const { data: event } = useQuery({
+    queryKey: ["event", eventId],
+    queryFn: () => eventsApi.getProtectedEvent(eventId),
+    staleTime: 15 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    gcTime: 30 * 60 * 1000,
   });
 
-  const attendees = Array.from(attendeeMap.values());
+  // Update the event store when data changes
+  useEffect(() => {
+    if (event) {
+      setActiveEvent(event);
+      setIsLoading(false);
+    } else {
+      setActiveEvent(null);
+      setIsLoading(true);
+    }
+  }, [event, setActiveEvent, setIsLoading]);
 
   useEffect(() => {
-    const fetchEvent = async () => {
-      setLoading(true);
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, [location]);
 
-      try {
-        const response = await API.get(`/events/${eventId}`);
-        const event = response.data;
-        setEventData(event);
-        console.log("evet data:", event);
-      } catch (error) {
-        console.error("Error fetching event data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEvent();
-  }, [eventId]);
+  const handleTabChange = value => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set("tab", value);
+    setSearchParams(newSearchParams);
+  };
 
-  if (loading)
-    return (
-      <div className="bg-[#F0F0F0]  h-[100vh] flex justify-center items-center">
-        <LoadingSpinner size={40} />
-      </div>
-    );
+  const renderTabContent = () => {
+    switch (tab) {
+      case "overview":
+        return <OverviewTab />;
+      case "guests":
+        return <GuestsTab />;
+      case "payouts":
+        return <PayoutsTab />;
+      case "withdraw":
+        return <WithdrawalTab />;
+      default:
+        return <OverviewTab />;
+    }
+  };
 
   return (
-    <>
-      <section className="bg-white">
-        <div className="md:w-[950px] mx-auto flex flex-col p-4 gap-4 md:pt-10 md:px-0 md:pb-6 md:gap-2">
-          <div className="flex items-center justify-between ">
-            <img
-              src="/arrow-left.svg"
-              alt=""
-              onClick={() => window.history.back()}
-              className="cursor-pointer"
-            />
-
-            <div className="flex gap-4 md:hidden">
-              <ShareEvent eventId={eventId} className={`bg-[#F0F0F0]`} />
-
-              <DeleteEvent eventId={eventId} />
-            </div>
-          </div>
-
-          <div className="flex justify-between">
-            <div className="flex flex-col gap-2 ">
-              <h2 className="text-[#001010] capitalize text-2xl paytone">
-                {eventData?.title?.S}
-              </h2>
-
-              <div className="flex items-center gap-2">
-                <div className="flex items-center">
-                  <img src="/location.svg" alt="" />
-                  <p className="text-sm font-medium text-[#8A9191] capitalize satoshi">
-                    {`${eventData?.location?.M?.venue?.S},
-                    ${eventData?.location?.M?.state?.S},
-                    ${eventData?.location?.M?.country?.S}`}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <img src="/timer.svg" alt="" />
-                  <p className="text-sm font-medium text-[#8A9191] capitalize satoshi">
-                    {`${eventData?.timeFrom?.S}`}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="hidden md:flex gap-4 items-center ">
-              <ShareEvent eventId={eventId} className={`bg-[#F0F0F0]`} />
-
-              <DeleteEvent eventId={eventId} />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center">
-            {/* tab toggle */}
-            <div
-              style={{
-                boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
-                backdropFilter: "blur(16px)",
-              }}
-              className="flex p-[4px] rounded-[20px] bg-white md:w-fit h-fit w-full"
-            >
-              <button
-                className={`${
-                  activeTab === "eventDetails"
-                    ? "bg-[#AEFC40]"
-                    : "bg-[#FFFFFEFC]"
-                } text-[#010E1F] py-1 px-2 rounded-3xl text-xs font-bold satoshi w-full md:w-auto`}
-                onClick={() => handleTabChange("eventDetails")}
-              >
-                Event Details
-              </button>
-
-              <button
-                className={`${
-                  activeTab === "guests" ? "bg-[#AEFC40] " : "bg-[#FFFFFEFC] "
-                } text-[#010E1F] py-2 px-2 rounded-3xl text-xs font-bold satoshi w-full md:w-auto`}
-                onClick={() => handleTabChange("guests")}
-              >
-                Guests
-              </button>
-            </div>
-          </div>
+    <ManageEventContext.Provider value={{ tab, handleTabChange }}>
+      <main className="bg-[#F0F0F0] h-full relative flex-1 flex flex-col pt-6 w-full pb-10">
+        <div className="max-w-[982px] w-full mx-auto flex">
+          {renderTabContent()}
         </div>
-      </section>
-
-      <section className="min-h-[642px] px-4 pb-10 pt-6 bg-[#F0F0F0]">
-        <div className="md:w-[950px] mx-auto">
-          {activeTab === "eventDetails" && <EditEvent eventData={eventData} />}
-          {activeTab === "guests" && <GuestList guests={attendees || []} />}
-        </div>
-      </section>
-    </>
+      </main>
+    </ManageEventContext.Provider>
   );
 }
+
+export default ManageEvent;

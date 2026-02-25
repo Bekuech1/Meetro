@@ -1,11 +1,16 @@
 import { clsx } from "clsx";
 import { format, isValid, parse } from "date-fns";
-import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
+
+export const formatDate = (value, formatStr = "MMM d   h:mm a") => {
+  if (!value) return "";
+  const date = new Date(value);
+  return format(date, formatStr);
+};
 
 export function timeAgo(dateString) {
   const now = new Date();
@@ -42,51 +47,27 @@ export const parseDate = rawDate => {
   return isValid(parsed) ? parsed : null;
 };
 
-export const groupEvents = events =>
-  useMemo(() => {
-    // If there are no events, return an empty object early
-    if (!events || events.length === 0) return {};
+export const randomProfileImage = () => {
+  const randomIndex = Math.floor(Math.random() * 4) + 1;
+  return `Profile-${randomIndex}.svg`;
+};
 
-    // Object to hold grouped events
-    const grouped = {};
-
-    // Get today's date and reset time to midnight for accurate comparison
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Loop through each event
-    for (const event of events) {
-      // Convert event.date into a Date object
-      const parsed = parseDate(event.date);
-      if (!parsed) continue; // Skip invalid or unparsable dates
-
-      // Reset the event date's time to midnight
-      parsed.setHours(0, 0, 0, 0);
-
-      // Skip events that are before today's date
-      if (parsed < today) continue;
-
-      // Format the date into a key string
-      const key = format(parsed, "yyyy-MM-dd");
-
-      // If this date hasn't been seen before, initialize an empty array
-      if (!grouped[key]) grouped[key] = [];
-
-      // Add the current event to its date group
-      grouped[key].push(event);
+// Group events by date
+export const groupEventsByDate = eventsList => {
+  const grouped = {};
+  eventsList.forEach(event => {
+    const date = new Date(event.startDate);
+    const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
+    const dayNum = String(date.getDate()).padStart(2, "0");
+    const monthName = date.toLocaleDateString("en-US", { month: "long" });
+    const eventDate = `${dayName}, ${dayNum} ${monthName}`;
+    if (!grouped[eventDate]) {
+      grouped[eventDate] = [];
     }
-
-    // Sort the grouped object by date (earliest → latest)
-    return Object.keys(grouped)
-      .sort((a, b) => new Date(a) - new Date(b))
-      .reduce((acc, date) => {
-        acc[date] = grouped[date]; // Rebuild the object in sorted order
-        return acc;
-      }, {});
-
-    // Re-run only when events changes
-  }, [events]);
-
+    grouped[eventDate].push(event);
+  });
+  return grouped;
+};
 // Helper function to calculate time remaining
 export function calculateTimeRemaining(eventDate) {
   const now = new Date();
@@ -115,12 +96,12 @@ export function calculateTimeRemaining(eventDate) {
   }
 }
 
-export const formatNaira = amount => {
+export const formatNaira = (amount, fractionDigits = 0) => {
   return new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: "NGN",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
   }).format(amount);
 };
 
@@ -129,7 +110,7 @@ export function formatCurrency(amount) {
   return "₦ " + Number(amount).toLocaleString("en-NG");
 }
 
-const format12Hour = (hour, minute) => {
+const format12Hour = () => {
   const period = hour >= 12 ? "PM" : "AM";
   const displayHour = hour % 12 || 12; // converts 0 → 12
   const mm = String(minute).padStart(2, "0");
@@ -187,3 +168,17 @@ export const states = [
   { id: 35, name: "Yobe" },
   { id: 36, name: "Zamfara" },
 ];
+
+export const categories = {
+  "Community Meetups": "text-[#0A84FF]",
+  "Nightlife & Parties": "text-[#011F0F]",
+  "Music & Concerts": "text-[#4A3A74]",
+  "Networking & Conferences": "text-[#077D8A]",
+  "Festivals & Cultural Events": "text-[#496A1B]",
+  "Food & Drink Events": "text-[#9B1C46]",
+  "Tech & Innovation": "text-[#011F0F]",
+  "Art & Exhibitions": "text-[#CF7E00]",
+  "Outdoor & Adventure": "text-[#B25000]",
+  "Gaming & Esports": "text-[#269E44]",
+  "Charity & Fundraisers": "text-[#8125AF]",
+};

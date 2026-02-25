@@ -1,93 +1,102 @@
 /* paytone */
 
-@import url('https://fonts.googleapis.com/css2?family=Paytone+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Paytone+One&display=swap");
 
 /* nico moji */
 
-@import url('https://fonts.googleapis.com/earlyaccess/nicomoji.css');
+@import url("https://fonts.googleapis.com/earlyaccess/nicomoji.css");
 
 /* urbanist */
-@import url('https://fonts.googleapis.com/css?family=Urbanist');
-
+@import url("https://fonts.googleapis.com/css?family=Urbanist");
 
 /* visbycf */
 
 @font-face {
-    font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-extrabold.otf') format("opentype");
-    font-weight: 800; 
-  }
+  font-family: "visbycf";
+  src: url("../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-extrabold.otf")
+    format("opentype");
+  font-weight: 800;
+}
 @font-face {
-    font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-bold.otf') format("opentype");
-    font-weight: 700;
-  }
+  font-family: "visbycf";
+  src: url("../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-bold.otf")
+    format("opentype");
+  font-weight: 700;
+}
 @font-face {
-    font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-heavy.otf') format("opentype");
-    font-weight: 600; 
-  }
-  @font-face {
-      font-family: 'visbycf';
-      src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-medium.otf') format("opentype");
-      font-weight: 500; 
-    }
+  font-family: "visbycf";
+  src: url("../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-heavy.otf")
+    format("opentype");
+  font-weight: 600;
+}
 @font-face {
-    font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-light.otf') format("opentype");
-    font-weight: 450; 
-  }
+  font-family: "visbycf";
+  src: url("../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-medium.otf")
+    format("opentype");
+  font-weight: 500;
+}
 @font-face {
-    font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-regular.otf') format("opentype");
-    font-weight: 400; 
-  }
+  font-family: "visbycf";
+  src: url("../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-light.otf")
+    format("opentype");
+  font-weight: 450;
+}
 @font-face {
-    font-family: 'visbycf';
-    src: url('../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-thin.otf') format("opentype");
-    font-weight: 300; 
-  }
-
+  font-family: "visbycf";
+  src: url("../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-regular.otf")
+    format("opentype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "visbycf";
+  src: url("../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-thin.otf")
+    format("opentype");
+  font-weight: 300;
+}
 
 /* satoshi  */
 
 @font-face {
-    font-family: 'satoshi';
-    src: url('../src/assets/fonts/OTF/Satoshi-Bold.otf') format("opentype");
-    font-weight: 700; 
-  }
-  @font-face {
-      font-family: 'satoshi';
-      src: url('../src/assets/fonts/OTF/Satoshi-Medium.otf') format("opentype");
-      font-weight: 500; 
-    }
-    @font-face {
-        font-family: 'satoshi';
-        src: url('../src/assets/fonts/OTF/Satoshi-Regular.otf') format("opentype");
-        font-weight: 400; 
-    }
-    @font-face {
-        font-family: 'satoshi';
-        src: url('../src/assets/fonts/OTF/Satoshi-Light.otf') format("opentype");
-        font-weight: 300; 
-      }
-
-.paytone{
-  font-family: 'Paytone One', sans-serif;
+  font-family: "satoshi";
+  src: url("../src/assets/fonts/OTF/Satoshi-Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "satoshi";
+  src: url("../src/assets/fonts/OTF/Satoshi-Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "satoshi";
+  src: url("../src/assets/fonts/OTF/Satoshi-Regular.otf") format("opentype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "satoshi";
+  src: url("../src/assets/fonts/OTF/Satoshi-Light.otf") format("opentype");
+  font-weight: 300;
 }
 
-.satoshi{
-  font-family: 'satoshi', sans-serif;
+.paytone {
+  font-family: "Paytone One", sans-serif;
 }
 
-.nico-moji{
-  font-family: 'Nico Moji', sans-serif;
+.satoshi {
+  font-family: "satoshi", sans-serif;
 }
 
-.times-new-roman{
-  font-family: 'Times New Roman', Times, serif;
+.nico-moji {
+  font-family: "Nico Moji", sans-serif;
 }
 
-.urbanist{
-  font-family: 'Urbanist', sans-serif;
+.times-new-roman {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.urbanist {
+  font-family: "Urbanist", sans-serif;
+}
+
+.visbycf {
+  font-family: "visbycf", sans-serif;
 }

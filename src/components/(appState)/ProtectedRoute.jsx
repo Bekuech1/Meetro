@@ -1,9 +1,16 @@
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const idToken = useAuthStore(state => state.idToken);
-  return idToken ? children : <Navigate to="/authentication" replace />;
+  // Get user from auth store
+  const user = useAuthStore(state => state.user);
+  // Get current location
+  const location = useLocation();
+  return user ? (
+    children
+  ) : (
+    <Navigate to="/" replace state={{ from: location }} />
+  );
 };
 
 export default ProtectedRoute;

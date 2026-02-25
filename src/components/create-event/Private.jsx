@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import CreateEventBtn from "../Layout-conponents/CreateEventBtn";
+import CreateEventBtn from "../layout-components/CreateEventBtn";
 import When from "./PopUps/When";
 import Where from "./PopUps/Where";
 import Host from "./PopUps/Host";

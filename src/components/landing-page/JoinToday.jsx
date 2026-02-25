@@ -1,0 +1,49 @@
+import Lottie from "react-lottie";
+import { Link } from "react-router";
+import animationData from "../layout-components/bgmove.json";
+import Button from "../layout-components/Button";
+import CtaButton from "../layout-components/CtaButton";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+
+const JoinToday = () => {
+  const { handleCreateEvent } = useCreateEvent();
+  return (
+    <div className="relative w-full min-h-screen overflow-hidden">
+      <div className="absolute inset-0">
+        <Lottie options={defaultOptions} />
+      </div>
+
+      <div className="flex justify-center px-4 gap-12 w-full min-h-screen items-center m-auto relative z-10">
+        <div className="grid gap-6 justify-center text-center w-full">
+          <h4 className="capitalize text-[#4A3A74] text-[36px] md:text-[60px] leading-[100%] font-[400] paytone">
+            join meetro today!
+          </h4>
+          <p className="text-[14px] md:text-[16px] font-[700] leading-5 md:leading-[24px] text-[#8A9191] satoshi">
+            Start discovering exciting events in your area and never miss out.
+          </p>
+          <div className="flex gap-4 mx-auto justify-center flex-wrap w-fit mt-6">
+            <a
+              href="https://chat.whatsapp.com/FLUaeqHc6oAIXNJeHilDhQ"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button name="Join Community" color="bg-white" />
+            </a>
+            <CtaButton name="create event" onClick={handleCreateEvent} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default JoinToday;

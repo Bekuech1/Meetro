@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import InputModals from "../InputModals";
 import PopUpInput from "./Popup components/PopUpInput";
-import CreateEventBtn from "@/components/Layout-conponents/CreateEventBtn";
+import CreateEventBtn from "@/components/layout-components/CreateEventBtn";
 import { searchBanks } from "../../../utils/Banks"; // Import the banks data and search function
 import API from "@/lib/axios";
 

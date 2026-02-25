@@ -1,6 +1,6 @@
-import LandingNav from "@/components/LandingPage/LandingNav";
-import AuthModal from "@/components/Layout-conponents/Authentication/AuthModal";
-import Footer from "@/components/Layout-conponents/Footer";
+import LandingNav from "@/components/landing-page/LandingNav";
+import AuthModal from "@/components/authentication/AuthModal";
+import Footer from "@/components/layout-components/Footer";
 import { Outlet, useNavigate } from "react-router-dom";
 
 function MainLayout() {
@@ -14,7 +14,7 @@ function MainLayout() {
         <Outlet />
       </main>
       <Footer />
-      <AuthModal onSuccess={() => navigate("/create-event")} />
+      <AuthModal onSuccess={() => navigate("/home")} />
     </div>
   );
 }
