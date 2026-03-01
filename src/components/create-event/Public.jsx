@@ -30,12 +30,6 @@ const Public = ({ onPrivate }) => {
               Images with a 1 : 1 ratio (a square) work best
             </p>
           </div>
-          {/* <div className="flex p-3 gap-2 rounded-[12px] bg-white/50 border border-white backdrop-blur-[2px] items-center w-full">
-            <h5 className="text-[#8A9191] text-[16px] font-[700] leading-[24px] satoshi capitalize w-full">
-              theme settings
-            </h5>
-            <div className="aspect-square size-[47px] py-3 px-2 flex justify-center items-center rounded-[6px] backdrop-blur-[12px] border border-[#866AD2]"></div>
-          </div> */}
         </section>
 
         {/* right section */}

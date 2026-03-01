@@ -14,6 +14,7 @@ import ManageEventHeader from "./components/manage-event/ManageEventHeader";
 import EditEvent from "./routes/EditEvent";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useRehydrateUser } from "./hooks/useRehydrateUser";
+import CreateEvent from "./routes/CreateEvent";
 
 function App() {
   useRehydrateUser(); // Rehydrate user on app load
@@ -53,6 +54,14 @@ function App() {
         >
           <Route path="/home" element={<MyEvents />} />
         </Route>
+        <Route
+          path="/create-event"
+          element={
+            <ProtectedRoute>
+              <CreateEvent />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

@@ -167,6 +167,7 @@ export const states = [
   { id: 34, name: "Taraba" },
   { id: 35, name: "Yobe" },
   { id: 36, name: "Zamfara" },
+  { id: 37, name: "FCT"}
 ];
 
 export const categories = {
