@@ -10,34 +10,22 @@ function Footer() {
           <p>© {new Date().getFullYear()} Meetro All rights reserved</p>
           <ul className="flex items-center gap-6">
             <li>
-              <Link
-                to="#"
-                className="transition-colors duration-200 hover:text-[#4A5B5C]"
-              >
+              <Link to="/legal?tab=terms" className="transition-colors duration-200 hover:text-[#4A5B5C]">
                 Terms of Service
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="transition-colors duration-200 hover:text-[#4A5B5C]"
-              >
+              <Link to="/legal?tab=privacy" className="transition-colors duration-200 hover:text-[#4A5B5C]">
                 Privacy Policy
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="transition-colors duration-200 hover:text-[#4A5B5C]"
-              >
+              <Link to="/legal?tab=data" className="transition-colors duration-200 hover:text-[#4A5B5C]">
                 Data Policy
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="transition-colors duration-200 hover:text-[#4A5B5C]"
-              >
+              <Link to="/legal?tab=cookies" className="transition-colors duration-200 hover:text-[#4A5B5C]">
                 Cookies
               </Link>
             </li>

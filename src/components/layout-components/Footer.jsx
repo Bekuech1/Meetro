@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import Button from "./Button";
-import Legal from "./Legal";
-import { useDisableScroll } from "@/hooks/useDisableScroll";
+import { Link } from "react-router"; // 👇 Imported Link from React Router
 
 const SOCIAL_LINKS = [
   { name: 'instagram', icon: '/ig', label: 'Instagram', url: 'https://instagram.com/meetro.live' },
@@ -10,62 +9,31 @@ const SOCIAL_LINKS = [
   { name: 'linkedin', icon: '/in', label: 'LinkedIn', url: 'https://linkedin.com/company/meetro' }
 ];
 
+// 👇 1. Updated this array to include the actual URL paths we created
 const LEGAL_LINKS = [
-  { key: 'Terms', label: 'Terms of Service' },
-  { key: 'Privacy', label: 'Privacy Policy' },
-  { key: 'Data', label: 'Data Policy' },
-  { key: 'Cookies', label: 'Cookies' }
+  { key: 'Terms', label: 'Terms of Service', url: '/legal?tab=terms' },
+  { key: 'Privacy', label: 'Privacy Policy', url: '/legal?tab=privacy' },
+  { key: 'Data', label: 'Data Policy', url: '/legal?tab=data' },
+  // { key: 'Cookies', label: 'Cookies', url: '/legal?tab=cookies' } // Add this back if you create a cookies tab!
 ];
 
-const Footer = ({ onclick }) => {
-  const [isLegalOpen, setIsLegalOpen] = useState(false);
-  const [activeLegalComponent, setActiveLegalComponent] = useState("");
+const Footer = () => {
+  // 👇 2. Removed all the modal state! Only kept the social hover state.
   const [hoveredSocial, setHoveredSocial] = useState(null);
-
-  useDisableScroll(isLegalOpen);
-
-  const openLegal = useCallback((component) => {
-    setActiveLegalComponent(component);
-    setIsLegalOpen(true);
-  }, []);
-
-  const closeLegal = useCallback(() => {
-    setIsLegalOpen(false);
-    setActiveLegalComponent("");
-  }, []);
 
   const handleSocialHover = useCallback((socialName, isHovering) => {
     setHoveredSocial(isHovering ? socialName : null);
   }, []);
 
-  const handleKeyPress = useCallback((event, action) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      action();
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleEscape = (event) => {
-      if (event.key === 'Escape' && isLegalOpen) {
-        closeLegal();
-      }
-    };
-
-    if (isLegalOpen) {
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
-    }
-  }, [isLegalOpen, closeLegal]);
-
   return (
     <footer className="bg-[#01160B] md:px-[60px] px-4 py-[64px]" id="footer" role="contentinfo">
       <div className="grid md:flex border-b border-white/10 pb-10 gap-[40px] md:justify-between">
+
         {/* Brand Section */}
         <div className="grid gap-6 h-fit w-fit mx-auto md:mx-0">
-          <img 
-            src="/meetroLogo.svg" 
-            alt="Meetro Logo" 
+          <img
+            src="/meetroLogo.svg"
+            alt="Meetro Logo"
             className="mx-auto md:mx-0"
             width="120"
             height="40"
@@ -77,7 +45,7 @@ const Footer = ({ onclick }) => {
           >
             connect@Meetro.live
           </a>
-          
+
           {/* Social Media Links */}
           <nav className="size-fit flex items-center gap-3 mx-auto md:mx-0" aria-label="Social media links">
             {SOCIAL_LINKS.map(({ name, icon, label, url }) => (
@@ -114,12 +82,6 @@ const Footer = ({ onclick }) => {
           >
             <Button name="Join Community" color="bg-white" />
           </a>
-          {/* <Button 
-            name="Join waitlist" 
-            color="bg-[#AFFC41]" 
-            onclick={onclick}
-            aria-label="Join our waitlist"
-          /> */}
         </div>
       </div>
 
@@ -128,39 +90,30 @@ const Footer = ({ onclick }) => {
         <p className="md:text-[14px] font-[500] md:leading-[20px] text-[10px] leading-[14px] text-[#B0B5B5] mx-auto md:mx-0 satoshi">
           © {new Date().getFullYear()} Meetro All rights reserved
         </p>
-        
-        {/* Legal Links */}
+
+        {/* 👇 3. Updated this section to use React Router <Link> tags */}
         <nav className="flex md:gap-6 gap-2 mx-auto md:mx-0" aria-label="Legal information">
-          {LEGAL_LINKS.map(({ key, label }) => (
-            <button
+          {LEGAL_LINKS.map(({ key, label, url }) => (
+            <Link
               key={key}
+              to={url}
               className="md:text-[14px] font-[500] md:leading-[20px] text-[10px] leading-[14px] text-[#B0B5B5] capitalize satoshi cursor-pointer hover:text-white transition-colors duration-200 rounded px-1 py-0.5"
-              onClick={() => openLegal(key)}
-              onKeyDown={(e) => handleKeyPress(e, () => openLegal(key))}
               aria-label={`Open ${label}`}
-              type="button"
             >
               {label}
-            </button>
+            </Link>
           ))}
         </nav>
       </div>
-      
-      <img 
-        src="/meetroFooter.svg" 
-        alt="Meetro footer decoration" 
+
+      <img
+        src="/meetroFooter.svg"
+        alt="Meetro footer decoration"
         className="w-full"
         loading="lazy"
       />
-      
-      {/* Legal Modal */}
-      {isLegalOpen && (
-        <Legal 
-          closeLegal={closeLegal} 
-          label={activeLegalComponent}
-          isOpen={isLegalOpen}
-        />
-      )}
+
+      {/* 👇 4. Removed the entire Legal Modal block from down here! */}
     </footer>
   );
 };
