@@ -44,8 +44,7 @@ const LandingNav = React.memo(() => {
           <NavLink
             to={item.path}
             className={({ isActive }) =>
-              `font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${
-                isActive ? "text-[#AEFC40]" : "text-[#B0BAB5]"
+              `font-bold text-sm leading-5 capitalize cursor-pointer transition-colors duration-200 satoshi ${isActive ? "text-[#AEFC40]" : "text-[#B0BAB5]"
               }`
             }
             onClick={handleMenuClose}
@@ -66,8 +65,7 @@ const LandingNav = React.memo(() => {
             to={item.path}
             onClick={handleMenuClose}
             className={({ isActive }) =>
-              `w-full h-fit flex py-4 paytone capitalize font-medium text-[20px] leading-6 cursor-pointer text-left transition-colors duration-200 ${
-                isActive ? "text-[#AEFC40]" : "text-white"
+              `w-full h-fit flex py-4 paytone capitalize font-medium text-[20px] leading-6 cursor-pointer text-left transition-colors duration-200 ${isActive ? "text-[#AEFC40]" : "text-white"
               }`
             }
           >

@@ -69,7 +69,7 @@ function ResetPassword() {
       // Set error message
       setErrorMessage(
         err.response?.data?.message ||
-          "Failed to reset password. Please try again."
+        "Failed to reset password. Please try again."
       );
     },
   });
