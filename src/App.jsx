@@ -14,10 +14,10 @@ import ManageEvent from "./routes/ManageEvent";
 import ManageEventHeader from "./components/manage-event/ManageEventHeader";
 import EditEvent from "./routes/EditEvent";
 import Withdraw from "./routes/Withdraw";
+import Legal from "./routes/legal/Legal";
+import LegalLayout from "./layouts/LegalLayout";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useRehydrateUser } from "./hooks/useRehydrateUser";
-import LegalLayout from "./layouts/LegalLayout";
-import Legal from "./routes/legal/Legal";
 
 function App() {
   useRehydrateUser(); // Rehydrate user on app load
@@ -41,28 +41,23 @@ function App() {
         </Route>
         {/* Reset password */}
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/home" element={<MyEvents />} />
-        </Route>
-        {/* Manage event routes */}
-        <Route
-          element={
-            <ProtectedRoute>
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/home" element={<MyEvents />} />
+          </Route>
+          {/* <Route path="/create-event" element={<CreateEvent />} /> */}
+          <Route
+            element={
               <ManageEventLayout>
                 <ManageEventHeader />
               </ManageEventLayout>
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/edit-event/:slug" element={<EditEvent />} />
-          <Route path="/manage-event/:slug" element={<ManageEvent />} />
-          <Route path="/manage-event/:slug/withdraw" element={<Withdraw />} />
+            }
+          >
+            <Route path="/edit-event/:slug" element={<EditEvent />} />
+            <Route path="/manage-event/:slug" element={<ManageEvent />} />
+            <Route path="/manage-event/:slug/withdraw" element={<Withdraw />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
