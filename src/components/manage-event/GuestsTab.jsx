@@ -10,24 +10,17 @@ import GuestsTable from "./GuestsTable";
 import GuestsTableSkeleton from "./GuestsTableSkeleton";
 import NoGuests from "./NoGuests";
 import TableSearch from "./TableSearch";
-import TableSort from "./TableSort";
-
-// Sort options for dropdown
-const sortOptions = [
-  { value: "date", label: "By Date" },
-  { value: "amount", label: "By Amount" },
-];
+import Modal from "../layout-components/Modal/Modal";
 
 function GuestsTab() {
-  const [sortValue, setSortValue] = useState(sortOptions[0].value);
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const { slug: eventId } = useParams();
 
   const { data, isLoading: loading } = useQuery({
-    queryKey: ["guests", eventId, sortValue, page, search],
-    queryFn: () => eventsApi.getEventGuests(eventId, sortValue, page, search),
+    queryKey: ["guests", eventId, page, search],
+    queryFn: () => eventsApi.getEventGuests(eventId, page, search),
     staleTime: 15 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -39,11 +32,6 @@ function GuestsTab() {
   useEffect(() => {
     setPage(1);
   }, [search]);
-
-  // Reset page when sort changes
-  useEffect(() => {
-    setPage(1);
-  }, [sortValue]);
 
   // Auto-clear search when input is manually cleared
   useEffect(() => {
@@ -95,11 +83,14 @@ function GuestsTab() {
         {/* Header */}
         <h3 className="font-bold text-[#001010]">Guests</h3>
         <div className="flex items-center gap-4">
-          <TagButton
-            text="Invite Guests"
-            className="sm:px-2 h-7 sm:h-8 sm:text-xs text-[10px] leading-3.5"
-            rightImg={<Send2 variant="Bold" />}
-          />
+          <Modal.Open opens="share-event">
+            <TagButton
+              text="Invite Guests"
+              className="sm:px-2 h-7 sm:h-8 sm:text-xs text-[10px] leading-3.5"
+              rightImg={<Send2 variant="Bold" />}
+            />
+          </Modal.Open>
+
           <TagButton
             text="Share Blast"
             className="sm:px-2 h-7 sm:h-8 sm:text-xs text-[10px] leading-3.5"
@@ -108,27 +99,23 @@ function GuestsTab() {
         </div>
       </div>
       {/* Guests table */}
-      <div className="p-6 border flex flex-col gap-4 border-white rounded-4xl bg-white/50">
-        <div className="flex justify-between items-center gap-4">
-          {/* Search bar */}
-          <TableSearch
-            value={searchInput}
-            onChange={e => setSearchInput(e.target.value)}
-            handleSearch={handleSearch}
-            onClear={handleClearSearch}
-            onKeyDown={e => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-          />
-          {/* Sort options */}
-          <TableSort
-            options={sortOptions}
-            value={sortValue}
-            onChange={setSortValue}
-          />
-        </div>
+      <div className="p-6 border flex flex-col gap-4 border-white rounded-4xl bg-white/50 overflow-visible">
+        {(guests.length > 0 || hasSearch || loading) && (
+          <div className="flex justify-between items-center gap-4">
+            {/* Search bar */}
+            <TableSearch
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+              handleSearch={handleSearch}
+              onClear={handleClearSearch}
+              onKeyDown={e => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+            />
+          </div>
+        )}
         {loading ? (
           <GuestsTableSkeleton rows={10} />
         ) : guests.length > 0 ? (
@@ -181,7 +168,9 @@ function GuestsTab() {
           <React.Fragment>
             {!hasSearch ? (
               <NoGuests>
-                <TextButton text="Invite Guests" variant="tertiary" />
+                <Modal.Open opens="share-event">
+                  <TextButton text="Invite Guests" variant="tertiary" />
+                </Modal.Open>
               </NoGuests>
             ) : (
               <NoGuests

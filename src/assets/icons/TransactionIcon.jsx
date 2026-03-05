@@ -72,8 +72,8 @@ function TransactionIcon() {
           x2="77.585007"
           y2="183.09479"
         >
-          <stop offset="0" stop-color="#265912" />
-          <stop offset="1" stop-color="#53A127" />
+          <stop offset="0" stopColor="#265912" />
+          <stop offset="1" stopColor="#53A127" />
         </linearGradient>
       </defs>
       <path
@@ -110,8 +110,8 @@ function TransactionIcon() {
           x2="181.93221"
           y2="207.39914"
         >
-          <stop offset="0" stop-color="#104712" />
-          <stop offset="1" stop-color="#3E671F" />
+          <stop offset="0" stopColor="#104712" />
+          <stop offset="1" stopColor="#3E671F" />
         </linearGradient>
       </defs>
       <path

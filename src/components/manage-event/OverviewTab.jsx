@@ -1,5 +1,4 @@
-import { useManageEventContext } from "@/routes/ManageEvent";
-import { useEventStore } from "@/stores/useEventStore";
+import { useManageEventContext } from "@/layouts/ManageEventLayout";
 import { format } from "date-fns";
 import {
   Calendar1,
@@ -12,7 +11,6 @@ import {
   Video,
 } from "iconsax-reactjs";
 import { Link } from "react-router";
-import ShareEventModal from "../event-dashboard/ShareEventModal";
 import Avatar from "../layout-components/Avatar";
 import AvatarGroup from "../layout-components/AvatarGroup";
 import IconButton from "../layout-components/Buttons/IconButton";
@@ -30,8 +28,7 @@ import { twMerge } from "tailwind-merge";
 import { categories } from "@/lib/utils";
 
 function OverviewTab() {
-  const { activeEvent: event, isLoading: loading } = useEventStore();
-  const { handleTabChange } = useManageEventContext();
+  const { event, loading, handleTabChange } = useManageEventContext();
 
   if (loading) {
     return (
@@ -357,14 +354,6 @@ function OverviewTab() {
       {/* Delete event modal */}
       <DeleteEventModal eventId={event._id} />
       {/* Share event modal */}
-      <ShareEventModal
-        event={{
-          image: event.image,
-          title: event.title,
-          startDate: event.startDate,
-          slug: event.slug,
-        }}
-      />
     </div>
   );
 }

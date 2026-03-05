@@ -10,7 +10,7 @@ const MyEvents = () => {
     (userEventsCount?.hosted || 0) + (userEventsCount?.attended || 0);
 
   return (
-    <main className="bg-[#F0F0F0] h-full relative flex-1 flex flex-col w-full pb-[84px]">
+    <main className="bg-[#F0F0F0] h-full relative flex-1 flex flex-col w-full">
       {totalUserEvents === 0 ? <NoEvents /> : <MyEventsList />}
       <BottomNavigation />
     </main>

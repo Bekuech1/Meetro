@@ -1,5 +1,7 @@
+import MeetroLogoAlt from "@/assets/icons/MeetroLogoAlt";
+import MeetroLogoAltMobile from "@/assets/icons/MeetroLogoAltMobile";
+import { useManageEventData } from "@/layouts/ManageEventLayout";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useEventStore } from "@/stores/useEventStore";
 import {
   ArrowDown2,
   ArrowLeft2,
@@ -11,25 +13,27 @@ import {
 import { useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { twMerge } from "tailwind-merge";
-import MeetroLogoAlt from "@/assets/icons/MeetroLogoAlt";
-import MeetroLogoAltMobile from "@/assets/icons/MeetroLogoAltMobile";
+import Notifications from "../event-dashboard/Notifications";
+import ProfileModal from "../event-dashboard/ProfileModal";
 import Avatar from "../layout-components/Avatar";
 import IconButton from "../layout-components/Buttons/IconButton";
 import TagButton from "../layout-components/Buttons/TagButton";
-import Notifications from "../event-dashboard/Notifications";
-import ProfileModal from "../event-dashboard/ProfileModal";
 
 function ManageEventHeader() {
   // Notifications state
   const [openNotifications, setOpenNotifications] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  // Get page name
-  const pageName = useLocation().pathname.split("/")[1];
   const navigate = useNavigate();
+  const location = useLocation();
   // Get current tab from URL search params
   const tab = searchParams.get("tab") || "overview";
   const { user } = useAuthStore();
-  const { activeEvent, isLoading } = useEventStore();
+  const { event: activeEvent, loading: isLoading } = useManageEventData();
+
+  // Get last part of URL path
+  const pathParts = location.pathname.split("/");
+  const lastPathPart = pathParts[pathParts.length - 1];
+  const showNav = !["edit", "withdraw"].includes(lastPathPart);
 
   // Handle tab change by updating URL search params
   const handleTabChange = value => {
@@ -106,7 +110,7 @@ function ManageEventHeader() {
                 className={`${openProfile ? "bg-[#E5E7E3]! pointer-events-none" : ""} h-9! w-max! p-[6px]!`}
               >
                 <div className="flex items-center gap-1">
-                  <Avatar size="xs" src={`/${user?.photo}`} />
+                  <Avatar size="xs" src={`${user?.photo ? user.photo : ""}`} />
                   {openProfile ? (
                     <ArrowUp2 variant="Outline" size={12} color="#001010" />
                   ) : (
@@ -160,7 +164,7 @@ function ManageEventHeader() {
           </Link>
         </div>
         {/* Manage event tabs */}
-        {pageName === "manage-event" && activeEvent && (
+        {showNav && (
           <div className="flex justify-center">
             <div className="border border-[#F9F9F9]  p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
               <TagButton
@@ -190,7 +194,7 @@ function ManageEventHeader() {
                 size="md"
                 className={twMerge(
                   "satoshi min-w-auto px-3",
-                  tab === "payouts" || tab === "withdraw"
+                  tab === "payouts"
                     ? "hover:bg-white bg-white text-[#011F0F]"
                     : "bg-transparent text-[#B0B5B5] border-transparent"
                 )}

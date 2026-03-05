@@ -99,7 +99,7 @@ export default function TopNavigation() {
                 className={`${openProfile ? "bg-[#E5E7E3]! pointer-events-none" : ""} h-9! w-max! p-[6px]!`}
               >
                 <div className="flex items-center gap-1">
-                  <Avatar size="xs" src={`/${user?.photo}`} />
+                  <Avatar size="xs" src={user?.photo ? user.photo : ""} />
                   {openProfile ? (
                     <ArrowUp2 variant="Outline" size={12} color="#001010" />
                   ) : (
