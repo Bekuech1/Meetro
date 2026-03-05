@@ -73,7 +73,7 @@ export default function ProfileModal({ open, setOpen }) {
       {/* Top */}
       <div className="py-3 px-6 md:p-2 flex flex-col gap-4">
         <div className="flex justify-between items-start">
-          <Avatar size="xl" src={`/${user?.photo}`} />
+          <Avatar size="xl" src={user?.photo ? user.photo : ""} />
           <button
             onClick={() => setOpen(false)}
             className="md:hidden cursor-pointer"

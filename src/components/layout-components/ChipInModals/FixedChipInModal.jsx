@@ -32,7 +32,7 @@ export default function FixedChipInModal({ amount = 10000 }) {
           <div className="flex flex-col gap-y-4">
             <PaystackButton />
             <p>
-              {"By continuing, you agree to out "}
+              {"By continuing, you agree to our "}
               <Link to="/" className="text-[#7A60BF]">
                 Terms of Service
               </Link>

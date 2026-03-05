@@ -134,8 +134,8 @@ function GuestIcon() {
           x2="300.95596"
           y2="135.54434"
         >
-          <stop offset="0" stop-color="#1C1C1C" />
-          <stop offset="1" stop-color="#4D4C4C" />
+          <stop offset="0" stopColor="#1C1C1C" />
+          <stop offset="1" stopColor="#4D4C4C" />
         </linearGradient>
       </defs>
       <path
@@ -167,8 +167,8 @@ function GuestIcon() {
           x2="252.80554"
           y2="117.20327"
         >
-          <stop offset="0" stop-color="#8A8A85" />
-          <stop offset="1" stop-color="#A19EA7" />
+          <stop offset="0" stopColor="#8A8A85" />
+          <stop offset="1" stopColor="#A19EA7" />
         </linearGradient>
       </defs>
       <path
@@ -185,8 +185,8 @@ function GuestIcon() {
           x2="306.2511"
           y2="129.34004"
         >
-          <stop offset="0" stop-color="#646364" />
-          <stop offset="1" stop-color="#949292" />
+          <stop offset="0" stopColor="#646364" />
+          <stop offset="1" stopColor="#949292" />
         </linearGradient>
       </defs>
       <path
@@ -213,8 +213,8 @@ function GuestIcon() {
           x2="247.55417"
           y2="113.2921"
         >
-          <stop offset="0" stop-color="#D7D4D8" />
-          <stop offset="1" stop-color="#FCFDFD" />
+          <stop offset="0" stopColor="#D7D4D8" />
+          <stop offset="1" stopColor="#FCFDFD" />
         </linearGradient>
       </defs>
       <path
@@ -231,8 +231,8 @@ function GuestIcon() {
           x2="244.73235"
           y2="120.80215"
         >
-          <stop offset="0" stop-color="#AEB1AE" />
-          <stop offset="1" stop-color="#F0EFF1" />
+          <stop offset="0" stopColor="#AEB1AE" />
+          <stop offset="1" stopColor="#F0EFF1" />
         </linearGradient>
       </defs>
       <path
@@ -259,8 +259,8 @@ function GuestIcon() {
           x2="243.23456"
           y2="131.69159"
         >
-          <stop offset="0" stop-color="#7A7A79" />
-          <stop offset="1" stop-color="#9E9EA0" />
+          <stop offset="0" stopColor="#7A7A79" />
+          <stop offset="1" stopColor="#9E9EA0" />
         </linearGradient>
       </defs>
       <path
@@ -282,8 +282,8 @@ function GuestIcon() {
           x2="293.58237"
           y2="99.682961"
         >
-          <stop offset="0" stop-color="#6D6A6F" />
-          <stop offset="1" stop-color="#808082" />
+          <stop offset="0" stopColor="#6D6A6F" />
+          <stop offset="1" stopColor="#808082" />
         </linearGradient>
       </defs>
       <path
@@ -320,8 +320,8 @@ function GuestIcon() {
           x2="271.87958"
           y2="143.58037"
         >
-          <stop offset="0" stop-color="#606064" />
-          <stop offset="1" stop-color="#858383" />
+          <stop offset="0" stopColor="#606064" />
+          <stop offset="1" stopColor="#858383" />
         </linearGradient>
       </defs>
       <path
@@ -353,8 +353,8 @@ function GuestIcon() {
           x2="190.23941"
           y2="72.719666"
         >
-          <stop offset="0" stop-color="#3D3E3A" />
-          <stop offset="1" stop-color="#53525C" />
+          <stop offset="0" stopColor="#3D3E3A" />
+          <stop offset="1" stopColor="#53525C" />
         </linearGradient>
       </defs>
       <path
@@ -386,8 +386,8 @@ function GuestIcon() {
           x2="228.51436"
           y2="83.173874"
         >
-          <stop offset="0" stop-color="#1D1D1E" />
-          <stop offset="1" stop-color="#4F4E4F" />
+          <stop offset="0" stopColor="#1D1D1E" />
+          <stop offset="1" stopColor="#4F4E4F" />
         </linearGradient>
       </defs>
       <path
@@ -404,8 +404,8 @@ function GuestIcon() {
           x2="178.52226"
           y2="61.826046"
         >
-          <stop offset="0" stop-color="#5C5B63" />
-          <stop offset="1" stop-color="#92908E" />
+          <stop offset="0" stopColor="#5C5B63" />
+          <stop offset="1" stopColor="#92908E" />
         </linearGradient>
       </defs>
       <path
@@ -432,8 +432,8 @@ function GuestIcon() {
           x2="192.71803"
           y2="59.826698"
         >
-          <stop offset="0" stop-color="#CDCCCE" />
-          <stop offset="1" stop-color="#F6F5F3" />
+          <stop offset="0" stopColor="#CDCCCE" />
+          <stop offset="1" stopColor="#F6F5F3" />
         </linearGradient>
       </defs>
       <path
@@ -460,8 +460,8 @@ function GuestIcon() {
           x2="221.23573"
           y2="65.240379"
         >
-          <stop offset="0" stop-color="#787677" />
-          <stop offset="1" stop-color="#A09FA1" />
+          <stop offset="0" stopColor="#787677" />
+          <stop offset="1" stopColor="#A09FA1" />
         </linearGradient>
       </defs>
       <path

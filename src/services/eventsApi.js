@@ -16,9 +16,9 @@ export const eventsApi = {
     const eventResponse = await API.get(`/events/${eventId}/protected`);
     return eventResponse.data.data;
   },
-  getEventGuests: async (eventId, sort = "date", page = 1, search = "") => {
+  getEventGuests: async (eventId, page = 1, search = "") => {
     const guestsResponse = await API.get(
-      `/events/${eventId}/guests?sort=${sort}&page=${page}&search=${search}`
+      `/events/${eventId}/guests?page=${page}&search=${search}`
     );
     return guestsResponse.data;
   },

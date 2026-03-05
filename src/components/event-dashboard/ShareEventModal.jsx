@@ -1,7 +1,7 @@
 import IconButton from "../layout-components/Buttons/IconButton";
 import TextButton from "../layout-components/Buttons/TextButtons";
 import Modal from "../layout-components/Modal/Modal";
-import { Calendar1, Copy, Send2 } from "iconsax-reactjs";
+import { Calendar1, Check, Copy, Send2, TickCircle } from "iconsax-reactjs";
 import { format } from "date-fns";
 import { useState } from "react";
 
@@ -67,9 +67,15 @@ export default function ShareEventModal({ event }) {
             onClick={handleShare}
           />
           <TextButton
-            text={copied ? "Copied!" : "Copy Link"}
+            text={copied ? "Copied" : "Copy Link"}
             variant="tertiary"
-            rightImg={<Copy size={16} variant="Bold" />}
+            rightImg={
+              copied ? (
+                <TickCircle size={16} variant="Bold" />
+              ) : (
+                <Copy size={16} variant="Bold" />
+              )
+            }
             onClick={handleCopy}
           />
         </div>

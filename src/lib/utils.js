@@ -49,7 +49,7 @@ export const parseDate = rawDate => {
 
 export const randomProfileImage = () => {
   const randomIndex = Math.floor(Math.random() * 4) + 1;
-  return `Profile-${randomIndex}.svg`;
+  return `/Profile-${randomIndex}.svg`;
 };
 
 // Group events by date

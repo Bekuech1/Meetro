@@ -1,6 +1,7 @@
 import ProtectedRoute from "./components/(appState)/ProtectedRoute";
 import BlogPost from "./components/landing-page/BlogPost";
 import DashboardLayout from "./layouts/DashboardLayout";
+import ManageEventLayout from "./layouts/ManageEventLayout";
 import ScrollTop from "./components/layout-components/ScrollTop";
 import MainLayout from "./layouts/MainLayout";
 import AboutUs from "./routes/landing-page/AboutUs";
@@ -12,6 +13,7 @@ import ResetPassword from "./routes/ResetPassword";
 import ManageEvent from "./routes/ManageEvent";
 import ManageEventHeader from "./components/manage-event/ManageEventHeader";
 import EditEvent from "./routes/EditEvent";
+import Withdraw from "./routes/Withdraw";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useRehydrateUser } from "./hooks/useRehydrateUser";
 import LegalLayout from "./layouts/LegalLayout";
@@ -42,23 +44,25 @@ function App() {
         <Route
           element={
             <ProtectedRoute>
-              <DashboardLayout>
-                <ManageEventHeader />
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/edit-event/:slug" element={<EditEvent />} />
-          <Route path="/manage-event/:slug" element={<ManageEvent />} />
-        </Route>
-        <Route
-          element={
-            <ProtectedRoute>
               <DashboardLayout />
             </ProtectedRoute>
           }
         >
           <Route path="/home" element={<MyEvents />} />
+        </Route>
+        {/* Manage event routes */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <ManageEventLayout>
+                <ManageEventHeader />
+              </ManageEventLayout>
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/edit-event/:slug" element={<EditEvent />} />
+          <Route path="/manage-event/:slug" element={<ManageEvent />} />
+          <Route path="/manage-event/:slug/withdraw" element={<Withdraw />} />
         </Route>
       </Routes>
     </BrowserRouter>

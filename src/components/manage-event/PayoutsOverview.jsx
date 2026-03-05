@@ -2,10 +2,16 @@ import Tooltip from "../layout-components/Tooltip";
 import ToggleBalance from "./ToggleBalance";
 import TextButton from "../layout-components/Buttons/TextButtons";
 import { InfoCircle } from "iconsax-reactjs";
-import { useManageEventContext } from "@/routes/ManageEvent";
+import { useNavigate, useParams } from "react-router";
 
 function PayoutsOverview({ availablePayout = 0, totalReceived = 0 }) {
-  const { handleTabChange } = useManageEventContext();
+  const navigate = useNavigate();
+  const { slug: eventId } = useParams();
+
+  const handleWithdrawClick = () => {
+    navigate(`/manage-event/${eventId}/withdraw`);
+  };
+
   return (
     <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
       <div className="flex sm:flex-[1.2] flex-col">
@@ -33,7 +39,7 @@ function PayoutsOverview({ availablePayout = 0, totalReceived = 0 }) {
         text="Withdraw"
         variant="primary"
         className="w-full sm:w-auto"
-        onClick={() => handleTabChange("withdraw")}
+        onClick={handleWithdrawClick}
       />
     </div>
   );

@@ -48,7 +48,7 @@ const Avatar = ({
       ) : (
         <img
           alt={alt}
-          src={`/${defaultSrc}`}
+          src={defaultSrc}
           referrerPolicy="no-referrer"
           crossOrigin="anonymous"
           className={`h-full w-full object-cover ${SIZES[size]}`}
