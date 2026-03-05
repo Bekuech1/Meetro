@@ -16,6 +16,8 @@ import EditEvent from "./routes/EditEvent";
 import Withdraw from "./routes/Withdraw";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useRehydrateUser } from "./hooks/useRehydrateUser";
+import LegalLayout from "./layouts/LegalLayout";
+import Legal from "./routes/legal/Legal";
 
 function App() {
   useRehydrateUser(); // Rehydrate user on app load
@@ -31,6 +33,11 @@ function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/about" element={<AboutUs />} />
+        </Route>
+
+        {/* Legal Pages */}
+        <Route element={<LegalLayout />}>
+          <Route path="/legal" element={<Legal />} />
         </Route>
         {/* Reset password */}
         <Route path="/reset-password" element={<ResetPassword />} />

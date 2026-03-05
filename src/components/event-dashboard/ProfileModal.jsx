@@ -118,8 +118,7 @@ export default function ProfileModal({ open, setOpen }) {
                   onClick={() => setOpen(false)}
                   to="/profile"
                   className={({ isActive }) =>
-                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${
-                      isActive ? "bg-[#F0F0F0]" : ""
+                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${isActive ? "bg-[#F0F0F0]" : ""
                     }`
                   }
                 >
@@ -138,8 +137,7 @@ export default function ProfileModal({ open, setOpen }) {
                   to="/settings"
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${
-                      isActive ? "bg-[#F0F0F0]" : ""
+                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${isActive ? "bg-[#F0F0F0]" : ""
                     }`
                   }
                 >
@@ -158,8 +156,7 @@ export default function ProfileModal({ open, setOpen }) {
                   to="/contact"
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${
-                      isActive ? "bg-[#F0F0F0]" : ""
+                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${isActive ? "bg-[#F0F0F0]" : ""
                     }`
                   }
                 >
