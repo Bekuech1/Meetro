@@ -1,13 +1,13 @@
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = () => {
   // Get user from auth store
   const user = useAuthStore(state => state.user);
   // Get current location
   const location = useLocation();
   return user ? (
-    children
+    <Outlet />
   ) : (
     <Navigate to="/" replace state={{ from: location }} />
   );
