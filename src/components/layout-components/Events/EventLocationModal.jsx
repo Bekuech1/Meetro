@@ -6,6 +6,7 @@ import InputField from "../Inputs/InputField";
 import InputIcon from "@/assets/icons/InputIcon";
 import SelectInput from "../Inputs/SelectInput";
 import TagButton from "../Buttons/TagButton";
+import React, { useEffect, useState } from "react";
 import {
   ArrowDown2,
   Building,
@@ -16,7 +17,6 @@ import {
   Video,
 } from "iconsax-reactjs";
 import { useModalContext } from "../Modal/ModalContext";
-import { useState } from "react";
 import { states } from "@/lib/utils";
 
 // All tabs
@@ -25,25 +25,187 @@ const tabs = [
   { id: "online", label: "Online" },
 ];
 
-export default function EventLocationModal({ onSave }) {
+export default function EventLocationModal({
+  onSave,
+  locationData,
+  eventType,
+  meetingURL,
+}) {
   const { close } = useModalContext();
-  const [location, setLocation] = useState("");
-  const [showVenueInput, setShowVenueInput] = useState(false);
-  const [showDirectionsInput, setShowDirectionsInput] = useState(false);
+  // Local state to manage form inputs, initialized with existing location data if available
+
+  const initialLocationState = {
+    venue: locationData?.venue || "",
+    state: locationData?.state || "",
+    city: locationData?.city || "",
+    coordinates: locationData?.coordinates || null,
+    directions: locationData?.directions || "",
+  };
+  const [newLocation, setNewLocation] = useState(initialLocationState);
+
+  // Separate state for meeting URL to avoid confusion with location fields
+  const [newMeetingURL, setNewMeetingURL] = useState(meetingURL || "");
+
+  // State to track selected event type tab
+  const [newEventType, setNewEventType] = useState(eventType || "offline");
+
+  // Handle save action based on selected event type
+  const [venueSuggestions, setVenueSuggestions] = useState([]);
+  const [isSearchingVenue, setIsSearchingVenue] = useState(false);
+  const [showVenueSuggestions, setShowVenueSuggestions] = useState(false);
+  const [showVenueInput, setShowVenueInput] = useState(
+    locationData?.venue ? true : false
+  );
+  const [showDirectionsInput, setShowDirectionsInput] = useState(
+    locationData?.directions ? true : false
+  );
+
+  useEffect(() => {
+    const searchQuery = newLocation.venue.trim();
+    if (searchQuery.length < 3) {
+      setVenueSuggestions([]);
+      setIsSearchingVenue(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(async () => {
+      try {
+        setIsSearchingVenue(true);
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&countrycodes=ng&q=${encodeURIComponent(searchQuery)}`,
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error("Unable to fetch location suggestions");
+        }
+
+        const data = await response.json();
+
+        const suggestions = data
+          .filter(item => item.address?.country_code?.toLowerCase() === "ng")
+          .map(item => ({
+            id: item.place_id,
+            label: `${item.name}${item.address?.road ? ", " + item.address.road : ""}${item.address?.suburb ? ", " + item.address.suburb : ""}${item.address?.state ? ", " + item.address.state : ""}`,
+            value: `${item.name}${item.address?.road ? ", " + item.address.road : ""}${item.address?.suburb ? ", " + item.address.suburb : ""}`,
+            state:
+              item.address?.state ||
+              item.address?.city ||
+              item.address?.county ||
+              "",
+            coordinates: {
+              lat: item.lat,
+              lng: item.lon,
+            },
+          }));
+
+        setVenueSuggestions(suggestions);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          setVenueSuggestions([]);
+        }
+      } finally {
+        setIsSearchingVenue(false);
+      }
+    }, 350);
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [newLocation.venue]);
+
+  // Handle venue selection from suggestions
+  const handleVenueSelect = suggestion => {
+    setNewLocation(prev => ({
+      ...prev,
+      venue: suggestion.value,
+    }));
+    // If the suggestion includes a state, extract it and set it in the location state
+    if (suggestion.state) {
+      const state = suggestion.state.replace(/ State$/, "").trim();
+      setNewLocation(prev => ({
+        ...prev,
+        state: state,
+      }));
+    }
+    // If the suggestion includes coordinates, set them in the location state
+    if (suggestion.coordinates) {
+      setNewLocation(prev => ({
+        ...prev,
+        coordinates: suggestion.coordinates,
+      }));
+    }
+    setVenueSuggestions([]);
+    setShowVenueSuggestions(false);
+  };
+
+  // Reset values
+  const resetValues = () => {
+    setNewLocation(initialLocationState);
+    setNewMeetingURL(meetingURL || "");
+    setNewEventType(eventType || "offline");
+    setShowVenueInput(locationData?.venue ? true : false);
+    setShowDirectionsInput(locationData?.directions ? true : false);
+  };
+
+  // Handle save action
+  const handleSave = () => {
+    switch (newEventType) {
+      case "online":
+        onSave({
+          eventType: "online",
+          meetingURL: newMeetingURL,
+        });
+        setNewLocation({
+          venue: "",
+          state: "",
+          city: "",
+          coordinates: null,
+          directions: "",
+        });
+        setShowVenueInput(false);
+        setShowDirectionsInput(false);
+        break;
+      case "offline":
+        onSave({
+          eventType: "offline",
+          location: {
+            ...newLocation,
+          },
+        });
+        setNewMeetingURL("");
+        break;
+      default:
+        break;
+    }
+    close();
+  };
 
   return (
-    <Modal.Window name="event-location" title="Where is the Event?">
+    <Modal.Window
+      name="event-location"
+      title="Where is the Event?"
+      onClose={resetValues}
+    >
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">
           {/* Tab list */}
-          <Tabs defaultTab="offline" className="flex flex-col gap-y-4">
-            <Tabs.List list={tabs} btnStyles="min-w-[87px]" />
+          <Tabs defaultTab={newEventType} className="flex flex-col gap-y-4">
+            <Tabs.List
+              list={tabs}
+              btnStyles="min-w-[87px]"
+              onChange={eventType => setNewEventType(eventType)}
+            />
             {/* Online tab */}
             <Tabs.Panel name="online">
               <FormGroup label="Enter Link">
                 <InputField
                   placeholder="Paste the meeting link here"
+                  value={newMeetingURL}
+                  onChange={event => setNewMeetingURL(event.target.value)}
                   leftIcon={
                     <InputIcon>
                       <Video size={16} variant="Bold" color="#001010" />
@@ -56,8 +218,10 @@ export default function EventLocationModal({ onSave }) {
             <Tabs.Panel name="offline">
               <FormGroup label="Select a state">
                 <SelectInput
-                  value={location}
-                  setValue={setLocation}
+                  value={newLocation.state}
+                  setValue={value =>
+                    setNewLocation(prev => ({ ...prev, state: value }))
+                  }
                   options={states}
                   placeholder="Choose one"
                   icon={
@@ -68,21 +232,70 @@ export default function EventLocationModal({ onSave }) {
                 />
               </FormGroup>
               {showVenueInput ? (
-                <>
+                <React.Fragment>
                   <div className="flex flex-col gap-y-1">
                     <FormGroup label="Venue">
-                      <InputField
-                        placeholder="Enter venue"
-                        leftIcon={
-                          <InputIcon>
-                            <Building
-                              color="#001010"
-                              size={16}
-                              variant="Bold"
-                            />
-                          </InputIcon>
-                        }
-                      />
+                      <div className="relative">
+                        <InputField
+                          placeholder="Enter venue"
+                          value={newLocation.venue}
+                          onChange={event => {
+                            setNewLocation(prev => ({
+                              ...prev,
+                              venue: event.target.value,
+                            }));
+                            setShowVenueSuggestions(true);
+                          }}
+                          onFocus={() => {
+                            if (venueSuggestions.length > 0) {
+                              setShowVenueSuggestions(true);
+                            }
+                          }}
+                          onBlur={() => {
+                            setTimeout(() => {
+                              setShowVenueSuggestions(false);
+                            }, 120);
+                          }}
+                          leftIcon={
+                            <InputIcon>
+                              <Building
+                                color="#001010"
+                                size={16}
+                                variant="Bold"
+                              />
+                            </InputIcon>
+                          }
+                        />
+                        {showVenueSuggestions &&
+                          (isSearchingVenue || venueSuggestions.length > 0) && (
+                            <div className="absolute z-20 mt-1 w-full rounded-xl border border-[#E5E7E3] satoshi bg-white shadow-lg overflow-hidden">
+                              {isSearchingVenue ? (
+                                <p className="px-3 py-2 text-xs font-medium text-[#8A9191]">
+                                  Searching address...
+                                </p>
+                              ) : (
+                                <ul className="max-h-48 overflow-y-auto py-1">
+                                  {venueSuggestions.map(suggestion => (
+                                    <li
+                                      key={suggestion.id}
+                                      className="overflow-hidden"
+                                    >
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleVenueSelect(suggestion)
+                                        }
+                                        className="w-full px-3 py-2 text-left text-xs font-medium text-[#001010] hover:bg-[#F8F8F7]"
+                                      >
+                                        {suggestion.label}
+                                      </button>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          )}
+                      </div>
                     </FormGroup>
                     <TagButton
                       size="sm"
@@ -91,7 +304,17 @@ export default function EventLocationModal({ onSave }) {
                         <Trash variant="Bold" size={12} color="#DB2863" />
                       }
                       className="text-[#DB2863] satoshi"
-                      onClick={() => setShowVenueInput(false)}
+                      onClick={() => {
+                        setShowVenueInput(false);
+                        setNewLocation(prev => {
+                          const { venue, coordinates, ...rest } = prev;
+                          return {
+                            ...rest,
+                            venue: "",
+                            coordinates: null,
+                          };
+                        });
+                      }}
                     />
                   </div>
                   {showDirectionsInput ? (
@@ -108,6 +331,13 @@ export default function EventLocationModal({ onSave }) {
                               />
                             </InputIcon>
                           }
+                          onChange={event =>
+                            setNewLocation(prev => ({
+                              ...prev,
+                              directions: event.target.value,
+                            }))
+                          }
+                          value={newLocation.directions}
                         />
                       </FormGroup>
                       <TagButton
@@ -117,7 +347,10 @@ export default function EventLocationModal({ onSave }) {
                           <Trash variant="Bold" size={12} color="#DB2863" />
                         }
                         className="text-[#DB2863] satoshi"
-                        onClick={() => setShowDirectionsInput(false)}
+                        onClick={() => {
+                          setShowDirectionsInput(false);
+                          setNewLocation(prev => ({ ...prev, directions: "" }));
+                        }}
                       />
                     </div>
                   ) : (
@@ -143,7 +376,7 @@ export default function EventLocationModal({ onSave }) {
                       </div>
                     </div>
                   )}
-                </>
+                </React.Fragment>
               ) : (
                 <div className="flex flex-col gap-y-1">
                   <TextButton
@@ -166,8 +399,15 @@ export default function EventLocationModal({ onSave }) {
             </Tabs.Panel>
           </Tabs>
           <div className="flex items-center justify-center md:justify-start gap-x-4">
-            <TextButton text="Cancel" variant="tertiary" onClick={close} />
-            <TextButton text="Save" />
+            <TextButton
+              text="Cancel"
+              variant="tertiary"
+              onClick={() => {
+                close();
+                resetValues();
+              }}
+            />
+            <TextButton text="Save" onClick={handleSave} />
           </div>
         </div>
       </div>

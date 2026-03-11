@@ -1,23 +1,73 @@
 import TagButton from "../Buttons/TagButton";
 import TextButton from "../Buttons/TextButtons";
-import SelectDate from "../Inputs/SelectDate";
 import FormGroup from "../Inputs/FormGroup";
 import InputGroup from "../Inputs/InputGroup";
+import SelectDate from "../Inputs/SelectDate";
 import SelectTime from "../Inputs/SelectTime";
 import Modal from "../Modal/Modal";
-import { ArrowDown2, InfoCircle, Trash } from "iconsax-reactjs";
+import React, { useState } from "react";
 import { useModalContext } from "../Modal/ModalContext";
-import { useState } from "react";
+import { parseTimeValue } from "@/lib/utils";
+import { ArrowDown2, InfoCircle, Trash } from "iconsax-reactjs";
 
-export default function EventDateModal({ onSave }) {
+// Utility functions to apply time to date and preserve time when changing date
+function applyTimeToDate(baseDate, timeValue) {
+  const parsedTime = parseTimeValue(timeValue);
+  if (!parsedTime) {
+    return baseDate;
+  }
+
+  const updatedDate = new Date(baseDate || new Date());
+  updatedDate.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
+  return updatedDate;
+}
+
+// Preserves time components of currentDateValue when changing the date with nextDateValue
+function applyDatePreservingTime(nextDateValue, currentDateValue) {
+  const nextDate = nextDateValue ? new Date(nextDateValue) : null;
+  if (!nextDate) {
+    return currentDateValue;
+  }
+
+  const updatedDate = new Date(nextDate);
+  const currentDate = currentDateValue ? new Date(currentDateValue) : null;
+
+  if (currentDate) {
+    updatedDate.setHours(
+      currentDate.getHours(),
+      currentDate.getMinutes(),
+      currentDate.getSeconds(),
+      currentDate.getMilliseconds()
+    );
+  }
+
+  return updatedDate;
+}
+
+export default function EventDateModal({ onSave, data }) {
+  const [newDates, setNewDates] = useState({
+    startDate: data?.startDate || null,
+    endDate: data?.endDate || null,
+  });
+
+  const [showEndDateInputs, setShowEndDateInputs] = useState(
+    data?.endDate ? true : false
+  );
+
+  // Reset to initial values
+  const resetValues = () => {
+    setNewDates(data);
+    setShowEndDateInputs(data?.endDate ? true : false);
+  };
+
+  // Close modal
   const { close } = useModalContext();
-  const [startDate, setStartDate] = useState("");
-  const [startDateTime, setStartDateTime] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [endDateTime, setEndDateTime] = useState("");
-  const [showEndDateInputs, setShowEndDateInputs] = useState(false);
   return (
-    <Modal.Window name="event-date" title="When is the Event?">
+    <Modal.Window
+      name="event-date"
+      title="When is the Event?"
+      onClose={resetValues}
+    >
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">
@@ -26,29 +76,52 @@ export default function EventDateModal({ onSave }) {
               <InputGroup>
                 <SelectDate
                   className="rounded-r-none"
-                  date={startDate}
-                  setDate={setStartDate}
+                  date={newDates.startDate}
+                  setDate={date =>
+                    setNewDates(prev => ({
+                      ...prev,
+                      startDate: applyDatePreservingTime(date, prev.startDate),
+                    }))
+                  }
                 />
                 <SelectTime
-                  time={startDateTime}
-                  setTime={setStartDateTime}
+                  time={newDates.startDate}
+                  setTime={time =>
+                    setNewDates(prev => ({
+                      ...prev,
+                      startDate: applyTimeToDate(prev.startDate, time),
+                    }))
+                  }
                   className="rounded-l-none"
                 />
               </InputGroup>
             </FormGroup>
             <div className="flex flex-col gap-y-1">
               {showEndDateInputs ? (
-                <>
+                <React.Fragment>
                   <FormGroup label="End Date">
                     <InputGroup>
                       <SelectDate
                         className="rounded-r-none"
-                        date={endDate}
-                        setDate={setEndDate}
+                        date={newDates.endDate}
+                        setDate={date =>
+                          setNewDates(prev => ({
+                            ...prev,
+                            endDate: applyDatePreservingTime(
+                              date,
+                              prev.endDate
+                            ),
+                          }))
+                        }
                       />
                       <SelectTime
-                        time={endDateTime}
-                        setTime={setEndDateTime}
+                        time={newDates.endDate}
+                        setTime={time =>
+                          setNewDates(prev => ({
+                            ...prev,
+                            endDate: applyTimeToDate(prev.endDate, time),
+                          }))
+                        }
                         className="rounded-l-none"
                       />
                     </InputGroup>
@@ -60,18 +133,29 @@ export default function EventDateModal({ onSave }) {
                       <Trash variant="Bold" size={12} color="#DB2863" />
                     }
                     className="text-[#DB2863] satoshi"
-                    onClick={() => setShowEndDateInputs(false)}
+                    onClick={() => {
+                      setShowEndDateInputs(false);
+                      setNewDates(prev => ({ ...prev, endDate: null }));
+                    }}
                   />
-                </>
+                </React.Fragment>
               ) : (
-                <>
+                <React.Fragment>
                   <TextButton
                     variant="secondary"
                     text="Add End Date"
                     rightImg={
                       <ArrowDown2 variant="Outline" size={16} color="#011F0F" />
                     }
-                    onClick={() => setShowEndDateInputs(true)}
+                    onClick={() => {
+                      if (!newDates.endDate && data.endDate) {
+                        setNewDates(prev => ({
+                          ...prev,
+                          endDate: data.endDate,
+                        }));
+                      }
+                      setShowEndDateInputs(true);
+                    }}
                     className="sm:min-w-[123px] min-w-full"
                   />
                   <div className="flex items-center gap-x-1">
@@ -80,13 +164,26 @@ export default function EventDateModal({ onSave }) {
                       Optional
                     </span>
                   </div>
-                </>
+                </React.Fragment>
               )}
             </div>
           </div>
           <div className="flex items-center justify-center md:justify-start gap-x-4">
-            <TextButton text="Cancel" variant="tertiary" onClick={close} />
-            <TextButton text="Save" />
+            <TextButton
+              text="Cancel"
+              variant="tertiary"
+              onClick={() => {
+                close();
+                resetValues();
+              }}
+            />
+            <TextButton
+              text="Save"
+              onClick={() => {
+                onSave(newDates);
+                close();
+              }}
+            />
           </div>
         </div>
       </div>

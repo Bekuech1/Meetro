@@ -30,10 +30,10 @@ function ManageEventHeader() {
   const { user } = useAuthStore();
   const { event: activeEvent, loading: isLoading } = useManageEventData();
 
-  // Get last part of URL path
-  const pathParts = location.pathname.split("/");
-  const lastPathPart = pathParts[pathParts.length - 1];
-  const showNav = !["edit", "withdraw"].includes(lastPathPart);
+  // Determine if we should show the bottom nav based on URL path
+  const showNav =
+    !location.pathname.includes("edit-event") &&
+    !location.pathname.includes("withdraw");
 
   // Handle tab change by updating URL search params
   const handleTabChange = value => {

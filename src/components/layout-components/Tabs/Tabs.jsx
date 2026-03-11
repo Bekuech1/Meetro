@@ -49,7 +49,7 @@ const useTabs = () => {
 //   { id: "analytics", label: "Analytics" },
 // ];
 
-function List({ list, size = "md", btnClassName = "", className }) {
+function List({ list, size = "md", btnClassName = "", className, onChange }) {
   const { setActiveTab, activeTab } = useTabs();
 
   return (
@@ -72,7 +72,10 @@ function List({ list, size = "md", btnClassName = "", className }) {
                 `${item.id !== activeTab ? "!bg-transparent !text-[#B0B5B5] !border-transparent" : "hover:!bg-white"} satoshi min-w-[87px] `,
                 btnClassName && btnClassName
               )}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                setActiveTab(item.id);
+                if (onChange) onChange(item.id);
+              }}
             />
           ))}
         </React.Fragment>

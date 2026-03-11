@@ -1,7 +1,3 @@
-// -------------------
-// ListInput component
-// --------------------
-
 import IconButton from "../Buttons/IconButton";
 import TagButton from "../Buttons/TagButton";
 
@@ -20,7 +16,13 @@ export default function ListInput({
       {...props}
     >
       {/* Left icon */}
-      {leftIcon && <IconButton variant="tertiary" icon={leftIcon} />}
+      {leftIcon && (
+        <IconButton
+          className="pointer-events-none"
+          variant="tertiary"
+          icon={leftIcon}
+        />
+      )}
       <div className="flex flex-1 flex-col gap-y-1">
         {title && (
           <h3 className="text-sm font-medium text-[#001010]">{title}</h3>

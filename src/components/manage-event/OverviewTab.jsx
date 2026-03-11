@@ -11,6 +11,8 @@ import {
   Video,
 } from "iconsax-reactjs";
 import { Link } from "react-router";
+import { twMerge } from "tailwind-merge";
+import { categories } from "@/lib/utils";
 import Avatar from "../layout-components/Avatar";
 import AvatarGroup from "../layout-components/AvatarGroup";
 import IconButton from "../layout-components/Buttons/IconButton";
@@ -24,8 +26,6 @@ import GuestsTableSkeleton from "./GuestsTableSkeleton";
 import NoGuests from "./NoGuests";
 import PayoutOverviewSkeleton from "./PayoutOverviewSkeleton";
 import PayoutsOverview from "./PayoutsOverview";
-import { twMerge } from "tailwind-merge";
-import { categories } from "@/lib/utils";
 
 function OverviewTab() {
   const { event, loading, handleTabChange } = useManageEventContext();
@@ -353,7 +353,6 @@ function OverviewTab() {
       </div>
       {/* Delete event modal */}
       <DeleteEventModal eventId={event._id} />
-      {/* Share event modal */}
     </div>
   );
 }
