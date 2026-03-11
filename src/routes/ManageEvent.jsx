@@ -31,7 +31,7 @@ function ManageEvent() {
 
   return (
     <main className="bg-[#F0F0F0] h-full relative flex-1 flex flex-col pt-6 w-full pb-10">
-      <div className="max-w-[982px] w-full mx-auto flex">
+      <div className="max-w-[930px] w-full mx-auto flex">
         {renderTabContent()}
       </div>
     </main>

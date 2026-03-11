@@ -1,23 +1,28 @@
 import { useState } from "react";
 
+// Available fonts for the user to choose from
+const fonts = [
+  { id: "paytone", label: "Paytone" },
+  { id: "satoshi", label: "Satoshi" },
+  { id: "nico-moji", label: "Nico Moji" },
+  { id: "times-new-roman", label: "TN Roman" },
+];
+
 // EventName component: an input field for event names with selectable font options
 export default function EventName({
   placeholder = "Event Name",
+  defaultFont,
   value,
   onChange,
   onSelect,
   error,
 }) {
   // State to track the currently selected font
-  const [font, setFont] = useState("paytone");
+  const [font, setFont] = useState(defaultFont || "paytone");
 
-  // Available fonts for the user to choose from
-  const fonts = [
-    { id: "paytone", label: "Paytone" },
-    { id: "satoshi", label: "Satoshi" },
-    { id: "nico-moji", label: "Nico Moji" },
-    { id: "times-new-roman", label: "TN Roman" },
-  ];
+  const handleChange = e => {
+    onChange?.(e.target.value);
+  };
 
   // Base button styles for font selection
   const baseBtn =
@@ -29,14 +34,14 @@ export default function EventName({
   return (
     // Wrapper container
     <div
-      className={`hover:shadow-[0_4px_32px_0_rgba(0,0,0,0.06)] ${error ? "border-[#DB2863]" : "focus-within:border-[#7CB32D] border-white"} border bg-[#f7f7f6] transition-all rounded-[12px] backdrop-blur-[40px] p-3 flex flex-col gap-y-4`}
+      className={`hover:shadow-[0_4px_32px_0_rgba(0,0,0,0.06)] min-h-35 ${error ? "border-[#DB2863]" : "focus-within:border-[#7CB32D] border-white"} border bg-[#f7f7f6] transition-all rounded-[12px] backdrop-blur-[40px] p-3 flex flex-col gap-y-4`}
     >
       {/* Input field for event name */}
       <input
         type="text"
         aria-label="Event name"
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         placeholder={placeholder}
         className={`${font} outline-0 text-2xl leading-[32px] placeholder:text-[#8A9191]`}
       />

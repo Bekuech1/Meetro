@@ -1,48 +1,62 @@
+import { useState } from "react";
+import { useModalContext } from "../Modal/ModalContext";
+import { twMerge } from "tailwind-merge";
+import { DEFAULT_EVENT_IMAGES as templates } from "@/lib/utils";
 import TextButton from "../Buttons/TextButtons";
 import ImageInput from "../Inputs/ImageInput";
 import Modal from "../Modal/Modal";
-import { useModalContext } from "../Modal/ModalContext";
 
-const templates = [
-  "/event-ph1.png",
-  "/event-ph2.jpg",
-  "/event-ph3.jpg",
-  "/event-ph4.jpg",
-  "/event-ph5.jpg",
-  "/event-ph6.jpg",
-  "/event-ph7.jpg",
-];
+function ImageItem({ url, isSelected, onSelect }) {
+  return (
+    <div
+      className={`cursor-pointer rounded-[16px] md:rounded-[24px] border-2 ${isSelected ? "border-[#7CB32D]" : "border-transparent"}`}
+      onClick={() => onSelect(url)}
+    >
+      <img src={url} className="block size-full" />
+    </div>
+  );
+}
 
-export default function ImageTemplatesModal({ onSelect, onUpload }) {
+export default function ImageTemplatesModal({ onSave, defaultImage }) {
+  const isDefaultImage = templates.includes(defaultImage);
   const { close } = useModalContext();
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(
+    isDefaultImage ? null : defaultImage
+  );
+  const [selectedTemplate, setSelectedTemplate] = useState(
+    defaultImage || templates[0]
+  );
 
-  function ImageItem({ url }) {
-    // Handle image select
-    function handleSelect(url) {
-      onSelect(url);
-      close();
-    }
-
-    return (
-      <div
-        className={`cursor-pointer rounded-[16px] md:rounded-[24px]`}
-        onClick={() => handleSelect(url)}
-      >
-        <img src={url} className="block size-full" />
-      </div>
-    );
-  }
+  // Reset to initial values
+  const resetValues = () => {
+    setUploadedFile(null);
+    setSelectedTemplate(defaultImage || templates[0]);
+  };
 
   // Handle file select
-  function handleUpload(file) {
-    // Image preview url
-    const previewUrl = URL.createObjectURL(file);
-    onSelect(previewUrl);
-    onUpload(file);
-    close();
-
+  function handleUpload({ file, previewUrl }) {
+    setUploadedFile(file);
+    setUploadedImage(previewUrl);
+    setSelectedTemplate(previewUrl);
     // Cleanup after closing modal
     return () => URL.revokeObjectURL(previewUrl);
+  }
+
+  // Handle save
+  function handleSave() {
+    if (!selectedTemplate) return;
+
+    onSave?.({
+      image: selectedTemplate,
+      file: selectedTemplate === uploadedImage ? uploadedFile : null,
+    });
+    close();
+  }
+
+  // Handle template select
+  function handleTemplateSelect(url) {
+    setSelectedTemplate(url);
   }
 
   return (
@@ -50,24 +64,54 @@ export default function ImageTemplatesModal({ onSelect, onUpload }) {
       name="image-templates"
       title="Image Templates"
       desktopWidth="sm:max-w-[900px]"
+      onClose={() => {
+        resetValues();
+      }}
     >
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">
           <div className="grid grid-cols-3 [@media(min-width:440px)]:grid-cols-4 gap-2 sm:gap-4 [&>*]:aspect-square [&>*]:overflow-hidden">
-            <ImageInput
-              size="md"
-              showUpload={false}
-              onUpload={handleUpload}
-              className="max-md:rounded-[16px]"
-            />
+            <div
+              className={`cursor-pointer`}
+              onClick={() => {
+                if (!uploadedImage) return;
+                handleTemplateSelect(uploadedImage);
+              }}
+            >
+              <ImageInput
+                size="md"
+                onUpload={handleUpload}
+                className={twMerge(
+                  "max-md:rounded-[16px]",
+                  "border-transparent",
+                  uploadedImage &&
+                    selectedTemplate === uploadedImage &&
+                    "border-[#7CB32D]"
+                )}
+                setImgUrl={setUploadedImage}
+                imgUrl={uploadedImage}
+              />
+            </div>
             {templates.map((image, i) => (
-              <ImageItem key={i} url={image} />
+              <ImageItem
+                key={i}
+                url={image}
+                isSelected={selectedTemplate === image}
+                onSelect={handleTemplateSelect}
+              />
             ))}
           </div>
           <div className="flex items-center justify-center md:justify-start gap-x-4">
-            <TextButton text="Cancel" variant="tertiary" onClick={close} />
-            <TextButton text="Save" />
+            <TextButton
+              text="Cancel"
+              variant="tertiary"
+              onClick={() => {
+                close();
+                resetValues();
+              }}
+            />
+            <TextButton text="Save" onClick={handleSave} />
           </div>
         </div>
       </div>

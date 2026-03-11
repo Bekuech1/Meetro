@@ -43,6 +43,7 @@ function EventsList() {
           <h1 className="paytone capitalize text-[#077D8A] leading-[22px] text-[30px] font-[400]">
             my events
           </h1>
+          {/* Filter tabs */}
           <div className="border border-[#F9F9F9] p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
             <TagButton
               text="All"

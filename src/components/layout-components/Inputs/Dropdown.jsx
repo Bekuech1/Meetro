@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function Dropdown({
   placeholder = "Select",
@@ -41,7 +41,9 @@ export default function Dropdown({
       className={`satoshi animate-in slide-in-from-bottom-20 ${modal ? "max-sm:rounded-t-[24px] max-sm:rounded-b-none max-sm:fixed max-sm:top-auto max-sm:bottom-0" : ""} left-0 top-full absolute rounded-[8px] z-20 text-left w-full overflow-hidden ${className} shadow-[0px_10px_22px_rgba(45,77,108,0.15)] bg-white`}
     >
       <div
-        className={`overflow-y-auto ${modal ? "max-sm:max-h-[435px] max-sm:p-0" : ""} p-1 pt-0 max-h-[188px]`}
+        className={`overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y ${modal ? "max-sm:max-h-[70vh] max-sm:p-0" : ""} p-1 pt-0 max-h-[188px]`}
+        style={{ WebkitOverflowScrolling: "touch" }}
+        onWheel={e => e.stopPropagation()}
       >
         {/* Placeholder */}
         <div
@@ -64,7 +66,7 @@ export default function Dropdown({
               >
                 {/* Left icon */}
                 {opt.leftIcon && (
-                  <>
+                  <React.Fragment>
                     {typeof opt.leftIcon === "string" ? (
                       <img
                         src={opt.leftIcon}
@@ -74,7 +76,7 @@ export default function Dropdown({
                     ) : (
                       <span className="[&>svg]:size-4">{opt.leftIcon}</span>
                     )}
-                  </>
+                  </React.Fragment>
                 )}
                 <span
                   className={`${modal ? "max-sm:text-base max-sm:font-medium" : ""} text-sm flex-1 font-bold`}
@@ -83,7 +85,7 @@ export default function Dropdown({
                 </span>
                 {/* Right icon */}
                 {opt.rightIcon && (
-                  <>
+                  <React.Fragment>
                     {typeof opt.rightIcon === "string" ? (
                       <img
                         src={opt.rightIcon}
@@ -93,7 +95,7 @@ export default function Dropdown({
                     ) : (
                       <span className="[&>svg]:size-4">{opt.rightIcon}</span>
                     )}
-                  </>
+                  </React.Fragment>
                 )}
               </div>
             ))

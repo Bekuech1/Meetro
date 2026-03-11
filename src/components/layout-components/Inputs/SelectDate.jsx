@@ -13,6 +13,8 @@ export default function SelectDate({
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
   const inputRef = useRef(null);
+  const parsedDate = date ? new Date(date) : null;
+  const hasValidDate = parsedDate && !Number.isNaN(parsedDate.getTime());
 
   // Close calendar
   const close = () => setShowCalendar(false);
@@ -48,7 +50,7 @@ export default function SelectDate({
         <p
           className={`flex-1 md:text-sm font-medium ${date ? "text-[#001010]" : "text-[#B0B5B5]"} [&~svg]:fill-[#8A9191]`}
         >
-          {date ? format(date, "EEE, d MMMM") : placeholder}
+          {hasValidDate ? format(parsedDate, "EEE, d MMM, yyyy") : placeholder}
         </p>
         {/* Dropdown arrow*/}
         <ArrowDown2 size={16} variant="Outline" color="#8A9191" />
@@ -57,7 +59,7 @@ export default function SelectDate({
       {showCalendar && (
         <Calendar
           date={date}
-          ref={calendarRef}
+          calendarRef={calendarRef}
           className="fixed w-full sm:w-auto bottom-0 z-40 sm:bottom-auto left-0 sm:absolute sm:top-1/2 sm:-translate-y-1/2"
           onSelect={date => {
             setDate(date.toString());

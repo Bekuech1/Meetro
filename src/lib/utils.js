@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { format, isValid, parse } from "date-fns";
+import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
@@ -33,19 +33,6 @@ export function timeAgo(dateString) {
   if (months < 12) return `${months}mo ago`;
   return `${years}y ago`;
 }
-
-export const parseDate = rawDate => {
-  if (!rawDate || typeof rawDate !== "string") return null;
-  // Remove weekday like "Sat, " or "Saturday, "
-  const cleanedDateStr = rawDate.replace(/^([A-Za-z]+,?\s*)/, "").trim();
-  // Try parsing with comma format first (e.g. "October 29, 2025")
-  let parsed = parse(cleanedDateStr, "MMMM d, yyyy", new Date());
-  // If invalid, try without comma ("October 29 2025")
-  if (!isValid(parsed)) {
-    parsed = parse(cleanedDateStr, "MMMM d yyyy", new Date());
-  }
-  return isValid(parsed) ? parsed : null;
-};
 
 export const randomProfileImage = () => {
   const randomIndex = Math.floor(Math.random() * 4) + 1;
@@ -110,26 +97,6 @@ export function formatCurrency(amount) {
   return "₦ " + Number(amount).toLocaleString("en-NG");
 }
 
-const format12Hour = () => {
-  const period = hour >= 12 ? "PM" : "AM";
-  const displayHour = hour % 12 || 12; // converts 0 → 12
-  const mm = String(minute).padStart(2, "0");
-  return `${displayHour}:${mm} ${period}`;
-};
-
-export const timeOptions = () => {
-  const times = [];
-  let id = 1;
-
-  for (let hour = 0; hour < 24; hour++) {
-    for (let minute = 0; minute < 60; minute += 15) {
-      times.push({ id: id++, name: format12Hour(hour, minute) });
-    }
-  }
-
-  return times;
-};
-
 export const states = [
   { id: 1, name: "Abia" },
   { id: 2, name: "Adamawa" },
@@ -182,3 +149,46 @@ export const categories = {
   "Gaming & Esports": "text-[#269E44]",
   "Charity & Fundraisers": "text-[#8125AF]",
 };
+
+export function parseTimeValue(timeValue) {
+  if (timeValue instanceof Date && !Number.isNaN(timeValue.getTime())) {
+    return {
+      hours: timeValue.getHours(),
+      minutes: timeValue.getMinutes(),
+    };
+  }
+
+  if (typeof timeValue !== "string") {
+    return null;
+  }
+
+  const match = timeValue.trim().match(/^(\d{1,2}):(\d{2})\s*([aApP][mM])$/);
+
+  if (!match) {
+    return null;
+  }
+
+  const hours12 = Number(match[1]);
+  const minutes = Number(match[2]);
+  const period = match[3].toLowerCase();
+
+  if (hours12 < 1 || hours12 > 12 || minutes < 0 || minutes > 59) {
+    return null;
+  }
+
+  const hours = period === "pm" ? (hours12 % 12) + 12 : hours12 % 12;
+  return { hours, minutes };
+}
+
+const imageBaseUrl = import.meta.env.VITE_CLOUDINARY_BASE_URL;
+
+// Default event image URLs
+export const DEFAULT_EVENT_IMAGES = [
+  `${imageBaseUrl}/event-ph1_qj8phv.png`,
+  `${imageBaseUrl}/event-ph2_jzpgki.jpg`,
+  `${imageBaseUrl}/event-ph3_pib5zg.jpg`,
+  `${imageBaseUrl}/event-ph4_icgikm.jpg`,
+  `${imageBaseUrl}/event-ph5_ekd4bz.jpg`,
+  `${imageBaseUrl}/event-ph6_s0alnz.jpg`,
+  `${imageBaseUrl}/event-ph7_kpdnih.jpg`,
+];

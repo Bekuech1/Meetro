@@ -1,11 +1,9 @@
-import { useState, useRef } from "react";
-import { DayPicker } from "react-day-picker";
-import { getMonth, getYear } from "date-fns";
+import { useMemo, useRef, useState } from "react";
+import { getMonth, getYear, isSameDay } from "date-fns";
 import { ArrowDown2, ArrowLeft2, ArrowRight2 } from "iconsax-reactjs";
 import Dropdown from "@/components/layout-components/Inputs/Dropdown";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import IconButton from "@/components/layout-components/Buttons/IconButton";
-import "react-day-picker/style.css";
 
 // Month and year options
 const MONTHS = [
@@ -23,26 +21,97 @@ const MONTHS = [
   { id: 11, name: "December" },
 ];
 
+// Get current year for generating year options in dropdown
 const currentYear = getYear(new Date());
-const years = Array.from({ length: 6 }, (_, i) => ({
-  id: i,
-  name: currentYear + i,
-}));
 
+// Total cells in calendar grid
+const CALENDAR_CELLS = 42;
+
+// Utility to get number of days in a month
+function getDaysInMonth(year, month) {
+  return new Date(year, month + 1, 0).getDate();
+}
+
+// Utility to parse and validate date input
+function toValidDate(value) {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value;
+  }
+
+  const parsed = value ? new Date(value) : null;
+  if (parsed && !Number.isNaN(parsed.getTime())) {
+    return parsed;
+  }
+
+  return null;
+}
+
+// Builds an array of 42 days to fill the calendar grid, including days from previous and next month
+function buildCalendarDays(year, month) {
+  const firstDayIndex = new Date(year, month, 1).getDay();
+  const totalDaysThisMonth = getDaysInMonth(year, month);
+  const previousMonth = month === 0 ? 11 : month - 1;
+  const previousMonthYear = month === 0 ? year - 1 : year;
+  const totalDaysPreviousMonth = getDaysInMonth(
+    previousMonthYear,
+    previousMonth
+  );
+
+  const days = [];
+
+  for (let i = 0; i < firstDayIndex; i += 1) {
+    const day = totalDaysPreviousMonth - firstDayIndex + i + 1;
+    days.push({
+      date: new Date(previousMonthYear, previousMonth, day),
+      isOutside: true,
+    });
+  }
+
+  for (let day = 1; day <= totalDaysThisMonth; day += 1) {
+    days.push({ date: new Date(year, month, day), isOutside: false });
+  }
+
+  const remainingCells = CALENDAR_CELLS - days.length;
+  const nextMonth = month === 11 ? 0 : month + 1;
+  const nextMonthYear = month === 11 ? year + 1 : year;
+
+  for (let day = 1; day <= remainingCells; day += 1) {
+    days.push({
+      date: new Date(nextMonthYear, nextMonth, day),
+      isOutside: true,
+    });
+  }
+
+  return days;
+}
+
+// Main calendar component
 export default function Calendar({
   date,
   onSelect,
   className,
   close,
+  calendarRef,
   ...rest
 }) {
-  const initialDate = date || new Date();
+  const initialDate = toValidDate(date) || new Date();
   const [month, setMonth] = useState(getMonth(initialDate));
   const [year, setYear] = useState(getYear(initialDate));
   const [monthOpen, setMonthOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
   const monthBtnRef = useRef(null);
   const yearBtnRef = useRef(null);
+  const selectedDate = toValidDate(date);
+
+  const years = useMemo(() => {
+    const startYear = Math.min(currentYear, year) - 2;
+    return Array.from({ length: 10 }, (_, i) => ({
+      id: i,
+      name: startYear + i,
+    }));
+  }, [year]);
+
+  const days = useMemo(() => buildCalendarDays(year, month), [year, month]);
 
   // Previous month
   const previousMonth = () => {
@@ -66,6 +135,7 @@ export default function Calendar({
 
   return (
     <div
+      ref={calendarRef}
       className={`animate-in slide-in-from-bottom-20 pt-4 pb-3 px-5 md:pt-6 md:pb-5 border-[#f0f0f0] shadow-[0px_4px_24px_rgba(0,14,51,0.08)] rounded-[16px] bg-[#f9f9f9] ${className}`}
       {...rest}
     >
@@ -143,34 +213,34 @@ export default function Calendar({
         />
       </div>
       {/* Calendar */}
-      <DayPicker
-        mode="single"
-        selected={date}
-        onSelect={onSelect}
-        month={new Date(year, month)}
-        hideWeekdays
-        onMonthChange={d => {
-          setMonth(getMonth(d));
-          setYear(getYear(d));
-        }}
-        showOutsideDays
-        hideNavigation
-        /* Custom calendar styles */
-        classNames={{
-          month_grid:
-            "w-full border-separate border-spacing-1 font-bold satoshi text-sm text-[#011F0F]",
-          month: "pt-7 md:pt-2",
-          day: "md:h-11 h-[38px] ",
-          day_button:
-            "cursor-pointer h-full text-[11px] md:text-[12px] md:leading-[18px] transition-all hover:bg-[#E5E7E3] duration-200 ease-in-out leading-[16px] text-[#001010] bg-white w-full  rounded-[7px] shadow-[0px_1px_1px_rgba(0,14,51,0.05)]",
-          months: "w-full",
-          selected:
-            "[&>button]:!bg-[#AEFC40] [&>button]:!text-[#011F0F] [&>button]:hover:bg-[#AEFC40]",
-          month_caption: "hidden",
-          outside:
-            "[&>button]:bg-transparent [&>button]:shadow-none pointer-events-none [&>button]:text-[#00175426]",
-        }}
-      />
+      <div className="w-full pt-7 md:pt-2">
+        <div className="grid grid-cols-7 gap-1 w-full font-bold satoshi text-sm text-[#011F0F]">
+          {days.map(day => {
+            const isSelected =
+              selectedDate &&
+              !day.isOutside &&
+              isSameDay(day.date, selectedDate);
+
+            return (
+              <div key={`${day.date.getTime()}-${day.isOutside ? "o" : "i"}`}>
+                <button
+                  type="button"
+                  disabled={day.isOutside}
+                  onClick={() => onSelect?.(day.date)}
+                  className={`md:h-11 h-[38px] w-full rounded-[7px] text-[11px] md:text-[12px] md:leading-[18px] leading-[16px] transition-all duration-200 ease-in-out ${
+                    day.isOutside
+                      ? "bg-transparent shadow-none pointer-events-none text-[#00175426]"
+                      : "cursor-pointer text-[#001010] bg-white shadow-[0px_1px_1px_rgba(0,14,51,0.05)] hover:bg-[#E5E7E3]"
+                  } ${isSelected ? "!bg-[#AEFC40] !text-[#011F0F] hover:!bg-[#AEFC40]" : ""}`}
+                  aria-label={day.date.toDateString()}
+                >
+                  {day.date.getDate()}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
       <div className="sm:hidden pt-11 flex justify-center">
         <TextButton onClick={close} text="Done" />
       </div>
