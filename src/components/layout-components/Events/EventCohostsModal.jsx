@@ -24,7 +24,7 @@ const options = [
   },
 ];
 
-export default function EventHostModal({ onSave }) {
+export default function EventCohostsModal({ onSave }) {
   const { close } = useModalContext();
   const [showFirstCohostInput, setShowFirstCohostInput] = useState(false);
   const [showSecondCohostInput, setShowSecondCohostInput] = useState(false);
@@ -40,7 +40,7 @@ export default function EventHostModal({ onSave }) {
     },
   });
   return (
-    <Modal.Window name="event-host" title="Who is the Host?">
+    <Modal.Window name="event-cohosts" title="Add Cohosts?">
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">

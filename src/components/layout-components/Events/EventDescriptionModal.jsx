@@ -7,7 +7,10 @@ export default function EventDescriptionModal({ onSave }) {
   const { close } = useModalContext();
 
   return (
-    <Modal.Window name="description" title="Give a Description of your Event">
+    <Modal.Window
+      name="event-description"
+      title="Give a Description of your Event"
+    >
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">

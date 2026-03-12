@@ -1,22 +1,33 @@
 import Alert from "@/components/layout-components/Alert";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
+import EventCohostsModal from "@/components/layout-components/Events/EventCohostsModal";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
+import EventDescriptionModal from "@/components/layout-components/Events/EventDescriptionModal";
 import EventImage from "@/components/layout-components/Events/EventImage";
+import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
 import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemplatesModal";
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
-import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
-import React, { useEffect, useState } from "react";
 import { useManageEventContext } from "@/layouts/ManageEventLayout";
 import { format } from "date-fns";
-import { Crown, Crown1, Location, Timer1 } from "iconsax-reactjs";
+import {
+  Add,
+  Calendar2,
+  Crown,
+  Location,
+  Timer1,
+  Trash,
+} from "iconsax-reactjs";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function EditEvent() {
   const { event } = useManageEventContext();
   const [editedEvent, setEditedEvent] = useState(null);
+  // Settings state to control visibility of optional fields.
+  const [settings, setSettings] = useState(null);
   // File state to hold the uploaded image file.
   const [file, setFile] = useState(null);
 
@@ -43,8 +54,15 @@ function EditEvent() {
           coordinates: event.location?.coordinates || null,
           directions: event.location?.directions || "",
         },
+        dressCode: event.dressCode || "",
         eventType: event.eventType || "",
         meetingURL: event.meetingURL || "",
+      });
+
+      setSettings({
+        hasDescription: event?.description ? true : false,
+        hasChipIn: event?.chipInDetails ? true : false,
+        hasDressCode: event?.dressCode ? true : false,
       });
     }
   }, [event]);
@@ -180,12 +198,73 @@ function EditEvent() {
             />
           </Modal.Open>
           {/* Event cohosts and collaborators */}
-          <Modal.Open>
+          <Modal.Open opens="event-cohosts">
             <ListInput
               placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
               leftIcon={<Crown variant="Bold" />}
             />
           </Modal.Open>
+          {/* Event description */}
+          {settings?.hasDescription && (
+            <Modal.Open opens="event-description">
+              <ListInput
+                placeholder="Event Description"
+                leftIcon={<Calendar2 variant="Bold" />}
+                rightIcon={
+                  <button
+                    onClick={e => {
+                      e.stopPropagation();
+                      setSettings(prev => ({ ...prev, hasDescription: false }));
+                    }}
+                  >
+                    <Trash variant="Outline" size={16} />
+                  </button>
+                }
+              />
+            </Modal.Open>
+          )}
+          {/* Optional fields based on settings */}
+          <div className="flex items-center gap-x-4 gap-y-3">
+            {!settings?.hasDescription && (
+              <TagButton
+                text="Description"
+                className="satoshi"
+                onClick={() =>
+                  setSettings(prev => ({
+                    ...prev,
+                    hasDescription: !prev.hasDescription,
+                  }))
+                }
+                leftImg={<Add />}
+              />
+            )}
+            {!settings?.hasChipIn && (
+              <TagButton
+                text="Chip In"
+                leftImg={<Add />}
+                className="satoshi"
+                onClick={() => {
+                  setSettings(prev => ({
+                    ...prev,
+                    hasChipIn: !prev.hasChipIn,
+                  }));
+                }}
+              />
+            )}
+            {!settings?.hasDressCode && (
+              <TagButton
+                text="Dress code"
+                leftImg={<Add />}
+                className="satoshi"
+                onClick={() => {
+                  setSettings(prev => ({
+                    ...prev,
+                    hasDressCode: !prev.hasDressCode,
+                  }));
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
       {/* Image templates modal */}
@@ -217,6 +296,10 @@ function EditEvent() {
         meetingURL={editedEvent.meetingURL}
         onSave={data => handleSetLocation(data)}
       />
+      {/* Event cohosts modal */}
+      <EventCohostsModal />
+      {/* Event description modal */}
+      <EventDescriptionModal />
     </div>
   );
 }
