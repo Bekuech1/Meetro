@@ -23,7 +23,7 @@ export default function Radio({
       className={`group flex text-[#001010] text-[12px] leading-[18px] font-medium items-center ${sizes[size].gap} cursor-pointer satoshi`}
     >
       {/* Hidden native radio input */}
-      <input type="radio" className="peer hidden" {...rest} />
+      <input type="radio" className="peer hidden" readOnly {...rest} />
       {/* Custom outer circle */}
       <span
         className={`${sizes[size].outer} flex items-center justify-center rounded-full border border-white bg-[#E5E7E3] peer-checked:bg-[#61B42D] peer-checked:border-[#61B42D]`}

@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { useModalContext } from "../Modal/ModalContext";
 import TagButton from "../Buttons/TagButton";
 import TextButton from "../Buttons/TextButtons";
 import Modal from "../Modal/Modal";
 import Radio from "../Selectors/Radio";
 import FormGroup from "../Inputs/FormGroup";
 import InputField from "../Inputs/InputField";
+import { useState } from "react";
+import { useModalContext } from "../Modal/ModalContext";
 
 export default function EventDressCodeModal({ onSave, dressCodeData }) {
   const { close } = useModalContext();
@@ -96,16 +96,16 @@ export default function EventDressCodeModal({ onSave, dressCodeData }) {
                   <Radio
                     size="sm"
                     label="Add Custom"
-                    checked={newDressCode.type === "custom"}
+                    checked={newDressCode.type === "Custom"}
                   />
                 }
-                className={`hover:bg-white ${newDressCode.type === "custom" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
+                className={`hover:bg-white ${newDressCode.type === "Custom" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
                 onClick={() =>
-                  setNewDressCode({ ...newDressCode, type: "custom" })
+                  setNewDressCode({ ...newDressCode, type: "Custom" })
                 }
               />
             </div>
-            {newDressCode.type === "custom" && (
+            {newDressCode.type === "Custom" && (
               <FormGroup label="Custom Dress Code">
                 <InputField
                   placeholder="Specify the dress code"
