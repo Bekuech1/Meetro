@@ -231,7 +231,7 @@ function EditEvent() {
             <Modal.Open opens="event-dress-code">
               <ListInput
                 placeholder="Dress Code"
-                content={`${editedEvent.dressCode ? editedEvent.dressCode.type : ""}`}
+                content={`${editedEvent.dressCode ? editedEvent.dressCode.type : ""}${editedEvent.dressCode?.details ? ` - ${editedEvent.dressCode.details}` : ""}`}
                 leftIcon={<Colorfilter variant="Bold" />}
                 rightIcon={
                   <button
