@@ -14,7 +14,7 @@ export default function EventDressCodeModal({ onSave }) {
   const [customText, setCustomText] = useState("");
 
   return (
-    <Modal.Window name="dress-code" title="Dress Code">
+    <Modal.Window name="event-dress-code" title="Dress Code">
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">
