@@ -56,7 +56,7 @@ function EditEvent() {
           coordinates: event.location?.coordinates || null,
           directions: event.location?.directions || "",
         },
-        dressCode: event.dressCode || "",
+        dressCode: event.dressCode || null,
         eventType: event.eventType || "",
         meetingURL: event.meetingURL || "",
       });
@@ -212,6 +212,7 @@ function EditEvent() {
               <ListInput
                 placeholder="Event Description"
                 leftIcon={<Calendar2 variant="Bold" />}
+                content={editedEvent.description}
                 rightIcon={
                   <button
                     onClick={e => {
@@ -230,6 +231,7 @@ function EditEvent() {
             <Modal.Open opens="event-dress-code">
               <ListInput
                 placeholder="Dress Code"
+                content={`${editedEvent.dressCode ? editedEvent.dressCode.type : ""}`}
                 leftIcon={<Colorfilter variant="Bold" />}
                 rightIcon={
                   <button
@@ -322,7 +324,12 @@ function EditEvent() {
       {/* Event description modal */}
       <EventDescriptionModal />
       {/* Event dress code modal */}
-      <EventDressCodeModal />
+      <EventDressCodeModal
+        dressCodeData={editedEvent.dressCode}
+        onSave={data => {
+          setEditedEvent({ ...editedEvent, dressCode: data });
+        }}
+      />
     </div>
   );
 }

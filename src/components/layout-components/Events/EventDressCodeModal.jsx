@@ -7,14 +7,31 @@ import Radio from "../Selectors/Radio";
 import FormGroup from "../Inputs/FormGroup";
 import InputField from "../Inputs/InputField";
 
-export default function EventDressCodeModal({ onSave }) {
+export default function EventDressCodeModal({ onSave, dressCodeData }) {
   const { close } = useModalContext();
 
-  const [dressCode, setDressCode] = useState("");
-  const [customText, setCustomText] = useState("");
+  const initialDressCode = {
+    type: dressCodeData?.type || "",
+    details: dressCodeData?.details || "",
+  };
+
+  const [newDressCode, setNewDressCode] = useState(initialDressCode);
+
+  const resetValues = () => {
+    setNewDressCode(initialDressCode);
+  };
+
+  const handleSave = () => {
+    onSave(newDressCode);
+    close();
+  };
 
   return (
-    <Modal.Window name="event-dress-code" title="Dress Code">
+    <Modal.Window
+      name="event-dress-code"
+      title="Dress Code"
+      onClose={resetValues}
+    >
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">
@@ -28,59 +45,91 @@ export default function EventDressCodeModal({ onSave }) {
                   <Radio
                     size="sm"
                     label="Casual"
-                    checked={dressCode === "casual"}
+                    checked={newDressCode.type === "Casual"}
                   />
                 }
-                className={`${dressCode === "casual" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
-                onClick={() => setDressCode("casual")}
+                className={`hover:bg-white ${newDressCode.type === "Casual" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
+                onClick={() =>
+                  setNewDressCode({
+                    ...newDressCode,
+                    type: "Casual",
+                    details: "",
+                  })
+                }
               />
               <TagButton
                 leftImg={
                   <Radio
                     size="sm"
                     label="Corporate"
-                    checked={dressCode === "corporate"}
+                    checked={newDressCode.type === "Corporate"}
                   />
                 }
-                className={`${dressCode === "corporate" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
-                onClick={() => setDressCode("corporate")}
+                className={`hover:bg-white ${newDressCode.type === "Corporate" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
+                onClick={() =>
+                  setNewDressCode({
+                    ...newDressCode,
+                    type: "Corporate",
+                    details: "",
+                  })
+                }
               />
               <TagButton
                 leftImg={
                   <Radio
                     size="sm"
                     label="Traditional"
-                    checked={dressCode === "traditional"}
+                    checked={newDressCode.type === "Traditional"}
                   />
                 }
-                className={`${dressCode === "traditional" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
-                onClick={() => setDressCode("traditional")}
+                className={`hover:bg-white ${newDressCode.type === "Traditional" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
+                onClick={() =>
+                  setNewDressCode({
+                    ...newDressCode,
+                    type: "Traditional",
+                    details: "",
+                  })
+                }
               />
               <TagButton
                 leftImg={
                   <Radio
                     size="sm"
                     label="Add Custom"
-                    checked={dressCode === "custom"}
+                    checked={newDressCode.type === "custom"}
                   />
                 }
-                className={`${dressCode === "custom" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
-                onClick={() => setDressCode("custom")}
+                className={`hover:bg-white ${newDressCode.type === "custom" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
+                onClick={() =>
+                  setNewDressCode({ ...newDressCode, type: "custom" })
+                }
               />
             </div>
-            {dressCode === "custom" && (
+            {newDressCode.type === "custom" && (
               <FormGroup label="Custom Dress Code">
                 <InputField
                   placeholder="Specify the dress code"
-                  value={customText}
-                  onChange={e => setCustomText(e.target.value)}
+                  value={newDressCode.details}
+                  onChange={e =>
+                    setNewDressCode({
+                      ...newDressCode,
+                      details: e.target.value,
+                    })
+                  }
                 />
               </FormGroup>
             )}
           </div>
           <div className="flex items-center justify-center md:justify-start gap-x-4">
-            <TextButton text="Cancel" variant="tertiary" onClick={close} />
-            <TextButton text="Save" />
+            <TextButton
+              text="Cancel"
+              variant="tertiary"
+              onClick={() => {
+                close();
+                resetValues();
+              }}
+            />
+            <TextButton text="Save" onClick={handleSave} />
           </div>
         </div>
       </div>
