@@ -93,7 +93,7 @@ function Window({
             {title && (
               <div className="p-2">
                 <TextButton
-                  className="w-full !justify-start pointer-events-none"
+                  className="w-full !justify-start normal-case pointer-events-none"
                   text={title}
                   variant="tertiary"
                 />
