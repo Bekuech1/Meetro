@@ -1,5 +1,5 @@
 import TextButton from "../Buttons/TextButtons";
-import TextArea from "../Inputs/Textarea";
+import TextArea from "../Inputs/TextArea";
 import Modal from "../Modal/Modal";
 import { useModalContext } from "../Modal/ModalContext";
 

@@ -4,6 +4,7 @@ import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import EventCohostsModal from "@/components/layout-components/Events/EventCohostsModal";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
 import EventDescriptionModal from "@/components/layout-components/Events/EventDescriptionModal";
+import EventDressCodeModal from "@/components/layout-components/Events/EventDressCodeModal";
 import EventImage from "@/components/layout-components/Events/EventImage";
 import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
 import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemplatesModal";
@@ -15,6 +16,7 @@ import { format } from "date-fns";
 import {
   Add,
   Calendar2,
+  Colorfilter,
   Crown,
   Location,
   Timer1,
@@ -223,6 +225,25 @@ function EditEvent() {
               />
             </Modal.Open>
           )}
+          {/* Event dress code */}
+          {settings?.hasDressCode && (
+            <Modal.Open opens="event-dress-code">
+              <ListInput
+                placeholder="Dress Code"
+                leftIcon={<Colorfilter variant="Bold" />}
+                rightIcon={
+                  <button
+                    onClick={e => {
+                      e.stopPropagation();
+                      setSettings(prev => ({ ...prev, hasDressCode: false }));
+                    }}
+                  >
+                    <Trash variant="Outline" size={16} />
+                  </button>
+                }
+              />
+            </Modal.Open>
+          )}
           {/* Optional fields based on settings */}
           <div className="flex items-center gap-x-4 gap-y-3">
             {!settings?.hasDescription && (
@@ -300,6 +321,8 @@ function EditEvent() {
       <EventCohostsModal />
       {/* Event description modal */}
       <EventDescriptionModal />
+      {/* Event dress code modal */}
+      <EventDressCodeModal />
     </div>
   );
 }
