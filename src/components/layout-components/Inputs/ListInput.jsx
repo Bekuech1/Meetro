@@ -36,18 +36,7 @@ export default function ListInput({
           </p>
         ) : tags ? (
           // If no content, render tags
-          <ul className="flex flex-wrap gap-1">
-            {tags.map((tag, i) => (
-              <TagButton
-                variant="white"
-                size="md"
-                text={tag.text}
-                key={i}
-                leftImg={tag.leftIcon}
-                rightImg={tag.rightIcon}
-              />
-            ))}
-          </ul>
+          <ul className="flex flex-wrap gap-1">{tags}</ul>
         ) : (
           // Fallback: show placeholder text if nothing else
           <p
