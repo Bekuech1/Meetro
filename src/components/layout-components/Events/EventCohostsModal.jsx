@@ -41,7 +41,7 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
 
   const resetData = () => {
     setEditedCohosts(cohostsData || []);
-    setCurrentStep(1);
+    setCurrentStep(editedCohosts.length > 0 ? 2 : 1);
     setHasAccount(true);
     setCohost({ email: "", role: "", photo: "", name: "", file: null });
   };
