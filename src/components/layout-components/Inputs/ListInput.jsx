@@ -12,7 +12,7 @@ export default function ListInput({
 }) {
   return (
     <div
-      className="input cursor-pointer hover:shadow-[0px_4px_24px_rgba(0,0,0,0.04)] transition-all rounded-[12px] border border-white bg-[#F8F8F7] satoshi py-3 px-2 flex items-center gap-x-2"
+      className="input cursor-pointer max-w-full hover:shadow-[0px_4px_24px_rgba(0,0,0,0.04)] transition-all rounded-[12px] border border-white bg-[#F8F8F7] satoshi py-3 px-2 flex items-center gap-x-2"
       {...props}
     >
       {/* Left icon */}
