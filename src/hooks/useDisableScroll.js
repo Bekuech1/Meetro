@@ -1,28 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-export const useDisableScroll = disabled => {
+export const useDisableScroll = (disabled = true) => {
+  const scrollYRef = useRef(0);
+
   useEffect(() => {
     if (disabled) {
-      // Store the current scroll position
-      const scrollY = window.scrollY;
+      // Store current scroll position
+      scrollYRef.current = window.scrollY;
 
-      // Prevent scroll with pointer-events and a scroll listener
-      const preventScroll = e => e.preventDefault();
+      // Prevent scrolling by setting overflow hidden
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
 
-      // Add passive: false to allow preventDefault
-      document.addEventListener("wheel", preventScroll, { passive: false });
-      document.addEventListener("touchmove", preventScroll, { passive: false });
-      document.addEventListener("scroll", preventScroll, { passive: false });
+      // Also prevent wheel and touch events as backup
+      const preventDefault = e => e.preventDefault();
 
-      // Cleanup function to re-enable scrolling
+      // Add listeners with passive: false to allow preventDefault
+      document.addEventListener("wheel", preventDefault, { passive: false });
+      document.addEventListener("touchmove", preventDefault, {
+        passive: false,
+      });
+
       return () => {
-        document.removeEventListener("wheel", preventScroll);
-        document.removeEventListener("touchmove", preventScroll);
-        document.removeEventListener("scroll", preventScroll);
+        // Remove listeners
+        document.removeEventListener("wheel", preventDefault);
+        document.removeEventListener("touchmove", preventDefault);
+
+        // Restore overflow
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
 
         // Restore scroll position
-        window.scrollTo(0, scrollY);
+        window.scrollTo(0, scrollYRef.current);
       };
+    } else {
+      // If disabled becomes false, clean up immediately
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
   }, [disabled]);
 };
