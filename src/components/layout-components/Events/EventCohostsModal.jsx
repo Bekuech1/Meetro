@@ -1,159 +1,150 @@
-import React from "react";
+import Avatar from "../Avatar";
+import IconButton from "../Buttons/IconButton";
 import TagButton from "../Buttons/TagButton";
 import TextButton from "../Buttons/TextButtons";
 import FormGroup from "../Inputs/FormGroup";
-import Modal from "../Modal/Modal";
 import InputField from "../Inputs/InputField";
-import Avatar from "../Avatar";
-import SearchInput from "../Inputs/SearchInput";
-import { ArrowDown2, InfoCircle, Trash } from "iconsax-reactjs";
-import { useModalContext } from "../Modal/ModalContext";
+import SelectInput from "../Inputs/SelectInput";
+import Modal from "../Modal/Modal";
+import InputIcon from "@/assets/icons/InputIcon";
+import { Crown, Trash } from "iconsax-reactjs";
+import { twMerge } from "tailwind-merge";
 import { useState } from "react";
+import { useModalContext } from "../Modal/ModalContext";
 
-// Example options
-const options = [
-  {
-    id: 1,
-    name: "Newman Ogbo",
-    leftIcon: <Avatar size="xxxs" />,
-  },
-  {
-    id: 2,
-    name: "Nesky",
-    leftIcon: <Avatar size="xxxs" />,
-  },
+const roleOptions = [
+  { id: 1, name: "Co-host" },
+  { id: 2, name: "Moderator" },
+  { id: 3, name: "Speaker" },
 ];
 
-export default function EventCohostsModal({ onSave }) {
+export default function EventCohostsModal({ onSave, cohostsData }) {
   const { close } = useModalContext();
-  const [showFirstCohostInput, setShowFirstCohostInput] = useState(false);
-  const [showSecondCohostInput, setShowSecondCohostInput] = useState(false);
-  const [hosts, setHosts] = useState({
-    host: "",
-    coHost1: {
-      icon: null,
-      name: "",
-    },
-    coHost2: {
-      icon: null,
-      name: "",
-    },
+  const [editedCohosts, setEditedCohosts] = useState(cohostsData || []);
+  const [hasAccount, setHasAccount] = useState(true);
+  const [cohost, setCohost] = useState({
+    email: "",
+    role: "",
+    photo: "",
+    name: "",
   });
+
+  const addCohost = () => {
+    if (!cohost.email || !cohost.role) return;
+    if (!hasAccount && (!cohost.name || !cohost.photo)) return;
+    setEditedCohosts(s => [...s, cohost]);
+    setCohost({ email: "", role: "", photo: "", name: "" });
+  };
+
+  const resetData = () => {
+    setEditedCohosts(cohostsData || []);
+    setHasAccount(true);
+    setCohost({ email: "", role: "", photo: "", name: "" });
+  };
+
+  const removeCohost = index => {
+    setEditedCohosts(s => s.filter((_, i) => i !== index));
+  };
+
   return (
-    <Modal.Window name="event-cohosts" title="Add Cohosts?">
+    <Modal.Window name="event-cohosts" title="Add Cohosts?" onClose={resetData}>
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">
-          <div className="flex flex-col gap-y-4">
-            <FormGroup label="Host Name">
+          <div className="flex flex-col gap-4">
+            {/* Cohosts list */}
+            {editedCohosts.length > 0 && (
+              <ul className="flex flex-col gap-y-4">
+                {editedCohosts.map((cohost, index) => (
+                  <li key={index} className="flex flex-col gap-1">
+                    <p className="font-bold text-[18px] leading-7">
+                      Collaborator {index + 1}
+                    </p>
+                    <div className="rounded-2xl flex items-center justify-between bg-white p-4">
+                      {/*  Cohost info */}
+                      <div className="flex items-center gap-2">
+                        <Avatar src={cohost?.photo} size="sm" />
+                        <div className="font-medium">
+                          <p className="text-base text-[#001010]">
+                            {cohost?.name || cohost.email}
+                          </p>
+                          <p className="text-xs text-[#8A9191]">
+                            {cohost?.role}
+                          </p>
+                        </div>
+                      </div>
+                      {/* Delete button */}
+                      <IconButton
+                        variant="tertiary"
+                        icon={<Trash variant="Bold" color="#DB2863" />}
+                        onClick={() => removeCohost(index)}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {/* Cohost account status */}
+            <div>
+              <div className="border border-[#F9F9F9] p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
+                <TagButton
+                  text="Has Meetro Account"
+                  className={twMerge(
+                    "satoshi min-w-auto h-7.5 px-3 hover:bg-transparent bg-transparent text-[#B0B5B5] border-transparent",
+                    hasAccount && "bg-white text-[#011F0F] hover:bg-white"
+                  )}
+                  onClick={() => setHasAccount(true)}
+                />
+                <TagButton
+                  text="No Meetro Account"
+                  className={twMerge(
+                    "satoshi min-w-auto h-7.5 px-3 bg-transparent hover:bg-transparent text-[#B0B5B5] border-transparent",
+                    !hasAccount && "bg-white text-[#011F0F] hover:bg-white"
+                  )}
+                  onClick={() => setHasAccount(false)}
+                />
+              </div>
+            </div>
+            {/* Cohost email */}
+            <FormGroup label="Email">
               <InputField
-                leftIcon={<Avatar size="xs" />}
-                placeholder="Enter the name you want Displayed"
-                value={hosts.host}
-                onChange={e =>
-                  setHosts(prev => ({ ...prev, host: e.target.value }))
-                }
+                placeholder="Enter the person's email"
+                type="email"
+                value={cohost.email}
+                onChange={e => setCohost({ ...cohost, email: e.target.value })}
               />
             </FormGroup>
-            {showFirstCohostInput ? (
-              <React.Fragment>
-                <div className="flex flex-col gap-y-1">
-                  <FormGroup label="Cohost 1">
-                    <SearchInput
-                      searchField="name"
-                      placeholder="Enter cohost email"
-                      options={options}
-                      value={hosts.coHost1}
-                      setValue={value =>
-                        setHosts(prev => ({
-                          ...prev,
-                          coHost1: value,
-                        }))
-                      }
-                    />
-                  </FormGroup>
-                  <TagButton
-                    size="sm"
-                    text="remove"
-                    rightImg={
-                      <Trash variant="Bold" size={12} color="#DB2863" />
-                    }
-                    className="text-[#DB2863] satoshi"
-                    onClick={() => setShowFirstCohostInput(false)}
-                  />
-                </div>
-                {showSecondCohostInput ? (
-                  <div className="flex flex-col gap-y-1">
-                    <FormGroup label="Cohost 2">
-                      <SearchInput
-                        searchField="name"
-                        placeholder="Enter cohost email"
-                        options={options}
-                        value={hosts.coHost2}
-                        setValue={value =>
-                          setHosts(prev => ({
-                            ...prev,
-                            coHost2: value,
-                          }))
-                        }
-                      />
-                    </FormGroup>
-                    <TagButton
-                      size="sm"
-                      text="remove"
-                      rightImg={
-                        <Trash variant="Bold" size={12} color="#DB2863" />
-                      }
-                      className="text-[#DB2863] satoshi"
-                      onClick={() => setShowSecondCohostInput(false)}
-                    />
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-y-1">
-                    <TextButton
-                      variant="secondary"
-                      text="Add Cohost"
-                      rightImg={
-                        <ArrowDown2
-                          variant="Outline"
-                          size={16}
-                          color="#011F0F"
-                        />
-                      }
-                      onClick={() => setShowSecondCohostInput(true)}
-                      className="sm:min-w-[123px] min-w-full"
-                    />
-                    <div className="flex items-center gap-x-1">
-                      <InfoCircle variant="Bold" size={16} color="#8A9191" />
-                      <span className="text-[10px] leading-[14px] font-medium text-[#001010]">
-                        Optional
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </React.Fragment>
-            ) : (
-              <div className="flex flex-col gap-y-1">
-                <TextButton
-                  variant="secondary"
-                  text="Add Cohost"
-                  rightImg={
-                    <ArrowDown2 variant="Outline" size={16} color="#011F0F" />
-                  }
-                  onClick={() => setShowFirstCohostInput(true)}
-                  className="sm:min-w-[123px] min-w-full"
-                />
-                <div className="flex items-center gap-x-1">
-                  <InfoCircle variant="Bold" size={16} color="#8A9191" />
-                  <span className="text-[10px] leading-[14px] font-medium text-[#001010]">
-                    Optional
-                  </span>
-                </div>
-              </div>
-            )}
+            {/* Cohost role */}
+            <FormGroup label="Role">
+              <SelectInput
+                placeholder="Choose one"
+                value={cohost.role}
+                setValue={role => setCohost({ ...cohost, role })}
+                icon={
+                  <InputIcon>
+                    <Crown variant="Bold" />
+                  </InputIcon>
+                }
+                options={roleOptions}
+              />
+            </FormGroup>
+            {/* Add cohost button */}
+            <TextButton
+              variant="secondary"
+              text="Add Cohost"
+              className="sm:min-w-auto min-w-full"
+              onClick={addCohost}
+            />
           </div>
           <div className="flex items-center justify-center md:justify-start gap-x-4">
-            <TextButton text="Cancel" variant="tertiary" onClick={close} />
+            <TextButton
+              text="Cancel"
+              variant="tertiary"
+              onClick={() => {
+                close();
+                resetData();
+              }}
+            />
             <TextButton text="Save" />
           </div>
         </div>

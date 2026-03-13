@@ -1,11 +1,11 @@
+import Dropdown from "./Dropdown";
 import { ArrowDown2 } from "iconsax-reactjs";
 import { useRef, useState } from "react";
-import Dropdown from "./Dropdown";
 
 export default function SelectInput({
   value,
   setValue,
-  options,
+  options = [],
   placeholder = "Choose One",
   icon,
   className = "",
@@ -42,7 +42,7 @@ export default function SelectInput({
         <ArrowDown2 size={16} variant="Outline" color="#8A9191" />
       </div>
       {/* Render options dropdown */}
-      {showDropdown && (
+      {showDropdown && options.length > 0 && (
         <Dropdown
           onSelect={option => {
             setValue(option.name);
