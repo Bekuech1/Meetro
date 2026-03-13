@@ -11,7 +11,7 @@ export default function EventDressCodeModal({ onSave, dressCodeData }) {
   const { close } = useModalContext();
 
   const initialDressCode = {
-    type: dressCodeData?.type || "",
+    type: dressCodeData?.type || "Casual",
     details: dressCodeData?.details || "",
   };
 

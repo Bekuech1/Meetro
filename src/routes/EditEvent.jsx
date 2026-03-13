@@ -63,6 +63,7 @@ function EditEvent() {
         dressCode: event.dressCode || null,
         eventType: event.eventType || "",
         meetingURL: event.meetingURL || "",
+        cohosts: event.cohosts || [],
       });
 
       setSettings({
@@ -228,7 +229,7 @@ function EditEvent() {
                     <TagButton
                       key={index}
                       className={twMerge(
-                        "pointer-events-none h-5.5 px-1 sm:px-1.5 sm:text-xs sm:h-7.5 text-[10px] leading-[14px] satoshi",
+                        "pointer-events-none  satoshi",
                         categories[cat] ? categories[cat] : "text-[#001010]"
                       )}
                       text={cat}
@@ -249,6 +250,7 @@ function EditEvent() {
                   <button
                     onClick={e => {
                       e.stopPropagation();
+                      setEditedEvent(prev => ({ ...prev, description: "" }));
                       setSettings(prev => ({ ...prev, hasDescription: false }));
                     }}
                   >
@@ -269,6 +271,7 @@ function EditEvent() {
                   <button
                     onClick={e => {
                       e.stopPropagation();
+                      setEditedEvent(prev => ({ ...prev, dressCode: null }));
                       setSettings(prev => ({ ...prev, hasDressCode: false }));
                     }}
                   >
@@ -352,7 +355,7 @@ function EditEvent() {
         onSave={data => handleSetLocation(data)}
       />
       {/* Event cohosts modal */}
-      <EventCohostsModal />
+      <EventCohostsModal cohostsData={editedEvent.cohosts} />
       {/* Event type modal */}
       <EventTypeModal
         categoriesData={editedEvent.category}
@@ -361,19 +364,23 @@ function EditEvent() {
         }}
       />
       {/* Event description modal */}
-      <EventDescriptionModal
-        descriptionData={editedEvent.description}
-        onSave={description => {
-          setEditedEvent({ ...editedEvent, description });
-        }}
-      />
+      {settings.hasDescription && (
+        <EventDescriptionModal
+          descriptionData={editedEvent.description}
+          onSave={description => {
+            setEditedEvent({ ...editedEvent, description });
+          }}
+        />
+      )}
       {/* Event dress code modal */}
-      <EventDressCodeModal
-        dressCodeData={editedEvent.dressCode}
-        onSave={data => {
-          setEditedEvent({ ...editedEvent, dressCode: data });
-        }}
-      />
+      {settings.hasDressCode && (
+        <EventDressCodeModal
+          dressCodeData={editedEvent.dressCode}
+          onSave={data => {
+            setEditedEvent({ ...editedEvent, dressCode: data });
+          }}
+        />
+      )}
     </div>
   );
 }
