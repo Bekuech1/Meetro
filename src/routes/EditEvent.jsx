@@ -115,13 +115,20 @@ function EditEvent() {
       ? `Online event - ${editedEvent?.meetingURL || "No meeting URL set"}`
       : `${editedEvent?.location?.venue ? `${editedEvent.location.venue}, ` : ""}${editedEvent?.location?.state ? `${editedEvent.location.state}` : ""}`;
 
+  // Format description for display in ListInput
+  const descriptionFormatted = editedEvent?.description
+    ? editedEvent.description.length > 50
+      ? editedEvent.description.slice(0, 50) + "..."
+      : editedEvent.description
+    : "";
+
   if (!editedEvent) {
     return <div> Loading.... </div>;
   }
   return (
     <div className="max-w-[950px] satoshi mt-10 w-full mx-auto flex flex-col md:flex-row gap-12">
       {/* Image section */}
-      <div>
+      <div className="md:sticky md:top-43 md:self-start">
         <h3 className="text-sm text-[#001010] font-bold">Event Image</h3>
         <p className="text-xs mb-4 text-[#8A9191] leading-4.5 font-medium">
           Upload a JPEG or PNG file with a size of 2mb or less
@@ -182,7 +189,7 @@ function EditEvent() {
           <TextButton
             text="Event details"
             variant="tertiary"
-            className="w-full pointer-events-none text-left justify-start"
+            className="w-full h-9 pointer-events-none text-left justify-start"
           />
           {/* Event date */}
           <Modal.Open opens="event-date">
@@ -212,7 +219,7 @@ function EditEvent() {
               <ListInput
                 placeholder="Event Description"
                 leftIcon={<Calendar2 variant="Bold" />}
-                content={editedEvent.description}
+                content={descriptionFormatted}
                 rightIcon={
                   <button
                     onClick={e => {
@@ -322,7 +329,12 @@ function EditEvent() {
       {/* Event cohosts modal */}
       <EventCohostsModal />
       {/* Event description modal */}
-      <EventDescriptionModal />
+      <EventDescriptionModal
+        descriptionData={editedEvent.description}
+        onSave={description => {
+          setEditedEvent({ ...editedEvent, description });
+        }}
+      />
       {/* Event dress code modal */}
       <EventDressCodeModal
         dressCodeData={editedEvent.dressCode}
