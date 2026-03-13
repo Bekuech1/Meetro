@@ -34,7 +34,7 @@ function EditEvent() {
   // Settings state to control visibility of optional fields.
   const [settings, setSettings] = useState(null);
   // File state to hold the uploaded image file.
-  const [file, setFile] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   const isPrivate = event?.isPrivate;
 
@@ -127,6 +127,11 @@ function EditEvent() {
       : editedEvent.description
     : "";
 
+  // Format cohosts for display in ListInput
+  const cohostsFormatted = editedEvent?.cohosts?.length
+    ? editedEvent.cohosts.map(cohost => cohost.name || cohost.email).join(", ")
+    : "";
+
   if (!editedEvent) {
     return <div> Loading.... </div>;
   }
@@ -216,6 +221,7 @@ function EditEvent() {
             <ListInput
               placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
               leftIcon={<Crown variant="Bold" />}
+              content={cohostsFormatted}
             />
           </Modal.Open>
           {/* Event type */}
@@ -329,7 +335,7 @@ function EditEvent() {
       <ImageTemplatesModal
         onSave={data => {
           setEditedEvent({ ...editedEvent, image: data.image });
-          setFile(data.file);
+          setImageFile(data.file);
         }}
         defaultImage={editedEvent.image}
       />
@@ -355,7 +361,12 @@ function EditEvent() {
         onSave={data => handleSetLocation(data)}
       />
       {/* Event cohosts modal */}
-      <EventCohostsModal cohostsData={editedEvent.cohosts} />
+      <EventCohostsModal
+        cohostsData={editedEvent.cohosts}
+        onSave={newCohosts => {
+          setEditedEvent({ ...editedEvent, cohosts: newCohosts });
+        }}
+      />
       {/* Event type modal */}
       <EventTypeModal
         categoriesData={editedEvent.category}

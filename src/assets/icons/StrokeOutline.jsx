@@ -4,7 +4,7 @@ export default function StrokeOutline({
 }) {
   return (
     <svg
-      className="absolute inset-0 w-[calc(100%+2px)] h-[calc(100%+2px)] top-1/2 left-1/2 -translate-1/2 pointer-events-none"
+      className="absolute inset-0 w-[calc(100%+4px)] h-[calc(100%+4px)] top-1/2 left-1/2 -translate-1/2 pointer-events-none"
       viewBox="0 0 117 122"
       fill="none"
     >
