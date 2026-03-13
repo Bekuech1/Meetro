@@ -7,31 +7,44 @@ import { TickCircle } from "iconsax-reactjs";
 
 const eventTypes = [
   {
-    name: "Nightlife & parties",
+    name: "Nightlife & Parties",
     color: "!text-[#011F0F]",
   },
-  { name: "Music & Concerts", color: "!text-[#4A3A74]" },
-  { name: "Networking & Conferences", color: "!text-[#077D8A]" },
-  { name: "Festivals & Cultural Events", color: "!text-[#496A1B]" },
-  { name: "Sports & Fitness", color: "!text-[#5856D6]" },
-  { name: "Food & Drink Events", color: "!text-[#9B1C46]" },
-  { name: "Tech & Innovation", color: "!text-[#011F0F]" },
-  { name: "Community Meetups", color: "!text-[#0A84FF]" },
-  { name: "Art & Exhibitions", color: "!text-[#CF7E00]" },
-  { name: "Outdoor & Adventure", color: "!text-[#B25000]" },
-  { name: "Gaming & Esports", color: "!text-[#269E44]" },
-  { name: "Charity & Fundraisers", color: "!text-[#8125AF]" },
+  { name: "Music & Concerts", color: "text-[#4A3A74]" },
+  { name: "Networking & Conferences", color: "text-[#077D8A]" },
+  { name: "Festivals & Cultural Events", color: "text-[#496A1B]" },
+  { name: "Sports & Fitness", color: "text-[#5856D6]" },
+  { name: "Food & Drink Events", color: "text-[#9B1C46]" },
+  { name: "Tech & Innovation", color: "text-[#011F0F]" },
+  { name: "Community Meetups", color: "text-[#0A84FF]" },
+  { name: "Art & Exhibitions", color: "text-[#CF7E00]" },
+  { name: "Outdoor & Adventure", color: "text-[#B25000]" },
+  { name: "Gaming & Esports", color: "text-[#269E44]" },
+  { name: "Charity & Fundraisers", color: "text-[#8125AF]" },
 ];
 
-export default function EventTypeModal({ onSave }) {
+export default function EventTypeModal({ onSave, categoriesData }) {
   const { close } = useModalContext();
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(categoriesData || []);
 
   // Check if even is selected
   const selected = event => categories.includes(event.name);
 
+  const resetData = () => {
+    setCategories(categoriesData || []);
+  };
+
+  const handleSave = () => {
+    onSave(categories);
+    close();
+  };
+
   return (
-    <Modal.Window name="event-type" title="What type of Event?">
+    <Modal.Window
+      name="event-type"
+      title="What type of Event?"
+      onClose={resetData}
+    >
       {/* Content goes here */}
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">
@@ -46,14 +59,15 @@ export default function EventTypeModal({ onSave }) {
                   key={i}
                   text={eventType.name}
                   variant={`${selected(eventType) ? "purple" : "tertiary"}`}
-                  className={`${!selected(eventType) ? eventType.color : ""}`}
-                  onClick={() =>
+                  className={`satoshi ${!selected(eventType) ? eventType.color : ""}`}
+                  onClick={() => {
+                    if (categories.length >= 3 && !selected(eventType)) return; // Limit to 3 selections
                     setCategories(s =>
                       s.includes(eventType.name)
                         ? s.filter(e => e !== eventType.name)
                         : [...s, eventType.name]
-                    )
-                  }
+                    );
+                  }}
                   rightImg={
                     selected(eventType) && <TickCircle variant="Bold" />
                   }
@@ -62,8 +76,15 @@ export default function EventTypeModal({ onSave }) {
             </div>
           </div>
           <div className="flex items-center justify-center md:justify-start gap-x-4">
-            <TextButton text="Cancel" variant="tertiary" onClick={close} />
-            <TextButton text="Save" />
+            <TextButton
+              text="Cancel"
+              variant="tertiary"
+              onClick={() => {
+                close();
+                resetData();
+              }}
+            />
+            <TextButton text="Save" onClick={handleSave} />
           </div>
         </div>
       </div>

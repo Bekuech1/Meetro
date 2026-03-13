@@ -7,22 +7,25 @@ import EventDescriptionModal from "@/components/layout-components/Events/EventDe
 import EventDressCodeModal from "@/components/layout-components/Events/EventDressCodeModal";
 import EventImage from "@/components/layout-components/Events/EventImage";
 import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
+import EventTypeModal from "@/components/layout-components/Events/EventTypeModal";
 import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemplatesModal";
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
 import { useManageEventContext } from "@/layouts/ManageEventLayout";
+import { categories } from "@/lib/utils";
 import { format } from "date-fns";
 import {
   Add,
   Calendar2,
+  Category2,
   Colorfilter,
   Crown,
   Location,
   Timer1,
   Trash,
 } from "iconsax-reactjs";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function EditEvent() {
@@ -56,6 +59,7 @@ function EditEvent() {
           coordinates: event.location?.coordinates || null,
           directions: event.location?.directions || "",
         },
+        category: event.category || [],
         dressCode: event.dressCode || null,
         eventType: event.eventType || "",
         meetingURL: event.meetingURL || "",
@@ -189,7 +193,7 @@ function EditEvent() {
           <TextButton
             text="Event details"
             variant="tertiary"
-            className="w-full h-9 pointer-events-none text-left justify-start"
+            className="w-full h-9 text-sm pointer-events-none text-left justify-start"
           />
           {/* Event date */}
           <Modal.Open opens="event-date">
@@ -211,6 +215,27 @@ function EditEvent() {
             <ListInput
               placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
               leftIcon={<Crown variant="Bold" />}
+            />
+          </Modal.Open>
+          {/* Event type */}
+          <Modal.Open opens="event-type">
+            <ListInput
+              placeholder="Event Type"
+              leftIcon={<Category2 variant="Bulk" />}
+              tags={
+                <React.Fragment>
+                  {editedEvent.category.map((cat, index) => (
+                    <TagButton
+                      key={index}
+                      className={twMerge(
+                        "pointer-events-none h-5.5 px-1 sm:px-1.5 sm:text-xs sm:h-7.5 text-[10px] leading-[14px] satoshi",
+                        categories[cat] ? categories[cat] : "text-[#001010]"
+                      )}
+                      text={cat}
+                    />
+                  ))}
+                </React.Fragment>
+              }
             />
           </Modal.Open>
           {/* Event description */}
@@ -328,6 +353,13 @@ function EditEvent() {
       />
       {/* Event cohosts modal */}
       <EventCohostsModal />
+      {/* Event type modal */}
+      <EventTypeModal
+        categoriesData={editedEvent.category}
+        onSave={data => {
+          setEditedEvent({ ...editedEvent, category: data });
+        }}
+      />
       {/* Event description modal */}
       <EventDescriptionModal
         descriptionData={editedEvent.description}
