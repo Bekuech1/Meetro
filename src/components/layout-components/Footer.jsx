@@ -3,17 +3,37 @@ import Button from "./Button";
 import { Link } from "react-router"; // 👇 Imported Link from React Router
 
 const SOCIAL_LINKS = [
-  { name: 'instagram', icon: '/ig', label: 'Instagram', url: 'https://instagram.com/meetro.live' },
-  { name: 'twitter', icon: '/x', label: 'Twitter', url: 'https://twitter.com/meetro.live' },
-  { name: 'facebook', icon: '/fb', label: 'Facebook', url: 'https://facebook.com/meetro.live' },
-  { name: 'linkedin', icon: '/in', label: 'LinkedIn', url: 'https://linkedin.com/company/meetro' }
+  {
+    name: "instagram",
+    icon: "/ig",
+    label: "Instagram",
+    url: "https://instagram.com/meetro.live",
+  },
+  {
+    name: "twitter",
+    icon: "/x",
+    label: "Twitter",
+    url: "https://twitter.com/meetro.live",
+  },
+  {
+    name: "facebook",
+    icon: "/fb",
+    label: "Facebook",
+    url: "https://facebook.com/meetro.live",
+  },
+  {
+    name: "linkedin",
+    icon: "/in",
+    label: "LinkedIn",
+    url: "https://linkedin.com/company/meetro",
+  },
 ];
 
 // 👇 1. Updated this array to include the actual URL paths we created
 const LEGAL_LINKS = [
-  { key: 'Terms', label: 'Terms of Service', url: '/legal?tab=terms' },
-  { key: 'Privacy', label: 'Privacy Policy', url: '/legal?tab=privacy' },
-  { key: 'Data', label: 'Data Policy', url: '/legal?tab=data' },
+  { key: "Terms", label: "Terms of Service", url: "/terms" },
+  { key: "Privacy", label: "Privacy Policy", url: "/privacy" },
+  { key: "Data", label: "Data Policy", url: "/data" },
   // { key: 'Cookies', label: 'Cookies', url: '/legal?tab=cookies' } // Add this back if you create a cookies tab!
 ];
 
@@ -26,9 +46,12 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="bg-[#01160B] md:px-[60px] px-4 py-[64px]" id="footer" role="contentinfo">
+    <footer
+      className="bg-[#01160B] md:px-[60px] px-4 py-[64px]"
+      id="footer"
+      role="contentinfo"
+    >
       <div className="grid md:flex border-b border-white/10 pb-10 gap-[40px] md:justify-between">
-
         {/* Brand Section */}
         <div className="grid gap-6 h-fit w-fit mx-auto md:mx-0">
           <img
@@ -47,7 +70,10 @@ const Footer = () => {
           </a>
 
           {/* Social Media Links */}
-          <nav className="size-fit flex items-center gap-3 mx-auto md:mx-0" aria-label="Social media links">
+          <nav
+            className="size-fit flex items-center gap-3 mx-auto md:mx-0"
+            aria-label="Social media links"
+          >
             {SOCIAL_LINKS.map(({ name, icon, label, url }) => (
               <a
                 key={name}
@@ -62,7 +88,11 @@ const Footer = () => {
                 aria-label={`Follow us on ${label}`}
               >
                 <img
-                  src={hoveredSocial === name ? `${icon}-color.svg` : `${icon}-gray.svg`}
+                  src={
+                    hoveredSocial === name
+                      ? `${icon}-color.svg`
+                      : `${icon}-gray.svg`
+                  }
                   className="size-[22px] transition-all duration-200"
                   alt=""
                   loading="lazy"
@@ -92,7 +122,10 @@ const Footer = () => {
         </p>
 
         {/* 👇 3. Updated this section to use React Router <Link> tags */}
-        <nav className="flex md:gap-6 gap-2 mx-auto md:mx-0" aria-label="Legal information">
+        <nav
+          className="flex md:gap-6 gap-2 mx-auto md:mx-0"
+          aria-label="Legal information"
+        >
           {LEGAL_LINKS.map(({ key, label, url }) => (
             <Link
               key={key}

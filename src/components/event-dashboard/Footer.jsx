@@ -15,7 +15,7 @@ function Footer() {
         <ul className="flex items-center gap-6">
           <li>
             <Link
-              to="#"
+              to="/terms"
               className="transition-colors duration-200 hover:text-[#4A5B5C]"
             >
               Terms of Service
@@ -23,7 +23,7 @@ function Footer() {
           </li>
           <li>
             <Link
-              to="#"
+              to="/privacy"
               className="transition-colors duration-200 hover:text-[#4A5B5C]"
             >
               Privacy Policy
@@ -31,7 +31,7 @@ function Footer() {
           </li>
           <li>
             <Link
-              to="#"
+              to="/data"
               className="transition-colors duration-200 hover:text-[#4A5B5C]"
             >
               Data Policy

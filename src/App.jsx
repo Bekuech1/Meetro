@@ -14,10 +14,12 @@ import ManageEvent from "./routes/ManageEvent";
 import ManageEventHeader from "./components/manage-event/ManageEventHeader";
 import EditEvent from "./routes/EditEvent";
 import Withdraw from "./routes/Withdraw";
-import Legal from "./routes/legal/Legal";
-import LegalLayout from "./layouts/LegalLayout";
+import Privacy from "./routes/legal/Privacy";
+import Data from "./routes/legal/Data";
+import Terms from "./routes/legal/Terms";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useRehydrateUser } from "./hooks/useRehydrateUser";
+import LegalLayout from "./layouts/LegalLayout";
 
 function App() {
   useRehydrateUser(); // Rehydrate user on app load
@@ -37,7 +39,9 @@ function App() {
 
         {/* Legal Pages */}
         <Route element={<LegalLayout />}>
-          <Route path="/legal" element={<Legal />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/data" element={<Data />} />
+          <Route path="/terms" element={<Terms />} />
         </Route>
         {/* Reset password */}
         <Route path="/reset-password" element={<ResetPassword />} />
