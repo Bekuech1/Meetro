@@ -10,7 +10,7 @@ import SelectInput from "../Inputs/SelectInput";
 import Modal from "../Modal/Modal";
 import { useModalContext } from "../Modal/ModalContext";
 import { Crown, Trash } from "iconsax-reactjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const roleOptions = [
@@ -31,6 +31,16 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     name: "",
     file: null,
   });
+
+  // Initialize cohosts and step based on incoming data
+  useEffect(() => {
+    setEditedCohosts(cohostsData || []);
+    if (cohostsData && cohostsData.length > 0) {
+      setCurrentStep(2);
+    } else {
+      setCurrentStep(1);
+    }
+  }, [cohostsData]);
 
   const addCohost = () => {
     if (!cohost.email || !cohost.role) return;
