@@ -25,23 +25,26 @@ import {
   Timer1,
   Trash,
 } from "iconsax-reactjs";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function EditEvent() {
   const { event } = useManageEventContext();
+  const [initialEvent, setInitialEvent] = useState(null);
   const [editedEvent, setEditedEvent] = useState(null);
   // Settings state to control visibility of optional fields.
   const [settings, setSettings] = useState(null);
   // File state to hold the uploaded image file.
   const [imageFile, setImageFile] = useState(null);
+  // Show update count alert
+  const [showUpdateAlert, setShowUpdateAlert] = useState(true);
 
   const isPrivate = event?.isPrivate;
 
   // Set initial event data when it loads and when event changes
   useEffect(() => {
     if (event) {
-      setEditedEvent({
+      const eventData = {
         title: event.title || "",
         description: event.description || "",
         startDate: event.startDate
@@ -51,7 +54,7 @@ function EditEvent() {
           ? new Date(event.endDate).toISOString().slice(0, 16)
           : "",
         image: event.image || "",
-        font: event.font || "",
+        font: event.font || "paytone",
         location: {
           venue: event.location?.venue || "",
           state: event.location?.state || "",
@@ -64,19 +67,47 @@ function EditEvent() {
         eventType: event.eventType || "",
         meetingURL: event.meetingURL || "",
         cohosts: event.cohosts || [],
-      });
+        updateCount: event.updateCount || 0,
+        chipInDetails: event.chipInDetails || null,
+      };
+
+      setInitialEvent(eventData);
+      setEditedEvent(eventData);
 
       setSettings({
-        hasDescription: event?.description ? true : false,
-        hasChipIn: event?.chipInDetails ? true : false,
-        hasDressCode: event?.dressCode ? true : false,
+        hasDescription: eventData?.description ? true : false,
+        hasChipIn: eventData?.chipInDetails ? true : false,
+        hasDressCode: eventData?.dressCode ? true : false,
       });
     }
   }, [event]);
 
+  // Clean up object URLs when component unmounts or when image changes
+  useEffect(() => {
+    return () => {
+      if (editedEvent?.image && editedEvent.image.startsWith("blob:")) {
+        URL.revokeObjectURL(editedEvent.image);
+      }
+
+      // Also check cohosts for any blob URLs and revoke them
+      if (editedEvent?.cohosts?.length) {
+        editedEvent.cohosts.forEach(cohost => {
+          if (cohost.photo && cohost.photo.startsWith("blob:")) {
+            URL.revokeObjectURL(cohost.photo);
+          }
+        });
+      }
+    };
+  });
+
   // Format start date for display in ListInput
   const startDateFormatted = editedEvent?.startDate
     ? format(new Date(editedEvent.startDate), "EEE,  MMM d, h:mm aa")
+    : "";
+
+  // Format end date for display in ListInput
+  const endDateFormatted = editedEvent?.endDate
+    ? format(new Date(editedEvent.endDate), "EEE,  MMM d, h:mm aa")
     : "";
 
   // Helper function to update location based on event type
@@ -113,6 +144,23 @@ function EditEvent() {
       default:
     }
   };
+
+  // Undo changes handler
+  const handleUndoChanges = () => {
+    setEditedEvent(initialEvent);
+    setSettings({
+      hasDescription: initialEvent.description ? true : false,
+      hasChipIn: initialEvent.chipInDetails ? true : false,
+      hasDressCode: initialEvent.dressCode ? true : false,
+    });
+    setImageFile(null);
+  };
+
+  // Determine if there are no optional settings enabled
+  const hasNoSettings =
+    !settings?.hasDescription ||
+    !settings?.hasChipIn ||
+    !settings?.hasDressCode;
 
   // Format location for display in ListInput
   const locationFormatted =
@@ -188,7 +236,7 @@ function EditEvent() {
         {/* Event title */}
         <EventName
           value={editedEvent.title}
-          defaultFont={editedEvent.font}
+          font={editedEvent.font}
           onChange={value => setEditedEvent({ ...editedEvent, title: value })}
           onSelect={newFont =>
             setEditedEvent({ ...editedEvent, font: newFont })
@@ -205,7 +253,11 @@ function EditEvent() {
           <Modal.Open opens="event-date">
             <ListInput
               placeholder="When is your Event?"
-              content={startDateFormatted}
+              content={
+                startDateFormatted
+                  ? `${startDateFormatted}${editedEvent.endDate ? ` - ${endDateFormatted}` : ""}`
+                  : ""
+              }
               leftIcon={<Timer1 variant="Bold" />}
             />
           </Modal.Open>
@@ -288,46 +340,76 @@ function EditEvent() {
             </Modal.Open>
           )}
           {/* Optional fields based on settings */}
-          <div className="flex items-center gap-x-4 gap-y-3">
-            {!settings?.hasDescription && (
-              <TagButton
-                text="Description"
-                className="satoshi"
-                onClick={() =>
-                  setSettings(prev => ({
-                    ...prev,
-                    hasDescription: !prev.hasDescription,
-                  }))
-                }
-                leftImg={<Add />}
-              />
-            )}
-            {!settings?.hasChipIn && (
-              <TagButton
-                text="Chip In"
-                leftImg={<Add />}
-                className="satoshi"
-                onClick={() => {
-                  setSettings(prev => ({
-                    ...prev,
-                    hasChipIn: !prev.hasChipIn,
-                  }));
-                }}
-              />
-            )}
-            {!settings?.hasDressCode && (
-              <TagButton
-                text="Dress code"
-                leftImg={<Add />}
-                className="satoshi"
-                onClick={() => {
-                  setSettings(prev => ({
-                    ...prev,
-                    hasDressCode: !prev.hasDressCode,
-                  }));
-                }}
-              />
-            )}
+          {hasNoSettings && (
+            <div className="flex items-center gap-x-4 gap-y-3">
+              {!settings?.hasDescription && (
+                <TagButton
+                  text="Description"
+                  className="satoshi"
+                  onClick={() =>
+                    setSettings(prev => ({
+                      ...prev,
+                      hasDescription: !prev.hasDescription,
+                    }))
+                  }
+                  leftImg={<Add />}
+                />
+              )}
+              {!settings?.hasChipIn && (
+                <TagButton
+                  text="Chip In"
+                  leftImg={<Add />}
+                  className="satoshi"
+                  onClick={() => {
+                    setSettings(prev => ({
+                      ...prev,
+                      hasChipIn: !prev.hasChipIn,
+                    }));
+                  }}
+                />
+              )}
+              {!settings?.hasDressCode && (
+                <TagButton
+                  text="Dress code"
+                  leftImg={<Add />}
+                  className="satoshi"
+                  onClick={() => {
+                    setSettings(prev => ({
+                      ...prev,
+                      hasDressCode: !prev.hasDressCode,
+                    }));
+                  }}
+                />
+              )}
+            </div>
+          )}
+        </div>
+        <div className="py-6">
+          {/* Amount of edits */}
+          {showUpdateAlert && (
+            <Alert
+              type="info"
+              option="outline"
+              className="mb-4 !rounded-2xl"
+              subtitle="You can update your event details but not forever 😅
+To keep things neat for your guests, you can only make up to 3 major edits (like name, date, or location)."
+              onClick={() => setShowUpdateAlert(false)}
+              title={
+                <span className="flex justify-between items-center">
+                  <span>✏️ Heads up, Creator!</span>
+                  <span>{editedEvent.updateCount}/3 edits</span>
+                </span>
+              }
+            />
+          )}
+          {/* Save buttons */}
+          <div className="flex items-center justify-between">
+            <TextButton
+              variant="secondary"
+              text="Undo Changes"
+              onClick={handleUndoChanges}
+            />
+            <TextButton variant="primary" text="Save Changes" />
           </div>
         </div>
       </div>
