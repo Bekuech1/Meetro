@@ -25,7 +25,7 @@ import {
   Timer1,
   Trash,
 } from "iconsax-reactjs";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function EditEvent() {
@@ -39,6 +39,7 @@ function EditEvent() {
   // Show update count alert
   const [showUpdateAlert, setShowUpdateAlert] = useState(true);
 
+  // Event privacy state derived from event data
   const isPrivate = event?.isPrivate;
 
   // Set initial event data when it loads and when event changes
