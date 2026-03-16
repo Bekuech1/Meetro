@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 // Available fonts for the user to choose from
 const fonts = [
   { id: "paytone", label: "Paytone" },
@@ -11,15 +9,12 @@ const fonts = [
 // EventName component: an input field for event names with selectable font options
 export default function EventName({
   placeholder = "Event Name",
-  defaultFont,
+  font,
   value,
   onChange,
   onSelect,
   error,
 }) {
-  // State to track the currently selected font
-  const [font, setFont] = useState(defaultFont || "paytone");
-
   const handleChange = e => {
     onChange?.(e.target.value);
   };
@@ -55,10 +50,7 @@ export default function EventName({
           {fonts.map(f => (
             <button
               key={f.id}
-              onClick={() => {
-                setFont(f.id);
-                onSelect?.(f.id);
-              }}
+              onClick={() => onSelect?.(f.id)}
               className={`${baseBtn} ${font === f.id ? selectedBtn : defaultBtn} ${f.id}`}
             >
               {f.label}

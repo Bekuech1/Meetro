@@ -1,7 +1,8 @@
+import React from "react";
 import TriangleAlert from "@/assets/icons/TriangleAlert";
 import { InfoCircle, TickCircle } from "iconsax-reactjs";
 import { X } from "lucide-react";
-import React from "react";
+import { twMerge } from "tailwind-merge";
 
 const typeConfig = {
   error: {
@@ -48,6 +49,7 @@ const Alert = ({
   button, // 👈 optional custom close button (IconButton or any element)
   title,
   subtitle,
+  className = "",
 }) => {
   const typeStyles = typeConfig[type];
   const sizeStyles = sizeConfig[size];
@@ -67,7 +69,10 @@ const Alert = ({
 
   return (
     <div
-      className={`flex place-items-center border ${sizeStyles} ${styles} rounded-[16px] md:rounded-[100px] transition-all h-fit w-full satoshi`}
+      className={twMerge(
+        `flex place-items-center border ${sizeStyles} ${styles} rounded-[16px] md:rounded-[100px] transition-all h-fit w-full satoshi`,
+        className
+      )}
       role="alert"
     >
       <div className="w-full flex place-items-center gap-2">
