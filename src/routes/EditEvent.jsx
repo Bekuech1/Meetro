@@ -30,6 +30,13 @@ import { twMerge } from "tailwind-merge";
 
 function EditEvent() {
   const { event } = useManageEventContext();
+  // Validation state for required fields
+  const [validation, setValidation] = useState({
+    title: "",
+    date: "",
+    location: "",
+  });
+  // Initial event data for comparison and undo functionality
   const [initialEvent, setInitialEvent] = useState(null);
   const [editedEvent, setEditedEvent] = useState(null);
   // Settings state to control visibility of optional fields.
@@ -181,6 +188,53 @@ function EditEvent() {
     ? editedEvent.cohosts.map(cohost => cohost.name || cohost.email).join(", ")
     : "";
 
+  // Handle save changes
+  const handleSaveChanges = () => {
+    if (!validateRequiredFields()) {
+      return;
+    }
+  };
+
+  // Validate fields
+  const validateRequiredFields = () => {
+    // Errors are strings
+    const errors = {
+      title: editedEvent.title.trim() ? "" : "Event title is required.",
+      date: editedEvent.startDate
+        ? ""
+        : "Event start date and time are required.",
+      location:
+        editedEvent.eventType === "offline"
+          ? editedEvent.location.venue.trim() &&
+            editedEvent.location.state.trim() &&
+            editedEvent.location.city.trim()
+            ? ""
+            : "Event location is required."
+          : "",
+    };
+
+    // Optional fields
+    if (settings?.hasDescription) {
+      errors.description = editedEvent.description.trim()
+        ? ""
+        : "Event description is required.";
+    }
+    if (settings?.hasDressCode) {
+      errors.dressCode =
+        editedEvent.dressCode?.type || editedEvent.dressCode?.details
+          ? ""
+          : "Event dress code is required.";
+    }
+    if (settings?.hasChipIn) {
+      errors.chipIn = editedEvent.chipInDetails
+        ? ""
+        : "Event chip-in details are required.";
+    }
+
+    setValidation(errors);
+    return Object.values(errors).every(value => value === "");
+  };
+
   if (!editedEvent) {
     return <div> Loading.... </div>;
   }
@@ -238,7 +292,12 @@ function EditEvent() {
         <EventName
           value={editedEvent.title}
           font={editedEvent.font}
-          onChange={value => setEditedEvent({ ...editedEvent, title: value })}
+          error={validation.title}
+          onChange={value => {
+            setEditedEvent({ ...editedEvent, title: value });
+            if (validation.title && value.trim())
+              setValidation(prev => ({ ...prev, title: "" }));
+          }}
           onSelect={newFont =>
             setEditedEvent({ ...editedEvent, font: newFont })
           }
@@ -254,6 +313,7 @@ function EditEvent() {
           <Modal.Open opens="event-date">
             <ListInput
               placeholder="When is your Event?"
+              error={validation.date}
               content={
                 startDateFormatted
                   ? `${startDateFormatted}${editedEvent.endDate ? ` - ${endDateFormatted}` : ""}`
@@ -410,7 +470,11 @@ To keep things neat for your guests, you can only make up to 3 major edits (like
               text="Undo Changes"
               onClick={handleUndoChanges}
             />
-            <TextButton variant="primary" text="Save Changes" />
+            <TextButton
+              variant="primary"
+              text="Save Changes"
+              onClick={handleSaveChanges}
+            />
           </div>
         </div>
       </div>
