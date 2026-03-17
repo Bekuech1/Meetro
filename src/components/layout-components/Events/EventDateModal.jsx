@@ -45,6 +45,7 @@ function applyDatePreservingTime(nextDateValue, currentDateValue) {
 }
 
 export default function EventDateModal({ onSave, data }) {
+  // Local state to manage date inputs
   const [newDates, setNewDates] = useState({
     startDate: data?.startDate || null,
     endDate: data?.endDate || null,
@@ -54,10 +55,41 @@ export default function EventDateModal({ onSave, data }) {
     data?.endDate ? true : false
   );
 
+  // Determine if end date should be included in payload
+  const hasEndDate = Boolean(newDates.endDate);
+
   // Reset to initial values
   const resetValues = () => {
     setNewDates(data);
     setShowEndDateInputs(data?.endDate ? true : false);
+  };
+
+  // Error state for validation
+  const [validation, setValidation] = useState({
+    startDate: "",
+    endDate: "",
+  });
+
+  const validateDates = () => {
+    let isValid = true;
+    const newValidation = { startDate: "", endDate: "" };
+    // Check if start date is provided
+    if (!newDates.startDate) {
+      newValidation.startDate = "Start date is required.";
+      isValid = false;
+    }
+    // If end date is shown, validate it
+    if (hasEndDate) {
+      if (!newDates.endDate) {
+        newValidation.endDate = "End date is required.";
+        isValid = false;
+      } else if (newDates.endDate < newDates.startDate) {
+        newValidation.endDate = "End date cannot be before start date.";
+        isValid = false;
+      }
+    }
+    setValidation(newValidation);
+    return isValid;
   };
 
   // Close modal
@@ -72,7 +104,17 @@ export default function EventDateModal({ onSave, data }) {
       <div className="satoshi font-bold text-sm text-[#010E1F]">
         <div className="flex flex-col gap-y-12">
           <div className="flex flex-col gap-y-4">
-            <FormGroup label="Start Date">
+            <FormGroup
+              label="Start Date"
+              message={
+                validation.startDate
+                  ? {
+                      type: "error",
+                      text: validation.startDate,
+                    }
+                  : null
+              }
+            >
               <InputGroup>
                 <SelectDate
                   className="rounded-r-none"
@@ -99,7 +141,17 @@ export default function EventDateModal({ onSave, data }) {
             <div className="flex flex-col gap-y-1">
               {showEndDateInputs ? (
                 <React.Fragment>
-                  <FormGroup label="End Date">
+                  <FormGroup
+                    label="End Date"
+                    message={
+                      validation.endDate
+                        ? {
+                            type: "error",
+                            text: validation.endDate,
+                          }
+                        : null
+                    }
+                  >
                     <InputGroup>
                       <SelectDate
                         className="rounded-r-none"
@@ -180,7 +232,15 @@ export default function EventDateModal({ onSave, data }) {
             <TextButton
               text="Save"
               onClick={() => {
-                onSave(newDates);
+                if (!validateDates()) return;
+
+                const payload = {
+                  startDate: newDates.startDate,
+                };
+                if (hasEndDate) {
+                  payload.endDate = newDates.endDate;
+                }
+                onSave(payload);
                 close();
               }}
             />
