@@ -1,7 +1,7 @@
 import TextButton from "../Buttons/TextButtons";
 import Modal from "../Modal/Modal";
 import TagButton from "../Buttons/TagButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModalContext } from "../Modal/ModalContext";
 import { TickCircle } from "iconsax-reactjs";
 
@@ -38,6 +38,10 @@ export default function EventTypeModal({ onSave, categoriesData }) {
     onSave(categories);
     close();
   };
+
+  useEffect(() => {
+    resetData();
+  }, [categoriesData]);
 
   return (
     <Modal.Window

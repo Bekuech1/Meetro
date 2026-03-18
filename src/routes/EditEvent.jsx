@@ -35,6 +35,11 @@ function EditEvent() {
     title: "",
     date: "",
     location: "",
+    description: "",
+    dressCode: "",
+    chipIn: "",
+    cohosts: "",
+    categories: "",
   });
   // Initial event data for comparison and undo functionality
   const [initialEvent, setInitialEvent] = useState(null);
@@ -162,6 +167,16 @@ function EditEvent() {
       hasDressCode: initialEvent.dressCode ? true : false,
     });
     setImageFile(null);
+    setValidation({
+      title: "",
+      date: "",
+      location: "",
+      description: "",
+      dressCode: "",
+      chipIn: "",
+      cohosts: "",
+      categories: "",
+    });
   };
 
   // Determine if there are no optional settings enabled
@@ -198,37 +213,36 @@ function EditEvent() {
   // Validate fields
   const validateRequiredFields = () => {
     // Errors are strings
-    const errors = {
-      title: editedEvent.title.trim() ? "" : "Event title is required.",
-      date: editedEvent.startDate
-        ? ""
-        : "Event start date and time are required.",
-      location:
-        editedEvent.eventType === "offline"
-          ? editedEvent.location.venue.trim() &&
-            editedEvent.location.state.trim() &&
-            editedEvent.location.city.trim()
-            ? ""
-            : "Event location is required."
-          : "",
-    };
+    const errors = {};
+
+    if (!editedEvent.title.trim()) {
+      errors.title = "Event title is required.";
+    }
+    if (!editedEvent.startDate) {
+      errors.date = "Event start date and time are required.";
+    }
+
+    if (!editedEvent.location.state.trim() && !editedEvent.meetingURL.trim()) {
+      errors.location = "Event location is required.";
+    }
+
+    if (editedEvent.cohosts.length <= 0) {
+      errors.cohosts = "At least one cohost is required.";
+    }
+
+    if (editedEvent.category.length <= 0) {
+      errors.categories = "At least one event category is required.";
+    }
 
     // Optional fields
-    if (settings?.hasDescription) {
-      errors.description = editedEvent.description.trim()
-        ? ""
-        : "Event description is required.";
+    if (settings?.hasDescription && !editedEvent.description.trim()) {
+      errors.description = "Event description is required.";
     }
-    if (settings?.hasDressCode) {
-      errors.dressCode =
-        editedEvent.dressCode?.type || editedEvent.dressCode?.details
-          ? ""
-          : "Event dress code is required.";
+    if (settings?.hasDressCode && !editedEvent.dressCode?.type) {
+      errors.dressCode = "Event dress code is required.";
     }
-    if (settings?.hasChipIn) {
-      errors.chipIn = editedEvent.chipInDetails
-        ? ""
-        : "Event chip-in details are required.";
+    if (settings?.hasChipIn && !editedEvent.chipInDetails) {
+      errors.chipIn = "Event chip-in details are required.";
     }
 
     setValidation(errors);
@@ -325,6 +339,7 @@ function EditEvent() {
           {/* Event location */}
           <Modal.Open opens="event-location">
             <ListInput
+              error={validation.location}
               placeholder="Where is your Event?"
               content={locationFormatted}
               leftIcon={<Location variant="Bold" />}
@@ -333,29 +348,33 @@ function EditEvent() {
           {/* Event cohosts and collaborators */}
           <Modal.Open opens="event-cohosts">
             <ListInput
+              error={validation.cohosts}
               placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
               leftIcon={<Crown variant="Bold" />}
               content={cohostsFormatted}
             />
           </Modal.Open>
-          {/* Event type */}
+          {/* Event categories */}
           <Modal.Open opens="event-type">
             <ListInput
               placeholder="Event Type"
               leftIcon={<Category2 variant="Bulk" />}
+              error={validation.categories}
               tags={
-                <React.Fragment>
-                  {editedEvent.category.map((cat, index) => (
-                    <TagButton
-                      key={index}
-                      className={twMerge(
-                        "pointer-events-none  satoshi",
-                        categories[cat] ? categories[cat] : "text-[#001010]"
-                      )}
-                      text={cat}
-                    />
-                  ))}
-                </React.Fragment>
+                editedEvent.category.length > 0 ? (
+                  <React.Fragment>
+                    {editedEvent.category.map((cat, index) => (
+                      <TagButton
+                        key={index}
+                        className={twMerge(
+                          "pointer-events-none  satoshi",
+                          categories[cat] ? categories[cat] : "text-[#001010]"
+                        )}
+                        text={cat}
+                      />
+                    ))}
+                  </React.Fragment>
+                ) : null
               }
             />
           </Modal.Open>
@@ -391,7 +410,12 @@ function EditEvent() {
                   <button
                     onClick={e => {
                       e.stopPropagation();
-                      setEditedEvent(prev => ({ ...prev, dressCode: null }));
+                      setEditedEvent(prev => ({
+                        ...prev,
+                        dressCode: {
+                          type: "Casual",
+                        },
+                      }));
                       setSettings(prev => ({ ...prev, hasDressCode: false }));
                     }}
                   >
@@ -493,33 +517,39 @@ To keep things neat for your guests, you can only make up to 3 major edits (like
           startDate: editedEvent.startDate,
           endDate: editedEvent.endDate,
         }}
-        onSave={newDates =>
+        onSave={newDates => {
           setEditedEvent({
             ...editedEvent,
             startDate: newDates.startDate,
             endDate: newDates.endDate,
-          })
-        }
+          });
+          setValidation(prev => ({ ...prev, date: "" }));
+        }}
       />
       {/* Event location modal */}
       <EventLocationModal
         locationData={editedEvent.location}
         eventType={editedEvent.eventType}
         meetingURL={editedEvent.meetingURL}
-        onSave={data => handleSetLocation(data)}
+        onSave={data => {
+          handleSetLocation(data);
+          setValidation(prev => ({ ...prev, location: "" }));
+        }}
       />
       {/* Event cohosts modal */}
       <EventCohostsModal
         cohostsData={editedEvent.cohosts}
         onSave={newCohosts => {
           setEditedEvent({ ...editedEvent, cohosts: newCohosts });
+          setValidation(prev => ({ ...prev, cohosts: "" }));
         }}
       />
-      {/* Event type modal */}
+      {/* Event categories modal */}
       <EventTypeModal
         categoriesData={editedEvent.category}
         onSave={data => {
           setEditedEvent({ ...editedEvent, category: data });
+          setValidation(prev => ({ ...prev, categories: "" }));
         }}
       />
       {/* Event description modal */}
