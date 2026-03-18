@@ -322,6 +322,7 @@ function EditEvent() {
               leftIcon={<Timer1 variant="Bold" />}
             />
           </Modal.Open>
+          {/* Event location */}
           <Modal.Open opens="event-location">
             <ListInput
               placeholder="Where is your Event?"

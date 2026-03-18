@@ -103,12 +103,12 @@ export default function EventDateModal({ onSave, data }) {
   // Close modal
   const { close } = useModalContext();
 
+  // Sync showEndDateInputs with presence of endDate in data when modal opens
   useEffect(() => {
-    // Reset showEndDateInputs if endDate is removed externally
-    if (data?.endDate) {
+    if (data?.endDate && data.endDate !== newDates.endDate) {
       setShowEndDateInputs(true);
       setNewDates(prev => ({ ...prev, endDate: data.endDate }));
-    } else {
+    } else if (!data?.endDate) {
       setShowEndDateInputs(false);
       setNewDates(prev => ({ ...prev, endDate: null }));
     }
@@ -138,21 +138,23 @@ export default function EventDateModal({ onSave, data }) {
                 <SelectDate
                   className="rounded-r-none"
                   date={newDates.startDate}
-                  setDate={date =>
+                  setDate={date => {
                     setNewDates(prev => ({
                       ...prev,
                       startDate: applyDatePreservingTime(date, prev.startDate),
-                    }))
-                  }
+                    }));
+                    setValidation(prev => ({ ...prev, startDate: "" }));
+                  }}
                 />
                 <SelectTime
                   time={newDates.startDate}
-                  setTime={time =>
+                  setTime={time => {
                     setNewDates(prev => ({
                       ...prev,
                       startDate: applyTimeToDate(prev.startDate, time),
-                    }))
-                  }
+                    }));
+                    setValidation(prev => ({ ...prev, startDate: "" }));
+                  }}
                   className="rounded-l-none"
                 />
               </InputGroup>
@@ -175,24 +177,26 @@ export default function EventDateModal({ onSave, data }) {
                       <SelectDate
                         className="rounded-r-none"
                         date={newDates.endDate}
-                        setDate={date =>
+                        setDate={date => {
                           setNewDates(prev => ({
                             ...prev,
                             endDate: applyDatePreservingTime(
                               date,
                               prev.endDate
                             ),
-                          }))
-                        }
+                          }));
+                          setValidation(prev => ({ ...prev, endDate: "" }));
+                        }}
                       />
                       <SelectTime
                         time={newDates.endDate}
-                        setTime={time =>
+                        setTime={time => {
                           setNewDates(prev => ({
                             ...prev,
                             endDate: applyTimeToDate(prev.endDate, time),
-                          }))
-                        }
+                          }));
+                          setValidation(prev => ({ ...prev, endDate: "" }));
+                        }}
                         className="rounded-l-none"
                       />
                     </InputGroup>
