@@ -60,6 +60,15 @@ export default function EventLocationModal({
     locationData?.directions ? true : false
   );
 
+  // State to manage validation errors
+  const [validation, setValidation] = useState({
+    meetingURL: "",
+    venue: "",
+    directions: "",
+    state: "",
+  });
+
+  // Effect to fetch venue suggestions when user types in the venue input
   useEffect(() => {
     const searchQuery = newLocation.venue.trim();
     if (searchQuery.length < 3) {
@@ -143,6 +152,12 @@ export default function EventLocationModal({
 
   // Reset values
   const resetValues = () => {
+    setValidation({
+      meetingURL: "",
+      venue: "",
+      directions: "",
+      state: "",
+    });
     setNewLocation(initialLocationState);
     setNewMeetingURL(meetingURL || "");
     setNewEventType(eventType || "offline");
@@ -152,6 +167,8 @@ export default function EventLocationModal({
 
   // Handle save action
   const handleSave = () => {
+    if (!validateFields()) return;
+
     switch (newEventType) {
       case "online":
         onSave({
@@ -183,6 +200,50 @@ export default function EventLocationModal({
     close();
   };
 
+  // Validation function to check required fields based on event type
+  const validateFields = () => {
+    let isValid = true;
+    const newValidation = {
+      meetingURL: "",
+      venue: "",
+      directions: "",
+      state: "",
+    };
+    if (newEventType === "online") {
+      if (!newMeetingURL.trim()) {
+        newValidation.meetingURL = "Meeting URL is required.";
+        isValid = false;
+      } else if (!/^https?:\/\/\S+$/.test(newMeetingURL.trim())) {
+        newValidation.meetingURL = "Please enter a valid URL.";
+        isValid = false;
+      }
+    } else if (newEventType === "offline") {
+      if (!newLocation.state.trim()) {
+        newValidation.state = "State is required.";
+        isValid = false;
+      }
+      if (showVenueInput && !newLocation.venue.trim()) {
+        newValidation.venue = "Venue is required.";
+        isValid = false;
+      }
+      if (showDirectionsInput && !newLocation.directions.trim()) {
+        newValidation.directions = "Directions are required.";
+        isValid = false;
+      }
+    }
+    setValidation(newValidation);
+    return isValid;
+  };
+
+  // Sync local state with incoming props when modal opens
+  useEffect(() => {
+    setNewLocation(initialLocationState);
+    setNewMeetingURL(meetingURL || "");
+    setNewEventType(eventType || "offline");
+    setShowVenueInput(locationData?.venue ? true : false);
+    setShowDirectionsInput(locationData?.directions ? true : false);
+  }, [locationData, meetingURL, eventType]);
+
   return (
     <Modal.Window
       name="event-location"
@@ -197,11 +258,23 @@ export default function EventLocationModal({
             <Tabs.List
               list={tabs}
               btnStyles="min-w-[87px]"
-              onChange={eventType => setNewEventType(eventType)}
+              onChange={eventType => {
+                setNewEventType(eventType);
+              }}
             />
             {/* Online tab */}
             <Tabs.Panel name="online">
-              <FormGroup label="Enter Link">
+              <FormGroup
+                label="Enter Link"
+                message={
+                  validation.meetingURL
+                    ? {
+                        text: validation.meetingURL,
+                        type: "error",
+                      }
+                    : null
+                }
+              >
                 <InputField
                   placeholder="Paste the meeting link here"
                   value={newMeetingURL}
@@ -216,7 +289,17 @@ export default function EventLocationModal({
             </Tabs.Panel>
             {/* Offline tab */}
             <Tabs.Panel name="offline">
-              <FormGroup label="Select a state">
+              <FormGroup
+                label="Select a state"
+                message={
+                  validation.state
+                    ? {
+                        text: validation.state,
+                        type: "error",
+                      }
+                    : null
+                }
+              >
                 <SelectInput
                   value={newLocation.state}
                   setValue={value =>
@@ -234,7 +317,17 @@ export default function EventLocationModal({
               {showVenueInput ? (
                 <React.Fragment>
                   <div className="flex flex-col gap-y-1">
-                    <FormGroup label="Venue">
+                    <FormGroup
+                      label="Venue"
+                      message={
+                        validation.venue
+                          ? {
+                              text: validation.venue,
+                              type: "error",
+                            }
+                          : null
+                      }
+                    >
                       <div className="relative">
                         <InputField
                           placeholder="Enter venue"
@@ -319,7 +412,17 @@ export default function EventLocationModal({
                   </div>
                   {showDirectionsInput ? (
                     <div className="flex flex-col gap-y-1">
-                      <FormGroup label="Direction">
+                      <FormGroup
+                        label="Direction"
+                        message={
+                          validation.directions
+                            ? {
+                                text: validation.directions,
+                                type: "error",
+                              }
+                            : null
+                        }
+                      >
                         <InputField
                           placeholder="Apartment number, Take the right, etc."
                           leftIcon={
