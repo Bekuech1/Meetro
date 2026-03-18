@@ -1,12 +1,5 @@
-import TextButton from "../Buttons/TextButtons";
-import Modal from "../Modal/Modal";
-import Tabs from "../Tabs/Tabs";
-import FormGroup from "../Inputs/FormGroup";
-import InputField from "../Inputs/InputField";
 import InputIcon from "@/assets/icons/InputIcon";
-import SelectInput from "../Inputs/SelectInput";
-import TagButton from "../Buttons/TagButton";
-import React, { useEffect, useState } from "react";
+import { states } from "@/lib/utils";
 import {
   ArrowDown2,
   Building,
@@ -16,8 +9,15 @@ import {
   Trash,
   Video,
 } from "iconsax-reactjs";
+import React, { useEffect, useState } from "react";
+import TagButton from "../Buttons/TagButton";
+import TextButton from "../Buttons/TextButtons";
+import FormGroup from "../Inputs/FormGroup";
+import InputField from "../Inputs/InputField";
+import SelectInput from "../Inputs/SelectInput";
+import Modal from "../Modal/Modal";
 import { useModalContext } from "../Modal/ModalContext";
-import { states } from "@/lib/utils";
+import Tabs from "../Tabs/Tabs";
 
 // All tabs
 const tabs = [
@@ -259,6 +259,12 @@ export default function EventLocationModal({
               list={tabs}
               btnStyles="min-w-[87px]"
               onChange={eventType => {
+                setValidation({
+                  meetingURL: "",
+                  venue: "",
+                  directions: "",
+                  state: "",
+                });
                 setNewEventType(eventType);
               }}
             />
@@ -278,7 +284,10 @@ export default function EventLocationModal({
                 <InputField
                   placeholder="Paste the meeting link here"
                   value={newMeetingURL}
-                  onChange={event => setNewMeetingURL(event.target.value)}
+                  onChange={event => {
+                    setNewMeetingURL(event.target.value);
+                    setValidation(prev => ({ ...prev, meetingURL: "" }));
+                  }}
                   leftIcon={
                     <InputIcon>
                       <Video size={16} variant="Bold" color="#001010" />
@@ -302,9 +311,10 @@ export default function EventLocationModal({
               >
                 <SelectInput
                   value={newLocation.state}
-                  setValue={value =>
-                    setNewLocation(prev => ({ ...prev, state: value }))
-                  }
+                  setValue={value => {
+                    setNewLocation(prev => ({ ...prev, state: value }));
+                    setValidation(prev => ({ ...prev, state: "" }));
+                  }}
                   options={states}
                   placeholder="Choose one"
                   icon={
@@ -337,6 +347,7 @@ export default function EventLocationModal({
                               ...prev,
                               venue: event.target.value,
                             }));
+                            setValidation(prev => ({ ...prev, venue: "" }));
                             setShowVenueSuggestions(true);
                           }}
                           onFocus={() => {
@@ -375,9 +386,13 @@ export default function EventLocationModal({
                                     >
                                       <button
                                         type="button"
-                                        onClick={() =>
-                                          handleVenueSelect(suggestion)
-                                        }
+                                        onClick={() => {
+                                          setValidation(prev => ({
+                                            ...prev,
+                                            venue: "",
+                                          }));
+                                          handleVenueSelect(suggestion);
+                                        }}
                                         className="w-full px-3 py-2 text-left text-xs font-medium text-[#001010] hover:bg-[#F8F8F7]"
                                       >
                                         {suggestion.label}
@@ -434,12 +449,16 @@ export default function EventLocationModal({
                               />
                             </InputIcon>
                           }
-                          onChange={event =>
+                          onChange={event => {
                             setNewLocation(prev => ({
                               ...prev,
                               directions: event.target.value,
-                            }))
-                          }
+                            }));
+                            setValidation(prev => ({
+                              ...prev,
+                              directions: "",
+                            }));
+                          }}
                           value={newLocation.directions}
                         />
                       </FormGroup>
