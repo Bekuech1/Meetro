@@ -5,7 +5,7 @@ import InputGroup from "../Inputs/InputGroup";
 import SelectDate from "../Inputs/SelectDate";
 import SelectTime from "../Inputs/SelectTime";
 import Modal from "../Modal/Modal";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useModalContext } from "../Modal/ModalContext";
 import { parseTimeValue } from "@/lib/utils";
 import { ArrowDown2, InfoCircle, Trash } from "iconsax-reactjs";
@@ -55,11 +55,9 @@ export default function EventDateModal({ onSave, data }) {
     data?.endDate ? true : false
   );
 
-  // Determine if end date should be included in payload
-  const hasEndDate = Boolean(newDates.endDate);
-
   // Reset to initial values
   const resetValues = () => {
+    setValidation({ startDate: "", endDate: "" });
     setNewDates(data);
     setShowEndDateInputs(data?.endDate ? true : false);
   };
@@ -70,30 +68,51 @@ export default function EventDateModal({ onSave, data }) {
     endDate: "",
   });
 
+  const hasEndDate = Boolean(newDates.endDate);
+
   const validateDates = () => {
     let isValid = true;
     const newValidation = { startDate: "", endDate: "" };
-    // Check if start date is provided
+
+    // Convert to Date objects for reliable comparison
+    const start = newDates.startDate ? new Date(newDates.startDate) : null;
+    const end = newDates.endDate ? new Date(newDates.endDate) : null;
+
+    // 1. Check if start date is provided
     if (!newDates.startDate) {
       newValidation.startDate = "Start date is required.";
       isValid = false;
     }
-    // If end date is shown, validate it
-    if (hasEndDate) {
+
+    // 2. Validate End Date logic
+    if (showEndDateInputs) {
       if (!newDates.endDate) {
         newValidation.endDate = "End date is required.";
         isValid = false;
-      } else if (newDates.endDate < newDates.startDate) {
+      } else if (start && end && end < start) {
+        // Comparison is safer with Date objects or .getTime()
         newValidation.endDate = "End date cannot be before start date.";
         isValid = false;
       }
     }
+
     setValidation(newValidation);
     return isValid;
   };
 
   // Close modal
   const { close } = useModalContext();
+
+  useEffect(() => {
+    // Reset showEndDateInputs if endDate is removed externally
+    if (data?.endDate) {
+      setShowEndDateInputs(true);
+      setNewDates(prev => ({ ...prev, endDate: data.endDate }));
+    } else {
+      setShowEndDateInputs(false);
+      setNewDates(prev => ({ ...prev, endDate: null }));
+    }
+  }, [data?.endDate]);
   return (
     <Modal.Window
       name="event-date"
