@@ -4,7 +4,7 @@ import Modal from "../Modal/Modal";
 import Radio from "../Selectors/Radio";
 import FormGroup from "../Inputs/FormGroup";
 import InputField from "../Inputs/InputField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModalContext } from "../Modal/ModalContext";
 
 export default function EventDressCodeModal({ onSave, dressCodeData }) {
@@ -17,13 +17,45 @@ export default function EventDressCodeModal({ onSave, dressCodeData }) {
 
   const [newDressCode, setNewDressCode] = useState(initialDressCode);
 
+  // Reset values
   const resetValues = () => {
     setNewDressCode(initialDressCode);
   };
 
+  const [validation, setValidation] = useState({
+    dressCode: "",
+  });
+
+  // Validation function for dress code
+  const validateDressCode = () => {
+    const errors = {};
+    if (newDressCode.type == "Custom" && !newDressCode.details.trim()) {
+      errors.dressCode = "Dress code details are required.";
+    }
+    setValidation(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Reset values when modal opens with new data
+  useEffect(() => {
+    resetValues();
+  }, [dressCodeData]);
+
+  // Handle save action
   const handleSave = () => {
-    onSave(newDressCode);
-    close();
+    if (validateDressCode()) {
+      onSave(newDressCode);
+      close();
+    }
+  };
+
+  // Helper to set dress code type
+  const handleSetDressCodeType = type => {
+    setNewDressCode({
+      type,
+      details: type === "Custom" ? newDressCode.details : "",
+    });
+    setValidation(prev => ({ ...prev, dressCode: "" }));
   };
 
   return (
@@ -49,13 +81,7 @@ export default function EventDressCodeModal({ onSave, dressCodeData }) {
                   />
                 }
                 className={`hover:bg-white ${newDressCode.type === "Casual" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
-                onClick={() =>
-                  setNewDressCode({
-                    ...newDressCode,
-                    type: "Casual",
-                    details: "",
-                  })
-                }
+                onClick={() => handleSetDressCodeType("Casual")}
               />
               <TagButton
                 leftImg={
@@ -66,13 +92,7 @@ export default function EventDressCodeModal({ onSave, dressCodeData }) {
                   />
                 }
                 className={`hover:bg-white ${newDressCode.type === "Corporate" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
-                onClick={() =>
-                  setNewDressCode({
-                    ...newDressCode,
-                    type: "Corporate",
-                    details: "",
-                  })
-                }
+                onClick={() => handleSetDressCodeType("Corporate")}
               />
               <TagButton
                 leftImg={
@@ -83,13 +103,7 @@ export default function EventDressCodeModal({ onSave, dressCodeData }) {
                   />
                 }
                 className={`hover:bg-white ${newDressCode.type === "Traditional" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
-                onClick={() =>
-                  setNewDressCode({
-                    ...newDressCode,
-                    type: "Traditional",
-                    details: "",
-                  })
-                }
+                onClick={() => handleSetDressCodeType("Traditional")}
               />
               <TagButton
                 leftImg={
@@ -100,22 +114,31 @@ export default function EventDressCodeModal({ onSave, dressCodeData }) {
                   />
                 }
                 className={`hover:bg-white ${newDressCode.type === "Custom" ? "!border-[#61B42D] [&_label]:text-[#61B42D]" : ""}`}
-                onClick={() =>
-                  setNewDressCode({ ...newDressCode, type: "Custom" })
-                }
+                onClick={() => handleSetDressCodeType("Custom")}
               />
             </div>
             {newDressCode.type === "Custom" && (
-              <FormGroup label="Custom Dress Code">
+              <FormGroup
+                label="Custom Dress Code"
+                message={
+                  validation.dressCode
+                    ? {
+                        type: "error",
+                        text: validation.dressCode,
+                      }
+                    : null
+                }
+              >
                 <InputField
                   placeholder="Specify the dress code"
                   value={newDressCode.details}
-                  onChange={e =>
+                  onChange={e => {
                     setNewDressCode({
                       ...newDressCode,
                       details: e.target.value,
-                    })
-                  }
+                    });
+                    setValidation(prev => ({ ...prev, dressCode: "" }));
+                  }}
                 />
               </FormGroup>
             )}

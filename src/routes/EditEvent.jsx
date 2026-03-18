@@ -385,6 +385,7 @@ function EditEvent() {
                 placeholder="Event Description"
                 leftIcon={<Calendar2 variant="Bold" />}
                 content={descriptionFormatted}
+                error={validation.description}
                 rightIcon={
                   <button
                     onClick={e => {
@@ -405,6 +406,7 @@ function EditEvent() {
               <ListInput
                 placeholder="Dress Code"
                 content={`${editedEvent.dressCode ? editedEvent.dressCode.type : ""}${editedEvent.dressCode?.details ? ` - ${editedEvent.dressCode.details}` : ""}`}
+                error={validation.dressCode}
                 leftIcon={<Colorfilter variant="Bold" />}
                 rightIcon={
                   <button
