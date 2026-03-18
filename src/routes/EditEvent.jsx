@@ -392,6 +392,7 @@ function EditEvent() {
                       e.stopPropagation();
                       setEditedEvent(prev => ({ ...prev, description: "" }));
                       setSettings(prev => ({ ...prev, hasDescription: false }));
+                      setValidation(prev => ({ ...prev, description: "" }));
                     }}
                   >
                     <Trash variant="Outline" size={16} />
@@ -419,6 +420,7 @@ function EditEvent() {
                         },
                       }));
                       setSettings(prev => ({ ...prev, hasDressCode: false }));
+                      setValidation(prev => ({ ...prev, dressCode: "" }));
                     }}
                   >
                     <Trash variant="Outline" size={16} />
@@ -560,6 +562,7 @@ To keep things neat for your guests, you can only make up to 3 major edits (like
           descriptionData={editedEvent.description}
           onSave={description => {
             setEditedEvent({ ...editedEvent, description });
+            setValidation(prev => ({ ...prev, description: "" }));
           }}
         />
       )}
@@ -569,6 +572,7 @@ To keep things neat for your guests, you can only make up to 3 major edits (like
           dressCodeData={editedEvent.dressCode}
           onSave={data => {
             setEditedEvent({ ...editedEvent, dressCode: data });
+            setValidation(prev => ({ ...prev, dressCode: "" }));
           }}
         />
       )}
