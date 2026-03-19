@@ -9,7 +9,7 @@ import InputField from "../Inputs/InputField";
 import SelectInput from "../Inputs/SelectInput";
 import Modal from "../Modal/Modal";
 import { useModalContext } from "../Modal/ModalContext";
-import { Crown, Trash } from "iconsax-reactjs";
+import { Crown, Sms, Trash, User } from "iconsax-reactjs";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -32,6 +32,13 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     file: null,
   });
 
+  // Validation state for form fields
+  const [validation, setValidation] = useState({
+    email: "",
+    role: "",
+    name: "",
+  });
+
   // Initialize cohosts and step based on incoming data
   useEffect(() => {
     setEditedCohosts(cohostsData || []);
@@ -42,20 +49,46 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     }
   }, [cohostsData]);
 
+  // Validate form fields before adding a cohost
+  const validateForm = () => {
+    let isValid = true;
+    const newValidation = { email: "", role: "", name: "" };
+    if (!cohost.email) {
+      newValidation.email = "Email is required";
+      isValid = false;
+    }
+    if (!cohost.role) {
+      newValidation.role = "Role is required";
+      isValid = false;
+    }
+    if (!hasAccount) {
+      if (!cohost.name) {
+        newValidation.name = "Name is required";
+        isValid = false;
+      }
+    }
+    setValidation(newValidation);
+    return isValid;
+  };
+
+  // Add a new cohost to the list
   const addCohost = () => {
-    if (!cohost.email || !cohost.role) return;
-    if (!hasAccount && (!cohost.name || !cohost.photo)) return;
+    if (!validateForm()) return;
     setEditedCohosts(s => [...s, cohost]);
     setCohost({ email: "", role: "", photo: "", name: "", file: null });
+    setCurrentStep(2);
   };
 
+  // Reset all data to initial state
   const resetData = () => {
     setEditedCohosts(cohostsData || []);
-    setCurrentStep(editedCohosts.length > 0 ? 2 : 1);
+    setCurrentStep(cohostsData.length > 0 ? 2 : 1);
     setHasAccount(true);
+    setValidation({ email: "", role: "", name: "" });
     setCohost({ email: "", role: "", photo: "", name: "", file: null });
   };
 
+  // Remove a cohost from the list by index
   const removeCohost = index => {
     setEditedCohosts(s => s.filter((_, i) => i !== index));
     if (editedCohosts.length === 1) {
@@ -64,6 +97,7 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     }
   };
 
+  // Navigate to the next step if there is at least one cohost added
   const goToNextStep = () => {
     if (editedCohosts.length === 0) return;
     if (currentStep < 2) {
@@ -71,6 +105,7 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     }
   };
 
+  // Navigate to the previous step
   const goToPreviousStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
@@ -78,6 +113,7 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     }
   };
 
+  // Save the edited cohosts and close the modal
   const handleSave = () => {
     onSave?.(editedCohosts);
     close();
@@ -104,7 +140,17 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
                       "satoshi min-w-auto h-7.5 px-3 hover:bg-transparent bg-transparent text-[#B0B5B5] border-transparent",
                       hasAccount && "bg-white text-[#011F0F] hover:bg-white"
                     )}
-                    onClick={() => setHasAccount(true)}
+                    onClick={() => {
+                      setHasAccount(true);
+                      setValidation({ name: "", email: "", role: "" });
+                      setCohost({
+                        email: "",
+                        role: "",
+                        photo: "",
+                        name: "",
+                        file: null,
+                      });
+                    }}
                   />
                   <TagButton
                     text="No Meetro Account"
@@ -112,7 +158,22 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
                       "satoshi min-w-auto h-7.5 px-3 bg-transparent hover:bg-transparent text-[#B0B5B5] border-transparent",
                       !hasAccount && "bg-white text-[#011F0F] hover:bg-white"
                     )}
-                    onClick={() => setHasAccount(false)}
+                    onClick={() => {
+                      setHasAccount(false);
+                      setValidation({
+                        ...validation,
+                        name: "",
+                        email: "",
+                        role: "",
+                      });
+                      setCohost({
+                        email: "",
+                        role: "",
+                        photo: "",
+                        name: "",
+                        file: null,
+                      });
+                    }}
                   />
                 </div>
               </div>
@@ -129,34 +190,79 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
               )}
               {/* Cohost name */}
               {!hasAccount && (
-                <FormGroup label="Name">
+                <FormGroup
+                  label="Name"
+                  message={
+                    validation.name
+                      ? {
+                          text: validation.name,
+                          type: "error",
+                        }
+                      : null
+                  }
+                >
                   <InputField
+                    leftIcon={
+                      <InputIcon>
+                        <User variant="Bold" />
+                      </InputIcon>
+                    }
                     placeholder="Enter the name you want displayed"
                     value={cohost.name}
-                    onChange={e =>
-                      setCohost({ ...cohost, name: e.target.value })
-                    }
+                    onChange={e => {
+                      setCohost({ ...cohost, name: e.target.value });
+                      setValidation({ ...validation, name: "" });
+                    }}
                   />
                 </FormGroup>
               )}
 
               {/* Cohost email */}
-              <FormGroup label="Email">
+              <FormGroup
+                label="Email"
+                message={
+                  validation.email
+                    ? {
+                        text: validation.email,
+                        type: "error",
+                      }
+                    : null
+                }
+              >
                 <InputField
+                  leftIcon={
+                    <InputIcon>
+                      <Sms variant="Bold" />
+                    </InputIcon>
+                  }
                   placeholder="Enter the person's email"
                   type="email"
                   value={cohost.email}
-                  onChange={e =>
-                    setCohost({ ...cohost, email: e.target.value })
-                  }
+                  onChange={e => {
+                    setCohost({ ...cohost, email: e.target.value });
+                    setValidation({ ...validation, email: "" });
+                  }}
                 />
               </FormGroup>
               {/* Cohost role */}
-              <FormGroup label="Role">
+              <FormGroup
+                label="Role"
+                message={
+                  validation.role
+                    ? {
+                        text: validation.role,
+                        type: "error",
+                      }
+                    : null
+                }
+              >
                 <SelectInput
                   placeholder="Choose one"
                   value={cohost.role}
-                  setValue={role => setCohost({ ...cohost, role })}
+                  setValue={role => {
+                    setCohost({ ...cohost, role });
+                    setValidation({ ...validation, role: "" });
+                  }}
                   icon={
                     <InputIcon>
                       <Crown variant="Bold" />
@@ -166,19 +272,12 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
                 />
               </FormGroup>
               {/* Add cohost button */}
-              <div className="flex items-center justify-between">
-                <TextButton
-                  variant="secondary"
-                  text="Add Cohost"
-                  className="sm:min-w-auto min-w-full"
-                  onClick={addCohost}
-                />
-                {editedCohosts.length > 0 && (
-                  <p className="text-sm text-[#8A9191] font-medium ml-4">
-                    Added {editedCohosts.length}/4 cohosts
-                  </p>
-                )}
-              </div>
+              <TextButton
+                variant="secondary"
+                text="Add Cohost"
+                className="sm:min-w-auto min-w-full"
+                onClick={addCohost}
+              />
             </div>
             <div className="flex items-center justify-center md:justify-start gap-x-4">
               <TextButton
@@ -232,6 +331,20 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
                   ))}
                 </ul>
               )}
+              <div className="flex items-center justify-between">
+                {editedCohosts.length < 3 && (
+                  <TextButton
+                    variant="secondary"
+                    text="Add More"
+                    className="sm:min-w-auto min-w-full"
+                    onClick={goToPreviousStep}
+                  />
+                )}
+
+                <p className="text-sm text-[#8A9191] flex-1 font-medium text-right">
+                  Added {editedCohosts.length}/3 cohosts
+                </p>
+              </div>
             </div>
             <div className="flex items-center justify-center md:justify-start gap-x-4">
               <TextButton

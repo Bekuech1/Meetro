@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 export default function Dropdown({
   placeholder = "Select",
@@ -13,6 +14,38 @@ export default function Dropdown({
 }) {
   /* Dropdown ref */
   const dropdownRef = useRef(null);
+  const [coords, setCoords] = useState(null);
+
+  useLayoutEffect(() => {
+    if (buttonRef?.current) {
+      const updatePosition = () => {
+        if (window.innerWidth < 640 && modal) {
+          setCoords(null);
+          return;
+        }
+        const rect = buttonRef.current.getBoundingClientRect();
+        setCoords({
+          top: rect.bottom,
+          left: rect.left,
+          width: rect.width,
+        });
+      };
+      
+      updatePosition();
+      
+      const onScroll = (e) => {
+        if (dropdownRef.current && dropdownRef.current.contains(e.target)) return;
+        onClose?.();
+      };
+      
+      window.addEventListener("resize", updatePosition);
+      document.addEventListener("scroll", onScroll, { capture: true, passive: true });
+      return () => {
+        window.removeEventListener("resize", updatePosition);
+        document.removeEventListener("scroll", onScroll, { capture: true });
+      };
+    }
+  }, [buttonRef, onClose, modal]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -35,10 +68,14 @@ export default function Dropdown({
     };
   }, [onClose]);
 
-  return (
+  if (!coords && window.innerWidth >= 640) return null;
+
+  return createPortal(
     <div
       ref={dropdownRef}
-      className={`satoshi animate-in slide-in-from-bottom-20 ${modal ? "max-sm:rounded-t-[24px] max-sm:rounded-b-none max-sm:fixed max-sm:top-auto max-sm:bottom-0" : ""} left-0 top-full absolute rounded-[8px] z-20 text-left w-full overflow-hidden ${className} shadow-[0px_10px_22px_rgba(45,77,108,0.15)] bg-white`}
+      data-dropdown-portal="true"
+      className={`satoshi animate-in slide-in-from-bottom-20 ${modal ? "max-sm:rounded-t-[24px] max-sm:rounded-b-none max-sm:fixed max-sm:top-auto max-sm:bottom-0" : ""} sm:fixed sm:z-[170] z-[170] rounded-[8px] text-left w-full overflow-hidden ${className} shadow-[0px_10px_22px_rgba(45,77,108,0.15)] bg-white`}
+      style={coords ? { top: coords.top, left: coords.left, width: coords.width } : {}}
     >
       <div
         className={`overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y ${modal ? "max-sm:max-h-[70vh] max-sm:p-0" : ""} p-1 pt-0 max-h-[188px]`}
@@ -104,6 +141,7 @@ export default function Dropdown({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

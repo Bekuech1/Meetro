@@ -34,7 +34,7 @@ export default function SelectInput({
         )}
         {/* Placeholder */}
         <p
-          className={`flex-1 md:text-sm font-medium ${value ? "text-[#001010]" : "text-[#B0B5B5]"} [&~svg]:fill-[#8A9191]`}
+          className={`flex-1 md:text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis ${value ? "text-[#001010]" : "text-[#B0B5B5]"} [&~svg]:fill-[#8A9191]`}
         >
           {value ? value : placeholder}
         </p>

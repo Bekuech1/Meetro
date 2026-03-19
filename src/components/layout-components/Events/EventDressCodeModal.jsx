@@ -71,7 +71,7 @@ export default function EventDressCodeModal({ onSave, dressCodeData }) {
             <h3 className="text-sm text-[#8A9191] font-medium">
               Select Preferred Dress Code
             </h3>
-            <div className="flex flex-wrap gap-x-2 items-center">
+            <div className="flex flex-wrap gap-2 items-center">
               <TagButton
                 leftImg={
                   <Radio

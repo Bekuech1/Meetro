@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { ArrowDown2, Calendar as Calendar2 } from "iconsax-reactjs";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Calendar from "../Calendar";
 import InputIcon from "@/assets/icons/InputIcon";
 
@@ -15,9 +15,45 @@ export default function SelectDate({
   const inputRef = useRef(null);
   const parsedDate = date ? new Date(date) : null;
   const hasValidDate = parsedDate && !Number.isNaN(parsedDate.getTime());
+  const [coords, setCoords] = useState(null);
 
   // Close calendar
   const close = () => setShowCalendar(false);
+
+  useLayoutEffect(() => {
+    if (showCalendar && inputRef?.current) {
+      const updatePosition = () => {
+        if (window.innerWidth < 640) {
+          setCoords(null);
+          return;
+        }
+        const rect = inputRef.current.getBoundingClientRect();
+        setCoords({
+          top: rect.top + rect.height / 2,
+          left: rect.left,
+        });
+      };
+      
+      updatePosition();
+      
+      const onScroll = (e) => {
+        // If the scroll target is the calendar itself, don't close
+        if (calendarRef.current && calendarRef.current.contains(e.target)) return;
+        
+        // If the scroll target is inside a portaled dropdown belonging to this tree, ignore
+        if (e.target.closest && e.target.closest('[data-dropdown-portal="true"]')) return;
+
+        close();
+      };
+      
+      window.addEventListener("resize", updatePosition);
+      document.addEventListener("scroll", onScroll, { capture: true, passive: true });
+      return () => {
+        window.removeEventListener("resize", updatePosition);
+        document.removeEventListener("scroll", onScroll, { capture: true });
+      };
+    }
+  }, [showCalendar]);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -48,7 +84,7 @@ export default function SelectDate({
         </InputIcon>
         {/* Placeholder */}
         <p
-          className={`flex-1 md:text-sm font-medium ${date ? "text-[#001010]" : "text-[#B0B5B5]"} [&~svg]:fill-[#8A9191]`}
+          className={`flex-1 md:text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis  ${date ? "text-[#001010]" : "text-[#B0B5B5]"} [&~svg]:fill-[#8A9191]`}
         >
           {hasValidDate ? format(parsedDate, "EEE, d MMM, yyyy") : placeholder}
         </p>
@@ -60,7 +96,8 @@ export default function SelectDate({
         <Calendar
           date={date}
           calendarRef={calendarRef}
-          className="fixed w-full sm:w-auto bottom-0 z-40 sm:bottom-auto left-0 sm:absolute sm:top-1/2 sm:-translate-y-1/2"
+          className="fixed w-full sm:w-auto bottom-0 z-40 sm:z-[160] sm:bottom-auto left-0 sm:fixed sm:-translate-y-1/2"
+          style={coords ? { top: coords.top, left: coords.left } : {}}
           onSelect={date => {
             setDate(date.toString());
             close();

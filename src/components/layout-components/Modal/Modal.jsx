@@ -68,7 +68,7 @@ function Window({
       <div className="fixed inset-0 z-110 bg-[#ABABAB80] backdrop-blur-[32px] pointer-events-auto animate-in fade-in" />
       <div className="w-full fixed z-120 h-full flex items-end sm:items-center animate-in slide-in-from-bottom-35 left-0 top-0 pointer-events-none">
         <div
-          className={`flex flex-col gap-[10px] ${desktopWidth} w-full mx-auto pointer-events-auto`}
+          className={`flex flex-col gap-[10px] ${desktopWidth} w-full mx-auto pointer-events-auto max-h-[95dvh]`}
         >
           {/* Close button */}
           {showCloseButton && (
@@ -79,7 +79,7 @@ function Window({
               }}
               disabled={isCloseButtonDisabled}
               className={twMerge(
-                "size-11! border-white! self-end mr-2 sm:mr-0 bg-[#EDEDED]! hover:bg-[#E5E7E3]!",
+                "size-11! border-white! self-end mr-2 sm:mr-0 bg-[#EDEDED]! hover:bg-[#E5E7E3]! shrink-0",
                 isCloseButtonDisabled && "pointer-events-none"
               )}
               icon={<CloseCircle color="#DB2863" variant="Bold" size={24} />}
@@ -87,11 +87,11 @@ function Window({
           )}
           {/* Content */}
           <div
-            className={`border-2 border-white rounded-t-[24px] sm:rounded-[24px] bg-[#EDEDED] ${title ? "" : "p-6 pb-12 sm:p-12"}`}
+            className={`border-2 border-white rounded-t-[24px] sm:rounded-[24px] bg-[#EDEDED] flex flex-col min-h-0`}
           >
             {/* Show title */}
             {title && (
-              <div className="p-2">
+              <div className="px-2 pt-2 shrink-0">
                 <TextButton
                   className="w-full !justify-start normal-case pointer-events-none"
                   text={title}
@@ -100,7 +100,7 @@ function Window({
               </div>
             )}
             <div
-              className={`${title ? "py-12 px-4 sm:pt-4 sm:px-6 sm:pb-6" : ""}`}
+              className={`overflow-y-auto ${title ? "pb-12 py-4 px-4 sm:pt-4 sm:px-6 sm:pb-6" : "p-6 pb-12 sm:p-12"}`}
             >
               {children}
             </div>
