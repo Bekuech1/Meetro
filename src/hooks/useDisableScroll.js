@@ -12,20 +12,7 @@ export const useDisableScroll = (disabled = true) => {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
 
-      // Also prevent wheel and touch events as backup
-      const preventDefault = e => e.preventDefault();
-
-      // Add listeners with passive: false to allow preventDefault
-      document.addEventListener("wheel", preventDefault, { passive: false });
-      document.addEventListener("touchmove", preventDefault, {
-        passive: false,
-      });
-
       return () => {
-        // Remove listeners
-        document.removeEventListener("wheel", preventDefault);
-        document.removeEventListener("touchmove", preventDefault);
-
         // Restore overflow
         document.body.style.overflow = "";
         document.documentElement.style.overflow = "";
