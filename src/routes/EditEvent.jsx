@@ -292,20 +292,6 @@ function EditEvent() {
         // Invalidate queries to refetch the updated data
         queryClient.invalidateQueries(["user-events"]);
         queryClient.invalidateQueries(["event", event._id]);
-        // Refresh the edited event
-        const refreshedEvent = {
-          ...data.data,
-          location: data.data.location || { venue: "", state: "", city: "", coordinates: null, directions: "" },
-          category: data.data.category || [],
-          cohosts: data.data.cohosts || [],
-          chipInDetails: data.data.chipInDetails || null,
-          dressCode: data.data.dressCode || null,
-          startDate: data.data.startDate || "",
-          endDate: data.data.endDate || ""
-        };
-        // Update the initial and edited event
-        setInitialEvent(refreshedEvent);
-        setEditedEvent(refreshedEvent); 
         // Clear local images
         clearLocalImages();
         // Clear file
