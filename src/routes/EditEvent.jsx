@@ -77,6 +77,7 @@ function EditEvent() {
           coordinates: event.location?.coordinates || null,
           directions: event.location?.directions || "",
         },
+        isPublished: Boolean(event.isPublished),  
         category: event.category || [],
         dressCode: event.dressCode || null,
         eventType: event.eventType || "",
@@ -346,6 +347,7 @@ function EditEvent() {
       {/* Details section */}
       <div className="flex-1">
         {/* Event privacy */}
+        {!editedEvent.isPublished && (
         <div className="mb-6">
           <div className="border border-[#F9F9F9] p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
             <TagButton
@@ -369,6 +371,7 @@ function EditEvent() {
               : "Open to all! Let the world (or at least your city) know what’s happening!"}
           </p>
         </div>
+        )}
         {/* Event title */}
         <EventName
           value={editedEvent.title}
