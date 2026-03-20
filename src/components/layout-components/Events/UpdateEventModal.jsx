@@ -62,6 +62,7 @@ import { useNavigate } from "react-router";
                     option="outline"
                     title="Failed to update event"
                     subtitle={error}
+                    className="!rounded-2xl"
                   />
                 )}
               </React.Fragment>
@@ -75,7 +76,7 @@ import { useNavigate } from "react-router";
               variant={`${status === "success" ? "tertiary" : "primary"}`}
               onClick={handleBackToHome}
             />
-            {status === "success" && <TextButton text="Share Event" onClick={() => setActive("share-event")} />}
+            {status === "success" && <TextButton text="Share Event" />}
           </div>
         )}
       </div>
