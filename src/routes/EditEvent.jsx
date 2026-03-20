@@ -9,11 +9,15 @@ import EventImage from "@/components/layout-components/Events/EventImage";
 import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
 import EventTypeModal from "@/components/layout-components/Events/EventTypeModal";
 import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemplatesModal";
+import UpdateEventModal from "@/components/layout-components/Events/UpdateEventModal";
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
+import { useModalContext } from "@/components/layout-components/Modal/ModalContext";
 import { useManageEventContext } from "@/layouts/ManageEventLayout";
 import { categories } from "@/lib/utils";
+import { eventsApi } from "@/services/eventsApi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
   Add,
@@ -30,6 +34,7 @@ import { twMerge } from "tailwind-merge";
 
 function EditEvent() {
   const { event } = useManageEventContext();
+  const {setActive} = useModalContext();
   // Validation state for required fields
   const [validation, setValidation] = useState({
     title: "",
@@ -46,6 +51,7 @@ function EditEvent() {
   const [editedEvent, setEditedEvent] = useState(null);
   // Settings state to control visibility of optional fields.
   const [settings, setSettings] = useState(null);
+  const queryClient = useQueryClient();
   // File state to hold the uploaded image file.
   const [imageFile, setImageFile] = useState(null);
   // Show update count alert
@@ -60,12 +66,8 @@ function EditEvent() {
       const eventData = {
         title: event.title || "",
         description: event.description || "",
-        startDate: event.startDate
-          ? new Date(event.startDate).toISOString().slice(0, 16)
-          : "",
-        endDate: event.endDate
-          ? new Date(event.endDate).toISOString().slice(0, 16)
-          : "",
+        startDate: event.startDate || "",
+        endDate: event.endDate || "",
         image: event.image || "",
         font: event.font || "paytone",
         location: {
@@ -95,10 +97,8 @@ function EditEvent() {
     }
   }, [event]);
 
-  // Clean up object URLs when component unmounts or when image changes
-  useEffect(() => {
-    return () => {
-      if (editedEvent?.image && editedEvent.image.startsWith("blob:")) {
+  const clearLocalImages = () => {
+    if (editedEvent?.image && editedEvent.image.startsWith("blob:")) {
         URL.revokeObjectURL(editedEvent.image);
       }
 
@@ -110,8 +110,12 @@ function EditEvent() {
           }
         });
       }
-    };
-  });
+  }
+
+  // Clean up object URLs when component unmounts or when image changes
+  useEffect(() => {
+    return () => clearLocalImages();  
+  }, []);
 
   // Format start date for display in ListInput
   const startDateFormatted = editedEvent?.startDate
@@ -203,13 +207,6 @@ function EditEvent() {
     ? editedEvent.cohosts.map(cohost => cohost.name || cohost.email).join(", ")
     : "";
 
-  // Handle save changes
-  const handleSaveChanges = () => {
-    if (!validateRequiredFields()) {
-      return;
-    }
-  };
-
   // Validate fields
   const validateRequiredFields = () => {
     // Errors are strings
@@ -248,6 +245,90 @@ function EditEvent() {
     setValidation(errors);
     return Object.values(errors).every(value => value === "");
   };
+  // Status state
+  const [status, setStatus] = useState(null);
+  // Error state
+  const [error, setError] = useState(null); 
+  // Update event mutation
+  const {mutateAsync: updateEvent, isPending: isUpdating} = useMutation({
+    mutationFn: () => {
+      const formData = new FormData();
+      formData.append("title", editedEvent.title);
+      formData.append("startDate", new Date(editedEvent.startDate).toISOString());
+      formData.append("font", editedEvent.font);
+      if (editedEvent.endDate) {
+        formData.append("endDate", new Date(editedEvent.endDate).toISOString());
+      }
+      formData.append("cohosts", JSON.stringify(editedEvent.cohosts));
+      formData.append("category", JSON.stringify(editedEvent.category));
+      formData.append("eventType", editedEvent.eventType);  
+      // Append image if it exists
+      if(imageFile){
+        formData.append("image", imageFile);
+      }else{
+        formData.append("image", editedEvent.image);
+      }
+      // Append description if it exists
+      if(editedEvent.description){
+        formData.append("description", editedEvent.description);
+      }
+      // Append optional fields
+      if(editedEvent.chipInDetails){
+        formData.append("chipInDetails", JSON.stringify(editedEvent.chipInDetails));
+      } 
+      if(editedEvent.location){
+        formData.append("location", JSON.stringify(editedEvent.location));  
+      }
+      if(editedEvent.meetingURL){
+        formData.append("meetingURL", editedEvent.meetingURL);
+      }
+      if(editedEvent.dressCode){
+        formData.append("dressCode", JSON.stringify(editedEvent.dressCode));
+      }
+      return eventsApi.updateEvent(event._id, formData);  
+    },
+    onSuccess: (data) => {
+      if(data.status === "success"){
+        // Invalidate queries to refetch the updated data
+        queryClient.invalidateQueries(["user-events"]);
+        queryClient.invalidateQueries(["event", event._id]);
+        // Refresh the edited event
+        const refreshedEvent = {
+          ...data.data,
+          location: data.data.location || { venue: "", state: "", city: "", coordinates: null, directions: "" },
+          category: data.data.category || [],
+          cohosts: data.data.cohosts || [],
+          chipInDetails: data.data.chipInDetails || null,
+          dressCode: data.data.dressCode || null,
+          startDate: data.data.startDate || "",
+          endDate: data.data.endDate || ""
+        };
+        // Update the initial and edited event
+        setInitialEvent(refreshedEvent);
+        setEditedEvent(refreshedEvent); 
+        // Clear local images
+        clearLocalImages();
+        // Clear file
+        setImageFile(null);
+        // Set status to success
+        setStatus("success");
+      }
+    },
+    onError: (err) => {
+      setStatus("error");
+      setError(err.response?.data?.message || "Failed to update event. Please try again.");
+    }
+  })
+
+  // Handle save changes
+  const handleSaveChanges = () => {
+    if (!validateRequiredFields()) {
+      return;
+    }
+    updateEvent();
+    setActive("update-event");
+
+  };  
 
   if (!editedEvent) {
     return <div> Loading.... </div>;
@@ -576,6 +657,13 @@ To keep things neat for your guests, you can only make up to 3 major edits (like
           }}
         />
       )}
+      {/* Event updating modal */}
+      <UpdateEventModal event={{
+        title: editedEvent.title,
+        slug: event.slug,
+        startDate: editedEvent.startDate,
+        image: editedEvent.image,
+      }} loading={isUpdating} status={status} error={error} />
     </div>
   );
 }
