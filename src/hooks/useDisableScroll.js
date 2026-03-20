@@ -1,29 +1,24 @@
 import { useEffect, useRef } from "react";
 
+
 export const useDisableScroll = (disabled = true) => {
   const scrollYRef = useRef(0);
 
   useEffect(() => {
-    if (disabled) {
-      // Store current scroll position
-      scrollYRef.current = window.scrollY;
+    if (!disabled) return;
 
-      // Prevent scrolling by setting overflow hidden
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
+    scrollYRef.current = window.scrollY;
 
-      return () => {
-        // Restore overflow
-        document.body.style.overflow = "";
-        document.documentElement.style.overflow = "";
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
 
-        // Restore scroll position
-        window.scrollTo(0, scrollYRef.current);
-      };
-    } else {
-      // If disabled becomes false, clean up immediately
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+    return () => {
       document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    }
+      document.body.style.paddingRight = "";
+      window.scrollTo(0, scrollYRef.current);
+    };
   }, [disabled]);
 };

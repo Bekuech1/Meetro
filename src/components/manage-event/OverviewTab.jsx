@@ -142,7 +142,7 @@ function OverviewTab() {
                     {format(new Date(event.startDate), "EEEE, MMMM d, yyyy")}
                   </p>
                   <p className="text-[#8A9191]">
-                    {format(new Date(event.startDate), "hh:mmaaa")}
+                    {format(new Date(event.startDate), "h:mm a")}
                   </p>
                 </div>
               </div>

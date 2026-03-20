@@ -1,23 +1,27 @@
-import { format } from "date-fns";
-import { Calendar1 } from "iconsax-reactjs";
+
 import React from "react";
 import Alert from "../Alert";
 import IconButton from "../Buttons/IconButton";
 import TextButton from "../Buttons/TextButtons";
 import LoadingSpinner from "../LoadingSpinner";
 import Modal from "../Modal/Modal";
+import { format } from "date-fns";
+import { Calendar1 } from "iconsax-reactjs";
 import { useModalContext } from "../Modal/ModalContext";
 import { useNavigate } from "react-router";
 
-  export default function CreateEventModal({event, loading, status, error}) {
-  const {setActive} = useModalContext();  
+  export default function UpdateEventModal({event, loading, status, error}) {
+  const {close} = useModalContext();  
   const navigate = useNavigate();
   const handleBackToHome = () => {
-      setActive(null);
-    navigate("/home");
-  } 
+    close();
+    // Timeout to allow the modal to close before navigating
+    setTimeout(() => {
+      navigate(`/manage-event/${event.slug}?tab=overview`);
+    }, 300);
+  }     
   return (
-    <Modal.Window showIcon={false} name="create-event">
+    <Modal.Window showIcon={false} name="update-event">
       <div className="flex flex-col gap-y-12 satoshi font-medium text-[#001010]">
         <div className="flex flex-col gap-y-4">
           <div className="size-[154px] rounded-[24px] overflow-hidden">
@@ -41,7 +45,7 @@ import { useNavigate } from "react-router";
               <Alert
                 type="info"
                 customIcon={<LoadingSpinner borderColor="border-[#7A60BF]" />}
-                title="Creating Event"
+                title="Updating Event"
                 option="outline"
               />
             ) : (
@@ -50,13 +54,13 @@ import { useNavigate } from "react-router";
                   <Alert
                     type="success"
                     option="outline"
-                    title="Event has been created successfully"
+                    title="Event has been updated successfully"
                   />
                 ) : (
                   <Alert
                     type="error"
                     option="outline"
-                    title="Failed to create event"
+                    title="Failed to update event"
                     subtitle={error}
                   />
                 )}

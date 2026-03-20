@@ -16,6 +16,14 @@ export const eventsApi = {
     const eventResponse = await API.get(`/events/${eventId}/protected`);
     return eventResponse.data.data;
   },
+  updateEvent: async (eventId, eventData) => {
+    const eventResponse = await API.patch(`/events/${eventId}`, eventData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return eventResponse.data;
+  },
   getEventGuests: async (eventId, page = 1, search = "") => {
     const guestsResponse = await API.get(
       `/events/${eventId}/guests?page=${page}&search=${search}`
