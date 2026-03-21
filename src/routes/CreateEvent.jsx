@@ -3,13 +3,14 @@ import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
 import EventImage from "@/components/layout-components/Events/EventImage";
+import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
 import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemplatesModal";
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
 import { DEFAULT_EVENT_IMAGES } from "@/lib/utils";
 import { format } from "date-fns";
-import { ArrowLeft2, Eye, Timer1 } from "iconsax-reactjs";
+import { ArrowLeft2, Eye, Timer1, Location } from "iconsax-reactjs";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
@@ -43,7 +44,7 @@ function CreateEvent() {
     isPublished: false,
     category: [],
     dressCode: null,
-    eventType: "",
+    eventType: "offline",
     meetingURL: "",
     cohosts: [],
     chipInDetails: null,
@@ -59,6 +60,47 @@ function CreateEvent() {
     cohosts: "",
     categories: "",
   });
+
+  // Helper function to update location based on event type
+  const handleSetLocation = data => {
+    switch (data.eventType) {
+      case "online":
+        setEvent({
+          ...event,
+          eventType: "online",
+          meetingURL: data.meetingURL,
+          location: {
+            venue: "",
+            state: "",
+            city: "",
+            coordinates: null,
+            directions: "",
+          },
+        });
+        break;
+      case "offline":
+        setEvent({
+          ...event,
+          eventType: "offline",
+          location: {
+            venue: data.location.venue,
+            state: data.location.state,
+            city: data.location.city,
+            coordinates: data.location.coordinates,
+            directions: data.location.directions,
+          },
+          meetingURL: "",
+        });
+        break;
+      default:
+    }
+  };
+
+  // Format location for display in ListInput
+  const locationFormatted =
+    event?.eventType === "online"
+      ? `Online event - ${event?.meetingURL || "No meeting URL set"}`
+      : `${event?.location?.venue ? `${event.location.venue}, ` : ""}${event?.location?.state ? `${event.location.state}` : ""}`;
 
   // Format start date for display in ListInput
   const startDateFormatted = event?.startDate
@@ -174,6 +216,15 @@ function CreateEvent() {
                   leftIcon={<Timer1 variant="Bold" />}
                 />
               </Modal.Open>
+              {/* Event location */}
+              <Modal.Open opens="event-location">
+                <ListInput
+                  error={validation.location}
+                  placeholder="Where is your Event?"
+                  content={locationFormatted}
+                  leftIcon={<Location variant="Bold" />}
+                />
+              </Modal.Open>
             </div>
           </div>
         </div>
@@ -199,6 +250,16 @@ function CreateEvent() {
             endDate: newDates.endDate,
           });
           setValidation(prev => ({ ...prev, date: "" }));
+        }}
+      />
+      {/* Event location modal */}
+      <EventLocationModal
+        locationData={event.location}
+        eventType={event.eventType}
+        meetingURL={event.meetingURL}
+        onSave={data => {
+          handleSetLocation(data);
+          setValidation(prev => ({ ...prev, location: "" }));
         }}
       />
     </div>
