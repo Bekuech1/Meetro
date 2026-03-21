@@ -3,6 +3,7 @@ import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import EventCohostsModal from "@/components/layout-components/Events/EventCohostsModal";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
+import EventDescriptionModal from "@/components/layout-components/Events/EventDescriptionModal";
 import EventImage from "@/components/layout-components/Events/EventImage";
 import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
 import EventTypeModal from "@/components/layout-components/Events/EventTypeModal";
@@ -19,6 +20,9 @@ import {
   Location,
   Crown,
   Category2,
+  Calendar2,
+  Trash,
+  Add,
 } from "iconsax-reactjs";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
@@ -34,6 +38,20 @@ function CreateEvent() {
     DEFAULT_EVENT_IMAGES[
       Math.floor(Math.random() * DEFAULT_EVENT_IMAGES.length)
     ];
+
+  // Settings state to control visibility of optional fields
+  const [settings, setSettings] = useState({
+    hasDescription: false,
+    hasDressCode: false,
+    hasChipIn: false,
+  });
+
+  // Determine if there are no optional settings enabled
+  const hasNoSettings =
+    !settings?.hasDescription ||
+    !settings?.hasChipIn ||
+    !settings?.hasDressCode;
+
   // Event State
   const [event, setEvent] = useState({
     title: "",
@@ -111,6 +129,13 @@ function CreateEvent() {
       ? `Online event - ${event?.meetingURL || "No meeting URL set"}`
       : `${event?.location?.venue ? `${event.location.venue}, ` : ""}${event?.location?.state ? `${event.location.state}` : ""}`;
 
+  // Format description for display in ListInput
+  const descriptionFormatted = event?.description
+    ? event.description.length > 50
+      ? event.description.slice(0, 50) + "..."
+      : event.description
+    : "";
+
   // Format cohosts for display in ListInput
   const cohostsFormatted = event?.cohosts?.length
     ? event.cohosts.map(cohost => cohost.name || cohost.email).join(", ")
@@ -147,7 +172,7 @@ function CreateEvent() {
         {/* Create event form */}
         <div className="flex flex-col md:flex-row gap-6 md:gap-12 mt-10 md:mt-8">
           {/* Image section */}
-          <div className="md:sticky md:top-0 md:self-start">
+          <div className="md:sticky md:top-24 md:self-start">
             <h3 className="text-sm text-[#001010] font-bold">Event Image</h3>
             <p className="text-xs mb-4 text-[#8A9191] leading-4.5 font-medium">
               Upload a JPEG or PNG file with a size of 2mb or less
@@ -274,6 +299,79 @@ function CreateEvent() {
                   }
                 />
               </Modal.Open>
+              {/* Event description */}
+              {settings?.hasDescription && (
+                <Modal.Open opens="event-description">
+                  <ListInput
+                    placeholder="Event Description"
+                    leftIcon={<Calendar2 variant="Bold" />}
+                    content={descriptionFormatted}
+                    error={validation.description}
+                    rightIcon={
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          setEvent(prev => ({
+                            ...prev,
+                            description: "",
+                          }));
+                          setSettings(prev => ({
+                            ...prev,
+                            hasDescription: false,
+                          }));
+                          setValidation(prev => ({ ...prev, description: "" }));
+                        }}
+                      >
+                        <Trash variant="Outline" size={16} />
+                      </button>
+                    }
+                  />
+                </Modal.Open>
+              )}
+              {/* Optional fields based on settings */}
+              {hasNoSettings && (
+                <div className="flex items-center gap-x-4 gap-y-3">
+                  {!settings?.hasDescription && (
+                    <TagButton
+                      text="Description"
+                      className="satoshi"
+                      onClick={() =>
+                        setSettings(prev => ({
+                          ...prev,
+                          hasDescription: !prev.hasDescription,
+                        }))
+                      }
+                      leftImg={<Add />}
+                    />
+                  )}
+                  {!settings?.hasChipIn && (
+                    <TagButton
+                      text="Chip In"
+                      leftImg={<Add />}
+                      className="satoshi"
+                      onClick={() => {
+                        setSettings(prev => ({
+                          ...prev,
+                          hasChipIn: !prev.hasChipIn,
+                        }));
+                      }}
+                    />
+                  )}
+                  {!settings?.hasDressCode && (
+                    <TagButton
+                      text="Dress code"
+                      leftImg={<Add />}
+                      className="satoshi"
+                      onClick={() => {
+                        setSettings(prev => ({
+                          ...prev,
+                          hasDressCode: !prev.hasDressCode,
+                        }));
+                      }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -327,6 +425,16 @@ function CreateEvent() {
           setValidation(prev => ({ ...prev, categories: "" }));
         }}
       />
+      {/* Event description modal */}
+      {settings.hasDescription && (
+        <EventDescriptionModal
+          descriptionData={event.description}
+          onSave={description => {
+            setEvent({ ...event, description });
+            setValidation(prev => ({ ...prev, description: "" }));
+          }}
+        />
+      )}
     </div>
   );
 }

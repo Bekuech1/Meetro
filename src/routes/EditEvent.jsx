@@ -34,7 +34,7 @@ import { twMerge } from "tailwind-merge";
 
 function EditEvent() {
   const { event } = useManageEventContext();
-  const {setActive} = useModalContext();
+  const { setActive } = useModalContext();
   // Validation state for required fields
   const [validation, setValidation] = useState({
     title: "",
@@ -49,7 +49,7 @@ function EditEvent() {
   // Initial event data for comparison and undo functionality
   const [initialEvent, setInitialEvent] = useState(null);
   const [editedEvent, setEditedEvent] = useState(null);
-  // Settings state to control visibility of optional fields.
+  // Settings state to control visibility of optional fields
   const [settings, setSettings] = useState(null);
   const queryClient = useQueryClient();
   // File state to hold the uploaded image file.
@@ -77,7 +77,7 @@ function EditEvent() {
           coordinates: event.location?.coordinates || null,
           directions: event.location?.directions || "",
         },
-        isPublished: Boolean(event.isPublished),  
+        isPublished: Boolean(event.isPublished),
         category: event.category || [],
         dressCode: event.dressCode || null,
         eventType: event.eventType || "",
@@ -100,22 +100,22 @@ function EditEvent() {
 
   const clearLocalImages = () => {
     if (editedEvent?.image && editedEvent.image.startsWith("blob:")) {
-        URL.revokeObjectURL(editedEvent.image);
-      }
+      URL.revokeObjectURL(editedEvent.image);
+    }
 
-      // Also check cohosts for any blob URLs and revoke them
-      if (editedEvent?.cohosts?.length) {
-        editedEvent.cohosts.forEach(cohost => {
-          if (cohost.photo && cohost.photo.startsWith("blob:")) {
-            URL.revokeObjectURL(cohost.photo);
-          }
-        });
-      }
-  }
+    // Also check cohosts for any blob URLs and revoke them
+    if (editedEvent?.cohosts?.length) {
+      editedEvent.cohosts.forEach(cohost => {
+        if (cohost.photo && cohost.photo.startsWith("blob:")) {
+          URL.revokeObjectURL(cohost.photo);
+        }
+      });
+    }
+  };
 
   // Clean up object URLs when component unmounts or when image changes
   useEffect(() => {
-    return () => clearLocalImages();  
+    return () => clearLocalImages();
   }, []);
 
   // Format start date for display in ListInput
@@ -249,47 +249,53 @@ function EditEvent() {
   // Status state
   const [status, setStatus] = useState(null);
   // Error state
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
   // Update event mutation
-  const {mutateAsync: updateEvent, isPending: isUpdating} = useMutation({
+  const { mutateAsync: updateEvent, isPending: isUpdating } = useMutation({
     mutationFn: () => {
       const formData = new FormData();
       formData.append("title", editedEvent.title);
-      formData.append("startDate", new Date(editedEvent.startDate).toISOString());
+      formData.append(
+        "startDate",
+        new Date(editedEvent.startDate).toISOString()
+      );
       formData.append("font", editedEvent.font);
       if (editedEvent.endDate) {
         formData.append("endDate", new Date(editedEvent.endDate).toISOString());
       }
       formData.append("cohosts", JSON.stringify(editedEvent.cohosts));
       formData.append("category", JSON.stringify(editedEvent.category));
-      formData.append("eventType", editedEvent.eventType);  
+      formData.append("eventType", editedEvent.eventType);
       // Append image if it exists
-      if(imageFile){
+      if (imageFile) {
         formData.append("image", imageFile);
-      }else{
+      } else {
         formData.append("image", editedEvent.image);
       }
       // Append description if it exists
-      if(editedEvent.description){
+      if (editedEvent.description) {
         formData.append("description", editedEvent.description);
       }
       // Append optional fields
-      if(editedEvent.chipInDetails){
-        formData.append("chipInDetails", JSON.stringify(editedEvent.chipInDetails));
-      } 
-      if(editedEvent.location){
-        formData.append("location", JSON.stringify(editedEvent.location));  
+      if (editedEvent.chipInDetails) {
+        formData.append(
+          "chipInDetails",
+          JSON.stringify(editedEvent.chipInDetails)
+        );
       }
-      if(editedEvent.meetingURL){
+      if (editedEvent.location) {
+        formData.append("location", JSON.stringify(editedEvent.location));
+      }
+      if (editedEvent.meetingURL) {
         formData.append("meetingURL", editedEvent.meetingURL);
       }
-      if(editedEvent.dressCode){
+      if (editedEvent.dressCode) {
         formData.append("dressCode", JSON.stringify(editedEvent.dressCode));
       }
-      return eventsApi.updateEvent(event._id, formData);  
+      return eventsApi.updateEvent(event._id, formData);
     },
-    onSuccess: (data) => {
-      if(data.status === "success"){
+    onSuccess: data => {
+      if (data.status === "success") {
         // Invalidate queries to refetch the updated data
         queryClient.invalidateQueries(["user-events"]);
         queryClient.invalidateQueries(["event", event._id]);
@@ -301,11 +307,14 @@ function EditEvent() {
         setStatus("success");
       }
     },
-    onError: (err) => {
+    onError: err => {
       setStatus("error");
-      setError(err.response?.data?.message || "Failed to update event. Please try again.");
-    }
-  })
+      setError(
+        err.response?.data?.message ||
+          "Failed to update event. Please try again."
+      );
+    },
+  });
 
   // Handle save changes
   const handleSaveChanges = () => {
@@ -314,8 +323,7 @@ function EditEvent() {
     }
     updateEvent();
     setActive("update-event");
-
-  };  
+  };
 
   if (!editedEvent) {
     return <div> Loading.... </div>;
@@ -348,29 +356,29 @@ function EditEvent() {
       <div className="flex-1">
         {/* Event privacy */}
         {!editedEvent.isPublished && (
-        <div className="mb-6">
-          <div className="border border-[#F9F9F9] p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
-            <TagButton
-              text="Private"
-              className={twMerge(
-                "satoshi min-w-auto h-7.5 px-3 pointer-events-none bg-transparent text-[#B0B5B5] border-transparent",
-                isPrivate && "bg-white text-[#011F0F]"
-              )}
-            />
-            <TagButton
-              text="Public"
-              className={twMerge(
-                "satoshi min-w-auto px-3 h-7.5 pointer-events-none bg-transparent text-[#B0B5B5] border-transparent",
-                !isPrivate && "bg-white text-[#011F0F]"
-              )}
-            />
+          <div className="mb-6">
+            <div className="border border-[#F9F9F9] p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
+              <TagButton
+                text="Private"
+                className={twMerge(
+                  "satoshi min-w-auto h-7.5 px-3 pointer-events-none bg-transparent text-[#B0B5B5] border-transparent",
+                  isPrivate && "bg-white text-[#011F0F]"
+                )}
+              />
+              <TagButton
+                text="Public"
+                className={twMerge(
+                  "satoshi min-w-auto px-3 h-7.5 pointer-events-none bg-transparent text-[#B0B5B5] border-transparent",
+                  !isPrivate && "bg-white text-[#011F0F]"
+                )}
+              />
+            </div>
+            <p className="text-xs text-[#8A9191] mt-2 font-medium">
+              {isPrivate
+                ? "Shh... it’s exclusive! Only those with the magic link can RSVP."
+                : "Open to all! Let the world (or at least your city) know what’s happening!"}
+            </p>
           </div>
-          <p className="text-xs text-[#8A9191] mt-2 font-medium">
-            {isPrivate
-              ? "Shh... it’s exclusive! Only those with the magic link can RSVP."
-              : "Open to all! Let the world (or at least your city) know what’s happening!"}
-          </p>
-        </div>
         )}
         {/* Event title */}
         <EventName
@@ -647,12 +655,17 @@ To keep things neat for your guests, you can only make up to 3 major edits (like
         />
       )}
       {/* Event updating modal */}
-      <UpdateEventModal event={{
-        title: editedEvent.title,
-        slug: event.slug,
-        startDate: editedEvent.startDate,
-        image: editedEvent.image,
-      }} loading={isUpdating} status={status} error={error} />
+      <UpdateEventModal
+        event={{
+          title: editedEvent.title,
+          slug: event.slug,
+          startDate: editedEvent.startDate,
+          image: editedEvent.image,
+        }}
+        loading={isUpdating}
+        status={status}
+        error={error}
+      />
     </div>
   );
 }
