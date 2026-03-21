@@ -4,6 +4,7 @@ import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import EventCohostsModal from "@/components/layout-components/Events/EventCohostsModal";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
 import EventDescriptionModal from "@/components/layout-components/Events/EventDescriptionModal";
+import EventDressCodeModal from "@/components/layout-components/Events/EventDressCodeModal";
 import EventImage from "@/components/layout-components/Events/EventImage";
 import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
 import EventTypeModal from "@/components/layout-components/Events/EventTypeModal";
@@ -23,6 +24,7 @@ import {
   Calendar2,
   Trash,
   Add,
+  Colorfilter,
 } from "iconsax-reactjs";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
@@ -70,7 +72,10 @@ function CreateEvent() {
     },
     isPublished: false,
     category: [],
-    dressCode: null,
+    dressCode: {
+      type: "Casual",
+      details: "",
+    },
     eventType: "offline",
     meetingURL: "",
     cohosts: [],
@@ -152,9 +157,9 @@ function CreateEvent() {
     : "";
   return (
     <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
-      <main className="flex-1 px-4 flex flex-col max-w-[950px] mx-auto w-full mt-10">
+      <main className="flex-1 px-4 flex flex-col max-w-[950px] mx-auto w-full py-10">
         {/* Navigation */}
-        <div className="flex items-center justify-between gap-4 sticky top-10 z-50 bg-transparent">
+        <div className="flex items-center justify-between gap-4">
           {/* Back button */}
           <TagButton
             text="Back"
@@ -328,6 +333,37 @@ function CreateEvent() {
                   />
                 </Modal.Open>
               )}
+              {/* Event dress code */}
+              {settings?.hasDressCode && (
+                <Modal.Open opens="event-dress-code">
+                  <ListInput
+                    placeholder="Dress Code"
+                    content={`${event.dressCode ? event.dressCode.type : ""}${event.dressCode?.details ? ` - ${event.dressCode.details}` : ""}`}
+                    error={validation.dressCode}
+                    leftIcon={<Colorfilter variant="Bold" />}
+                    rightIcon={
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          setEvent(prev => ({
+                            ...prev,
+                            dressCode: {
+                              type: "Casual",
+                            },
+                          }));
+                          setSettings(prev => ({
+                            ...prev,
+                            hasDressCode: false,
+                          }));
+                          setValidation(prev => ({ ...prev, dressCode: "" }));
+                        }}
+                      >
+                        <Trash variant="Outline" size={16} />
+                      </button>
+                    }
+                  />
+                </Modal.Open>
+              )}
               {/* Optional fields based on settings */}
               {hasNoSettings && (
                 <div className="flex items-center gap-x-4 gap-y-3">
@@ -372,6 +408,13 @@ function CreateEvent() {
                   )}
                 </div>
               )}
+            </div>
+            <div className="py-6">
+              {/* Save buttons */}
+              <div className="flex items-center justify-between">
+                <TextButton variant="secondary" text="Save draft" />
+                <TextButton variant="primary" text="Create event" />
+              </div>
             </div>
           </div>
         </div>
@@ -432,6 +475,16 @@ function CreateEvent() {
           onSave={description => {
             setEvent({ ...event, description });
             setValidation(prev => ({ ...prev, description: "" }));
+          }}
+        />
+      )}
+      {/* Event dress code modal */}
+      {settings.hasDressCode && (
+        <EventDressCodeModal
+          dressCodeData={event.dressCode}
+          onSave={data => {
+            setEvent({ ...event, dressCode: data });
+            setValidation(prev => ({ ...prev, dressCode: "" }));
           }}
         />
       )}
