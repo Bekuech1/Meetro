@@ -5,14 +5,22 @@ import EventCohostsModal from "@/components/layout-components/Events/EventCohost
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
 import EventImage from "@/components/layout-components/Events/EventImage";
 import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
+import EventTypeModal from "@/components/layout-components/Events/EventTypeModal";
 import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemplatesModal";
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
-import { DEFAULT_EVENT_IMAGES } from "@/lib/utils";
+import { categories, DEFAULT_EVENT_IMAGES } from "@/lib/utils";
 import { format } from "date-fns";
-import { ArrowLeft2, Eye, Timer1, Location, Crown } from "iconsax-reactjs";
-import { useState } from "react";
+import {
+  ArrowLeft2,
+  Eye,
+  Timer1,
+  Location,
+  Crown,
+  Category2,
+} from "iconsax-reactjs";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
 
@@ -121,7 +129,7 @@ function CreateEvent() {
     <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
       <main className="flex-1 px-4 flex flex-col max-w-[950px] mx-auto w-full mt-10">
         {/* Navigation */}
-        <div className="flex items-center justify-between gap-4 sticky top-0 z-50 bg-transparent">
+        <div className="flex items-center justify-between gap-4 sticky top-10 z-50 bg-transparent">
           {/* Back button */}
           <TagButton
             text="Back"
@@ -139,7 +147,7 @@ function CreateEvent() {
         {/* Create event form */}
         <div className="flex flex-col md:flex-row gap-6 md:gap-12 mt-10 md:mt-8">
           {/* Image section */}
-          <div className="md:sticky md:top-43 md:self-start">
+          <div className="md:sticky md:top-0 md:self-start">
             <h3 className="text-sm text-[#001010] font-bold">Event Image</h3>
             <p className="text-xs mb-4 text-[#8A9191] leading-4.5 font-medium">
               Upload a JPEG or PNG file with a size of 2mb or less
@@ -240,6 +248,32 @@ function CreateEvent() {
                   content={cohostsFormatted}
                 />
               </Modal.Open>
+              {/* Event categories */}
+              <Modal.Open opens="event-type">
+                <ListInput
+                  placeholder="Event Type"
+                  leftIcon={<Category2 variant="Bulk" />}
+                  error={validation.categories}
+                  tags={
+                    event.category.length > 0 ? (
+                      <React.Fragment>
+                        {event.category.map((cat, index) => (
+                          <TagButton
+                            key={index}
+                            className={twMerge(
+                              "pointer-events-none satoshi",
+                              categories[cat]
+                                ? categories[cat]
+                                : "text-[#001010]"
+                            )}
+                            text={cat}
+                          />
+                        ))}
+                      </React.Fragment>
+                    ) : null
+                  }
+                />
+              </Modal.Open>
             </div>
           </div>
         </div>
@@ -283,6 +317,14 @@ function CreateEvent() {
         onSave={newCohosts => {
           setEvent({ ...event, cohosts: newCohosts });
           setValidation(prev => ({ ...prev, cohosts: "" }));
+        }}
+      />
+      {/* Event categories modal */}
+      <EventTypeModal
+        categoriesData={event.category}
+        onSave={data => {
+          setEvent({ ...event, category: data });
+          setValidation(prev => ({ ...prev, categories: "" }));
         }}
       />
     </div>
