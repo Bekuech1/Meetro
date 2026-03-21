@@ -321,7 +321,7 @@ function EditEvent() {
     return <div> Loading.... </div>;
   }
   return (
-    <div className="max-w-[950px] satoshi mt-10 w-full mx-auto flex flex-col md:flex-row gap-12">
+    <div className="max-w-[950px] satoshi mt-10 w-full mx-auto flex flex-col md:flex-row md:gap-12 gap-6">
       {/* Image section */}
       <div className="md:sticky md:top-43 md:self-start">
         <h3 className="text-sm text-[#001010] font-bold">Event Image</h3>
