@@ -1,6 +1,7 @@
 import Alert from "@/components/layout-components/Alert";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
+import EventCohostsModal from "@/components/layout-components/Events/EventCohostsModal";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
 import EventImage from "@/components/layout-components/Events/EventImage";
 import EventLocationModal from "@/components/layout-components/Events/EventLocationModal";
@@ -10,7 +11,7 @@ import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
 import { DEFAULT_EVENT_IMAGES } from "@/lib/utils";
 import { format } from "date-fns";
-import { ArrowLeft2, Eye, Timer1, Location } from "iconsax-reactjs";
+import { ArrowLeft2, Eye, Timer1, Location, Crown } from "iconsax-reactjs";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
@@ -101,6 +102,11 @@ function CreateEvent() {
     event?.eventType === "online"
       ? `Online event - ${event?.meetingURL || "No meeting URL set"}`
       : `${event?.location?.venue ? `${event.location.venue}, ` : ""}${event?.location?.state ? `${event.location.state}` : ""}`;
+
+  // Format cohosts for display in ListInput
+  const cohostsFormatted = event?.cohosts?.length
+    ? event.cohosts.map(cohost => cohost.name || cohost.email).join(", ")
+    : "";
 
   // Format start date for display in ListInput
   const startDateFormatted = event?.startDate
@@ -225,6 +231,15 @@ function CreateEvent() {
                   leftIcon={<Location variant="Bold" />}
                 />
               </Modal.Open>
+              {/* Event cohosts and collaborators */}
+              <Modal.Open opens="event-cohosts">
+                <ListInput
+                  error={validation.cohosts}
+                  placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
+                  leftIcon={<Crown variant="Bold" />}
+                  content={cohostsFormatted}
+                />
+              </Modal.Open>
             </div>
           </div>
         </div>
@@ -260,6 +275,14 @@ function CreateEvent() {
         onSave={data => {
           handleSetLocation(data);
           setValidation(prev => ({ ...prev, location: "" }));
+        }}
+      />
+      {/* Event cohosts modal */}
+      <EventCohostsModal
+        cohostsData={event.cohosts}
+        onSave={newCohosts => {
+          setEvent({ ...event, cohosts: newCohosts });
+          setValidation(prev => ({ ...prev, cohosts: "" }));
         }}
       />
     </div>
