@@ -257,7 +257,7 @@ export default function EventLocationModal({
           <Tabs defaultTab={newEventType} className="flex flex-col gap-y-4">
             <Tabs.List
               list={tabs}
-              btnStyles="min-w-[87px]"
+              btnClassName="px-6"
               onChange={eventType => {
                 setValidation({
                   meetingURL: "",

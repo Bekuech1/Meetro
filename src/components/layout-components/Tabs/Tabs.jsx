@@ -69,7 +69,7 @@ function List({ list, size = "md", btnClassName = "", className, onChange }) {
               variant="tertiary"
               size={size === "sm" ? "xs" : size}
               className={twMerge(
-                `${item.id !== activeTab ? "!bg-transparent !text-[#B0B5B5] !border-transparent" : "hover:!bg-white"} satoshi min-w-[87px] `,
+                `px-3 ${item.id !== activeTab ? "!bg-transparent !text-[#B0B5B5] !border-transparent" : "hover:!bg-white"} satoshi min-w-[87px] `,
                 btnClassName && btnClassName
               )}
               onClick={() => {

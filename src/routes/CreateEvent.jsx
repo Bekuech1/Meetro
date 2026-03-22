@@ -1,6 +1,7 @@
 import Alert from "@/components/layout-components/Alert";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
+import EventChipInModal from "@/components/layout-components/Events/EventChipInModal";
 import EventCohostsModal from "@/components/layout-components/Events/EventCohostsModal";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
 import EventDescriptionModal from "@/components/layout-components/Events/EventDescriptionModal";
@@ -12,6 +13,7 @@ import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemp
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
+import React, { useState } from "react";
 import { categories, DEFAULT_EVENT_IMAGES } from "@/lib/utils";
 import { format } from "date-fns";
 import {
@@ -25,8 +27,8 @@ import {
   Trash,
   Add,
   Colorfilter,
+  Gallery,
 } from "iconsax-reactjs";
-import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
 
@@ -364,6 +366,35 @@ function CreateEvent() {
                   />
                 </Modal.Open>
               )}
+              {/* Event chip in */}
+              {settings?.hasChipIn && event.isPrivate && (
+                <Modal.Open opens="event-chip-in">
+                  <ListInput
+                    placeholder="Chip In"
+                    content=""
+                    error={validation.chipIn}
+                    leftIcon={<Gallery variant="Bold" />}
+                    rightIcon={
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          setEvent(prev => ({
+                            ...prev,
+                            chipIn: "",
+                          }));
+                          setSettings(prev => ({
+                            ...prev,
+                            hasChipIn: false,
+                          }));
+                          setValidation(prev => ({ ...prev, chipIn: "" }));
+                        }}
+                      >
+                        <Trash variant="Outline" size={16} />
+                      </button>
+                    }
+                  />
+                </Modal.Open>
+              )}
               {/* Optional fields based on settings */}
               {hasNoSettings && (
                 <div className="flex items-center gap-x-4 gap-y-3">
@@ -380,7 +411,7 @@ function CreateEvent() {
                       leftImg={<Add />}
                     />
                   )}
-                  {!settings?.hasChipIn && (
+                  {!settings?.hasChipIn && event.isPrivate && (
                     <TagButton
                       text="Chip In"
                       leftImg={<Add />}
@@ -485,6 +516,16 @@ function CreateEvent() {
           onSave={data => {
             setEvent({ ...event, dressCode: data });
             setValidation(prev => ({ ...prev, dressCode: "" }));
+          }}
+        />
+      )}
+      {/* Event chip in modal */}
+      {settings.hasChipIn && event.isPrivate && (
+        <EventChipInModal
+          chipInData={event.chipInDetails?.type}
+          onSave={data => {
+            setEvent({ ...event, chipInDetails: data });
+            setValidation(prev => ({ ...prev, chipIn: "" }));
           }}
         />
       )}
