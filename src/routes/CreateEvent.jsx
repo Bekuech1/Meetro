@@ -221,7 +221,12 @@ function CreateEvent() {
                     !event.isPrivate &&
                       "bg-white text-[#011F0F] hover:bg-white hover:text-[#011F0F]"
                   )}
-                  onClick={() => setEvent({ ...event, isPrivate: false })}
+                  onClick={() => {
+                    setSettings(prev => ({ ...prev, hasChipIn: false }));
+                    setValidation(prev => ({ ...prev, chipIn: "" }));
+                    setEvent(prev => ({ ...prev, chipInDetails: null }));
+                    setEvent(prev => ({ ...prev, isPrivate: false }));
+                  }}
                 />
               </div>
               <p className="text-xs text-[#8A9191] mt-2 font-medium">
