@@ -8,12 +8,11 @@ import SelectInput from "../Inputs/SelectInput";
 import Modal from "../Modal/Modal";
 import React, { useEffect, useState } from "react";
 import { useModalContext } from "../Modal/ModalContext";
-
 import { paymentApi } from "@/services/paymentApi";
-import { banks } from "@/utils/banks";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight2, CloseCircle, MoneyAdd, TickCircle } from "iconsax-reactjs";
 import { twMerge } from "tailwind-merge";
+import { banks } from "@/utils/banks";
 import LoadingSpinner from "../LoadingSpinner";
 
 // Add ids to banks
