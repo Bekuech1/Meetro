@@ -18,7 +18,7 @@ import { useNavigate } from "react-router";
     // Timeout to allow the modal to close before navigating
     setTimeout(() => {
       navigate(`/manage-event/${event.slug}?tab=overview`);
-    }, 300);
+    }, 150);
   }     
   return (
     <Modal.Window showIcon={false} name="update-event">

@@ -19,7 +19,6 @@ const responseColors = {
 };
 
 function EventItem({ event }) {
-  console.log("Event data in EventItem:", event);
   const eventDate = new Date(event.startDate);
   const startTime = formatDate(eventDate, "hh:mm a");
   const hoursAgo = timeAgo(event.createdAt);
