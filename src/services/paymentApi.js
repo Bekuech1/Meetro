@@ -19,4 +19,12 @@ export const paymentApi = {
     });
     return withdrawResponse.data.data;
   },
+  verifyBank: async (bankCode, accountNumber) => {
+    const verifyResponse = await API.post(`/payments/verify-account`, {
+      bankCode,
+      accountNumber,
+    });
+    return verifyResponse.data;
+  }
+
 };

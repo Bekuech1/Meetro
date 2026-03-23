@@ -157,6 +157,12 @@ function CreateEvent() {
   const endDateFormatted = event?.endDate
     ? format(new Date(event.endDate), "EEE,  MMM d, h:mm aa")
     : "";
+
+    // Format chip in details for display
+    const chipInDetailsFormatted = event?.chipInDetails
+    ? event.chipInDetails?.chipInType === "fixed"
+      ? `Fixed - ₦${event.chipInDetails?.amount}`
+      : event.chipInDetails?.chipInType === "target" ? `Target - ₦${event.chipInDetails?.amount}` : event.chipInDetails?.chipInType === "donation" ? `Flexible - ₦${event.chipInDetails?.amount}` : "" : "";
   return (
     <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
       <main className="flex-1 px-4 flex flex-col max-w-[950px] mx-auto w-full py-10">
@@ -376,7 +382,7 @@ function CreateEvent() {
                 <Modal.Open opens="event-chip-in">
                   <ListInput
                     placeholder="Chip In"
-                    content=""
+                    content={chipInDetailsFormatted}
                     error={validation.chipIn}
                     leftIcon={<Gallery variant="Bold" />}
                     rightIcon={
@@ -385,7 +391,7 @@ function CreateEvent() {
                           e.stopPropagation();
                           setEvent(prev => ({
                             ...prev,
-                            chipIn: "",
+                            chipInDetails: null,
                           }));
                           setSettings(prev => ({
                             ...prev,
@@ -527,7 +533,7 @@ function CreateEvent() {
       {/* Event chip in modal */}
       {settings.hasChipIn && event.isPrivate && (
         <EventChipInModal
-          chipInData={event.chipInDetails?.type}
+          chipInData={event.chipInDetails}
           onSave={data => {
             setEvent({ ...event, chipInDetails: data });
             setValidation(prev => ({ ...prev, chipIn: "" }));
