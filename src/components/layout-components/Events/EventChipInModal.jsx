@@ -6,6 +6,7 @@ import InputField from "../Inputs/InputField";
 import ListInput from "../Inputs/ListInput";
 import SelectInput from "../Inputs/SelectInput";
 import Modal from "../Modal/Modal";
+import LoadingSpinner from "../LoadingSpinner";
 import React, { useEffect, useState } from "react";
 import { useModalContext } from "../Modal/ModalContext";
 import { paymentApi } from "@/services/paymentApi";
@@ -13,7 +14,6 @@ import { useMutation } from "@tanstack/react-query";
 import { ArrowRight2, CloseCircle, MoneyAdd, TickCircle } from "iconsax-reactjs";
 import { twMerge } from "tailwind-merge";
 import { banks } from "@/utils/banks";
-import LoadingSpinner from "../LoadingSpinner";
 
 // Add ids to banks
 const banksWithIds = banks.map((bank, index) => ({

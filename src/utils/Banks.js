@@ -1,4 +1,3 @@
-// banks.js
 export const banks = [
   { code: "120001", name: "9mobile 9Payment Service Bank" },
   { code: "404", name: "Abbey Mortgage Bank" },
