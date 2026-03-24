@@ -13,7 +13,7 @@ import { paymentApi } from "@/services/paymentApi";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight2, CloseCircle, MoneyAdd, TickCircle } from "iconsax-reactjs";
 import { twMerge } from "tailwind-merge";
-import { banks } from "@/utils/banks";
+import { banks } from "@/utils/banksData";
 
 // Add ids to banks
 const banksWithIds = banks.map((bank, index) => ({
