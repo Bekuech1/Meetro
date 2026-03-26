@@ -24,6 +24,14 @@ export const eventsApi = {
     });
     return eventResponse.data;
   },
+  createEvent: async eventData => {
+    const eventResponse = await API.post(`/events`, eventData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return eventResponse.data;
+  },
   getEventGuests: async (eventId, page = 1, search = "") => {
     const guestsResponse = await API.get(
       `/events/${eventId}/guests?page=${page}&search=${search}`

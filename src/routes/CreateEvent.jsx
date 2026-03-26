@@ -13,6 +13,7 @@ import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemp
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
+import CreateEventModal from "@/components/layout-components/Events/CreateEventModal";
 import React, { useEffect, useState } from "react";
 import { categories, DEFAULT_EVENT_IMAGES } from "@/lib/utils";
 import { format } from "date-fns";
@@ -32,6 +33,8 @@ import {
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { eventsApi } from "@/services/eventsApi";
+import { useModalContext } from "@/components/layout-components/Modal/ModalContext";
 
 function CreateEvent() {
   // Navigation
@@ -60,8 +63,8 @@ function CreateEvent() {
     !settings?.hasChipIn ||
     !settings?.hasDressCode;
 
-  // Event State
-  const [event, setEvent] = useState({
+  // Initial event state
+  const initialEventState = {
     title: "",
     description: "",
     startDate: "",
@@ -85,7 +88,11 @@ function CreateEvent() {
     meetingURL: "",
     cohosts: [],
     chipInDetails: null,
-  });
+  };
+
+
+  // Event State
+  const [event, setEvent] = useState(initialEventState);
   // Validation state for required fields
   const [validation, setValidation] = useState({
     title: "",
@@ -229,8 +236,51 @@ function CreateEvent() {
   // Error state
   const [error, setError] = useState(null);
   // Create event mutation
-  const createEventMutation = useMutation({
-    mutationFn: () => {},
+  const {mutateAsync: createEvent, isPending: isCreating} = useMutation({
+    mutationFn: (eventData) => {
+
+      const formData = new FormData();
+      formData.append("title", eventData.title);
+      formData.append(
+        "startDate",
+        new Date(eventData.startDate).toISOString()
+      );
+      formData.append("font", eventData.font);
+      if (eventData.endDate) {
+        formData.append("endDate", new Date(eventData.endDate).toISOString());
+      }
+      formData.append("cohosts", JSON.stringify(eventData.cohosts));
+      formData.append("category", JSON.stringify(eventData.category));
+      formData.append("eventType", eventData.eventType);
+      // Append image if it exists
+      if (imageFile) {
+        formData.append("image", imageFile);
+      } else {
+        formData.append("image", eventData.image);
+      }
+      // Append description if it exists
+      if (eventData.description) {
+        formData.append("description", eventData.description);
+      }
+      // Append optional fields
+      if (eventData.chipInDetails) {
+        formData.append(
+          "chipInDetails",
+          JSON.stringify(eventData.chipInDetails)
+        );
+      }
+      if (eventData.location) {
+        formData.append("location", JSON.stringify(eventData.location));
+      }
+      if (eventData.meetingURL) {
+        formData.append("meetingURL", eventData.meetingURL);
+      }
+      if (eventData.dressCode) {
+        formData.append("dressCode", JSON.stringify(eventData.dressCode));
+      }
+            console.log(formData);
+      return eventsApi.createEvent(formData);
+    },
     onSuccess: (data) => {
       if (data.status === "success") {
         // Invalidate queries to refetch the updated data
@@ -249,12 +299,32 @@ function CreateEvent() {
     },
   });
 
+  const {setActive} = useModalContext();
+
   // Handle create event
   const handleCreateEvent = (isPublished) => {
-    if (validateRequiredFields()) {
-      const eventData = {...event, isPublished}
-      console.log(eventData);
-    }
+    if (!validateRequiredFields()) return; 
+    createEvent({...event, isPublished});
+    setActive("create-event");
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setEvent(initialEventState);
+    setValidation({
+      title: "",
+      date: "",
+      location: "",
+      description: "",
+      dressCode: "",
+      chipIn: "",
+      cohosts: "",
+      categories: "",
+    });
+    setStatus(null);
+    setError(null);
+    setImageFile(null);
+    clearLocalImages();
   };
   return (
     <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
@@ -633,6 +703,17 @@ function CreateEvent() {
           }}
         />
       )}
+      {/* Create event modal */}
+      <CreateEventModal  event={{
+          title: event.title,
+          slug: event.slug,
+          startDate: event.startDate,
+          image: event.image,
+        }}
+        loading={isCreating}
+        status={status}
+        error={error}
+        resetForm={resetForm} />
     </div>
   );
 }
