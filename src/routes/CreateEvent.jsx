@@ -13,7 +13,7 @@ import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemp
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { categories, DEFAULT_EVENT_IMAGES } from "@/lib/utils";
 import { format } from "date-fns";
 import {
@@ -31,10 +31,14 @@ import {
 } from "iconsax-reactjs";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function CreateEvent() {
   // Navigation
   const navigate = useNavigate();
+  // Query Client
+  const queryClient = useQueryClient();
+
   // Image File State
   const [imageFile, setImageFile] = useState(null);
   // Random Image
@@ -72,7 +76,6 @@ function CreateEvent() {
       coordinates: null,
       directions: "",
     },
-    isPublished: false,
     category: [],
     dressCode: {
       type: "Casual",
@@ -130,6 +133,27 @@ function CreateEvent() {
     }
   };
 
+    // Clear local images
+    const clearLocalImages = () => {
+      if (event?.image && event.image.startsWith("blob:")) {
+        URL.revokeObjectURL(event.image);
+      }
+  
+      // Also check cohosts for any blob URLs and revoke them
+      if (event?.cohosts?.length) {
+        event.cohosts.forEach(cohost => {
+          if (cohost.photo && cohost.photo.startsWith("blob:")) {
+            URL.revokeObjectURL(cohost.photo);
+          }
+        });
+      }
+    };
+  
+    // Clean up object URLs when component unmounts
+    useEffect(() => {
+      return () => clearLocalImages();
+    }, []);
+
   // Format location for display in ListInput
   const locationFormatted =
     event?.eventType === "online"
@@ -163,6 +187,75 @@ function CreateEvent() {
     ? event.chipInDetails?.chipInType === "fixed"
       ? `Fixed - ₦${event.chipInDetails?.amount}`
       : event.chipInDetails?.chipInType === "target" ? `Target - ₦${event.chipInDetails?.amount}` : event.chipInDetails?.chipInType === "donation" ? `Flexible - ₦${event.chipInDetails?.amount}` : "" : "";
+
+    // Validate required fields
+    const validateRequiredFields = () => {
+      const errors = {};
+      if (!event.title) {
+        errors.title = "Event title is required";
+      }
+      if (!event.startDate) {
+        errors.date = "Event start date and time are required.";
+      }
+       if (!event.location.state.trim() && !event.meetingURL.trim()) {
+         errors.location = "Event location is required.";
+       }
+   
+       if (event.cohosts.length <= 0) {
+         errors.cohosts = "At least one cohost is required.";
+       }
+   
+       if (event.category.length <= 0) {
+         errors.categories = "At least one event category is required.";
+       }
+   
+
+    // Optional fields
+    if (settings?.hasDescription && !event.description.trim()) {
+      errors.description = "Event description is required.";
+    }
+    if (settings?.hasDressCode && !event.dressCode?.type) {
+      errors.dressCode = "Event dress code is required.";
+    }
+    if (settings?.hasChipIn && !event.chipInDetails) {
+      errors.chipIn = "Event chip-in details are required.";
+    }
+
+      setValidation(errors);
+      return Object.keys(errors).length === 0;
+    };
+  // Status state
+  const [status, setStatus] = useState(null);
+  // Error state
+  const [error, setError] = useState(null);
+  // Create event mutation
+  const createEventMutation = useMutation({
+    mutationFn: () => {},
+    onSuccess: (data) => {
+      if (data.status === "success") {
+        // Invalidate queries to refetch the updated data
+        queryClient.invalidateQueries(["user-events"]);
+        // Clear file
+        setImageFile(null);
+        // Set status to success
+        setStatus("success");
+        // Clear local images
+        clearLocalImages();
+      }
+    },
+    onError: err => {
+      setStatus("error");
+      setError(err.response?.data?.message || "Failed to create event");
+    },
+  });
+
+  // Handle create event
+  const handleCreateEvent = (isPublished) => {
+    if (validateRequiredFields()) {
+      const eventData = {...event, isPublished}
+      console.log(eventData);
+    }
+  };
   return (
     <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
       <main className="flex-1 px-4 flex flex-col max-w-[950px] mx-auto w-full py-10">
@@ -454,8 +547,8 @@ function CreateEvent() {
             <div className="py-6">
               {/* Save buttons */}
               <div className="flex items-center justify-between">
-                <TextButton variant="secondary" text="Save draft" />
-                <TextButton variant="primary" text="Create event" />
+                <TextButton variant="secondary" text="Save draft" onClick={() => handleCreateEvent(false)} />
+                <TextButton variant="primary" text="Create event" onClick={() => handleCreateEvent(true)} />
               </div>
             </div>
           </div>
