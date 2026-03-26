@@ -57,6 +57,8 @@ export default function SelectDate({
 
   useEffect(() => {
     function handleClickOutside(e) {
+      // Ignore clicks inside portaled dropdowns (e.g. month/year picker in Calendar)
+      if (e.target.closest?.('[data-dropdown-portal="true"]')) return;
       // if clicking outside both input and calendar -> close
       if (
         !inputRef.current?.contains(e.target) &&
