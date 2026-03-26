@@ -113,7 +113,7 @@ function EditEvent() {
     }
   };
 
-  // Clean up object URLs when component unmounts or when image changes
+  // Clean up object URLs when component unmounts
   useEffect(() => {
     return () => clearLocalImages();
   }, []);
@@ -299,12 +299,12 @@ function EditEvent() {
         // Invalidate queries to refetch the updated data
         queryClient.invalidateQueries(["user-events"]);
         queryClient.invalidateQueries(["event", event._id]);
-        // Clear local images
-        clearLocalImages();
         // Clear file
         setImageFile(null);
         // Set status to success
         setStatus("success");
+        // Clear local images
+        clearLocalImages();
       }
     },
     onError: err => {
