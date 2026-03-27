@@ -12,10 +12,18 @@ export const formatDate = (value, formatStr = "MMM d   h:mm a") => {
   return format(date, formatStr);
 };
 
+// Server clock is ~2 hours ahead — adjust timestamps by this offset
+const SERVER_TIME_OFFSET_MS = 2 * 60 * 60 * 1000;
+
 export function timeAgo(dateString) {
+  if (!dateString) return "";
   const now = new Date();
-  const past = new Date(dateString);
+  const past = new Date(new Date(dateString).getTime() - SERVER_TIME_OFFSET_MS);
+  if (Number.isNaN(past.getTime())) return "";
   const diffMs = now - past;
+
+  // Still negative after offset? Treat as just now
+  if (diffMs < 0) return "just now";
 
   const seconds = Math.floor(diffMs / 1000);
   const minutes = Math.floor(seconds / 60);

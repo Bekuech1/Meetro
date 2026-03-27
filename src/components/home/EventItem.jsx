@@ -1,5 +1,5 @@
 import { formatNaira, timeAgo } from "@/lib/utils";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { Location, Money3, TickCircle } from "iconsax-reactjs";
 import { FaCircle } from "react-icons/fa6";
 import TagButton from "../layout-components/Buttons/TagButton";
@@ -20,7 +20,7 @@ const responseColors = {
 
 function EventItem({ event }) {
   const eventDate = new Date(event.startDate);
-  const startTime = formatDate(eventDate, "hh:mm a");
+  const startTime = format(eventDate, "hh:mm a");
   const hoursAgo = timeAgo(event.createdAt);
 
   const chipInDetails = event?.chipInDetails;

@@ -291,6 +291,8 @@ function CreateEvent() {
         setStatus("success");
         // Clear local images
         clearLocalImages();
+        // Add event slug
+        setEvent({...event, slug: data.data.slug});
       }
     },
     onError: err => {
