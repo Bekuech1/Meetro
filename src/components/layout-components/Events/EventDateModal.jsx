@@ -105,14 +105,12 @@ export default function EventDateModal({ onSave, data }) {
 
   // Sync showEndDateInputs with presence of endDate in data when modal opens
   useEffect(() => {
-    if (data?.endDate && data.endDate !== newDates.endDate) {
-      setShowEndDateInputs(true);
-      setNewDates(prev => ({ ...prev, endDate: data.endDate }));
-    } else if (!data?.endDate) {
-      setShowEndDateInputs(false);
-      setNewDates(prev => ({ ...prev, endDate: null }));
-    }
-  }, [data?.endDate]);
+    setNewDates({
+      startDate: data?.startDate || null,
+      endDate: data?.endDate || null,
+    });
+    setShowEndDateInputs(data?.endDate ? true : false);
+  }, [data?.endDate, data?.startDate]);
   return (
     <Modal.Window
       name="event-date"

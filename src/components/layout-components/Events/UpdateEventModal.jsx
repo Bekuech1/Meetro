@@ -13,6 +13,22 @@ import { useNavigate } from "react-router";
   export default function UpdateEventModal({event, loading, status, error}) {
   const {close} = useModalContext();  
   const navigate = useNavigate();
+  // Share event
+  const eventUrl = `${window.location.origin}/events/${event.slug}`;
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: event.title,
+          text: `Check out this event: ${event.title}`,
+          url: eventUrl,
+        });
+      } catch (err) {
+        // Optionally handle share error
+        console.error("Error sharing:", err);
+      }
+    }
+  };
   const handleBackToHome = () => {
     close();
     // Timeout to allow the modal to close before navigating
@@ -76,7 +92,7 @@ import { useNavigate } from "react-router";
               variant={`${status === "success" ? "tertiary" : "primary"}`}
               onClick={handleBackToHome}
             />
-            {status === "success" && <TextButton text="Share Event" />}
+            {status === "success" && <TextButton text="Share Event" onClick={handleShare} />}
           </div>
         )}
       </div>
