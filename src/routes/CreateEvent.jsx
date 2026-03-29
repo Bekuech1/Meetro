@@ -1,6 +1,7 @@
 import Alert from "@/components/layout-components/Alert";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
+import CreateEventModal from "@/components/layout-components/Events/CreateEventModal";
 import EventChipInModal from "@/components/layout-components/Events/EventChipInModal";
 import EventCohostsModal from "@/components/layout-components/Events/EventCohostsModal";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
@@ -13,28 +14,32 @@ import ImageTemplatesModal from "@/components/layout-components/Events/ImageTemp
 import EventName from "@/components/layout-components/Inputs/EventName";
 import ListInput from "@/components/layout-components/Inputs/ListInput";
 import Modal from "@/components/layout-components/Modal/Modal";
-import CreateEventModal from "@/components/layout-components/Events/CreateEventModal";
+import Toggle from "@/components/layout-components/Selectors/Toggle";
 import React, { useEffect, useState } from "react";
+import { useModalContext } from "@/components/layout-components/Modal/ModalContext";
 import { categories, DEFAULT_EVENT_IMAGES } from "@/lib/utils";
+import { eventsApi } from "@/services/eventsApi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
-  ArrowLeft2,
-  Eye,
-  Timer1,
-  Location,
-  Crown,
-  Category2,
-  Calendar2,
-  Trash,
   Add,
+  ArrowDown2,
+  ArrowLeft2,
+  Calendar2,
+  Category2,
   Colorfilter,
+  Crown,
+  Eye,
   Gallery,
+  Location,
+  Lock1,
+  People,
+  Timer1,
+  Trash,
+  UserTick
 } from "iconsax-reactjs";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { eventsApi } from "@/services/eventsApi";
-import { useModalContext } from "@/components/layout-components/Modal/ModalContext";
 
 function CreateEvent() {
   // Navigation
@@ -49,12 +54,16 @@ function CreateEvent() {
     DEFAULT_EVENT_IMAGES[
       Math.floor(Math.random() * DEFAULT_EVENT_IMAGES.length)
     ];
-
+  // Event Settings Open State
+  const [eventSettingsOpen, setEventSettingsOpen] = useState(false);
   // Settings state to control visibility of optional fields
   const [settings, setSettings] = useState({
     hasDescription: false,
     hasDressCode: false,
     hasChipIn: false,
+    hasEntryCode: false,
+    hasGuestListApproval: false,
+    hasAttendeeLimit: false,
   });
 
   // Determine if there are no optional settings enabled
@@ -88,6 +97,8 @@ function CreateEvent() {
     meetingURL: "",
     cohosts: [],
     chipInDetails: null,
+    entryCode: null,
+    attendeeLimit: null,
   };
 
 
@@ -323,6 +334,7 @@ function CreateEvent() {
       cohosts: "",
       categories: "",
     });
+    setSettings(prev => ({...prev, hasEntryCode: false, hasAttendeeLimit: false, hasGuestListApproval: false}))
     setStatus(null);
     setError(null);
     setImageFile(null);
@@ -616,6 +628,45 @@ function CreateEvent() {
                 </div>
               )}
             </div>
+            {/*Event Settings */}
+          <div className="mt-6">
+            <TextButton
+              text="Event Settings"
+              variant="tertiary"
+              onClick={() => setEventSettingsOpen(prev => !prev)}
+              className={twMerge("w-full relative h-9 text-sm flex justify-between", eventSettingsOpen && "bg-[#E5E7E3]")}
+              rightImg={<ArrowDown2 variant="Outline" color="#011F0F" className={`absolute right-4 transition-all duration-200 ease-in-out top-1/2 -translate-y-1/2 ${eventSettingsOpen ? "rotate-180" : ""}`} />}
+            />
+            <div className={`max-h-0 overflow-hidden transition-all duration-200 ease-in-out ${eventSettingsOpen ? "max-h-[500px]" : ""}`}>
+  <div className="flex flex-col pt-3 gap-y-3">
+                {/* Guest List Approval */}
+              <ListInput
+              className="cursor-default"
+                placeholder="Approve all guests before the event"
+                title='Guest List Approval'
+                leftIcon={<UserTick variant="Bold" />}
+                
+                rightIcon={<Toggle checked={settings.hasGuestListApproval} onChange={(e) => setSettings({...settings, hasGuestListApproval: e.target.checked})}  />}
+              />
+              {/* Entry Code */}
+              <ListInput
+                placeholder="Require attendees to enter a code"
+                title='Entry Code'
+                className="cursor-default"
+                leftIcon={<Lock1 variant="Bold" />}
+                rightIcon={<Toggle checked={settings.hasEntryCode} onChange={(e) => setSettings({...settings, hasEntryCode: e.target.checked})}  />}
+              />
+              {/* Attendee Limit */}
+              <ListInput
+                placeholder="Set a limit to the number of attendees"
+                title='Attendee Limit'
+                className="cursor-default"
+                leftIcon={<People variant="Bold" />}
+                rightIcon={<Toggle checked={settings.hasAttendeeLimit} onChange={(e) => setSettings({...settings, hasAttendeeLimit: e.target.checked})}  />}
+              />
+  </div>
+            </div>
+          </div>
             <div className="py-6">
               {/* Save buttons */}
               <div className="flex items-center justify-between">

@@ -1,3 +1,4 @@
+import { twMerge } from "tailwind-merge";
 import IconButton from "../Buttons/IconButton";
 import { CloseCircle } from "iconsax-reactjs";
 
@@ -8,6 +9,7 @@ export default function ListInput({
   title,
   error = "",
   placeholder = "When is your event",
+  className="",
   tags,
   ...props
 }) {
@@ -16,9 +18,7 @@ export default function ListInput({
   return (
     <div className="flex flex-col gap-y-1">
       <div
-        className={`input cursor-pointer max-w-full hover:shadow-[0px_4px_24px_rgba(0,0,0,0.04)] transition-all rounded-[12px] border ${
-          hasError ? "border-[#DB2863]" : "border-white"
-        } bg-[#F8F8F7] satoshi py-3 px-2 flex flex-col gap-y-2`}
+        className={twMerge(`input cursor-pointer border-white max-w-full hover:shadow-[0px_4px_24px_rgba(0,0,0,0.04)] transition-all rounded-[12px] border bg-[#F8F8F7] satoshi py-3 px-2 flex flex-col gap-y-2`, hasError && "border-[#DB2863]", className && className)}
         {...props}
       >
         <div className="flex items-center gap-x-2 w-full">
