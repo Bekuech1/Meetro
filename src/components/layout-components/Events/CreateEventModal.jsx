@@ -85,6 +85,7 @@ import { Calendar1 } from "iconsax-reactjs";
                     option="outline"
                     title="Failed to create event"
                     subtitle={error}
+                    className="!rounded-2xl"
                   />
                 )}
               </React.Fragment>
