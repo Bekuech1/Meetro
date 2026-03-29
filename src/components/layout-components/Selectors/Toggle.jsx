@@ -1,4 +1,4 @@
-export default function Toggle({ props }) {
+export default function Toggle(props) {
   return (
     <label className="cursor-pointer">
       {/* Hidden native checkbox input */}

@@ -51,7 +51,7 @@ export default function EventDescriptionModal({ onSave, descriptionData }) {
             }
           >
             <TextArea
-              maxlength={500}
+              maxLength={500}
               value={description}
               onChange={e => {
                 setDescription(e.target.value);
