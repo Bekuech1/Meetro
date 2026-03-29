@@ -104,11 +104,14 @@ export default function Calendar({
   const selectedDate = toValidDate(date);
 
   const years = useMemo(() => {
-    const startYear = Math.min(currentYear, year) - 2;
-    return Array.from({ length: 10 }, (_, i) => ({
-      id: i,
-      name: startYear + i,
-    }));
+    const minYear = Math.min(currentYear, year) - 2;
+    const maxYear = Math.max(currentYear + 10, year + 5);
+    const length = maxYear - minYear + 1;
+
+    return Array.from({ length }, (_, i) => {
+      const yearValue = minYear + i;
+      return { id: yearValue, name: yearValue };
+    });
   }, [year]);
 
   const days = useMemo(() => buildCalendarDays(year, month), [year, month]);

@@ -168,7 +168,7 @@ function OverviewTab() {
                   {event.location.coordinates && (
                     <Link
                       target="_blank"
-                      to={`https://maps.google.com/?q=${event.location.coordinates.lat},${event.location.coordinates.lng}`}
+                      to={`https://maps.google.com/?q=${encodeURIComponent(event.location.venue || event.location.state || event.location.city)}&ll=${event.location.coordinates.lat},${event.location.coordinates.lng}`}
                     >
                       <TagButton
                         variant="light-purple"
@@ -246,7 +246,7 @@ function OverviewTab() {
                 Hosted by
               </p>
               <div className="flex items-center satoshi gap-2">
-                <Avatar size="xs" />
+                <Avatar size="xs" src={event.host.photo?.url} />
                 <div className="flex flex-col font-medium">
                   <p className="sm:text-base text-sm">
                     {event.host.fullName}
