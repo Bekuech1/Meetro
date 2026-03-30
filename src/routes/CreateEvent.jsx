@@ -40,6 +40,7 @@ import {
 } from "iconsax-reactjs";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
+import EventEntryCodeModal from "@/components/layout-components/Events/EventEntryCodeModal";
 
 function CreateEvent() {
   // Navigation
@@ -114,6 +115,7 @@ function CreateEvent() {
     chipIn: "",
     cohosts: "",
     categories: "",
+    entryCode: "",
   });
 
   // Helper function to update location based on event type
@@ -237,6 +239,9 @@ function CreateEvent() {
     }
     if (settings?.hasChipIn && !event.chipInDetails) {
       errors.chipIn = "Event chip-in details are required.";
+    }
+    if (settings?.hasEntryCode && !event.entryCode) {
+      errors.entryCode = "Event entry code is required.";
     }
 
       setValidation(errors);
@@ -583,6 +588,17 @@ function CreateEvent() {
                   />
                 </Modal.Open>
               )}
+              {/* Event entry code */}
+              {settings?.hasEntryCode && (
+                <Modal.Open opens="event-entry-code">
+                  <ListInput
+                    placeholder="Entry Code"
+                    content={event.entryCode}
+                    error={validation.entryCode}
+                    leftIcon={<Lock1 variant="Bold" />}
+                  />
+                </Modal.Open>
+              )}
               {/* Optional fields based on settings */}
               {hasNoSettings && (
                 <div className="flex items-center gap-x-4 gap-y-3">
@@ -641,28 +657,36 @@ function CreateEvent() {
   <div className="flex flex-col pt-3 gap-y-3">
                 {/* Guest List Approval */}
               <ListInput
-              className="cursor-default"
                 placeholder="Approve all guests before the event"
                 title='Guest List Approval'
                 leftIcon={<UserTick variant="Bold" />}
-                
-                rightIcon={<Toggle checked={settings.hasGuestListApproval} onChange={(e) => setSettings({...settings, hasGuestListApproval: e.target.checked})}  />}
+                onClick={() => setSettings(prev => ({...prev, hasGuestListApproval: !prev.hasGuestListApproval}))}
+                rightIcon={<Toggle checked={settings.hasGuestListApproval} className="pointer-events-none"  />}
               />
               {/* Entry Code */}
               <ListInput
                 placeholder="Require attendees to enter a code"
                 title='Entry Code'
-                className="cursor-default"
+                onClick={() => {
+                  // toggle the entry code
+                  setSettings(prev => ({...prev, hasEntryCode: !prev.hasEntryCode}));
+                  // clear validation
+                  setValidation(prev => ({ ...prev, entryCode: "" }));
+                  // if the user unchecks the entry code, remove the entry code
+                  if(settings.hasEntryCode){
+                    setEvent(prev => ({ ...prev, entryCode: "" }));
+                  }
+                }}
                 leftIcon={<Lock1 variant="Bold" />}
-                rightIcon={<Toggle checked={settings.hasEntryCode} onChange={(e) => setSettings({...settings, hasEntryCode: e.target.checked})}  />}
+                rightIcon={<Toggle checked={settings.hasEntryCode}  className="pointer-events-none"/>}
               />
               {/* Attendee Limit */}
               <ListInput
                 placeholder="Set a limit to the number of attendees"
                 title='Attendee Limit'
-                className="cursor-default"
+                onClick={() => setSettings(prev => ({...prev, hasAttendeeLimit: !prev.hasAttendeeLimit}))}
                 leftIcon={<People variant="Bold" />}
-                rightIcon={<Toggle checked={settings.hasAttendeeLimit} onChange={(e) => setSettings({...settings, hasAttendeeLimit: e.target.checked})}  />}
+                rightIcon={<Toggle checked={settings.hasAttendeeLimit} className="pointer-events-none"  />}
               />
   </div>
             </div>
@@ -753,6 +777,16 @@ function CreateEvent() {
           onSave={data => {
             setEvent({ ...event, chipInDetails: data });
             setValidation(prev => ({ ...prev, chipIn: "" }));
+          }}
+        />
+      )}
+      {/* Event entry code modal */}
+      {settings.hasEntryCode && (
+        <EventEntryCodeModal
+          entryCodeData={event.entryCode}
+          onSave={entryCode => {
+            setEvent({ ...event, entryCode });
+            setValidation(prev => ({ ...prev, entryCode: "" }));
           }}
         />
       )}
