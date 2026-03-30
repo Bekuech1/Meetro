@@ -41,6 +41,7 @@ import {
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
 import EventEntryCodeModal from "@/components/layout-components/Events/EventEntryCodeModal";
+import EventAttendeeLimitModal from "@/components/layout-components/Events/EventAttendeeLimitModal";
 
 function CreateEvent() {
   // Navigation
@@ -599,6 +600,16 @@ function CreateEvent() {
                   />
                 </Modal.Open>
               )}
+              {/* Event attendee limit */}
+              {settings?.hasAttendeeLimit && (
+                <Modal.Open opens="event-attendee-limit">
+                  <ListInput
+                    placeholder="Attendee Limit"
+                    content={event.attendeeLimit}
+                    leftIcon={<People variant="Bold" />}
+                  />
+                </Modal.Open>
+              )}
               {/* Optional fields based on settings */}
               {hasNoSettings && (
                 <div className="flex items-center gap-x-4 gap-y-3">
@@ -661,7 +672,7 @@ function CreateEvent() {
                 title='Guest List Approval'
                 leftIcon={<UserTick variant="Bold" />}
                 onClick={() => setSettings(prev => ({...prev, hasGuestListApproval: !prev.hasGuestListApproval}))}
-                rightIcon={<Toggle checked={settings.hasGuestListApproval} className="pointer-events-none"  />}
+                rightIcon={<Toggle checked={settings.hasGuestListApproval} readOnly className="pointer-events-none"  />}
               />
               {/* Entry Code */}
               <ListInput
@@ -678,15 +689,23 @@ function CreateEvent() {
                   }
                 }}
                 leftIcon={<Lock1 variant="Bold" />}
-                rightIcon={<Toggle checked={settings.hasEntryCode}  className="pointer-events-none"/>}
+                rightIcon={<Toggle checked={settings.hasEntryCode} readOnly  className="pointer-events-none"/>}
               />
               {/* Attendee Limit */}
               <ListInput
                 placeholder="Set a limit to the number of attendees"
                 title='Attendee Limit'
-                onClick={() => setSettings(prev => ({...prev, hasAttendeeLimit: !prev.hasAttendeeLimit}))}
+                onClick={() => {
+                  setSettings(prev => ({...prev, hasAttendeeLimit: !prev.hasAttendeeLimit}));
+                  // if the user unchecks the attendee limit, remove the attendee limit
+                  if(settings.hasAttendeeLimit){
+                    setEvent(prev => ({ ...prev, attendeeLimit: null }));
+                  }else{
+                    setEvent(prev => ({ ...prev, attendeeLimit: 10 }));
+                  }
+                }}
                 leftIcon={<People variant="Bold" />}
-                rightIcon={<Toggle checked={settings.hasAttendeeLimit} className="pointer-events-none"  />}
+                rightIcon={<Toggle checked={settings.hasAttendeeLimit} readOnly className="pointer-events-none"  />}
               />
   </div>
             </div>
@@ -787,6 +806,15 @@ function CreateEvent() {
           onSave={entryCode => {
             setEvent({ ...event, entryCode });
             setValidation(prev => ({ ...prev, entryCode: "" }));
+          }}
+        />
+      )}
+      {/* Event attendee limit modal */}
+      {settings.hasAttendeeLimit && (
+        <EventAttendeeLimitModal
+          attendeeLimitData={event.attendeeLimit}
+          onSave={attendeeLimit => {
+            setEvent({ ...event, attendeeLimit });
           }}
         />
       )}
