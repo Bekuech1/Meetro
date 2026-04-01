@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import IconButton from './Buttons/IconButton';
 import {
     ArrowCircleLeft2, ArrowRight2, Calendar, CloseCircle, Location, Map1,
-    Maximize1, Note1, Send2, SidebarRight, Timer1, User, Calendar1, Money3,
+    Maximize1, Send2, SidebarRight, Timer1, User, Calendar1, Money3,
     Colorfilter,
     TickCircle
 } from 'iconsax-reactjs';
@@ -17,6 +17,8 @@ import AvatarGroup from "./AvatarGroup";
 import ConfirmationButton from "./Buttons/ConfirmationButton";
 import Avatar from './Avatar';
 import ProgressBar from './ProgressBar';
+
+
 
 // ==========================================
 // 1. HELPER COMPONENTS (Time & Navbar)
@@ -33,24 +35,45 @@ const DigitalTime = ({ time, unit }) => {
 };
 
 // 👇 The newly extracted Timer Navbar component
-const EventTimerNav = () => {
-    const [currentTime, setCurrentTime] = useState(new Date());
+const EventTimerNav = ({ targetDate }) => {
+    const [timeLeft, setTimeLeft] = useState({
+        days: 0, hours: 0, minutes: 0, seconds: 0
+    });
 
     useEffect(() => {
-        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-        return () => clearInterval(timer);
-    }, []);
+        if (!targetDate) return;
 
-    const day = String(currentTime.getDate()).padStart(2, "0");
-    const hour = String(currentTime.getHours()).padStart(2, "0");
-    const minute = String(currentTime.getMinutes()).padStart(2, "0");
-    const second = String(currentTime.getSeconds()).padStart(2, "0");
+        const calculateTimeLeft = () => {
+            const difference = new Date(targetDate) - new Date();
+            if (difference > 0) {
+                setTimeLeft({
+                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                    minutes: Math.floor((difference / 1000 / 60) % 60),
+                    seconds: Math.floor((difference / 1000) % 60)
+                });
+            } else {
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            }
+        };
+
+        calculateTimeLeft(); // initialize immediately
+        const timer = setInterval(calculateTimeLeft, 1000);
+        return () => clearInterval(timer);
+    }, [targetDate]);
+
+    const day = String(timeLeft.days).padStart(2, "0");
+    const hour = String(timeLeft.hours).padStart(2, "0");
+    const minute = String(timeLeft.minutes).padStart(2, "0");
+    const second = String(timeLeft.seconds).padStart(2, "0");
 
     return (
         <nav className="bg-[#011F0F] w-full px-8 py-3 flex items-center gap-4 flex-shrink-0">
             <img src="/Logo.svg" alt="Logo" className="size-6" />
             <div className="w-full flex justify-end gap-4 items-center">
-                <span className="text-lg font-normal paytone text-[#55695E]">starts in</span>
+                <span className="text-lg font-normal paytone text-[#55695E]">
+                    {(targetDate && new Date(targetDate) > new Date()) ? "starts in" : "started"}
+                </span>
                 <div className="flex size-fit">
                     <DigitalTime time={day} unit="d" />
                     <h6 className="text-white text-xl digital-font mx-1">:</h6>
@@ -73,18 +96,6 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
     const [viewState, setViewState] = useState(1);
     const [textExpanded, setTextExpanded] = useState(false);
     const modalRef = useRef(null);
-
-    const BASE_DESCRIPTION_LIMIT = 140;
-    const descriptionLimit = viewState === 2
-        ? Math.round(BASE_DESCRIPTION_LIMIT * 2)
-        : BASE_DESCRIPTION_LIMIT;
-
-    const eventDetails = [
-        { label: "Time", value: event.time, icon: <Timer1 variant="Bulk" size={16} /> },
-        { label: "Date", value: event.date, icon: <Calendar variant="Bulk" size={16} /> },
-        { label: "Dress Code", value: event.dressCode, icon: <Colorfilter variant="Bulk" size={16} /> },
-        { label: "Location", value: event.location, icon: <Location variant="Bulk" size={16} /> },
-    ];
 
     // Handle Escape key press and body scroll lock
     useEffect(() => {
@@ -120,6 +131,22 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
 
     if (!isOpen || !event) return null;
 
+    const BASE_DESCRIPTION_LIMIT = 140;
+    const descriptionLimit = viewState === 2
+        ? Math.round(BASE_DESCRIPTION_LIMIT * 2)
+        : BASE_DESCRIPTION_LIMIT;
+
+    const eventDetails = [
+        { label: "Time", value: event.time, icon: <Timer1 variant="Bulk" size={16} /> },
+        { label: "Date", value: event.date, icon: <Calendar variant="Bulk" size={16} /> },
+        { label: "Dress Code", value: event.dressCode, icon: <Colorfilter variant="Bulk" size={16} /> },
+        { label: "Location", value: event.location, icon: <Location variant="Bulk" size={16} /> },
+    ];
+
+    const goingGuests = event.going?.filter(guest => guest.status === "going") || [];
+    const goingPhotos = goingGuests.map(guest => guest.photo);
+    const remainingCount = goingGuests.length > 2 ? goingGuests.length - 2 : 0;
+
     return (
         <div
             className="satoshi fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity"
@@ -149,7 +176,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                     }`}
             >
                 {/* 👇 The unified Timer Navbar used across ALL states */}
-                {viewState !== 1 && <EventTimerNav />}
+                {viewState !== 1 && <EventTimerNav targetDate={event?.startDate} />}
 
                 {/* ============================================================== */}
                 {/* STATES 1 & 2: THE SPLIT VIEW (COLLAPSED / EXPANDED)            */}
@@ -173,20 +200,22 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                                     <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
                                 </div>
                             </div>
-                            <Alert
-                                title="You have manage access to this event"
-                                size='sm'
-                                option='outline'
-                                onClick={() => console.log("Action triggered!")}
-                                button={<TagButton variant="purple" text='Manage' rightImg={<ArrowRight2 size={12} />} size='sm' />}
-                            />
+                            {event.userRole === "host" && (
+                                <Alert
+                                    title="You have manage access to this event"
+                                    size='sm'
+                                    option='outline'
+                                    onClick={() => console.log("Action triggered!")}
+                                    button={<TagButton variant="purple" text='Manage' rightImg={<ArrowRight2 size={12} />} size='sm' />}
+                                />
+                            )}
                             <div className='grid gap-1'>
                                 <span className='text-base text-[#B0B5B5] font-medium paytone'>Hosted by</span>
                                 <div className="flex gap-1 items-center justify-between">
                                     <div className="flex gap-1 items-center">
-                                        <Avatar size='xs' />
+                                        <Avatar size='xs' src={event.host?.photo?.url ? event.host.photo.url : ''} />
                                         <div className="grid">
-                                            <span className="text-base font-medium text-[#001010]">{event.host}</span>
+                                            <span className="text-base font-medium text-[#001010]">{event.host?.fullName}</span>
                                             <span className="text-xs font-medium text-[#8A9191]">Host</span>
                                         </div>
                                     </div>
@@ -196,7 +225,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                             <div className='grid gap-1'>
                                 <span className='text-base text-[#B0B5B5] font-medium paytone'>Attending</span>
                                 <div className="flex items-center gap-4 pointer-events-none">
-                                    <AvatarGroup count={200} size='md' />
+                                    <AvatarGroup count={remainingCount} size='md' src={goingPhotos} />
                                     <TagButton leftImg={<TickCircle variant='Bold' />} text="Going" variant="green" size='lg' />
                                 </div>
                             </div>
@@ -206,7 +235,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                         <div className={`w-full min-w-0 flex flex-col h-full bg-white/80 relative border-l border-[#E5E7E3]  ${viewState === 2 && 'rounded-tl-2xl'}`}>
                             <section className={`sticky top-0 right-0 z-10 flex gap-6 flex-col py-6 px-8 border-b border-[#E5E7E3]`}>
                                 <div className={`flex gap-2 justify-between`}>
-                                    <TagButton text="Private Event" variant="light-purple" size='lg' className='pointer-events-none' />
+                                    {event.isPrivate && <TagButton text="Private Event" variant="light-purple" size='lg' className='pointer-events-none' />}
                                     <div className='flex gap-4'>
                                         <TextButton
                                             rightImg={<Send2 variant='Bulk' />}
@@ -259,37 +288,62 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                                     )}
                                 </div>
 
-                                <div className="space-y-2 py-6 px-8">
-                                    <h3 className="text-base font-medium text-[#8A9191] paytone">Tickets</h3>
-                                    <ProgressBar current={75000} target={150000} />
-                                    <ProgressBar variant="minimum-amount" amount={50000} />
-                                    <ProgressBar variant='amount' amount={80000} />
-                                </div>
+                                {event.chipInDetails && (
+                                    <div className="space-y-2 py-6 px-8">
+                                        <h3 className="text-base font-medium text-[#8A9191] paytone">Tickets</h3>
+                                        {event.chipInDetails.chipInType === "target" && (
+                                            <ProgressBar current={event.totalDonations} target={event.chipInDetails?.amount} />
+                                        )}
+                                        {event.chipInDetails.chipInType === "donation" && (
+                                            <ProgressBar variant="minimum-amount" amount={event.chipInDetails?.amount} />
+                                        )}
+                                        {event.chipInDetails.chipInType === "fixed" && (
+                                            <ProgressBar variant='amount' amount={event.chipInDetails?.amount} />
+                                        )}
+                                    </div>
+                                )}
 
-                                <div className="space-y-2 py-6 px-8">
+                                <div className="space-y-4 py-6 px-8 flex flex-col">
                                     <h3 className="text-base font-medium text-[#8A9191] paytone">Location</h3>
                                     <div className="grid gap-1">
                                         <span className="text-[#001010] text-base font-medium">{event.building}</span>
                                         <span className="text-[#8A9191] text-base font-medium">{event.location}</span>
                                         <span className="text-[#8A9191] text-sm font-medium">{event.furtherDirections}</span>
                                     </div>
+                                    {(event.latitude !== 0 || event.longitude !== 0) && (
+                                        <div className="w-full h-[200px] rounded-xl overflow-hidden mt-4 border border-[#E5E7E3]">
+                                            <iframe
+                                                width="100%"
+                                                height="100%"
+                                                style={{ border: 0 }}
+                                                loading="lazy"
+                                                allowFullScreen
+                                                referrerPolicy="no-referrer-when-downgrade"
+                                                src={`https://maps.google.com/maps?q=${event.latitude},${event.longitude}&z=15&output=embed`}
+                                            ></iframe>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col gap-2 py-6 px-8">
                                     <h3 className="text-base font-medium text-[#8A9191] paytone">Going</h3>
                                     <div className="flex overflow-x-auto scrollbar-hide gap-4 p-4">
-                                        {event.going.map((item, index) => (
-                                            <div key={index} className='flex flex-col items-center justify-center gap-1 w-[112px] shrink-0 h-[90px] p-3 rounded-[12px] bg-[#FFFFFF] drop-shadow-[0px_4px_16px_rgba(0,0,0,0.04)]'>
-                                                <Avatar size='lg' />
-                                                <span className="text-[#001010] text-[10px] font-medium text-center truncate w-full block">{item}</span>
-                                            </div>
-                                        ))}
+                                        <div className="flex overflow-x-auto scrollbar-hide gap-4 p-4">
+                                            {event.going.map((guest, index) => (
+                                                <div key={index} className='flex flex-col items-center justify-center gap-1 w-[112px] shrink-0 h-[90px] p-3 rounded-[12px] bg-[#FFFFFF] drop-shadow-[0px_4px_16px_rgba(0,0,0,0.04)]'>
+                                                    <Avatar size='lg' src={guest.photo} />
+                                                    <span className="text-[#001010] text-[10px] font-medium text-center truncate w-full block">
+                                                        {guest.name ? guest.name.split(' ')[0] : "Guest"}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className={`mt-auto flex flex-col justify-end sm:flex-row gap-3 px-8 pb-8 ${viewState === 1 ? 'sticky bottom-0 bg-gradient-to-b from-[#e8e8e8]/0 to-[#FFFFFF] z-10 pt-6' : 'pt-8'}`}>
-                                    <ConfirmationButton variant="going" className={`${viewState === 1 ? 'max-w-[222px]' : ''}`} />
-                                    <ConfirmationButton variant="not-sure" className={`${viewState === 1 ? 'max-w-[222px]' : ''}`} onClick={() => console.log("clicked")} />
+                                <div className={`mt-auto flex flex-col justify-end sm:flex-row gap-3 px-8 pb-8 sticky bottom-0 bg-gradient-to-b from-[#e8e8e8]/0 to-[#FFFFFF] z-10 pt-6`}>
+                                    <ConfirmationButton variant="going" className={`${viewState === 1 ? 'max-w-[222px]' : 'max-w-[300px]'}`} />
+                                    <ConfirmationButton variant="not-sure" className={`${viewState === 1 ? 'max-w-[222px]' : 'max-w-[300px]'}`} onClick={() => console.log("clicked")} />
                                 </div>
                             </div>
                         </div>
@@ -328,23 +382,37 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                                     <div className="size-fit flex gap-2 items-center">
                                         <IconButton icon={<Calendar1 variant="Bold" color="#866AD2" />} variant="tertiary" />
                                         <h6 className="text-base font-medium text-black">
-                                            {event.date} <span className="text-[#8A9191] ml-2">16:30pm</span>
+                                            {event.date} <span className="text-[#8A9191] ml-2">{event.time}</span>
                                         </h6>
                                     </div>
                                     <div className="size-fit flex gap-2 items-center">
-                                        <TagButton size="md" text="abuja" variant="light-purple" leftImg={<Location color="#7A60BF" variant="Bold" />} />
-                                        <TagButton text="From - N50,000" variant="light-purple" leftImg={<Money3 color="#7A60BF" variant="Bold" />} />
-                                        <AvatarGroup size="sm" count={100} />
-                                        <AttendanceStatus status="going" />
+                                        <TagButton size="md" text={event.location} variant="light-purple" leftImg={<Location color="#7A60BF" variant="Bold" />} />
+                                        <TagButton text={`From - ₦${event.chipInDetails?.amount}`} variant="light-purple" leftImg={<Money3 color="#7A60BF" variant="Bold" />} />
+                                        <AvatarGroup
+                                            size="sm"
+                                            count={remainingCount}
+                                            src={goingPhotos}
+                                        />
+                                        {event.userResponse === "going" && (
+                                            <AttendanceStatus status="going" />
+                                        )}
+                                        {event.userResponse === "not-sure" && (
+                                            <AttendanceStatus status="not-sure" />
+                                        )}
+                                        {event.userResponse === "not-going" && (
+                                            <AttendanceStatus status="not-going" />
+                                        )}
                                     </div>
                                 </div>
-                                <Alert
-                                    title="You have manage access to this event"
-                                    size='sm'
-                                    option='outline'
-                                    onClick={() => console.log("Action triggered!")}
-                                    button={<TagButton variant="light-purple" text='Manage' rightImg={<ArrowRight2 size={12} />} size='sm' className='border-0' />}
-                                />
+                                {event.userRole === "host" && (
+                                    <Alert
+                                        title="You have manage access to this event"
+                                        size='sm'
+                                        option='outline'
+                                        onClick={() => console.log("Action triggered!")}
+                                        button={<TagButton variant="purple" text='Manage' rightImg={<ArrowRight2 size={12} />} size='sm' className='border-0' />}
+                                    />
+                                )}
                             </section>
 
                             <section className="w-full flex justify-center p-4 mt-auto bg-gradient-to-b from-[#E8E8E8]/0 to-[#E8E8E8]">

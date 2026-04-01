@@ -18,7 +18,7 @@ const responseColors = {
   going: "green",
 };
 
-function EventItem({ event }) {
+function EventItem({ event, onClick }) {
   const eventDate = new Date(event.startDate);
   const startTime = format(eventDate, "hh:mm a");
   const hoursAgo = timeAgo(event.createdAt);
@@ -46,7 +46,10 @@ function EventItem({ event }) {
     event?.guests?.slice(0, 2).map(guest => guest?.photo?.url) || [];
 
   return (
-    <div className="border flex flex-col gap-6 border-white p-2 min-[500px]:p-3 bg-gradient-to-r from-[#FCFEF9]/50 to-white backdrop-blur-2xl rounded-2xl  cursor-pointer transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,16,16,0.08)] hover:scale-[1.01]">
+    <div 
+      onClick={onClick}
+      className="border flex flex-col gap-6 border-white p-2 min-[500px]:p-3 bg-gradient-to-r from-[#FCFEF9]/50 to-white backdrop-blur-2xl rounded-2xl  cursor-pointer transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,16,16,0.08)] hover:scale-[1.01]"
+    >
       <div className="flex gap-2">
         {/* Event image */}
         <div className="w-16 h-14.5 min-[500px]:w-[114px] min-[500px]:h-[106px] overflow-hidden rounded-[6px] min-[500px]:rounded-xl">

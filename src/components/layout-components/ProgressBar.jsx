@@ -12,7 +12,7 @@ const ProgressBar = ({ variant = 'target-goal', current = 0, target = 1, amount 
     if (variant === 'target-goal') {
         const percentage = Math.min(Math.round((current / target) * 100), 100);
         return (
-            <div className="grid gap-2 p-3 rounded-xl border border-[#E5E7E3]">
+            <div className="grid gap-2 p-3 rounded-2xl border border-[#E5E7E3]">
                 <div className="flex justify-between items-center">
                     <span className="text-base font-medium text-[#8A9191]">
                         Target Goal
@@ -37,7 +37,7 @@ const ProgressBar = ({ variant = 'target-goal', current = 0, target = 1, amount 
 
     // variant === 'minimum-amount' or 'amount'
     return (
-        <div className='grid gap-2 p-3 rounded-xl border border-[#E5E7E3]'>
+        <div className='grid gap-2 p-3 rounded-2xl border border-[#E5E7E3]'>
             <div className="flex justify-between items-center">
                 <span className="text-base font-medium text-[#8A9191]">
                     Chip in {variant === 'minimum-amount' ? 'Minimum amount' : title || 'Amount'}
