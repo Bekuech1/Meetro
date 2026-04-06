@@ -1,10 +1,17 @@
-import { Bank, RefreshCircle } from "iconsax-reactjs";
 import TagButton from "../layout-components/Buttons/TagButton";
 import TextButton from "../layout-components/Buttons/TextButtons";
 import IconButton from "../layout-components/Buttons/IconButton";
 import Toggle from "../layout-components/Selectors/Toggle";
+import { useState } from "react";
+import { Bank, RefreshCircle } from "iconsax-reactjs";
 
 function Payments() {
+  const [feeSettings, setFeeSettings] = useState(false);
+  const [bankAccount, setBankAccount] = useState({
+    bankName: "Opay",
+    accountNumber: "9023820208",
+    accountName: "Newman Ogbo",
+  });
   return (
     <div className="satoshi">
       <div className="mb-6">
@@ -40,9 +47,11 @@ function Payments() {
             />
             {/* Bank details */}
             <div className="font-medium">
-              <p className="text-[#001010] text-sm">Opay</p>
+              <p className="text-[#001010] text-sm capitalize">
+                {bankAccount.bankName}
+              </p>
               <p className="text-[#8A9191] capitalize leading-3.5 text-[10px] sm:text-xs">
-                Newman Ogbo | 9023820208
+                {bankAccount.accountName} | {bankAccount.accountNumber}
               </p>
             </div>
           </div>
@@ -56,7 +65,10 @@ function Payments() {
             Shift the responsibility onto customers.
           </p>
         </div>
-        <Toggle />
+        <Toggle
+          checked={feeSettings}
+          onChange={() => setFeeSettings(!feeSettings)}
+        />
       </div>
 
       {/* Save Button */}

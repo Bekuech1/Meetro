@@ -28,8 +28,8 @@ function Profile() {
     isLoading: loading,
     error,
   } = useQuery({
-    queryKey: ["user-events", "all"],
-    queryFn: () => eventsApi.getUserEvents("all"),
+    queryKey: ["user-events", "past"],
+    queryFn: () => eventsApi.getUserEvents("past"),
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 
@@ -84,19 +84,21 @@ function Profile() {
                   </div>
                 </div>
                 {/* Location */}
-                <div className="flex gap-2 items-center">
-                  <IconButton
-                    icon={<Location variant="Bold" className="size-4" />}
-                    variant="tertiary"
-                    className="pointer-events-none size-6 sm:size-6"
-                  />
-                  <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
-                    <p className="text-[#8A9191] capitalize">Location</p>
-                    <p className="text-[#001010] capitalize">
-                      {user.location || "Nigeria"}
-                    </p>
+                {user.location && (
+                  <div className="flex gap-2 items-center">
+                    <IconButton
+                      icon={<Location variant="Bold" className="size-4" />}
+                      variant="tertiary"
+                      className="pointer-events-none size-6 sm:size-6"
+                    />
+                    <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                      <p className="text-[#8A9191] capitalize">Location</p>
+                      <p className="text-[#001010] capitalize">
+                        {user.location}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               {/* User event count */}
               <div className="flex py-3 justify-center border rounded-[16px] border-[#F0F0F0]">
@@ -148,7 +150,7 @@ function Profile() {
             <div className="flex-1">
               <div className="flex justify-between flex-col min-[500px]:flex-row gap-4 items-center mb-6">
                 <h1 className="paytone capitalize text-[#077D8A] leading-[22px] text-[30px] font-[400]">
-                  My Events
+                  Past Events
                 </h1>
                 {/* Filter tabs */}
                 <div className="border border-[#F9F9F9] p-[2px] bg-[#E5E7E3] rounded-full inline-flex items-center">
