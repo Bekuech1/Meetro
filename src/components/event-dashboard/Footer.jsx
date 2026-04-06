@@ -7,7 +7,7 @@ function Footer() {
     <div
       className={twMerge(
         "bg-[#F0F0F0] md:block hidden min-[680px]:block",
-        pathname === "/home" && "pb-20"
+        (pathname === "/home" || pathname === "/profile") && "pb-20"
       )}
     >
       <div className="max-w-[1440px] visbycf text-sm text-[#8A9191] font-medium py-5 px-4 md:px-[60px] mx-auto w-full gap-4 flex-wrap flex flex-row items-center justify-between">
