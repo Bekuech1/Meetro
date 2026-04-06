@@ -36,7 +36,7 @@ import {
   People,
   Timer1,
   Trash,
-  UserTick
+  UserTick,
 } from "iconsax-reactjs";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
@@ -103,7 +103,6 @@ function CreateEvent() {
     attendeeLimit: null,
   };
 
-
   // Event State
   const [event, setEvent] = useState(initialEventState);
   // Validation state for required fields
@@ -154,26 +153,26 @@ function CreateEvent() {
     }
   };
 
-    // Clear local images
-    const clearLocalImages = () => {
-      if (event?.image && event.image.startsWith("blob:")) {
-        URL.revokeObjectURL(event.image);
-      }
-  
-      // Also check cohosts for any blob URLs and revoke them
-      if (event?.cohosts?.length) {
-        event.cohosts.forEach(cohost => {
-          if (cohost.photo && cohost.photo.startsWith("blob:")) {
-            URL.revokeObjectURL(cohost.photo);
-          }
-        });
-      }
-    };
-  
-    // Clean up object URLs when component unmounts
-    useEffect(() => {
-      return () => clearLocalImages();
-    }, []);
+  // Clear local images
+  const clearLocalImages = () => {
+    if (event?.image && event.image.startsWith("blob:")) {
+      URL.revokeObjectURL(event.image);
+    }
+
+    // Also check cohosts for any blob URLs and revoke them
+    if (event?.cohosts?.length) {
+      event.cohosts.forEach(cohost => {
+        if (cohost.photo && cohost.photo.startsWith("blob:")) {
+          URL.revokeObjectURL(cohost.photo);
+        }
+      });
+    }
+  };
+
+  // Clean up object URLs when component unmounts
+  useEffect(() => {
+    return () => clearLocalImages();
+  }, []);
 
   // Format location for display in ListInput
   const locationFormatted =
@@ -203,33 +202,37 @@ function CreateEvent() {
     ? format(new Date(event.endDate), "EEE,  MMM d, h:mm aa")
     : "";
 
-    // Format chip in details for display
-    const chipInDetailsFormatted = event?.chipInDetails
+  // Format chip in details for display
+  const chipInDetailsFormatted = event?.chipInDetails
     ? event.chipInDetails?.chipInType === "fixed"
       ? `Fixed - ₦${event.chipInDetails?.amount}`
-      : event.chipInDetails?.chipInType === "target" ? `Target - ₦${event.chipInDetails?.amount}` : event.chipInDetails?.chipInType === "donation" ? `Flexible - ₦${event.chipInDetails?.amount}` : "" : "";
+      : event.chipInDetails?.chipInType === "target"
+        ? `Target - ₦${event.chipInDetails?.amount}`
+        : event.chipInDetails?.chipInType === "donation"
+          ? `Flexible - ₦${event.chipInDetails?.amount}`
+          : ""
+    : "";
 
-    // Validate required fields
-    const validateRequiredFields = () => {
-      const errors = {};
-      if (!event.title) {
-        errors.title = "Event title is required";
-      }
-      if (!event.startDate) {
-        errors.date = "Event start date and time are required.";
-      }
-       if (!event.location.state.trim() && !event.meetingURL.trim()) {
-         errors.location = "Event location is required.";
-       }
-   
-       if (event.cohosts.length <= 0) {
-         errors.cohosts = "At least one cohost is required.";
-       }
-   
-       if (event.category.length <= 0) {
-         errors.categories = "At least one event category is required.";
-       }
-   
+  // Validate required fields
+  const validateRequiredFields = () => {
+    const errors = {};
+    if (!event.title) {
+      errors.title = "Event title is required";
+    }
+    if (!event.startDate) {
+      errors.date = "Event start date and time are required.";
+    }
+    if (!event.location.state.trim() && !event.meetingURL.trim()) {
+      errors.location = "Event location is required.";
+    }
+
+    if (event.cohosts.length <= 0) {
+      errors.cohosts = "At least one cohost is required.";
+    }
+
+    if (event.category.length <= 0) {
+      errors.categories = "At least one event category is required.";
+    }
 
     // Optional fields
     if (settings?.hasDescription && !event.description.trim()) {
@@ -245,23 +248,19 @@ function CreateEvent() {
       errors.entryCode = "Event entry code is required.";
     }
 
-      setValidation(errors);
-      return Object.keys(errors).length === 0;
-    };
+    setValidation(errors);
+    return Object.keys(errors).length === 0;
+  };
   // Status state
   const [status, setStatus] = useState(null);
   // Error state
   const [error, setError] = useState(null);
   // Create event mutation
-  const {mutateAsync: createEvent, isPending: isCreating} = useMutation({
-    mutationFn: (eventData) => {
-
+  const { mutateAsync: createEvent, isPending: isCreating } = useMutation({
+    mutationFn: eventData => {
       const formData = new FormData();
       formData.append("title", eventData.title);
-      formData.append(
-        "startDate",
-        new Date(eventData.startDate).toISOString()
-      );
+      formData.append("startDate", new Date(eventData.startDate).toISOString());
       formData.append("font", eventData.font);
       if (eventData.endDate) {
         formData.append("endDate", new Date(eventData.endDate).toISOString());
@@ -295,10 +294,10 @@ function CreateEvent() {
       if (eventData.dressCode) {
         formData.append("dressCode", JSON.stringify(eventData.dressCode));
       }
-            console.log(formData);
+      console.log(formData);
       return eventsApi.createEvent(formData);
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.status === "success") {
         // Invalidate queries to refetch the updated data
         queryClient.invalidateQueries(["user-events"]);
@@ -309,7 +308,7 @@ function CreateEvent() {
         // Clear local images
         clearLocalImages();
         // Add event slug
-        setEvent({...event, slug: data.data.slug});
+        setEvent({ ...event, slug: data.data.slug });
       }
     },
     onError: err => {
@@ -318,12 +317,12 @@ function CreateEvent() {
     },
   });
 
-  const {setActive} = useModalContext();
+  const { setActive } = useModalContext();
 
   // Handle create event
-  const handleCreateEvent = (isPublished) => {
-    if (!validateRequiredFields()) return; 
-    createEvent({...event, isPublished});
+  const handleCreateEvent = isPublished => {
+    if (!validateRequiredFields()) return;
+    createEvent({ ...event, isPublished });
     setActive("create-event");
   };
 
@@ -340,7 +339,12 @@ function CreateEvent() {
       cohosts: "",
       categories: "",
     });
-    setSettings(prev => ({...prev, hasEntryCode: false, hasAttendeeLimit: false, hasGuestListApproval: false}))
+    setSettings(prev => ({
+      ...prev,
+      hasEntryCode: false,
+      hasAttendeeLimit: false,
+      hasGuestListApproval: false,
+    }));
     setStatus(null);
     setError(null);
     setImageFile(null);
@@ -656,65 +660,113 @@ function CreateEvent() {
               )}
             </div>
             {/*Event Settings */}
-          <div className="mt-6">
-            <TextButton
-              text="Event Settings"
-              variant="tertiary"
-              onClick={() => setEventSettingsOpen(prev => !prev)}
-              className={twMerge("w-full relative h-9 text-sm flex justify-between", eventSettingsOpen && "bg-[#E5E7E3]")}
-              rightImg={<ArrowDown2 variant="Outline" color="#011F0F" className={`absolute right-4 transition-all duration-200 ease-in-out top-1/2 -translate-y-1/2 ${eventSettingsOpen ? "rotate-180" : ""}`} />}
-            />
-            <div className={`max-h-0 overflow-hidden transition-all duration-200 ease-in-out ${eventSettingsOpen ? "max-h-[500px]" : ""}`}>
-  <div className="flex flex-col pt-3 gap-y-3">
-                {/* Guest List Approval */}
-              <ListInput
-                placeholder="Approve all guests before the event"
-                title='Guest List Approval'
-                leftIcon={<UserTick variant="Bold" />}
-                onClick={() => setSettings(prev => ({...prev, hasGuestListApproval: !prev.hasGuestListApproval}))}
-                rightIcon={<Toggle checked={settings.hasGuestListApproval} readOnly className="pointer-events-none"  />}
+            <div className="mt-6">
+              <TextButton
+                text="Event Settings"
+                variant="tertiary"
+                onClick={() => setEventSettingsOpen(prev => !prev)}
+                className={twMerge(
+                  "w-full relative h-9 text-sm flex justify-between",
+                  eventSettingsOpen && "bg-[#E5E7E3]"
+                )}
+                rightImg={
+                  <ArrowDown2
+                    variant="Outline"
+                    color="#011F0F"
+                    className={`absolute right-4 transition-all duration-200 ease-in-out top-1/2 -translate-y-1/2 ${eventSettingsOpen ? "rotate-180" : ""}`}
+                  />
+                }
               />
-              {/* Entry Code */}
-              <ListInput
-                placeholder="Require attendees to enter a code"
-                title='Entry Code'
-                onClick={() => {
-                  // toggle the entry code
-                  setSettings(prev => ({...prev, hasEntryCode: !prev.hasEntryCode}));
-                  // clear validation
-                  setValidation(prev => ({ ...prev, entryCode: "" }));
-                  // if the user unchecks the entry code, remove the entry code
-                  if(settings.hasEntryCode){
-                    setEvent(prev => ({ ...prev, entryCode: "" }));
-                  }
-                }}
-                leftIcon={<Lock1 variant="Bold" />}
-                rightIcon={<Toggle checked={settings.hasEntryCode} readOnly  className="pointer-events-none"/>}
-              />
-              {/* Attendee Limit */}
-              <ListInput
-                placeholder="Set a limit to the number of attendees"
-                title='Attendee Limit'
-                onClick={() => {
-                  setSettings(prev => ({...prev, hasAttendeeLimit: !prev.hasAttendeeLimit}));
-                  // if the user unchecks the attendee limit, remove the attendee limit
-                  if(settings.hasAttendeeLimit){
-                    setEvent(prev => ({ ...prev, attendeeLimit: null }));
-                  }else{
-                    setEvent(prev => ({ ...prev, attendeeLimit: 10 }));
-                  }
-                }}
-                leftIcon={<People variant="Bold" />}
-                rightIcon={<Toggle checked={settings.hasAttendeeLimit} readOnly className="pointer-events-none"  />}
-              />
-  </div>
+              <div
+                className={`max-h-0 overflow-hidden transition-all duration-200 ease-in-out ${eventSettingsOpen ? "max-h-[500px]" : ""}`}
+              >
+                <div className="flex flex-col pt-3 gap-y-3">
+                  {/* Guest List Approval */}
+                  <ListInput
+                    placeholder="Approve all guests before the event"
+                    title="Guest List Approval"
+                    leftIcon={<UserTick variant="Bold" />}
+                    onClick={() =>
+                      setSettings(prev => ({
+                        ...prev,
+                        hasGuestListApproval: !prev.hasGuestListApproval,
+                      }))
+                    }
+                    rightIcon={
+                      <Toggle
+                        checked={settings.hasGuestListApproval}
+                        readOnly
+                        className="pointer-events-none"
+                      />
+                    }
+                  />
+                  {/* Entry Code */}
+                  <ListInput
+                    placeholder="Require attendees to enter a code"
+                    title="Entry Code"
+                    onClick={() => {
+                      // toggle the entry code
+                      setSettings(prev => ({
+                        ...prev,
+                        hasEntryCode: !prev.hasEntryCode,
+                      }));
+                      // clear validation
+                      setValidation(prev => ({ ...prev, entryCode: "" }));
+                      // if the user unchecks the entry code, remove the entry code
+                      if (settings.hasEntryCode) {
+                        setEvent(prev => ({ ...prev, entryCode: "" }));
+                      }
+                    }}
+                    leftIcon={<Lock1 variant="Bold" />}
+                    rightIcon={
+                      <Toggle
+                        checked={settings.hasEntryCode}
+                        readOnly
+                        className="pointer-events-none"
+                      />
+                    }
+                  />
+                  {/* Attendee Limit */}
+                  <ListInput
+                    placeholder="Set a limit to the number of attendees"
+                    title="Attendee Limit"
+                    onClick={() => {
+                      setSettings(prev => ({
+                        ...prev,
+                        hasAttendeeLimit: !prev.hasAttendeeLimit,
+                      }));
+                      // if the user unchecks the attendee limit, remove the attendee limit
+                      if (settings.hasAttendeeLimit) {
+                        setEvent(prev => ({ ...prev, attendeeLimit: null }));
+                      } else {
+                        setEvent(prev => ({ ...prev, attendeeLimit: 10 }));
+                      }
+                    }}
+                    leftIcon={<People variant="Bold" />}
+                    rightIcon={
+                      <Toggle
+                        checked={settings.hasAttendeeLimit}
+                        readOnly
+                        className="pointer-events-none"
+                      />
+                    }
+                  />
+                </div>
+              </div>
             </div>
-          </div>
             <div className="py-6">
               {/* Save buttons */}
               <div className="flex items-center justify-between">
-                <TextButton variant="secondary" text="Save draft" onClick={() => handleCreateEvent(false)} />
-                <TextButton variant="primary" text="Create event" onClick={() => handleCreateEvent(true)} />
+                <TextButton
+                  variant="secondary"
+                  text="Save draft"
+                  onClick={() => handleCreateEvent(false)}
+                />
+                <TextButton
+                  variant="primary"
+                  text="Create event"
+                  onClick={() => handleCreateEvent(true)}
+                />
               </div>
             </div>
           </div>
@@ -819,7 +871,8 @@ function CreateEvent() {
         />
       )}
       {/* Create event modal */}
-      <CreateEventModal  event={{
+      <CreateEventModal
+        event={{
           title: event.title,
           slug: event.slug,
           startDate: event.startDate,
@@ -828,7 +881,8 @@ function CreateEvent() {
         loading={isCreating}
         status={status}
         error={error}
-        resetForm={resetForm} />
+        resetForm={resetForm}
+      />
     </div>
   );
 }

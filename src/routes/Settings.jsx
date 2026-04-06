@@ -45,7 +45,7 @@ function Settings() {
         <div className="max-w-[772px] min-h-full w-full mx-auto">
           <div className="flex justify-between flex-col md:flex-row gap-y-6 gap-x-12  h-fit mt-4 md:mt-10">
             {/* Settings tab */}
-            <div className="bg-white satoshi self-start sticky top-28  text-[#001010] font-bold text-sm p-6 rounded-4xl  flex flex-col min-w-full md:min-w-[332px]">
+            <div className="bg-white satoshi self-start md:sticky md:top-28  text-[#001010] font-bold text-sm p-6 rounded-4xl  flex flex-col min-w-full md:min-w-[332px]">
               <button
                 className={twMerge(
                   "p-3 flex items-center gap-2",
