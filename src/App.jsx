@@ -21,6 +21,7 @@ import LegalLayout from "./layouts/LegalLayout";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useRehydrateUser } from "./hooks/useRehydrateUser";
 import CreateEvent from "./routes/CreateEvent";
+import Profile from "./routes/Profile";
 
 function App() {
   useRehydrateUser(); // Rehydrate user on app load
@@ -50,6 +51,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/home" element={<MyEvents />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/create-event" element={<CreateEvent />} />
           <Route
