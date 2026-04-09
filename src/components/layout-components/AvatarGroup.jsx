@@ -31,7 +31,9 @@ export default function AvatarGroup({ size = "md", count = 0, src = [] }) {
           className="-ml-[8px] z-[4]"
         />
       </div>
-      <span className="font-bold">+{count}</span>
+      {count > 0 && (
+        <span className="font-bold">+{count}</span>
+      )}
     </div>
   );
 }
