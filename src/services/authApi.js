@@ -67,4 +67,13 @@ export const authApi = {
     const { accessToken } = response.data;
     return { accessToken };
   },
+
+  updateProfile: async data => {
+    const response = await API.patch("/auth/update-profile", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data.data;
+  },
 };
