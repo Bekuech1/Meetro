@@ -285,6 +285,7 @@ function EditProfile() {
           </FormGroup>
         </div>
       </div>
+      {/* Error Message */}
       {errorMessage && (
         <Alert type="error" title={errorMessage} className="mb-4" />
       )}

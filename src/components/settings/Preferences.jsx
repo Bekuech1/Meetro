@@ -1,9 +1,14 @@
 import TextButton from "../layout-components/Buttons/TextButtons";
-import { useEffect, useRef, useState } from "react";
-import { ArrowDown2 } from "iconsax-reactjs";
 import Toggle from "../layout-components/Selectors/Toggle";
+import LoadingSpinner from "../layout-components/LoadingSpinner";
+import Alert from "../layout-components/Alert";
+import { useEffect, useRef, useState } from "react";
+import { ArrowDown2, TickCircle } from "iconsax-reactjs";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useMutation } from "@tanstack/react-query";
+import { authApi } from "@/services/authApi";
 
-const VISIBILITY_OPTIONS = ["Public", "Private"];
+const VISIBILITY_OPTIONS = ["public", "private"];
 
 function SelectSetting({ value, onChange, options = [] }) {
   const [open, setOpen] = useState(false);
@@ -62,18 +67,56 @@ function SelectSetting({ value, onChange, options = [] }) {
 }
 
 function Preferences() {
+  const { user, setUser } = useAuthStore();
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [privacy, setPrivacy] = useState({
-    profileVisibility: "Public",
-    socialMediaVisibility: "Public",
+    profileVisibility: user?.preferences?.profileVisibility || "public",
+    socialMediaVisibility: user?.preferences?.socialMediaVisibility || "public",
   });
 
   const [notificationSettings, setNotificationSettings] = useState({
-    notificationMode: "Email",
-    eventReminders: false,
-    eventUpdates: false,
-    guestRegistrations: false,
-    productUpdates: false,
+    notificationMode: user?.preferences?.notificationMode || "email",
+    eventReminders: user?.preferences?.eventReminders || false,
+    eventUpdates: user?.preferences?.eventUpdates || false,
+    guestRegistrations: user?.preferences?.guestRegistrations || false,
+    productUpdates: user?.preferences?.productUpdates || false,
   });
+
+  const [saveStatus, setSaveStatus] = useState("idle");
+
+  const { mutateAsync: updateProfile } = useMutation({
+    mutationFn: data => authApi.updateProfile(data),
+    onMutate: () => setSaveStatus("saving"),
+    onSuccess: data => {
+      setUser(data);
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2000);
+    },
+    onError: error => {
+      setSaveStatus("idle");
+      setErrorMessage(
+        error.response?.data?.message || "Failed to update profile"
+      );
+    },
+  });
+
+  // Handle update preferences
+  const handleUpdatePreferences = () => {
+    // Clean up error message
+    setErrorMessage("");
+    // Create form data
+    const formData = new FormData();
+    formData.append(
+      "preferences",
+      JSON.stringify({
+        ...privacy,
+        ...notificationSettings,
+      })
+    );
+    // Update preferences
+    updateProfile(formData);
+  };
 
   return (
     <div className="satoshi">
@@ -153,7 +196,7 @@ function Preferences() {
                     notificationMode: value,
                   }))
                 }
-                options={["Email", "Phone"]}
+                options={["email", "phone"]}
               />
             </div>
             {/* Event reminders */}
@@ -233,9 +276,31 @@ function Preferences() {
           </div>
         </div>
       </div>
-
+      {/* Error Message */}
+      {errorMessage && (
+        <Alert type="error" title={errorMessage} className="mb-4" />
+      )}
       {/* Save Button */}
-      <TextButton text="Save Changes" variant="primary" className="min-w-0" />
+      <TextButton
+        text={
+          saveStatus === "saving"
+            ? "Saving..."
+            : saveStatus === "saved"
+              ? "Saved"
+              : "Save Changes"
+        }
+        leftImg={
+          saveStatus === "saving" ? (
+            <LoadingSpinner />
+          ) : saveStatus === "saved" ? (
+            <TickCircle variant="Bold" />
+          ) : undefined
+        }
+        disabled={saveStatus !== "idle"}
+        variant={saveStatus === "saved" ? "secondary" : "primary"}
+        className="transition-colors duration-300"
+        onClick={handleUpdatePreferences}
+      />
     </div>
   );
 }
