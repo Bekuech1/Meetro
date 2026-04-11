@@ -48,7 +48,7 @@ function Profile() {
         <div className="max-w-[1120px] min-h-full w-full mx-auto">
           <div className="flex justify-between flex-col md:flex-row gap-y-6 gap-x-12  h-fit mt-4 md:mt-10">
             {/* Profile details */}
-            <div className="bg-white p-6 rounded-4xl relative flex flex-col gap-4 min-w-full md:min-w-[332px]">
+            <div className="bg-white self-start p-6 rounded-4xl relative flex flex-col gap-4 min-w-full md:min-w-[332px]">
               {/* Edit profile button */}
               <Link to="/settings?tab=edit-profile">
                 <TextButton
@@ -84,7 +84,7 @@ function Profile() {
                   </div>
                 </div>
                 {/* Location */}
-                {user.location && (
+                {user.address && (
                   <div className="flex gap-2 items-center">
                     <IconButton
                       icon={<Location variant="Bold" className="size-4" />}
@@ -94,7 +94,7 @@ function Profile() {
                     <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
                       <p className="text-[#8A9191] capitalize">Location</p>
                       <p className="text-[#001010] capitalize">
-                        {user.location}
+                        {user.address}
                       </p>
                     </div>
                   </div>
