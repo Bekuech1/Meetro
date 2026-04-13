@@ -89,7 +89,7 @@ function Preferences() {
     mutationFn: data => authApi.updateProfile(data),
     onMutate: () => setSaveStatus("saving"),
     onSuccess: data => {
-      setUser(data);
+      setUser({ ...user, preferences: data.preferences });
       setSaveStatus("saved");
       setTimeout(() => setSaveStatus("idle"), 2000);
     },
@@ -112,6 +112,7 @@ function Preferences() {
       JSON.stringify({
         ...privacy,
         ...notificationSettings,
+        eventFeesPaidBy: user?.preferences?.eventFeesPaidBy || "organizer",
       })
     );
     // Update preferences

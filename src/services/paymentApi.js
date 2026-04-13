@@ -8,6 +8,10 @@ export const paymentApi = {
 
     return transactionsResponse.data;
   },
+  updateBankDetails: async data => {
+    const updateResponse = await API.patch(`/payments/update-bank`, data);
+    return updateResponse.data.data;
+  },
   getEventBalance: async eventId => {
     const balanceResponse = await API.get(`/payments/balance/${eventId}`);
     return balanceResponse.data.data;
@@ -25,6 +29,5 @@ export const paymentApi = {
       accountNumber,
     });
     return verifyResponse.data;
-  }
-
+  },
 };
