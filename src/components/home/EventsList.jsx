@@ -80,6 +80,7 @@ function EventsList() {
     userResponse: eventDetails.userResponse || "",
     guestCount: eventDetails.guestCount || 0,
     isPrivate: eventDetails.isPrivate,
+    slug: eventDetails.slug || "",
     
   } : null;
 

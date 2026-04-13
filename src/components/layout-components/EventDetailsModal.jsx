@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import IconButton from './Buttons/IconButton';
 import {
     ArrowCircleLeft2, ArrowRight2, Calendar, CloseCircle, Location, Map1,
@@ -92,6 +93,8 @@ const EventTimerNav = ({ targetDate }) => {
 // 2. MAIN MODAL COMPONENT
 // ==========================================
 const EventDetailsModal = ({ isOpen, onClose, event }) => {
+    const navigate = useNavigate();
+
     // 3-way view state (1 = Collapsed, 2 = Expanded Split, 3 = Status View)
     const [viewState, setViewState] = useState(1);
     const [textExpanded, setTextExpanded] = useState(false);
@@ -112,8 +115,10 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
         }
 
         return () => {
+
             document.removeEventListener('keydown', handleKeyDown);
             document.body.style.overflow = 'unset';
+            
         };
     }, [isOpen, onClose]);
 
@@ -123,6 +128,25 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
             setViewState(1);
         }
     }, [isOpen]);
+
+    const handleShare = async () => {
+        const eventUrl = `${window.location.origin}/events/${event?.slug}`; // Adjust URL as needed
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: event?.title,
+                    text: `Check out this event: ${event?.title}`,
+                    url: eventUrl,
+                });
+            } catch (err) {
+                console.error("Error sharing:", err);
+            }
+        } else {
+            // Fallback if browser doesn't support native sharing
+            navigator.clipboard.writeText(eventUrl);
+            alert("Link copied to clipboard!");
+        }
+    };
 
     // Cycle through the 3 states
     const cycleViewState = () => {
@@ -205,7 +229,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                                     title="You have manage access to this event"
                                     size='sm'
                                     option='outline'
-                                    onClick={() => console.log("Action triggered!")}
+                                    onClick={() => navigate(`/manage-event/${event?.slug}`)}
                                     button={<TagButton variant="purple" text='Manage' rightImg={<ArrowRight2 size={12} />} size='sm' />}
                                 />
                             )}
@@ -240,6 +264,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                                         <TextButton
                                             rightImg={<Send2 variant='Bulk' />}
                                             text="Share" variant='tertiary'
+                                            onClick={handleShare}
                                         />
                                         <TextButton
                                             onClick={cycleViewState}
@@ -270,10 +295,10 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                                             )}
                                         </div>
                                     ))}
-                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-md text-sm text-gray-500 border border-gray-100 mt-2">
+                                    {/* <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-md text-sm text-gray-500 border border-gray-100 mt-2">
                                         <span className="font-semibold text-gray-700">Coordinates:</span>
                                         <span>{event.latitude}° N, {event.longitude}° E</span>
-                                    </div>
+                                    </div> */}
                                 </section>
 
                                 <div className="space-y-2 py-6 px-8">
@@ -311,7 +336,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                                         <span className="text-[#8A9191] text-sm font-medium">{event.furtherDirections}</span>
                                     </div>
                                     {(event.latitude !== 0 || event.longitude !== 0) && (
-                                        <div className="w-full h-[200px] rounded-xl overflow-hidden mt-4 border border-[#E5E7E3]">
+                                        <div className="w-full h-[350px] rounded-2xl overflow-hidden mt-4 border border-[#E5E7E3]">
                                             <iframe
                                                 width="100%"
                                                 height="100%"
@@ -327,7 +352,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
 
                                 <div className="flex flex-col gap-2 py-6 px-8">
                                     <h3 className="text-base font-medium text-[#8A9191] paytone">Going</h3>
-                                    <div className="flex overflow-x-auto scrollbar-hide gap-4 p-4">
+                                    <div className="flex overflow-x-auto scrollbar-hide gap-4">
                                         <div className="flex overflow-x-auto scrollbar-hide gap-4 p-4">
                                             {event.going.map((guest, index) => (
                                                 <div key={index} className='flex flex-col items-center justify-center gap-1 w-[112px] shrink-0 h-[90px] p-3 rounded-[12px] bg-[#FFFFFF] drop-shadow-[0px_4px_16px_rgba(0,0,0,0.04)]'>
@@ -359,7 +384,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                             <section className="w-[513px] h-fit py-6 flex justify-between">
                                 <TagButton text="Back" leftImg={<ArrowCircleLeft2 size={16} variant='Bold' />} variant="white" size="lg" onClick={onClose} />
                                 <div className="flex gap-4">
-                                    <TagButton text="share" rightImg={<Send2 color="black" variant="Bold" />} variant="white" size="lg" />
+                                    <TagButton text="share" rightImg={<Send2 color="black" variant="Bold" />} variant="white" size="lg" onClick={handleShare} />
                                     {/* 👇 Cycle State Toggle to reset to Collapsed (State 1) */}
                                     <TagButton text="Collapse" rightImg={<Maximize1 color="black" variant="Bold" />} variant="white" size="lg" onClick={cycleViewState} />
                                 </div>
