@@ -90,7 +90,7 @@ function EventsList() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setTimeout(() => setSelectedEventId(null), 300); // clear after animation
+    setTimeout(() => setSelectedEventId(null), 300); // clear after
   };
 
   // Group events by date for display
