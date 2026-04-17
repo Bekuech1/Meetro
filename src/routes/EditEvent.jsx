@@ -277,7 +277,7 @@ function EditEvent() {
         formData.append("description", editedEvent.description);
       }
       // Append optional fields
-      if (editedEvent.chipInDetails) {
+      if (editedEvent.chipInDetails && settings?.hasChipIn) {
         formData.append(
           "chipInDetails",
           JSON.stringify(editedEvent.chipInDetails)
@@ -523,7 +523,7 @@ function EditEvent() {
                   leftImg={<Add />}
                 />
               )}
-              {!settings?.hasChipIn && (
+              {/* {!settings?.hasChipIn && (
                 <TagButton
                   text="Chip In"
                   leftImg={<Add />}
@@ -535,7 +535,7 @@ function EditEvent() {
                     }));
                   }}
                 />
-              )}
+              )} */}
               {!settings?.hasDressCode && (
                 <TagButton
                   text="Dress code"
