@@ -19,7 +19,7 @@ import { twMerge } from "tailwind-merge";
 
 function Profile() {
   // Auth store
-  const { user, userEventsCount } = useAuthStore();
+  const { user } = useAuthStore();
   // Filter state
   const [filter, setFilter] = useState("all");
   // Fetch past user events
@@ -32,6 +32,19 @@ function Profile() {
     queryFn: () => eventsApi.getUserEvents("past"),
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
+
+  // Fetch user events count
+  const { data: userEventsCount, isLoading: isUserEventsCountLoading } =
+    useQuery({
+      queryKey: ["userEventsCount"],
+      queryFn: eventsApi.getUserEventsCount,
+      onError: error => {
+        console.log(
+          "Error fetching user events count:",
+          error?.response?.data?.message || error.message
+        );
+      },
+    });
 
   // Filter events client-side and attach isHost flag
   const filteredEvents = (events || []).filter(event => {
@@ -104,7 +117,11 @@ function Profile() {
               <div className="flex py-3 justify-center border rounded-[16px] border-[#F0F0F0]">
                 <div className="text-center flex-1 flex flex-col">
                   <span className="paytone text-[#001010] text-base">
-                    {userEventsCount?.hosted ?? 0}
+                    {isUserEventsCountLoading ? (
+                      <div className="h-4 w-8 bg-gray-300 animate-pulse rounded mx-auto"></div>
+                    ) : (
+                      userEventsCount?.hosted || 0
+                    )}
                   </span>
                   <span className="text-[12px] leading-[18px] font-bold text-[#8A9191]">
                     Hosted
@@ -113,7 +130,11 @@ function Profile() {
                 <div className="min-h-full w-[1px] bg-[#F0F0F0]"></div>
                 <div className="text-center flex-1 flex flex-col">
                   <span className="paytone text-[#001010] text-base">
-                    {userEventsCount?.attended ?? 0}
+                    {isUserEventsCountLoading ? (
+                      <div className="h-4 w-8 bg-gray-300 animate-pulse rounded mx-auto"></div>
+                    ) : (
+                      userEventsCount?.attended || 0
+                    )}
                   </span>
                   <span className="text-[12px] leading-[18px] font-bold text-[#8A9191]">
                     Attended

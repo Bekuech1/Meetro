@@ -26,8 +26,6 @@ export default function GoogleButton({ onSuccess, setError, error }) {
       setUser(user);
       // Set last fetched profile time
       setLastFetchedProfile(Date.now());
-      // Set user events count
-      setUserEventsCount(getProfileResponse.userEventsCount);
     },
     onSuccess: () => {
       // Close modal

@@ -6,14 +6,9 @@ export const useAuthStore = create(
     set => ({
       accessToken: null,
       user: null,
-      userEventsCount: {
-        hosted: 0,
-        attended: 0,
-      },
       lastFetchedProfile: null,
       setAccessToken: accessToken => set({ accessToken }),
       setUser: user => set({ user }),
-      setUserEventsCount: userEventsCount => set({ userEventsCount }),
       setLastFetchedProfile: lastFetchedProfile => set({ lastFetchedProfile }),
     }),
     {
@@ -21,7 +16,6 @@ export const useAuthStore = create(
       partialize: state => ({
         accessToken: state.accessToken,
         user: state.user,
-        userEventsCount: state.userEventsCount,
         lastFetchedProfile: state.lastFetchedProfile,
       }),
     }

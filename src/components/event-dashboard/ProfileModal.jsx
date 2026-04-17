@@ -4,7 +4,9 @@ import { useEffect, useState, useRef } from "react";
 import { Link, NavLink } from "react-router";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { authApi } from "@/services/authApi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { twMerge } from "tailwind-merge";
+import { eventsApi } from "@/services/eventsApi";
 import CloseIcon from "@/assets/icons/CloseIcon";
 import TextButton from "../layout-components/Buttons/TextButtons";
 import Avatar from "../layout-components/Avatar";
@@ -14,7 +16,20 @@ export default function ProfileModal({ open, setOpen }) {
   const [isMobile, setIsMobile] = useState(false);
 
   // User details
-  const { user, setUser, setAccessToken, userEventsCount } = useAuthStore();
+  const { user, setUser, setAccessToken } = useAuthStore();
+
+  // Fetch user events count
+  const { data: userEventsCount, isLoading: isUserEventsCountLoading } =
+    useQuery({
+      queryKey: ["userEventsCount"],
+      queryFn: eventsApi.getUserEventsCount,
+      onError: error => {
+        console.log(
+          "Error fetching user events count:",
+          error?.response?.data?.message || error.message
+        );
+      },
+    });
 
   const { mutate: logoutMutate, isPending: loading } = useMutation({
     mutationFn: authApi.logout,
@@ -64,11 +79,13 @@ export default function ProfileModal({ open, setOpen }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, setOpen]);
 
-  if (!open) return null;
   return (
     <div
       ref={profileModalRef}
-      className="satoshi w-full z-20 md:z-auto h-full md:h-auto bg-[#f0f0f0] fixed top-0 left-0 md:top-[calc(100%+13px)] md:left-auto md:right-0 md:absolute md:rounded-[24px] overflow-hidden shadow-[0_4px_24px_0_rgba(0,0,0,0.25)] md:min-w-[272px] flex flex-col md:p-1"
+      className={twMerge(
+        "satoshi w-full z-20 md:z-auto h-full md:h-auto bg-[#f0f0f0] fixed top-0 left-0 md:top-[calc(100%+13px)] md:left-auto md:right-0 md:absolute md:rounded-[24px] overflow-hidden shadow-[0_4px_24px_0_rgba(0,0,0,0.25)] md:min-w-[272px] flex flex-col md:p-1",
+        open ? "block pointer-events-auto" : "hidden pointer-events-none"
+      )}
     >
       {/* Top */}
       <div className="py-3 px-6 md:p-2 flex flex-col gap-4">
@@ -95,7 +112,11 @@ export default function ProfileModal({ open, setOpen }) {
             <div className="flex py-3 justify-center border rounded-[16px] border-[#F0F0F0]">
               <div className="text-center flex-1 flex flex-col">
                 <span className="paytone text-[#001010] text-base">
-                  {userEventsCount?.hosted ?? 0}
+                  {isUserEventsCountLoading ? (
+                    <div className="h-4 w-8 bg-gray-300 animate-pulse rounded mx-auto"></div>
+                  ) : (
+                    userEventsCount?.hosted || 0
+                  )}
                 </span>
                 <span className="text-[12px] leading-[18px] font-bold text-[#8A9191]">
                   Hosted
@@ -104,7 +125,11 @@ export default function ProfileModal({ open, setOpen }) {
               <div className="min-h-full w-[1px] bg-[#F0F0F0]"></div>
               <div className="text-center flex-1 flex flex-col">
                 <span className="paytone text-[#001010] text-base">
-                  {userEventsCount?.attended ?? 0}
+                  {isUserEventsCountLoading ? (
+                    <div className="h-4 w-8 bg-gray-300 animate-pulse rounded mx-auto"></div>
+                  ) : (
+                    userEventsCount?.attended || 0
+                  )}
                 </span>
                 <span className="text-[12px] leading-[18px] font-bold text-[#8A9191]">
                   Attended
@@ -118,7 +143,8 @@ export default function ProfileModal({ open, setOpen }) {
                   onClick={() => setOpen(false)}
                   to="/profile"
                   className={({ isActive }) =>
-                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${isActive ? "bg-[#F0F0F0]" : ""
+                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${
+                      isActive ? "bg-[#F0F0F0]" : ""
                     }`
                   }
                 >
@@ -137,7 +163,8 @@ export default function ProfileModal({ open, setOpen }) {
                   to="/settings"
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${isActive ? "bg-[#F0F0F0]" : ""
+                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${
+                      isActive ? "bg-[#F0F0F0]" : ""
                     }`
                   }
                 >
@@ -156,7 +183,8 @@ export default function ProfileModal({ open, setOpen }) {
                   to="/contact"
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${isActive ? "bg-[#F0F0F0]" : ""
+                    `flex items-center gap-x-1 px-1 py-3 md:py-2 rounded-[8px] transition-colors hover:bg-[#F0F0F0] ${
+                      isActive ? "bg-[#F0F0F0]" : ""
                     }`
                   }
                 >
