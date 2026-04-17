@@ -5,13 +5,8 @@ import { useEffect } from "react";
 
 export function useRehydrateUser() {
   const refreshInterval = 15 * 60 * 1000; // 15 minutes
-  const {
-    accessToken,
-    setUser,
-    setUserEventsCount,
-    lastFetchedProfile,
-    setLastFetchedProfile,
-  } = useAuthStore();
+  const { accessToken, setUser, lastFetchedProfile, setLastFetchedProfile } =
+    useAuthStore();
 
   useEffect(() => {
     const handleFocus = async () => {
@@ -22,11 +17,9 @@ export function useRehydrateUser() {
           Date.now() - lastFetchedProfile > refreshInterval)
       ) {
         try {
-          const { user, userEventsCount } = await authApi.getProfile();
+          const { user } = await authApi.getProfile();
           if (!user?.photo) user.photo = randomProfileImage();
           setUser(user);
-
-          setUserEventsCount(userEventsCount);
           setLastFetchedProfile(Date.now());
         } catch {}
       }
@@ -34,11 +27,5 @@ export function useRehydrateUser() {
 
     window.addEventListener("focus", handleFocus);
     return () => window.removeEventListener("focus", handleFocus);
-  }, [
-    accessToken,
-    setUser,
-    lastFetchedProfile,
-    setLastFetchedProfile,
-    setUserEventsCount,
-  ]);
+  }, [accessToken, setUser, lastFetchedProfile, setLastFetchedProfile]);
 }

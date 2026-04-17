@@ -5,6 +5,10 @@ export const eventsApi = {
     const eventsResponse = await API.get(`/events/my-events?filter=${filter}`);
     return eventsResponse.data.data;
   },
+  getUserEventsCount: async () => {
+    const countResponse = await API.get(`/events/event-counts`);
+    return countResponse.data.data;
+  },
   getEvent: async eventId => {
     const eventResponse = await API.get(`/events/${eventId}`);
     return eventResponse.data.data;

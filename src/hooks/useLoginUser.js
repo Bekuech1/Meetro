@@ -4,8 +4,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useMutation } from "@tanstack/react-query";
 
 export function useLoginUser({ onSuccess, onError }) {
-  const { setUser, setAccessToken, setUserEventsCount, setLastFetchedProfile } =
-    useAuthStore();
+  const { setUser, setAccessToken, setLastFetchedProfile } = useAuthStore();
 
   const { mutate: loginMutate, isPending: loading } = useMutation({
     mutationFn: async loginData => {
@@ -22,8 +21,6 @@ export function useLoginUser({ onSuccess, onError }) {
       setUser(user);
       // Set last fetched profile time
       setLastFetchedProfile(Date.now());
-      // Set user events count in store
-      setUserEventsCount(getProfileResponse.userEventsCount);
     },
     onSuccess: onSuccess || (() => {}),
     onError: onError || (() => {}),
