@@ -3,6 +3,7 @@ import TextButton from "../layout-components/Buttons/TextButtons";
 import { Link } from "react-router";
 
 const NoEvents = ({ hasEvents = false, message = null }) => {
+
   return (
     <div className="flex flex-col justify-center flex-1">
       <div className="flex flex-col items-center gap-6 ">
