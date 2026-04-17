@@ -23,6 +23,7 @@ export default function DeleteEventModal({ eventId, showAlert = false }) {
       // Revalidate events list or update state as needed here
       queryClient.invalidateQueries(["user-events"]);
       queryClient.invalidateQueries(["event", eventId]);
+      queryClient.invalidateQueries(["userEventsCount"]);
 
       // Redirect to home after short delay to allow modal to close
       setTimeout(() => {

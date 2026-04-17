@@ -40,10 +40,13 @@ import {
 } from "iconsax-reactjs";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
+import { useAuthStore } from "@/stores/useAuthStore";
 import EventEntryCodeModal from "@/components/layout-components/Events/EventEntryCodeModal";
 import EventAttendeeLimitModal from "@/components/layout-components/Events/EventAttendeeLimitModal";
 
 function CreateEvent() {
+  // User
+  const { user } = useAuthStore();
   // Navigation
   const navigate = useNavigate();
   // Query Client
@@ -74,6 +77,18 @@ function CreateEvent() {
     !settings?.hasChipIn ||
     !settings?.hasDressCode;
 
+  // Initial chip in details for state
+  const initialChipInDetails = {
+    chipInType: "",
+    amount: "",
+    bankDetails: {
+      accountName: user?.bankDetails?.accountName || "",
+      accountNumber: user?.bankDetails?.accountNumber || "",
+      bankName: user?.bankDetails?.bankName || "",
+      bankCode: user?.bankDetails?.bankCode || "",
+    },
+  };
+
   // Initial event state
   const initialEventState = {
     title: "",
@@ -98,7 +113,7 @@ function CreateEvent() {
     eventType: "offline",
     meetingURL: "",
     cohosts: [],
-    chipInDetails: null,
+    chipInDetails: initialChipInDetails,
     entryCode: null,
     attendeeLimit: null,
   };
@@ -279,7 +294,7 @@ function CreateEvent() {
         formData.append("description", eventData.description);
       }
       // Append optional fields
-      if (eventData.chipInDetails) {
+      if (eventData.chipInDetails && settings?.hasChipIn) {
         formData.append(
           "chipInDetails",
           JSON.stringify(eventData.chipInDetails)
@@ -294,13 +309,14 @@ function CreateEvent() {
       if (eventData.dressCode) {
         formData.append("dressCode", JSON.stringify(eventData.dressCode));
       }
-      console.log(formData);
       return eventsApi.createEvent(formData);
     },
     onSuccess: data => {
       if (data.status === "success") {
         // Invalidate queries to refetch the updated data
         queryClient.invalidateQueries(["user-events"]);
+        queryClient.invalidateQueries(["userEventsCount"]);
+
         // Clear file
         setImageFile(null);
         // Set status to success
@@ -578,7 +594,7 @@ function CreateEvent() {
                           e.stopPropagation();
                           setEvent(prev => ({
                             ...prev,
-                            chipInDetails: null,
+                            chipInDetails: initialChipInDetails,
                           }));
                           setSettings(prev => ({
                             ...prev,

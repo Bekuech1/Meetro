@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { ArrowDown2, ArrowUp2, Map1, Notification } from "iconsax-reactjs";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { twMerge } from "tailwind-merge";
+import { Link } from "react-router";
 
 // Notifications
 export default function TopNavigation() {
@@ -39,7 +40,7 @@ export default function TopNavigation() {
     >
       <div className="max-w-[1440px] satoshi py-3 px-4 md:px-8 mx-auto w-full flex-1  gap-4 flex-wrap flex flex-col min-[300px]:flex-row items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <Link to="/home" className="flex items-center gap-2">
           <div className="hidden min-[400px]:block">
             <MeetroLogoAlt />
           </div>
@@ -49,7 +50,7 @@ export default function TopNavigation() {
           <span className="bg-linear-to-r satoshi flex justify-center items-center from-[#BCFF5C] to-[#C0A8FF] text-[8px] font-[700] min-w-[26px] size-fit capitalize px-1 h-[14px] leading-[14px] rounded-2xl text-[#011F0F]">
             Beta
           </span>
-        </div>
+        </Link>
         {/* State select */}
         <div className="rounded-full hidden min-[680px]:flex items-center max-h-11 justify-between bg-[#f8f8f7] border border-[#E5E7E3] py-[10px] min-w-[282px] px-[6px]">
           <div className="flex items-center">
