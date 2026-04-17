@@ -676,100 +676,104 @@ function CreateEvent() {
               )}
             </div>
             {/*Event Settings */}
-            <div className="mt-6">
-              <TextButton
-                text="Event Settings"
-                variant="tertiary"
-                onClick={() => setEventSettingsOpen(prev => !prev)}
-                className={twMerge(
-                  "w-full relative h-9 text-sm flex justify-between",
-                  eventSettingsOpen && "bg-[#E5E7E3]"
-                )}
-                rightImg={
-                  <ArrowDown2
-                    variant="Outline"
-                    color="#011F0F"
-                    className={`absolute right-4 transition-all duration-200 ease-in-out top-1/2 -translate-y-1/2 ${eventSettingsOpen ? "rotate-180" : ""}`}
-                  />
-                }
-              />
-              <div
-                className={`max-h-0 overflow-hidden transition-all duration-200 ease-in-out ${eventSettingsOpen ? "max-h-[500px]" : ""}`}
-              >
-                <div className="flex flex-col pt-3 gap-y-3">
-                  {/* Guest List Approval */}
-                  <ListInput
-                    placeholder="Approve all guests before the event"
-                    title="Guest List Approval"
-                    leftIcon={<UserTick variant="Bold" />}
-                    onClick={() =>
-                      setSettings(prev => ({
-                        ...prev,
-                        hasGuestListApproval: !prev.hasGuestListApproval,
-                      }))
-                    }
-                    rightIcon={
-                      <Toggle
-                        checked={settings.hasGuestListApproval}
-                        readOnly
-                        className="pointer-events-none"
-                      />
-                    }
-                  />
-                  {/* Entry Code */}
-                  <ListInput
-                    placeholder="Require attendees to enter a code"
-                    title="Entry Code"
-                    onClick={() => {
-                      // toggle the entry code
-                      setSettings(prev => ({
-                        ...prev,
-                        hasEntryCode: !prev.hasEntryCode,
-                      }));
-                      // clear validation
-                      setValidation(prev => ({ ...prev, entryCode: "" }));
-                      // if the user unchecks the entry code, remove the entry code
-                      if (settings.hasEntryCode) {
-                        setEvent(prev => ({ ...prev, entryCode: "" }));
+
+            {0 === 3 && (
+              <div className="mt-6">
+                <TextButton
+                  text="Event Settings"
+                  variant="tertiary"
+                  onClick={() => setEventSettingsOpen(prev => !prev)}
+                  className={twMerge(
+                    "w-full relative h-9 text-sm flex justify-between",
+                    eventSettingsOpen && "bg-[#E5E7E3]"
+                  )}
+                  rightImg={
+                    <ArrowDown2
+                      variant="Outline"
+                      color="#011F0F"
+                      className={`absolute right-4 transition-all duration-200 ease-in-out top-1/2 -translate-y-1/2 ${eventSettingsOpen ? "rotate-180" : ""}`}
+                    />
+                  }
+                />
+                <div
+                  className={`max-h-0 overflow-hidden transition-all duration-200 ease-in-out ${eventSettingsOpen ? "max-h-[500px]" : ""}`}
+                >
+                  <div className="flex flex-col pt-3 gap-y-3">
+                    {/* Guest List Approval */}
+                    <ListInput
+                      placeholder="Approve all guests before the event"
+                      title="Guest List Approval"
+                      leftIcon={<UserTick variant="Bold" />}
+                      onClick={() =>
+                        setSettings(prev => ({
+                          ...prev,
+                          hasGuestListApproval: !prev.hasGuestListApproval,
+                        }))
                       }
-                    }}
-                    leftIcon={<Lock1 variant="Bold" />}
-                    rightIcon={
-                      <Toggle
-                        checked={settings.hasEntryCode}
-                        readOnly
-                        className="pointer-events-none"
-                      />
-                    }
-                  />
-                  {/* Attendee Limit */}
-                  <ListInput
-                    placeholder="Set a limit to the number of attendees"
-                    title="Attendee Limit"
-                    onClick={() => {
-                      setSettings(prev => ({
-                        ...prev,
-                        hasAttendeeLimit: !prev.hasAttendeeLimit,
-                      }));
-                      // if the user unchecks the attendee limit, remove the attendee limit
-                      if (settings.hasAttendeeLimit) {
-                        setEvent(prev => ({ ...prev, attendeeLimit: null }));
-                      } else {
-                        setEvent(prev => ({ ...prev, attendeeLimit: 10 }));
+                      rightIcon={
+                        <Toggle
+                          checked={settings.hasGuestListApproval}
+                          readOnly
+                          className="pointer-events-none"
+                        />
                       }
-                    }}
-                    leftIcon={<People variant="Bold" />}
-                    rightIcon={
-                      <Toggle
-                        checked={settings.hasAttendeeLimit}
-                        readOnly
-                        className="pointer-events-none"
-                      />
-                    }
-                  />
+                    />
+                    {/* Entry Code */}
+                    <ListInput
+                      placeholder="Require attendees to enter a code"
+                      title="Entry Code"
+                      onClick={() => {
+                        // toggle the entry code
+                        setSettings(prev => ({
+                          ...prev,
+                          hasEntryCode: !prev.hasEntryCode,
+                        }));
+                        // clear validation
+                        setValidation(prev => ({ ...prev, entryCode: "" }));
+                        // if the user unchecks the entry code, remove the entry code
+                        if (settings.hasEntryCode) {
+                          setEvent(prev => ({ ...prev, entryCode: "" }));
+                        }
+                      }}
+                      leftIcon={<Lock1 variant="Bold" />}
+                      rightIcon={
+                        <Toggle
+                          checked={settings.hasEntryCode}
+                          readOnly
+                          className="pointer-events-none"
+                        />
+                      }
+                    />
+                    {/* Attendee Limit */}
+                    <ListInput
+                      placeholder="Set a limit to the number of attendees"
+                      title="Attendee Limit"
+                      onClick={() => {
+                        setSettings(prev => ({
+                          ...prev,
+                          hasAttendeeLimit: !prev.hasAttendeeLimit,
+                        }));
+                        // if the user unchecks the attendee limit, remove the attendee limit
+                        if (settings.hasAttendeeLimit) {
+                          setEvent(prev => ({ ...prev, attendeeLimit: null }));
+                        } else {
+                          setEvent(prev => ({ ...prev, attendeeLimit: 10 }));
+                        }
+                      }}
+                      leftIcon={<People variant="Bold" />}
+                      rightIcon={
+                        <Toggle
+                          checked={settings.hasAttendeeLimit}
+                          readOnly
+                          className="pointer-events-none"
+                        />
+                      }
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
             <div className="py-6">
               {/* Save buttons */}
               <div className="flex items-center justify-between">

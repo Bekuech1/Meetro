@@ -76,7 +76,7 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     if (!validateForm()) return;
     setEditedCohosts(s => [...s, cohost]);
     setCohost({ email: "", role: "", photo: "", name: "", file: null });
-    setCurrentStep(2);
+    goToNextStep();
   };
 
   // Reset all data to initial state
@@ -271,13 +271,6 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
                   options={roleOptions}
                 />
               </FormGroup>
-              {/* Add cohost button */}
-              <TextButton
-                variant="secondary"
-                text="Add Cohost"
-                className="sm:min-w-auto min-w-full"
-                onClick={addCohost}
-              />
             </div>
             <div className="flex items-center justify-center md:justify-start gap-x-4">
               <TextButton
@@ -289,8 +282,8 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
                 }}
               />
               <TextButton
-                text="Continue"
-                onClick={goToNextStep}
+                text="Add Cohost"
+                onClick={addCohost}
                 className="min-w-auto"
               />
             </div>
