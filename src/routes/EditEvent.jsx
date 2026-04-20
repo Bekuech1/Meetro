@@ -94,6 +94,7 @@ function EditEvent() {
         hasDescription: eventData?.description ? true : false,
         hasChipIn: eventData?.chipInDetails ? true : false,
         hasDressCode: eventData?.dressCode ? true : false,
+        hasCohosts: eventData?.cohosts?.length > 0 ? true : false,
       });
     }
   }, [event]);
@@ -170,6 +171,7 @@ function EditEvent() {
       hasDescription: initialEvent.description ? true : false,
       hasChipIn: initialEvent.chipInDetails ? true : false,
       hasDressCode: initialEvent.dressCode ? true : false,
+      hasCohosts: initialEvent.cohosts?.length > 0 ? true : false,
     });
     setImageFile(null);
     setValidation({
@@ -188,6 +190,7 @@ function EditEvent() {
   const hasNoSettings =
     !settings?.hasDescription ||
     !settings?.hasChipIn ||
+    !settings?.hasCohosts ||
     !settings?.hasDressCode;
 
   // Format location for display in ListInput
@@ -224,7 +227,7 @@ function EditEvent() {
       errors.location = "Event location is required.";
     }
 
-    if (editedEvent.cohosts.length <= 0) {
+    if (settings?.hasCohosts && editedEvent.cohosts.length <= 0) {
       errors.cohosts = "At least one cohost is required.";
     }
 
@@ -263,7 +266,9 @@ function EditEvent() {
       if (editedEvent.endDate) {
         formData.append("endDate", new Date(editedEvent.endDate).toISOString());
       }
-      formData.append("cohosts", JSON.stringify(editedEvent.cohosts));
+      if (settings?.hasCohosts) {
+        formData.append("cohosts", JSON.stringify(editedEvent.cohosts));
+      }
       formData.append("category", JSON.stringify(editedEvent.category));
       formData.append("eventType", editedEvent.eventType);
       // Append image if it exists
@@ -424,14 +429,16 @@ function EditEvent() {
             />
           </Modal.Open>
           {/* Event cohosts and collaborators */}
-          <Modal.Open opens="event-cohosts">
-            <ListInput
-              error={validation.cohosts}
-              placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
-              leftIcon={<Crown variant="Bold" />}
-              content={cohostsFormatted}
-            />
-          </Modal.Open>
+          {settings?.hasCohosts && (
+            <Modal.Open opens="event-cohosts">
+              <ListInput
+                error={validation.cohosts}
+                placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
+                leftIcon={<Crown variant="Bold" />}
+                content={cohostsFormatted}
+              />
+            </Modal.Open>
+          )}
           {/* Event categories */}
           <Modal.Open opens="event-type">
             <ListInput
@@ -536,6 +543,19 @@ function EditEvent() {
                   }}
                 />
               )} */}
+              {!settings?.hasCohosts && (
+                <TagButton
+                  text="Cohosts"
+                  leftImg={<Add />}
+                  className="satoshi"
+                  onClick={() => {
+                    setSettings(prev => ({
+                      ...prev,
+                      hasCohosts: !prev.hasCohosts,
+                    }));
+                  }}
+                />
+              )}
               {!settings?.hasDressCode && (
                 <TagButton
                   text="Dress code"

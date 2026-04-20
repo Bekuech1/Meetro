@@ -120,7 +120,7 @@ function Profile() {
                     {isUserEventsCountLoading ? (
                       <div className="h-4 w-8 bg-gray-300 animate-pulse rounded mx-auto"></div>
                     ) : (
-                      userEventsCount?.hosted || 0
+                      userEventsCount?.created || 0
                     )}
                   </span>
                   <span className="text-[12px] leading-[18px] font-bold text-[#8A9191]">

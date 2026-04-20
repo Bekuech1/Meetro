@@ -67,6 +67,7 @@ function CreateEvent() {
     hasDressCode: false,
     hasChipIn: false,
     hasEntryCode: false,
+    hasCohosts: true,
     hasGuestListApproval: false,
     hasAttendeeLimit: false,
   });
@@ -75,6 +76,7 @@ function CreateEvent() {
   const hasNoSettings =
     !settings?.hasDescription ||
     !settings?.hasChipIn ||
+    !settings?.hasCohosts ||
     !settings?.hasDressCode;
 
   // Initial chip in details for state
@@ -241,7 +243,7 @@ function CreateEvent() {
       errors.location = "Event location is required.";
     }
 
-    if (event.cohosts.length <= 0) {
+    if (settings?.hasCohosts && event.cohosts.length <= 0) {
       errors.cohosts = "At least one cohost is required.";
     }
 
@@ -280,7 +282,9 @@ function CreateEvent() {
       if (eventData.endDate) {
         formData.append("endDate", new Date(eventData.endDate).toISOString());
       }
-      formData.append("cohosts", JSON.stringify(eventData.cohosts));
+      if (settings?.hasCohosts) {
+        formData.append("cohosts", JSON.stringify(eventData.cohosts));
+      }
       formData.append("category", JSON.stringify(eventData.category));
       formData.append("eventType", eventData.eventType);
       // Append image if it exists
@@ -486,14 +490,34 @@ function CreateEvent() {
                 />
               </Modal.Open>
               {/* Event cohosts and collaborators */}
-              <Modal.Open opens="event-cohosts">
-                <ListInput
-                  error={validation.cohosts}
-                  placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
-                  leftIcon={<Crown variant="Bold" />}
-                  content={cohostsFormatted}
-                />
-              </Modal.Open>
+              {settings?.hasCohosts && (
+                <Modal.Open opens="event-cohosts">
+                  <ListInput
+                    error={validation.cohosts}
+                    placeholder="Add Cohosts, Collaborators, Speakers e.t.c"
+                    leftIcon={<Crown variant="Bold" />}
+                    content={cohostsFormatted}
+                    rightIcon={
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          setEvent(prev => ({
+                            ...prev,
+                            cohosts: [],
+                          }));
+                          setSettings(prev => ({
+                            ...prev,
+                            hasCohosts: false,
+                          }));
+                          setValidation(prev => ({ ...prev, cohosts: "" }));
+                        }}
+                      >
+                        <Trash variant="Outline" size={16} />
+                      </button>
+                    }
+                  />
+                </Modal.Open>
+              )}
               {/* Event categories */}
               <Modal.Open opens="event-type">
                 <ListInput
@@ -641,6 +665,19 @@ function CreateEvent() {
                         setSettings(prev => ({
                           ...prev,
                           hasDescription: !prev.hasDescription,
+                        }))
+                      }
+                      leftImg={<Add />}
+                    />
+                  )}
+                  {!settings?.hasCohosts && (
+                    <TagButton
+                      text="Cohosts"
+                      className="satoshi"
+                      onClick={() =>
+                        setSettings(prev => ({
+                          ...prev,
+                          hasCohosts: !prev.hasCohosts,
                         }))
                       }
                       leftImg={<Add />}

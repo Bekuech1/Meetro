@@ -76,7 +76,7 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     if (!validateForm()) return;
     setEditedCohosts(s => [...s, cohost]);
     setCohost({ email: "", role: "", photo: "", name: "", file: null });
-    goToNextStep();
+    setCurrentStep(2);
   };
 
   // Reset all data to initial state
@@ -94,14 +94,6 @@ export default function EventCohostsModal({ onSave, cohostsData }) {
     if (editedCohosts.length === 1) {
       setHasAccount(true);
       setCurrentStep(1);
-    }
-  };
-
-  // Navigate to the next step if there is at least one cohost added
-  const goToNextStep = () => {
-    if (editedCohosts.length === 0) return;
-    if (currentStep < 2) {
-      setCurrentStep(currentStep + 1);
     }
   };
 
