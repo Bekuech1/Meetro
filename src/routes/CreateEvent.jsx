@@ -304,10 +304,10 @@ function CreateEvent() {
           JSON.stringify(eventData.chipInDetails)
         );
       }
-      if (eventData.location) {
+      if (eventData.eventType === "offline") {
         formData.append("location", JSON.stringify(eventData.location));
       }
-      if (eventData.meetingURL) {
+      if (eventData.eventType === "online") {
         formData.append("meetingURL", eventData.meetingURL);
       }
       if (eventData.dressCode) {

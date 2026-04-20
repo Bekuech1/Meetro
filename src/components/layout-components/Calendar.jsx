@@ -116,6 +116,12 @@ export default function Calendar({
 
   const days = useMemo(() => buildCalendarDays(year, month), [year, month]);
 
+  // Get today's date for comparison (date-only, no time)
+  const today = useMemo(() => {
+    const t = new Date();
+    return new Date(t.getFullYear(), t.getMonth(), t.getDate());
+  }, []);
+
   // Previous month
   const previousMonth = () => {
     if (month === 0) {
@@ -224,17 +230,21 @@ export default function Calendar({
               !day.isOutside &&
               isSameDay(day.date, selectedDate);
 
+            const isPast = day.date < today && !day.isOutside;
+
             return (
               <div key={`${day.date.getTime()}-${day.isOutside ? "o" : "i"}`}>
                 <button
                   type="button"
-                  disabled={day.isOutside}
+                  disabled={day.isOutside || isPast}
                   onClick={() => onSelect?.(day.date)}
                   className={`md:h-11 h-[38px] w-full rounded-[7px] text-[11px] md:text-[12px] md:leading-[18px] leading-[16px] transition-all duration-200 ease-in-out ${
                     day.isOutside
                       ? "bg-transparent shadow-none pointer-events-none text-[#00175426]"
-                      : "cursor-pointer text-[#001010] bg-white shadow-[0px_1px_1px_rgba(0,14,51,0.05)] hover:bg-[#E5E7E3]"
-                  } ${isSelected ? "!bg-[#AEFC40] !text-[#011F0F] hover:!bg-[#AEFC40]" : ""}`}
+                      : isPast
+                        ? "cursor-default text-[#001010] bg-white shadow-[0px_1px_1px_rgba(0,14,51,0.05)] opacity-50"
+                        : "cursor-pointer text-[#001010] bg-white shadow-[0px_1px_1px_rgba(0,14,51,0.05)] hover:bg-[#E5E7E3]"
+                  } ${isSelected ? "!bg-[#AEFC40] !text-[#011F0F] hover:!bg-[#AEFC40] !opacity-100" : ""}`}
                   aria-label={day.date.toDateString()}
                 >
                   {day.date.getDate()}
