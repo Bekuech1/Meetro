@@ -41,8 +41,7 @@ API.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
-    const { setAccessToken, setUser, setUserEventsCount } =
-      useAuthStore.getState();
+    const { setAccessToken, setUser } = useAuthStore.getState();
 
     // If unauthorized - Token has expired
     if (
@@ -95,13 +94,9 @@ API.interceptors.response.use(
           console.error("Error during logout:", error);
         }
 
-        // Redirect first (user data still visible in UI)
-        // window.location.href = "/";
-
         // Clear auth state after redirect initiated
         setUser(null);
         setAccessToken(null);
-        setUserEventsCount({ hosted: 0, attended: 0 });
         localStorage.removeItem("auth-storage");
 
         return Promise.reject(err);
