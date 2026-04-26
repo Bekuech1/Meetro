@@ -38,22 +38,26 @@ import {
   Trash,
   UserTick,
 } from "iconsax-reactjs";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { useAuthStore } from "@/stores/useAuthStore";
 import EventEntryCodeModal from "@/components/layout-components/Events/EventEntryCodeModal";
 import EventAttendeeLimitModal from "@/components/layout-components/Events/EventAttendeeLimitModal";
+import EventPreview from "./EventPreview";
 
 function CreateEvent() {
   // User
   const { user } = useAuthStore();
   // Navigation
   const navigate = useNavigate();
+  const location = useLocation();
   // Query Client
   const queryClient = useQueryClient();
 
   // Image File State
   const [imageFile, setImageFile] = useState(null);
+  // Event preview status
+  const [isPreview, setIsPreview] = useState(false);
   // Random Image
   const randomImage =
     DEFAULT_EVENT_IMAGES[
@@ -190,6 +194,28 @@ function CreateEvent() {
   useEffect(() => {
     return () => clearLocalImages();
   }, []);
+
+  // Populate form from location state (when coming back from preview)
+  useEffect(() => {
+    if (location.state?.event) {
+      const eventData = location.state.event;
+      setEvent(eventData);
+
+      // Update settings based on event data
+      setSettings({
+        hasDescription: !!eventData.description,
+        hasDressCode: !!eventData.dressCode?.type,
+        hasChipIn: !!eventData.chipInDetails,
+        hasEntryCode: !!eventData.entryCode,
+        hasCohosts: eventData.cohosts?.length > 0,
+        hasGuestListApproval: false, // Not implemented yet
+        hasAttendeeLimit: !!eventData.attendeeLimit,
+      });
+
+      // Clear location state to prevent re-population on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Format location for display in ListInput
   const locationFormatted =
@@ -370,6 +396,10 @@ function CreateEvent() {
     setImageFile(null);
     clearLocalImages();
   };
+  if (isPreview) {
+    return <EventPreview event={event} />;
+  }
+
   return (
     <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
       <main className="flex-1 px-4 flex flex-col max-w-[950px] mx-auto w-full py-10">
@@ -387,6 +417,7 @@ function CreateEvent() {
             text="View Preview"
             className="h-8 min-w-0 px-2"
             rightImg={<Eye variant="Bold" size={16} />}
+            onClick={() => setIsPreview(true)}
           />
         </div>
         {/* Create event form */}

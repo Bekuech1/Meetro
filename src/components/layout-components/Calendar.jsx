@@ -242,7 +242,7 @@ export default function Calendar({
                     day.isOutside
                       ? "bg-transparent shadow-none pointer-events-none text-[#00175426]"
                       : isPast
-                        ? "cursor-default text-[#001010] bg-white shadow-[0px_1px_1px_rgba(0,14,51,0.05)] opacity-50"
+                        ? "cursor-default text-[#001010] bg-transparent shadow-none opacity-50"
                         : "cursor-pointer text-[#001010] bg-white shadow-[0px_1px_1px_rgba(0,14,51,0.05)] hover:bg-[#E5E7E3]"
                   } ${isSelected ? "!bg-[#AEFC40] !text-[#011F0F] hover:!bg-[#AEFC40] !opacity-100" : ""}`}
                   aria-label={day.date.toDateString()}

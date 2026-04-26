@@ -21,6 +21,7 @@ import LegalLayout from "./layouts/LegalLayout";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useRehydrateUser } from "./hooks/useRehydrateUser";
 import CreateEvent from "./routes/CreateEvent";
+import EventPreview from "./routes/EventPreview";
 import Profile from "./routes/Profile";
 import Settings from "./routes/Settings";
 
@@ -56,6 +57,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
           </Route>
           <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/event-preview" element={<EventPreview />} />
           <Route
             element={
               <ManageEventLayout>
