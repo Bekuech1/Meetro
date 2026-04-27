@@ -18,76 +18,7 @@ import AvatarGroup from "./AvatarGroup";
 import ConfirmationButton from "./Buttons/ConfirmationButton";
 import Avatar from './Avatar';
 import ProgressBar from './ProgressBar';
-
-
-
-// ==========================================
-// 1. HELPER COMPONENTS (Time & Navbar)
-// ==========================================
-const DigitalTime = ({ time, unit }) => {
-    return (
-        <div className="digital-font flex justify-center items-center">
-            <h6 className="text-white font-normal text-xl">{time}</h6>
-            <span className="text-[#55695E] font-normal text-sm capitalize ml-1">
-                {unit}
-            </span>
-        </div>
-    );
-};
-
-// 👇 The newly extracted Timer Navbar component
-const EventTimerNav = ({ targetDate }) => {
-    const [timeLeft, setTimeLeft] = useState({
-        days: 0, hours: 0, minutes: 0, seconds: 0
-    });
-
-    useEffect(() => {
-        if (!targetDate) return;
-
-        const calculateTimeLeft = () => {
-            const difference = new Date(targetDate) - new Date();
-            if (difference > 0) {
-                setTimeLeft({
-                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                    minutes: Math.floor((difference / 1000 / 60) % 60),
-                    seconds: Math.floor((difference / 1000) % 60)
-                });
-            } else {
-                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-            }
-        };
-
-        calculateTimeLeft(); // initialize immediately
-        const timer = setInterval(calculateTimeLeft, 1000);
-        return () => clearInterval(timer);
-    }, [targetDate]);
-
-    const day = String(timeLeft.days).padStart(2, "0");
-    const hour = String(timeLeft.hours).padStart(2, "0");
-    const minute = String(timeLeft.minutes).padStart(2, "0");
-    const second = String(timeLeft.seconds).padStart(2, "0");
-
-    return (
-        <nav className="bg-[#011F0F] w-full px-8 py-3 flex items-center gap-4 flex-shrink-0">
-            <img src="/Logo.svg" alt="Logo" className="size-6" />
-            <div className="w-full flex justify-end gap-4 items-center">
-                <span className="text-lg font-normal paytone text-[#55695E]">
-                    {(targetDate && new Date(targetDate) > new Date()) ? "starts in" : "started"}
-                </span>
-                <div className="flex size-fit">
-                    <DigitalTime time={day} unit="d" />
-                    <h6 className="text-white text-xl digital-font mx-1">:</h6>
-                    <DigitalTime time={hour} unit="h" />
-                    <h6 className="text-white font-normal text-xl digital-font mx-1">:</h6>
-                    <DigitalTime time={minute} unit="m" />
-                    <h6 className="text-white font-normal text-xl digital-font mx-1">:</h6>
-                    <DigitalTime time={second} unit="s" />
-                </div>
-            </div>
-        </nav>
-    );
-};
+import EventTimerNav from './EventTimerNav';
 
 // ==========================================
 // 2. MAIN MODAL COMPONENT
@@ -99,6 +30,10 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
     const [viewState, setViewState] = useState(1);
     const [textExpanded, setTextExpanded] = useState(false);
     const modalRef = useRef(null);
+
+    const cleanPhotoUrl = (photoUrl) => {
+        return photoUrl ? photoUrl.replace(/^blob:/, '') : '';
+    };
 
     // Handle Escape key press and body scroll lock
     useEffect(() => {
@@ -118,7 +53,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
 
             document.removeEventListener('keydown', handleKeyDown);
             document.body.style.overflow = 'unset';
-            
+
         };
     }, [isOpen, onClose]);
 
@@ -200,7 +135,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                     }`}
             >
                 {/* 👇 The unified Timer Navbar used across ALL states */}
-                {viewState !== 1 && <EventTimerNav targetDate={event?.startDate} />}
+                {viewState !== 1 && <EventTimerNav targetDate={event?.startDate} onClick={onClose} />}
 
                 {/* ============================================================== */}
                 {/* STATES 1 & 2: THE SPLIT VIEW (COLLAPSED / EXPANDED)            */}
@@ -233,25 +168,52 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
                                     button={<TagButton variant="purple" text='Manage' rightImg={<ArrowRight2 size={12} />} size='sm' />}
                                 />
                             )}
-                            <div className='grid gap-1'>
+                            <div className='grid gap-3'>
                                 <span className='text-base text-[#B0B5B5] font-medium paytone'>Hosted by</span>
-                                <div className="flex gap-1 items-center justify-between">
-                                    <div className="flex gap-1 items-center">
-                                        <Avatar size='xs' src={event.host?.photo?.url ? event.host.photo.url : ''} />
-                                        <div className="grid">
-                                            <span className="text-base font-medium text-[#001010]">{event.host?.fullName}</span>
-                                            <span className="text-xs font-medium text-[#8A9191]">Host</span>
+
+                                <div className="flex flex-col gap-4">
+                                    {/* Main Host */}
+                                    {event.host && (
+                                        <div className="flex gap-1 items-center justify-between">
+                                            <div className="flex gap-1 items-center">
+                                                <Avatar size='xs' src={event.host?.photo?.url || ''} />
+                                                <div className="grid">
+                                                    <span className="text-base font-medium text-[#001010]">{event.host?.fullName}</span>
+                                                    <span className="text-xs font-medium text-[#8A9191]">Host</span>
+                                                </div>
+                                            </div>
+                                            <TagButton text="Follow" variant="green" size='sm' />
                                         </div>
-                                    </div>
-                                    <TagButton text="Follow" variant="green" size='sm' />
+                                    )}
+
+                                    {/* Co-hosts (renders only if the array exists and has items) */}
+                                    {event.cohosts && event.cohosts.length > 0 && (
+                                        event.cohosts.map((cohost, index) => (
+                                            <div key={cohost.email || index} className="flex gap-1 items-center justify-between">
+                                                <div className="flex gap-1 items-center">
+                                                    <Avatar size='xs' src={cleanPhotoUrl(cohost?.photo)} />
+                                                    <div className="grid">
+                                                        <span className="text-base font-medium text-[#001010]">{cohost.name}</span>
+                                                        <span className="text-xs font-medium text-[#8A9191]">{cohost.role || 'Co-host'}</span>
+                                                    </div>
+                                                </div>
+                                                <TagButton text="Follow" variant="green" size='sm' />
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
                             </div>
                             <div className='grid gap-1'>
                                 <span className='text-base text-[#B0B5B5] font-medium paytone'>Attending</span>
-                                <div className="flex items-center gap-4 pointer-events-none">
-                                    <AvatarGroup count={remainingCount} size='md' src={goingPhotos} />
-                                    <TagButton leftImg={<TickCircle variant='Bold' />} text="Going" variant="green" size='lg' />
-                                </div>
+                                {goingGuests.length > 0 && (
+                                    <div className='grid gap-1'>
+                                        <span className='text-base text-[#B0B5B5] font-medium paytone'>Attending</span>
+                                        <div className="flex items-center gap-4 pointer-events-none">
+                                            <AvatarGroup count={remainingCount} size='md' src={goingPhotos} />
+                                            <TagButton leftImg={<TickCircle variant='Bold' />} text="Going" variant="green" size='lg' />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
