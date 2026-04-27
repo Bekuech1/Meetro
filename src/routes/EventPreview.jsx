@@ -402,7 +402,13 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
                     >
                       <Avatar size="lg" src={guest.photo} />
                       <span className="text-[#001010] text-[10px] font-medium text-center truncate w-full block">
-                        {`${guest.fullName || guest.email || "Guest"}`}
+                        {guest.name
+                          ? guest.name
+                          : guest.fullName
+                            ? guest.fullName
+                            : guest.email
+                              ? guest.email
+                              : "Guest"}
                       </span>
                     </div>
                   ))}
