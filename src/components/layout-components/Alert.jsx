@@ -84,7 +84,7 @@ const Alert = ({
       </div>
 
       {/* 👇 Close button logic */}
-      {onClick &&
+      {(onClick || button) &&
         (button ? (
           // Use custom close button if provided
           React.cloneElement(button, { onClick })

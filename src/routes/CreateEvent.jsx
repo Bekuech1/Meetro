@@ -397,7 +397,13 @@ function CreateEvent() {
     clearLocalImages();
   };
   if (isPreview) {
-    return <EventPreview event={event} />;
+    return (
+      <EventPreview
+        event={event}
+        setIsPreview={setIsPreview}
+        settings={settings}
+      />
+    );
   }
 
   return (

@@ -9,6 +9,13 @@
 /* urbanist */
 @import url("https://fonts.googleapis.com/css?family=Urbanist");
 
+/* Digital numbers */
+@font-face {
+  font-family: "Digital Numbers";
+  src: url("../src/assets/fonts/OTF/Digital-Numbers.otf") format("opentype");
+  font-weight: 400;
+}
+
 /* visbycf */
 
 @font-face {
@@ -17,6 +24,7 @@
     format("opentype");
   font-weight: 800;
 }
+
 @font-face {
   font-family: "visbycf";
   src: url("../src/assets/fonts/Demo_Fonts/Fontspring-DEMO-visbycf-bold.otf")
@@ -79,6 +87,10 @@
 
 .paytone {
   font-family: "Paytone One", sans-serif;
+}
+
+.digital-numbers {
+  font-family: "Digital Numbers", sans-serif;
 }
 
 .satoshi {
