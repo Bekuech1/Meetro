@@ -1,14 +1,14 @@
+import TagButton from "../layout-components/Buttons/TagButton";
+import AvatarGroup from "../layout-components/AvatarGroup";
 import { formatNaira, timeAgo } from "@/lib/utils";
 import { format } from "date-fns";
 import { Location, Money3, TickCircle } from "iconsax-reactjs";
 import { FaCircle } from "react-icons/fa6";
-import TagButton from "../layout-components/Buttons/TagButton";
-import AvatarGroup from "../layout-components/AvatarGroup";
 
 // Event status
 const statusColors = {
   upcoming: "light-cyan",
-  ongoing: "green",
+  "live now": "green",
   completed: "purple",
 };
 

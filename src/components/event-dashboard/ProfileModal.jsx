@@ -84,7 +84,7 @@ export default function ProfileModal({ open, setOpen }) {
       ref={profileModalRef}
       className={twMerge(
         "satoshi w-full z-20 md:z-auto h-full md:h-auto bg-[#f0f0f0] fixed top-0 left-0 md:top-[calc(100%+13px)] md:left-auto md:right-0 md:absolute md:rounded-[24px] overflow-hidden shadow-[0_4px_24px_0_rgba(0,0,0,0.25)] md:min-w-[272px] flex flex-col md:p-1",
-        open ? "block pointer-events-auto" : "hidden pointer-events-none"
+        open ? "flex pointer-events-auto" : "hidden pointer-events-none"
       )}
     >
       {/* Top */}
