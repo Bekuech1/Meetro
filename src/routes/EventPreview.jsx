@@ -230,21 +230,6 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
                         </p>
                       )}
                     </div>
-                    {event.location.coordinates && (
-                      <Link>
-                        <TagButton
-                          variant="light-purple"
-                          text="View on Map"
-                          className="satoshi font-bold px-2 hidden h-8.5 sm:inline-block"
-                          rightImg={<Map1 variant="Bold" />}
-                        />
-                        <IconButton
-                          icon={<Map1 variant="Bold" size={16} />}
-                          variant="light-purple"
-                          className="size-8 sm:hidden"
-                        />
-                      </Link>
-                    )}
                   </div>
                 )}
                 {/* Online event */}
@@ -264,19 +249,6 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
                       <p className="text-[#001010]">Online Event</p>
                       <p className="text-[#8A9191]">{event.meetingURL}</p>
                     </div>
-                    <Link>
-                      <TagButton
-                        variant="light-purple"
-                        text="Join Meeting"
-                        className="satoshi font-bold px-2 hidden h-8.5 sm:inline-block"
-                        rightImg={<Video variant="Bold" />}
-                      />
-                      <IconButton
-                        icon={<Video variant="Bold" size={16} />}
-                        variant="light-purple"
-                        className="size-8 sm:hidden"
-                      />
-                    </Link>
                   </div>
                 )}
                 {/* Dress code */}

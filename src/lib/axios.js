@@ -36,12 +36,36 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
+// Helper function to logout user
+const handleLogout = async () => {
+  const { setAccessToken, setUser } = useAuthStore.getState();
+
+  // Logout API call
+  try {
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/auth/logout`,
+      {},
+      { withCredentials: true }
+    );
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
+
+  // Clear auth state and localStorage
+  setUser(null);
+  setAccessToken(null);
+  localStorage.removeItem("auth-storage");
+
+  // Redirect to home page
+  window.location.href = "/";
+};
+
 // ----- RESPONSE INTERCEPTOR -----
 API.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
-    const { setAccessToken, setUser } = useAuthStore.getState();
+    const { setAccessToken } = useAuthStore.getState();
 
     // If unauthorized - Token has expired
     if (
@@ -54,10 +78,18 @@ API.interceptors.response.use(
           failedQueue.push({ resolve, reject });
         })
           .then(token => {
+            if (!token) {
+              // Token refresh failed, logout user
+              handleLogout();
+              return Promise.reject(error);
+            }
             originalRequest.headers.Authorization = `Bearer ${token}`;
             return API(originalRequest);
           })
-          .catch(err => Promise.reject(err));
+          .catch(err => {
+            handleLogout();
+            return Promise.reject(err);
+          });
       }
 
       originalRequest._retry = true;
@@ -72,6 +104,10 @@ API.interceptors.response.use(
 
         const newAccessToken = response.data.accessToken;
 
+        if (!newAccessToken) {
+          throw new Error("No access token in refresh response");
+        }
+
         // Update Zustand state
         setAccessToken(newAccessToken);
 
@@ -83,22 +119,8 @@ API.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
 
-        // Logout API call
-        try {
-          await axios.post(
-            `${import.meta.env.VITE_API_URL}/auth/logout`,
-            {},
-            { withCredentials: true }
-          );
-        } catch (error) {
-          console.error("Error during logout:", error);
-        }
-
-        // Clear auth state after redirect initiated
-        setUser(null);
-        setAccessToken(null);
-        localStorage.removeItem("auth-storage");
-
+        // Logout and redirect
+        await handleLogout();
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
