@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { eventsApi } from "@/services/eventsApi";
 import { format } from "date-fns";
 
-
 import { ArrowCircleLeft2, Send2, Maximize1, Calendar1, Location, Money3, ArrowRight2 } from "iconsax-reactjs";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import EventStatus from "@/components/layout-components/EventStatus";
@@ -14,6 +13,11 @@ import Alert from "@/components/layout-components/Alert";
 import ConfirmationButton from "@/components/layout-components/Buttons/ConfirmationButton";
 import { useAuthStore } from "@/stores/useAuthStore";
 import EventTimerNav from "@/components/layout-components/EventTimerNav";
+import AttendanceStatus from "@/components/layout-components/AttendanceStatus";
+
+// 👇 Import your newly extracted component here 
+// (Make sure the path matches where you saved the file)
+import EventExpandedView from "@/components/layout-components/EventExpandedView"; 
 
 const EventDetails = () => {
   const { slug } = useParams();
@@ -86,20 +90,18 @@ const EventDetails = () => {
   const goingPhotos = event.going.map(guest => guest.photoUrl).filter(Boolean);
   const remainingCount = Math.max(0, event.guestCount - goingPhotos.length);
 
+  // 👇 The updated logged-in user block
   if (user) {
     return (
-      <div className="grid">
-        <EventTimerNav targetDate={event?.startDate} onClick={() => navigate("/home")} />
-        <div className="size-fit flex gap-2 items-center">
-          <IconButton icon={<Calendar1 variant="Bold" color="#866AD2" />} variant="tertiary" />
-          <h6 className="satoshi text-base font-medium text-black">
-            {event.date} <span className="text-[#8A9191] ml-2">{event.time}</span>
-          </h6>
-        </div>
-      </div>
-    )
+      <EventExpandedView 
+        event={event} 
+        onClose={onClose} 
+        onCycleView={cycleViewState} 
+      />
+    );
   }
 
+  // Guest View (Not Logged In)
   return (
     <div className="w-full h-screen flex flex-col">
       <main className="flex flex-col place-items-center flex-1">
@@ -108,7 +110,6 @@ const EventDetails = () => {
           <TagButton text="Back" leftImg={<ArrowCircleLeft2 size={16} variant='Bold' />} variant="white" size="lg" onClick={onClose} />
           <div className="flex gap-4">
             <TagButton text="share" rightImg={<Send2 color="black" variant="Bold" />} variant="white" size="lg" onClick={handleShare} />
-            {/* 👇 Cycle State Toggle to reset to Collapsed (State 1) */}
             <TagButton text="Collapse" rightImg={<Maximize1 color="black" variant="Bold" />} variant="white" size="lg" onClick={cycleViewState} />
           </div>
         </section>
