@@ -24,6 +24,7 @@ import CreateEvent from "./routes/CreateEvent";
 import EventPreview from "./routes/EventPreview";
 import Profile from "./routes/Profile";
 import Settings from "./routes/Settings";
+import EventDetails from "./routes/EventDetails";
 
 function App() {
   useRehydrateUser(); // Rehydrate user on app load
@@ -40,7 +41,8 @@ function App() {
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/about" element={<AboutUs />} />
         </Route>
-
+        {/* Account Pages */}
+        <Route path="/events/:slug" element={<EventDetails />} />
         {/* Legal Pages */}
         <Route element={<LegalLayout />}>
           <Route path="/privacy" element={<Privacy />} />
