@@ -24,13 +24,15 @@ function Modal({ children }) {
 }
 
 // Button
-function Open({ opens, children }) {
+function Open({ opens, children, onOpen }) {
   // Get context
   const { open } = useModalContext();
 
   // Clone child with onClick event
   return cloneElement(children, {
     onClick: e => {
+      // Call onOpen callback if provided
+      onOpen?.();
       // Open modal
       open(opens);
 
@@ -55,6 +57,7 @@ function Window({
   desktopWidth = "sm:max-w-[546px]",
   showCloseButton = true,
   isCloseButtonDisabled = false,
+  padding,
 }) {
   // Get context
   const { active, close } = useModalContext();
@@ -87,7 +90,7 @@ function Window({
           )}
           {/* Content */}
           <div
-            className={`border-2 border-white rounded-t-[24px] sm:rounded-[24px] bg-[#EDEDED] flex flex-col min-h-0`}
+            className={`border-2 border-white overflow-hidden rounded-t-[24px] sm:rounded-[24px] bg-[#EDEDED] flex flex-col min-h-0`}
           >
             {/* Show title */}
             {title && (
@@ -100,7 +103,11 @@ function Window({
               </div>
             )}
             <div
-              className={`overflow-y-auto ${title ? "pb-12 py-4 px-4 sm:pt-4 sm:px-6 sm:pb-6" : "p-6 pb-12 sm:p-12"}`}
+              className={twMerge(
+                "overflow-y-auto p-6 pb-12 sm:p-12 scrollbar-hide",
+                title && "pb-12 py-4 px-4 sm:pt-4 sm:px-6 sm:pb-6",
+                padding && padding
+              )}
             >
               {children}
             </div>
