@@ -70,7 +70,7 @@ const Alert = ({
   return (
     <div
       className={twMerge(
-        `flex place-items-center border ${sizeStyles} ${styles} rounded-[16px] md:rounded-[100px] transition-all h-fit w-full satoshi`,
+        `flex items-center border ${sizeStyles} ${styles} rounded-[16px] md:rounded-[100px] transition-all h-fit w-full satoshi`,
         className
       )}
       role="alert"

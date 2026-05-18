@@ -17,13 +17,10 @@ import {
   Colorfilter,
   LinkCircle,
   Location,
-  Map1,
   Send2,
   TickCircle,
-  Video,
 } from "iconsax-reactjs";
 import React, { useState } from "react";
-import { Link } from "react-router";
 import { twMerge } from "tailwind-merge";
 
 const EventPreview = ({ event, setIsPreview, settings }) => {
@@ -58,7 +55,7 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
       </div>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
         {/* Left content */}
-        <div className="w-full md:w-[420px] bg-[#f0f0f0] md:fixed md:top-[52px] md:bottom-0 md:left-0 z-20 flex flex-col py-8 px-8 gap-4 overflow-y-auto scrollbar-hide">
+        <div className="w-full md:w-[413px] items-start bg-[#f0f0f0] md:fixed md:top-[52px] md:bottom-0 md:left-0 z-20 flex flex-col py-8 px-8 gap-4 overflow-y-auto scrollbar-hide">
           <div>
             <TagButton
               text="Back"
@@ -69,8 +66,8 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
             />
           </div>
 
-          <div className="grid gap-4">
-            <div className="size-[349px] overflow-hidden rounded-3xl border-4 shadow-[0_20px_60px_rgba(0,0,0,0.12)] border-white flex-shrink-0">
+          <div>
+            <div className="md:size-[349px] size-full overflow-hidden rounded-3xl border-4 shadow-[0_20px_60px_rgba(0,0,0,0.12)] border-white flex-shrink-0">
               <img
                 src={event.image}
                 alt={event.title}
@@ -79,20 +76,22 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
             </div>
           </div>
           {isHost && (
-            <Alert
-              title="You have manage access"
-              size="sm"
-              option="outline"
-              button={
-                <TagButton
-                  variant="purple"
-                  text="Manage"
-                  className="h-6 w-auto px-[6px] min-w-auto"
-                  rightImg={<ArrowRight2 size={12} />}
-                  size="sm"
-                />
-              }
-            />
+            <div className="w-full">
+              <Alert
+                title="You have manage access"
+                size="sm"
+                option="outline"
+                button={
+                  <TagButton
+                    variant="purple"
+                    text="Manage"
+                    className="h-6 w-auto px-[6px] min-w-auto"
+                    rightImg={<ArrowRight2 size={12} />}
+                    size="sm"
+                  />
+                }
+              />
+            </div>
           )}
 
           <div className="grid gap-1">
@@ -132,7 +131,7 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
         </div>
 
         {/* Right content */}
-        <div className="w-full overflow-hidden  min-w-0 flex flex-col h-full  min-h-[calc(100vh-52px)] bg-white/80 relative border-l border-[#E5E7E3] md:ml-[420px] rounded-l-2xl">
+        <div className="w-full overflow-hidden  min-w-0 flex flex-col h-full  min-h-[calc(100vh-52px)] bg-white/80 relative border-l border-[#E5E7E3] md:ml-[413px] rounded-l-2xl">
           <section className="flex gap-6 flex-col py-6 px-10 pt-9 border-b border-[#E5E7E3] ">
             <div className="flex gap-2 justify-between">
               <TagButton

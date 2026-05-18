@@ -51,9 +51,9 @@ function ManageEventHeader() {
       <div className="max-w-[1440px] satoshi py-3 px-4 md:px-8 mx-auto w-full flex-1  gap-4 flex-wrap flex flex-col min-[300px]:flex-row items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <div className="hidden min-[400px]:block">
+          <Link className="hidden min-[400px]:block" to="/home">
             <MeetroLogoAlt />
-          </div>
+          </Link>
           <div className="block min-[400px]:hidden">
             <MeetroLogoAltMobile />
           </div>
