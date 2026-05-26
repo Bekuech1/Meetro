@@ -3,15 +3,17 @@ import API from "@/lib/axios";
 export const authApi = {
   login: async credentials => {
     const loginResponse = await API.post("/auth/login", credentials);
-    const { accessToken } = loginResponse.data;
-    return { accessToken };
+    const { accessToken, refreshToken } = loginResponse.data;
+    return { accessToken, refreshToken };
   },
 
   signup: async details => {
     const signupResponse = await API.post("/auth/signup", details);
+    const { accessToken, refreshToken } = signupResponse.data;
     return {
       status: signupResponse.data.status,
-      accessToken: signupResponse.data.accessToken,
+      accessToken,
+      refreshToken,
     };
   },
 
@@ -29,8 +31,8 @@ export const authApi = {
 
   refreshToken: async () => {
     const refreshResponse = await API.post("/auth/refresh-token");
-    const { accessToken } = refreshResponse.data;
-    return { accessToken };
+    const { accessToken, refreshToken } = refreshResponse.data;
+    return { accessToken, refreshToken };
   },
 
   forgotPassword: async email => {
@@ -64,8 +66,8 @@ export const authApi = {
     const response = await API.post("/auth/google-auth", {
       token: googleToken,
     });
-    const { accessToken } = response.data;
-    return { accessToken };
+    const { accessToken, refreshToken } = response.data;
+    return { accessToken, refreshToken };
   },
 
   updateProfile: async data => {

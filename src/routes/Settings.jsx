@@ -91,7 +91,7 @@ function Settings() {
 
             <div className="flex-1">
               <div className="relative">
-                <button
+                <div
                   onClick={handleBackClick}
                   className="mb-6 md:hidden text-sm font-bold flex bg-transparent gap-2 items-center"
                 >
@@ -101,7 +101,7 @@ function Settings() {
                     icon={<ArrowLeft2 size={16} />}
                   />
                   <span>Back</span>
-                </button>
+                </div>
               </div>
 
               {/* Mobile Menu */}

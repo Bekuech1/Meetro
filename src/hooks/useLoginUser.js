@@ -4,7 +4,8 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useMutation } from "@tanstack/react-query";
 
 export function useLoginUser({ onSuccess, onError }) {
-  const { setUser, setAccessToken, setLastFetchedProfile } = useAuthStore();
+  const { setUser, setAccessToken, setRefreshToken, setLastFetchedProfile } =
+    useAuthStore();
 
   const { mutate: loginMutate, isPending: loading } = useMutation({
     mutationFn: async loginData => {
@@ -12,6 +13,8 @@ export function useLoginUser({ onSuccess, onError }) {
       const loginResponse = await authApi.login(loginData);
       // Store access token
       setAccessToken(loginResponse.accessToken);
+      // Store refresh token
+      setRefreshToken(loginResponse.refreshToken);
       // Fetch user profile
       const getProfileResponse = await authApi.getProfile();
       // Set user in store

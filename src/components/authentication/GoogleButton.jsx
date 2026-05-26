@@ -8,7 +8,7 @@ import GoogleIcon from "@/assets/icons/GoogleIcon";
 import Alert from "../layout-components/Alert";
 
 export default function GoogleButton({ onSuccess, setError, error }) {
-  const { setAccessToken, setUser, setUserEventsCount, setLastFetchedProfile } =
+  const { setAccessToken, setUser, setRefreshToken, setLastFetchedProfile } =
     useAuthStore();
   const { close } = useModalContext();
 
@@ -17,6 +17,8 @@ export default function GoogleButton({ onSuccess, setError, error }) {
       const response = await authApi.googleAuth(googleToken);
       // Set access token
       setAccessToken(response.accessToken);
+      // Set refresh token
+      setRefreshToken(response.refreshToken);
       // Fetch user profile
       const getProfileResponse = await authApi.getProfile();
       // Set random default photo

@@ -16,7 +16,7 @@ export default function ProfileModal({ open, setOpen }) {
   const [isMobile, setIsMobile] = useState(false);
 
   // User details
-  const { user, setUser, setAccessToken } = useAuthStore();
+  const { user, setUser, setAccessToken, setRefreshToken } = useAuthStore();
 
   // Fetch user events count
   const { data: userEventsCount, isLoading: isUserEventsCountLoading } =
@@ -37,6 +37,7 @@ export default function ProfileModal({ open, setOpen }) {
       setOpen(false);
       setUser(null);
       setAccessToken(null);
+      setRefreshToken(null);
       localStorage.removeItem("auth-storage");
     },
     onError: error => {

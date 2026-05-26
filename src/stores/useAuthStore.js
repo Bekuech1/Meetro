@@ -5,9 +5,11 @@ export const useAuthStore = create(
   persist(
     set => ({
       accessToken: null,
+      refreshToken: null,
       user: null,
       lastFetchedProfile: null,
       setAccessToken: accessToken => set({ accessToken }),
+      setRefreshToken: refreshToken => set({ refreshToken }),
       setUser: user => set({ user }),
       setLastFetchedProfile: lastFetchedProfile => set({ lastFetchedProfile }),
     }),
@@ -15,6 +17,7 @@ export const useAuthStore = create(
       name: "auth-storage", // LocalStorage key
       partialize: state => ({
         accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         user: state.user,
         lastFetchedProfile: state.lastFetchedProfile,
       }),

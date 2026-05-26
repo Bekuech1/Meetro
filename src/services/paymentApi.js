@@ -30,4 +30,11 @@ export const paymentApi = {
     });
     return verifyResponse.data;
   },
+  chipIn: async (eventId, amount) => {
+    const chipInResponse = await API.post(`/payments/chip-in`, {
+      eventId,
+      amount,
+    });
+    return chipInResponse.data.data;
+  },
 };

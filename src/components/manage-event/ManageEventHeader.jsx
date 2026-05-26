@@ -154,6 +154,7 @@ function ManageEventHeader() {
           <Link
             to={!isLoading && activeEvent ? `/events/${activeEvent.slug}` : "#"}
             className={isLoading ? "pointer-events-none" : ""}
+            state={{ from: location.pathname }}
           >
             <TagButton
               rightImg={<MoneyArchive variant="Bold" />}
@@ -189,17 +190,19 @@ function ManageEventHeader() {
                 )}
                 onClick={() => handleTabChange("guests")}
               />
-              <TagButton
-                text="Payouts"
-                size="md"
-                className={twMerge(
-                  "satoshi min-w-auto px-3",
-                  tab === "payouts"
-                    ? "hover:bg-white bg-white text-[#011F0F]"
-                    : "bg-transparent text-[#B0B5B5] border-transparent"
-                )}
-                onClick={() => handleTabChange("payouts")}
-              />
+              {activeEvent?.chipInDetails && (
+                <TagButton
+                  text="Payouts"
+                  size="md"
+                  className={twMerge(
+                    "satoshi min-w-auto px-3",
+                    tab === "payouts"
+                      ? "hover:bg-white bg-white text-[#011F0F]"
+                      : "bg-transparent text-[#B0B5B5] border-transparent"
+                  )}
+                  onClick={() => handleTabChange("payouts")}
+                />
+              )}
             </div>
           </div>
         )}

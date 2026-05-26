@@ -304,6 +304,7 @@ function EditEvent() {
         // Invalidate queries to refetch the updated data
         queryClient.invalidateQueries(["user-events"]);
         queryClient.invalidateQueries(["event", event._id]);
+
         // Clear file
         setImageFile(null);
         // Set status to success

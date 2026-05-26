@@ -38,7 +38,7 @@ const processQueue = (error, token = null) => {
 
 // Helper function to logout user
 const handleLogout = async () => {
-  const { setAccessToken, setUser } = useAuthStore.getState();
+  const { setAccessToken, setRefreshToken, setUser } = useAuthStore.getState();
 
   // Logout API call
   try {
@@ -54,10 +54,11 @@ const handleLogout = async () => {
   // Clear auth state and localStorage
   setUser(null);
   setAccessToken(null);
+  setRefreshToken(null);
   localStorage.removeItem("auth-storage");
 
   // Redirect to home page
-  window.location.href = "/";
+  //window.location.href = "/";
 };
 
 // ----- RESPONSE INTERCEPTOR -----
@@ -65,7 +66,8 @@ API.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
-    const { setAccessToken } = useAuthStore.getState();
+    const { setAccessToken, setRefreshToken, refreshToken } =
+      useAuthStore.getState();
 
     // If unauthorized - Token has expired
     if (
@@ -99,17 +101,25 @@ API.interceptors.response.use(
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
           {},
-          { withCredentials: true }
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${refreshToken}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const newAccessToken = response.data.accessToken;
+        const newRefreshToken = response.data.refreshToken;
 
-        if (!newAccessToken) {
-          throw new Error("No access token in refresh response");
+        if (!newAccessToken || !newRefreshToken) {
+          throw new Error("No access token or refresh token in response");
         }
 
         // Update Zustand state
         setAccessToken(newAccessToken);
+        setRefreshToken(newRefreshToken);
 
         processQueue(null, newAccessToken);
 
@@ -118,6 +128,8 @@ API.interceptors.response.use(
         return API(originalRequest);
       } catch (err) {
         processQueue(err, null);
+
+        console.error("Token refresh failed:", err);
 
         // Logout and redirect
         await handleLogout();

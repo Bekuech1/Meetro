@@ -49,16 +49,15 @@ const ConfirmationButton = ({
     <button
       className={buttonClasses}
       onClick={loading ? undefined : onClick}
-      disabled={loading}
       {...props}
     >
       {!loading ? (
-        <>
+        <React.Fragment>
           <img src={config.icon} alt="" className="size-8" />
           <span className="capitalize text-[12px] font-normal leading-4.5">
             {config.text}
           </span>
-        </>
+        </React.Fragment>
       ) : (
         <LoadingSpinner size={24} borderColor={config.spinnerColor} />
       )}

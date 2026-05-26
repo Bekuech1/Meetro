@@ -108,7 +108,12 @@ function OverviewTab() {
             </div>
             {/* Event title */}
             <div className="flex flex-col gap-3 sm:gap-2 sm:mb-8 mb-4">
-              <h2 className="paytone sm:text-[24px] sm:leading-[38px] text-base leading-[22px] text-[#001010]">
+              <h2
+                className={twMerge(
+                  "sm:text-[24px] sm:leading-[38px] text-base leading-[22px] text-[#001010]",
+                  event.font ? event.font : "paytone"
+                )}
+              >
                 {event.title}
               </h2>
               {/* Event categories */}
@@ -311,24 +316,26 @@ function OverviewTab() {
         </div>
       </div>
       {/* Payout details */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between satoshi text-base">
-          <h3 className="font-bold text-[#001010]">Payouts</h3>
-          <TagButton
-            variant="light-purple"
-            className="satoshi min-w-0"
-            text="See more"
-            onClick={() => handleTabChange("payouts")}
-          />
+      {event.chipInDetails && (
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between satoshi text-base">
+            <h3 className="font-bold text-[#001010]">Payouts</h3>
+            <TagButton
+              variant="light-purple"
+              className="satoshi min-w-0"
+              text="See more"
+              onClick={() => handleTabChange("payouts")}
+            />
+          </div>
+          {/* Payout overview */}
+          <div className="p-6 border border-white rounded-4xl bg-white/50">
+            <PayoutsOverview
+              availablePayout={event.balance}
+              totalReceived={event.totalDonations}
+            />
+          </div>
         </div>
-        {/* Payout overview */}
-        <div className="p-6 border border-white rounded-4xl bg-white/50">
-          <PayoutsOverview
-            availablePayout={event.balance}
-            totalReceived={event.totalDonations}
-          />
-        </div>
-      </div>
+      )}
 
       {/* Recent guests */}
       <div className="flex flex-col gap-2">
@@ -343,7 +350,10 @@ function OverviewTab() {
         </div>
         <div className="p-6 border border-white rounded-4xl bg-white/50">
           {event.guests.length > 0 ? (
-            <GuestsTable guests={event.guests} />
+            <GuestsTable
+              guests={event.guests}
+              isPaidEvent={event.chipInDetails ? true : false}
+            />
           ) : (
             <NoGuests>
               <TextButton text="Invite Guests" variant="tertiary" />

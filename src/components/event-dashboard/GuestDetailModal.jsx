@@ -1,14 +1,8 @@
-import { formatDate, formatNaira } from "@/lib/utils";
+import { formatDate, formatNaira, responseColors } from "@/lib/utils";
 import { TickCircle } from "iconsax-reactjs";
 import Avatar from "../layout-components/Avatar";
 import TagButton from "../layout-components/Buttons/TagButton";
 import Modal from "../layout-components/Modal/Modal";
-
-// Event response colors
-const responseColors = {
-  maybe: "purple",
-  going: "green",
-};
 
 export default function GuestDetailModal({ guestDetail, onClose }) {
   return (

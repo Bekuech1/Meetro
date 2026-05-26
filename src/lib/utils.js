@@ -12,7 +12,6 @@ export const formatDate = (value, formatStr = "MMM d   h:mm a") => {
   return format(date, formatStr);
 };
 
-
 export function timeAgo(dateString) {
   if (!dateString) return "";
   const now = new Date();
@@ -102,6 +101,11 @@ export function formatCurrency(amount) {
   if (isNaN(amount)) return "Invalid amount";
   return "₦ " + Number(amount).toLocaleString("en-NG");
 }
+
+export const responseColors = {
+  maybe: "purple",
+  going: "green",
+};
 
 export const states = [
   { id: 1, name: "Abia" },
