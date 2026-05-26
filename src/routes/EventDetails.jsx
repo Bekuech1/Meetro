@@ -1,14 +1,32 @@
-import EventTimerNav from "@/components/layout-components/EventTimerNav";
-import React from "react";
+import Alert from "@/components/layout-components/Alert";
+import Avatar from "@/components/layout-components/Avatar";
+import AvatarGroup from "@/components/layout-components/AvatarGroup";
 import IconButton from "@/components/layout-components/Buttons/IconButton";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
-import Alert from "@/components/layout-components/Alert";
-import AvatarGroup from "@/components/layout-components/AvatarGroup";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
-import ProgressBar from "@/components/layout-components/ProgressBar";
-import Avatar from "@/components/layout-components/Avatar";
 import ConfirmAttendance from "@/components/layout-components/Events/ConfirmAttendance";
+import EventTimerNav from "@/components/layout-components/EventTimerNav";
+import ProgressBar from "@/components/layout-components/ProgressBar";
+import { useConfirmAttendance } from "@/hooks/useConfirmAttendance";
+import { useShareEvent } from "@/hooks/useShareEvent";
+import { categories, responseColors } from "@/lib/utils";
+import { eventsApi } from "@/services/eventsApi";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import {
+  ArrowLeft2,
+  ArrowRight2,
+  Calendar1,
+  Colorfilter,
+  LinkCircle,
+  Location,
+  Maximize1,
+  Money3,
+  Send2,
+  TickCircle,
+} from "iconsax-reactjs";
+import React, { useState } from "react";
 import {
   Link,
   useLocation,
@@ -16,30 +34,12 @@ import {
   useParams,
   useSearchParams,
 } from "react-router";
-import { useQuery } from "@tanstack/react-query";
-import { eventsApi } from "@/services/eventsApi";
 import { twMerge } from "tailwind-merge";
-import {
-  ArrowLeft2,
-  ArrowRight2,
-  Location,
-  Money3,
-  Send2,
-  TickCircle,
-  Calendar1,
-  Maximize1,
-  LinkCircle,
-  Colorfilter,
-} from "iconsax-reactjs";
-import { format } from "date-fns";
-import { categories, responseColors } from "@/lib/utils";
-import { useState } from "react";
-import { useConfirmAttendance } from "@/hooks/useConfirmAttendance";
-import PayChipInModal from "@/components/layout-components/Events/PayChipInModal";
 
 export default function EventDetails() {
   const { slug } = useParams();
   const { user } = useAuthStore();
+
   const [searchParams] = useSearchParams();
   const {
     data: event,
@@ -54,6 +54,8 @@ export default function EventDetails() {
   const hostPhoto = host?.photo?.url ? host.photo.url : host?.photo || "";
   const hostName = host?.fullName || user?.fullName || "Host";
   const isHost = event?.userRole === "host" || host?.id === user?.id;
+
+  const { handleShare } = useShareEvent(event);
 
   // Chip in details
   const chipInDetails = event?.chipInDetails;
@@ -143,6 +145,7 @@ export default function EventDetails() {
                   text="Share"
                   className="min-w-0 px-2 h-8 text-xs sm:h-8 sm:text-xs"
                   variant="tertiary"
+                  onClick={handleShare}
                 />
 
                 <Link to={`/events/${event.slug}`}>
@@ -157,7 +160,9 @@ export default function EventDetails() {
             </div>
             {/* Event details */}
             <div className="flex flex-col items-center">
-              <h1 className="text-2xl leading-8 paytone">{event.title}</h1>
+              <h1 className={`text-2xl leading-8 ${event.font || "paytone"}`}>
+                {event.title}
+              </h1>
               {event.category.length > 0 && (
                 <div className="flex items-center gap-2 mt-4 flex-wrap">
                   {event.category.map((cat, index) => (
@@ -303,6 +308,7 @@ export default function EventDetails() {
                       text="Invite Friends"
                       variant="tertiary"
                       rightImg={<Send2 variant="Bold" />}
+                      onClick={handleShare}
                     />
                     {event.userResponse !== "going" && (
                       <TextButton
@@ -426,6 +432,7 @@ export default function EventDetails() {
                       text="Share"
                       className="min-w-0 px-2"
                       variant="tertiary"
+                      onClick={handleShare}
                     />
                   </div>
                 </div>
@@ -701,6 +708,7 @@ export default function EventDetails() {
                         text="Invite Friends"
                         variant="tertiary"
                         rightImg={<Send2 variant="Bold" />}
+                        onClick={handleShare}
                       />
                       {event.userResponse !== "going" && (
                         <TextButton
@@ -723,8 +731,6 @@ export default function EventDetails() {
           </React.Fragment>
         )}
       </div>
-      {/* Pay chip in modal */}
-      {event.chipInDetails && <PayChipInModal event={event} />}
     </div>
   );
 }
