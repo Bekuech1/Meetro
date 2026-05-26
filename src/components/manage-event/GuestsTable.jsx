@@ -125,7 +125,7 @@ function GuestsTable({ guests, isPaidEvent }) {
                     <button
                       ref={el => (buttonRefs.current[guestId] = el)}
                       onClick={() => toggleMenu(guestId)}
-                      className="bg-transparent cursor-pointer hover:bg-[#E5E7E3] rounded-lg p-1 transition-colors"
+                      className="bg-transparent cursor-pointer hover:bg-[#E5E7E3] rounded-[24px] p-1 transition-colors"
                     >
                       <More color="#8A9191" size={18} />
                     </button>

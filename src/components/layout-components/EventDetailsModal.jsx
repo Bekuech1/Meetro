@@ -28,6 +28,7 @@ import TextButton from "./Buttons/TextButtons";
 import EventTimerNav from "./EventTimerNav";
 import Modal from "./Modal/Modal";
 import ProgressBar from "./ProgressBar";
+import { useShareEvent } from "@/hooks/useShareEvent";
 
 // ==========================================
 // LOADING SKELETON COMPONENT
@@ -212,6 +213,8 @@ const EventDetailsModal = ({ eventId }) => {
   const goingPhotos = goingGuests.slice(0, 2).map(guest => guest?.photo || "");
   const remainingCount = goingGuests.length > 2 ? goingGuests.length - 2 : 0;
 
+  const { handleShare } = useShareEvent(event);
+
   const [textExpanded, setTextExpanded] = useState(false);
   const descriptionLimit = 140;
   const truncatedDescription =
@@ -384,6 +387,7 @@ const EventDetailsModal = ({ eventId }) => {
                       className={twMerge(
                         "min-w-0  px-2 h-8 text-xs sm:h-8 sm:text-xs"
                       )}
+                      onClick={handleShare}
                       variant="tertiary"
                     />
                     {!isFullView && (
@@ -726,6 +730,7 @@ const EventDetailsModal = ({ eventId }) => {
                       text="Invite Friends"
                       variant="tertiary"
                       rightImg={<Send2 variant="Bold" />}
+                      onClick={handleShare}
                     />
                     {event.userResponse !== "going" && (
                       <TextButton

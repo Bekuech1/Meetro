@@ -3,36 +3,10 @@ import TextButton from "../layout-components/Buttons/TextButtons";
 import Modal from "../layout-components/Modal/Modal";
 import { Calendar1, Copy, Send2, TickCircle } from "iconsax-reactjs";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useShareEvent } from "@/hooks/useShareEvent";
 
 export default function ShareEventModal({ event }) {
-  const [copied, setCopied] = useState(false);
-  const eventUrl = `${window.location.origin}/events/${event.slug}`;
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: event.title,
-          text: `Check out this event: ${event.title}`,
-          url: eventUrl,
-        });
-      } catch (err) {
-        // Optionally handle share error
-        console.error("Error sharing:", err);
-      }
-    }
-  };
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(eventUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch (err) {
-      // Optionally handle copy error
-      console.error("Error copying to clipboard:", err);
-    }
-  };
+  const { copied, handleShare, handleCopy } = useShareEvent(event);
   return (
     <Modal.Window showIcon={false} name="share-event">
       <div className="flex flex-col gap-y-12 satoshi font-medium text-[#001010]">

@@ -30,7 +30,7 @@ function ManageEventLayout({ children }) {
 
   // Fetch event data
   const { data: event, isLoading } = useQuery({
-    queryKey: ["event", eventId],
+    queryKey: ["event-protected", eventId],
     queryFn: () => eventsApi.getProtectedEvent(eventId),
     enabled: !!eventId,
     staleTime: 15 * 60 * 1000,

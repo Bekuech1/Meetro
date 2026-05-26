@@ -1,8 +1,3 @@
-import { eventsApi } from "@/services/eventsApi";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowRight2, Send2, Sms } from "iconsax-reactjs";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import IconButton from "../layout-components/Buttons/IconButton";
 import TagButton from "../layout-components/Buttons/TagButton";
 import TextButton from "../layout-components/Buttons/TextButtons";
@@ -10,13 +5,21 @@ import GuestsTable from "./GuestsTable";
 import GuestsTableSkeleton from "./GuestsTableSkeleton";
 import NoGuests from "./NoGuests";
 import TableSearch from "./TableSearch";
+import React, { useEffect, useState } from "react";
 import Modal from "../layout-components/Modal/Modal";
+import { useShareEvent } from "@/hooks/useShareEvent";
+import { useManageEventContext } from "@/layouts/ManageEventLayout";
+import { eventsApi } from "@/services/eventsApi";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight2, Send2, Sms } from "iconsax-reactjs";
+import { useParams } from "react-router";
 
 function GuestsTab({ isPaidEvent }) {
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const { slug: eventId } = useParams();
+  const { event } = useManageEventContext();
 
   const { data, isLoading: loading } = useQuery({
     queryKey: ["guests", eventId, page, search],
@@ -73,6 +76,7 @@ function GuestsTab({ isPaidEvent }) {
     });
   };
 
+  const { handleShare } = useShareEvent(event);
   const hasSearch = search !== "";
 
   const guests = data?.data || [];
@@ -83,14 +87,12 @@ function GuestsTab({ isPaidEvent }) {
         {/* Header */}
         <h3 className="font-bold text-[#001010]">Guests</h3>
         <div className="flex items-center gap-4">
-          <Modal.Open opens="share-event">
-            <TagButton
-              text="Invite Guests"
-              className="sm:px-2 h-7 sm:h-8 sm:text-xs text-[10px] leading-3.5"
-              rightImg={<Send2 variant="Bold" />}
-            />
-          </Modal.Open>
-
+          <TagButton
+            text="Invite Guests"
+            className="sm:px-2 h-7 sm:h-8 sm:text-xs text-[10px] leading-3.5"
+            rightImg={<Send2 variant="Bold" />}
+            onClick={handleShare}
+          />
           <TagButton
             text="Share Blast"
             className="sm:px-2 h-7 sm:h-8 sm:text-xs text-[10px] leading-3.5"
