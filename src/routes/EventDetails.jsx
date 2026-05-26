@@ -282,7 +282,7 @@ export default function EventDetails() {
                 </Link>
               )}
               {event.userResponse ? (
-                <div className=" flex flex-col justify-between gap-6 items-start">
+                <div className=" flex flex-col justify-between gap-6 pb-6 items-start">
                   <div className="flex flex-col items-center text-center satoshi gap-1">
                     <div className="flex items-center gap-4">
                       <p className="font-bold text-[#001010]">
