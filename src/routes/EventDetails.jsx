@@ -5,6 +5,7 @@ import IconButton from "@/components/layout-components/Buttons/IconButton";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import ConfirmAttendance from "@/components/layout-components/Events/ConfirmAttendance";
+import PayChipInModal from "@/components/layout-components/Events/PayChipInModal";
 import EventTimerNav from "@/components/layout-components/EventTimerNav";
 import ProgressBar from "@/components/layout-components/ProgressBar";
 import { useConfirmAttendance } from "@/hooks/useConfirmAttendance";
@@ -731,6 +732,7 @@ export default function EventDetails() {
           </React.Fragment>
         )}
       </div>
+      {event.chipInDetails && <PayChipInModal event={event} />}
     </div>
   );
 }
