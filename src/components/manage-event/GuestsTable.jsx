@@ -1,17 +1,11 @@
-import { formatDate, formatNaira } from "@/lib/utils";
+import { formatDate, formatNaira, responseColors } from "@/lib/utils";
 import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
 import { useModalContext } from "../layout-components/Modal/ModalContext";
 import GuestDetailModal from "../event-dashboard/GuestDetailModal";
 import TagButton from "../layout-components/Buttons/TagButton";
 
-// Event response colors
-const responseColors = {
-  maybe: "purple",
-  going: "green",
-};
-
-function GuestsTable({ guests }) {
+function GuestsTable({ guests, isPaidEvent }) {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [activeGuest, setActiveGuest] = useState(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
@@ -78,8 +72,11 @@ function GuestsTable({ guests }) {
             </th>
             <th className="p-2 px-4 bg-[#F0F0F0]/90 text-center">Status</th>
             <th className="p-2 px-4 bg-[#F0F0F0]/90">Date</th>
-            <th className="p-2 px-4 bg-[#F0F0F0]/90 text-right">Amount Paid</th>
-
+            {isPaidEvent && (
+              <th className="p-2 px-4 bg-[#F0F0F0]/90 text-right">
+                Amount Paid
+              </th>
+            )}
             <th className="p-2 px-4 bg-[#F0F0F0]/90 rounded-r-[8px] text-right">
               Options
             </th>
@@ -118,9 +115,11 @@ function GuestsTable({ guests }) {
                 <td className="p-2 px-4 hidden md:table-cell">
                   {formatDate(guest.date)}
                 </td>
-                <td className="p-2 px-4 text-right hidden md:table-cell">
-                  {formatNaira(guest.amountPaid, 2)}
-                </td>
+                {isPaidEvent && (
+                  <td className="p-2 px-4 text-right hidden md:table-cell">
+                    {formatNaira(guest.amountPaid, 2)}
+                  </td>
+                )}
                 <td className="p-2 px-4 text-right hidden md:table-cell">
                   <div className="flex justify-end relative options-menu-container">
                     <button

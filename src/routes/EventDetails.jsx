@@ -1,188 +1,730 @@
+import EventTimerNav from "@/components/layout-components/EventTimerNav";
 import React from "react";
-import { useParams, useNavigate } from "react-router";
+import IconButton from "@/components/layout-components/Buttons/IconButton";
+import TagButton from "@/components/layout-components/Buttons/TagButton";
+import Alert from "@/components/layout-components/Alert";
+import AvatarGroup from "@/components/layout-components/AvatarGroup";
+import TextButton from "@/components/layout-components/Buttons/TextButtons";
+import ProgressBar from "@/components/layout-components/ProgressBar";
+import Avatar from "@/components/layout-components/Avatar";
+import ConfirmAttendance from "@/components/layout-components/Events/ConfirmAttendance";
+import { useAuthStore } from "@/stores/useAuthStore";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { eventsApi } from "@/services/eventsApi";
+import { twMerge } from "tailwind-merge";
+import {
+  ArrowLeft2,
+  ArrowRight2,
+  Location,
+  Money3,
+  Send2,
+  TickCircle,
+  Calendar1,
+  Maximize1,
+  LinkCircle,
+  Colorfilter,
+} from "iconsax-reactjs";
 import { format } from "date-fns";
+import { categories, responseColors } from "@/lib/utils";
+import { useState } from "react";
+import { useConfirmAttendance } from "@/hooks/useConfirmAttendance";
+import PayChipInModal from "@/components/layout-components/Events/PayChipInModal";
 
-import { ArrowCircleLeft2, Send2, Maximize1, Calendar1, Location, Money3, ArrowRight2 } from "iconsax-reactjs";
-import TagButton from "@/components/layout-components/Buttons/TagButton";
-import EventStatus from "@/components/layout-components/EventStatus";
-import IconButton from "@/components/layout-components/Buttons/IconButton";
-import AvatarGroup from "@/components/layout-components/AvatarGroup";
-import Alert from "@/components/layout-components/Alert";
-import ConfirmationButton from "@/components/layout-components/Buttons/ConfirmationButton";
-import { useAuthStore } from "@/stores/useAuthStore";
-import EventTimerNav from "@/components/layout-components/EventTimerNav";
-import AttendanceStatus from "@/components/layout-components/AttendanceStatus";
-
-// 👇 Import your newly extracted component here 
-// (Make sure the path matches where you saved the file)
-import EventExpandedView from "@/components/layout-components/EventExpandedView"; 
-
-const EventDetails = () => {
+export default function EventDetails() {
   const { slug } = useParams();
-  const navigate = useNavigate();
-  const user = useAuthStore(state => state.user);
-
-  // Fetch event details using the slug
-  const { data, isLoading, error } = useQuery({
+  const { user } = useAuthStore();
+  const [searchParams] = useSearchParams();
+  const {
+    data: event,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["event", slug],
     queryFn: () => eventsApi.getEvent(slug),
-    enabled: !!slug,
+  });
+  const isShared = searchParams.get("shared") === "true";
+  const host = event?.host;
+  const hostPhoto = host?.photo?.url ? host.photo.url : host?.photo || "";
+  const hostName = host?.fullName || user?.fullName || "Host";
+  const isHost = event?.userRole === "host" || host?.id === user?.id;
+
+  // Chip in details
+  const chipInDetails = event?.chipInDetails;
+
+  // Attendance confirmation
+  const { isPending, handleRespond } = useConfirmAttendance({
+    event,
   });
 
-  // Placeholder handlers for UI interactions
-  const onClose = () => navigate(-1); // Goes back to the previous page
-  const handleShare = () => console.log("Share clicked");
-  const cycleViewState = () => console.log("Cycle view state clicked");
+  // Chip in type
+  const chipInType = chipInDetails?.chipInType;
 
-  if (isLoading) {
-    return <div className="p-10 text-center">Loading event details...</div>;
-  }
+  // Chip in amount
+  const chipInAmount =
+    chipInType === "fixed"
+      ? chipInDetails?.fixedAmount
+      : chipInType === "target"
+        ? chipInDetails?.targetAmount
+        : chipInType === "donation"
+          ? chipInDetails?.minAmount
+          : null;
 
-  if (error) {
-    return <div className="p-10 text-center text-red-500">Error: {error.message}</div>;
-  }
+  // Event location
+  const eventLocation = event?.location?.state || event?.location?.city;
 
-  if (!data) {
-    return <div className="p-10 text-center">Event not found.</div>;
-  }
+  // Going guests and photos
+  const goingGuests = Array.isArray(event?.guests)
+    ? event.guests
+    : [host, ...(event?.cohosts || [])];
+  const goingPhotos = goingGuests.slice(0, 2).map(guest => guest?.photo || "");
+  const remainingCount = goingGuests.length > 2 ? goingGuests.length - 2 : 0;
 
-  // Map backend event structure to the format your UI expects
-  const event = {
-    title: data.title || "Untitled Event",
-    date: data.startDate
-      ? (() => {
-        const start = format(new Date(data.startDate), "MMMM d, yyyy");
-        const end = data.endDate ? format(new Date(data.endDate), "MMMM d, yyyy") : null;
-        return end && start !== end ? `${start} - ${end}` : start;
-      })()
-      : "TBD",
-    time: data.startDate
-      ? (() => {
-        const start = format(new Date(data.startDate), "h:mma").toLowerCase();
-        const end = data.endDate ? format(new Date(data.endDate), "h:mma").toLowerCase() : null;
-        return end && start !== end ? `${start} - ${end}` : start;
-      })()
-      : "TBD",
-    startDate: data.startDate,
-    dressCode: data.dressCode?.type === "Custom" ? data.dressCode?.details : data.dressCode?.type,
-    host: data.host || null,
-    building: data.location?.venue || "",
-    location: data.location?.state || "Location TBD",
-    furtherDirections: data.location?.directions || "",
-    going: data.guests || [],
-    latitude: data.location?.coordinates?.lat || 0,
-    longitude: data.location?.coordinates?.lng || 0,
-    image: data.image || "",
-    description: data.description || "No description available.",
-    chipInDetails: data.chipInDetails || null,
-    totalDonations: data.totalDonations || 0,
-    userRole: data.userRole || "",
-    userResponse: data.userResponse || "",
-    guestCount: data.guestCount || 0,
-    isPrivate: data.isPrivate,
-    cohosts: data.cohosts || [],
-    slug: data.slug || "",
+  // Text expansion state
+  const [textExpanded, setTextExpanded] = useState(false);
+  const descriptionLimit = 140;
+  const truncatedDescription =
+    event?.description && event?.description.length > descriptionLimit
+      ? `${event.description.slice(0, descriptionLimit)}...`
+      : event?.description;
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const previousPage = location.state?.from || document.referrer; // Fallback to document.referrer if state is not available
+
+  const handleNavigateBack = () => {
+    const isInternal =
+      previousPage &&
+      previousPage.startsWith("/") &&
+      !previousPage.startsWith("//");
+    // Check if previous page exists and is part of the same app (to avoid navigating back to an external site)
+    if (isInternal) {
+      navigate(-1);
+    } else {
+      if (user) {
+        navigate("/home");
+      } else {
+        navigate("/");
+      }
+    }
   };
 
-  // Mocked guest data properties for the UI
-  const goingPhotos = event.going.map(guest => guest.photoUrl).filter(Boolean);
-  const remainingCount = Math.max(0, event.guestCount - goingPhotos.length);
-
-  // 👇 The updated logged-in user block
-  if (user) {
-    return (
-      <EventExpandedView 
-        event={event} 
-        onClose={onClose} 
-        onCycleView={cycleViewState} 
-      />
-    );
-  }
-
-  // Guest View (Not Logged In)
+  // Loading and error states
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading event details</div>;
   return (
-    <div className="w-full h-screen flex flex-col">
-      <main className="flex flex-col place-items-center flex-1">
-        <EventTimerNav targetDate={event?.startDate} onClick={() => navigate("/home")} />
-        <section className="w-[513px] h-fit py-6 flex justify-between">
-          <TagButton text="Back" leftImg={<ArrowCircleLeft2 size={16} variant='Bold' />} variant="white" size="lg" onClick={onClose} />
-          <div className="flex gap-4">
-            <TagButton text="share" rightImg={<Send2 color="black" variant="Bold" />} variant="white" size="lg" onClick={handleShare} />
-            <TagButton text="Collapse" rightImg={<Maximize1 color="black" variant="Bold" />} variant="white" size="lg" onClick={cycleViewState} />
-          </div>
-        </section>
-
-        <section className="w-[513px] h-fit flex flex-col gap-6 place-items-center">
-          <div className="grid gap-4 place-items-center">
-            <div className="grid text-center place-items-center">
-              <EventStatus title="draft" size="sm" color="bluegreen" />
-              <h1 className="paytone text-2xl font-normal">{event.title}</h1>
-            </div>
-          </div>
-
-          {event.image && (
-            <img
-              src={event.image}
-              alt={event.title}
-              className="size-[381px] rounded-3xl aspect-square object-cover"
-            />
-          )}
-
-          <div className="grid gap-2 place-items-center">
-            <div className="size-fit flex gap-2 items-center">
-              <IconButton icon={<Calendar1 variant="Bold" color="#866AD2" />} variant="tertiary" />
-              <h6 className="satoshi text-base font-medium text-black">
-                {event.date} <span className="text-[#8A9191] ml-2">{event.time}</span>
-              </h6>
-            </div>
-
-            <div className="size-fit flex gap-2 items-center">
-              <TagButton size="md" text={event.location} variant="light-purple" leftImg={<Location color="#7A60BF" variant="Bold" />} />
-
-              {event.chipInDetails?.amount && (
-                <TagButton text={`From - ₦${event.chipInDetails.amount}`} variant="light-purple" leftImg={<Money3 color="#7A60BF" variant="Bold" />} />
-              )}
-
-              <AvatarGroup
-                size="sm"
-                count={remainingCount}
-                src={goingPhotos}
+    <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
+      <div className="sticky top-0 z-50">
+        <EventTimerNav targetDate={event.startDate} />
+      </div>
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {isShared ? (
+          <div className="mx-auto max-w-[545px] w-full px-4">
+            {/* Top navigation */}
+            <div className="py-6 flex justify-between items-center">
+              <TagButton
+                onClick={handleNavigateBack}
+                text="Back"
+                variant="tertiary"
+                className="h-8 text-xs min-w-0 px-2"
+                leftImg={<ArrowLeft2 size={16} />}
               />
 
-              {event.userResponse === "going" && (
-                <AttendanceStatus status="going" />
+              <div className="flex items-center gap-4">
+                <TextButton
+                  rightImg={<Send2 variant="Bold" />}
+                  text="Share"
+                  className="min-w-0 px-2 h-8 text-xs sm:h-8 sm:text-xs"
+                  variant="tertiary"
+                />
+
+                <Link to={`/events/${event.slug}`}>
+                  <TextButton
+                    rightImg={<Maximize1 variant="Bold" />}
+                    text="More details"
+                    className="min-w-0 px-2 h-8 text-xs sm:h-8 sm:text-xs"
+                    variant="tertiary"
+                  />
+                </Link>
+              </div>
+            </div>
+            {/* Event details */}
+            <div className="flex flex-col items-center">
+              <h1 className="text-2xl leading-8 paytone">{event.title}</h1>
+              {event.category.length > 0 && (
+                <div className="flex items-center gap-2 mt-4 flex-wrap">
+                  {event.category.map((cat, index) => (
+                    <TagButton
+                      key={index}
+                      className={twMerge(
+                        "pointer-events-none h-[22px] p-1 text-[10px] leading-3.5 satoshi",
+                        categories[cat] ? categories[cat] : "text-[#001010]"
+                      )}
+                      text={cat}
+                    />
+                  ))}
+                </div>
               )}
-              {event.userResponse === "not-sure" && (
-                <AttendanceStatus status="not-sure" />
+              <div
+                className={twMerge(
+                  "max-w-[381px] my-6 w-full overflow-hidden rounded-3xl "
+                )}
+              >
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="w-full h-full aspect-square object-cover"
+                />
+              </div>
+              {/* Event date */}
+              {event.startDate && (
+                <div className="flex gap-2 items-center">
+                  <IconButton
+                    icon={
+                      <Calendar1
+                        variant="Bold"
+                        color="#866AD2"
+                        className="size-4 sm:size-6"
+                      />
+                    }
+                    variant="tertiary"
+                    className="pointer-events-none sm:size-11 size-6"
+                  />
+                  <div className="flex flex-1  satoshi sm:text-base text-sm font-medium">
+                    <React.Fragment>
+                      <p className="text-[#001010] ">
+                        {format(
+                          new Date(event.startDate),
+                          "EEEE, MMMM d, yyyy"
+                        )}
+                      </p>
+                      <p className="text-[#8A9191] ml-2">
+                        {format(new Date(event.startDate), "h:mm a")}
+                      </p>
+                    </React.Fragment>
+                  </div>
+                </div>
               )}
-              {event.userResponse === "not-going" && (
-                <AttendanceStatus status="not-going" />
+              {/* Event tags */}
+              <div className="flex-wrap items-center gap-1 mb-6 mt-2 flex">
+                {/* Location */}
+                {eventLocation && (
+                  <TagButton
+                    size="lg"
+                    text={eventLocation}
+                    variant="light-purple"
+                    className="satoshi bold min-w-0 pointer-events-none px-2"
+                    leftImg={<Location size="12" variant="Bold" />}
+                  />
+                )}
+                {/* Chip in type */}
+                {chipInDetails && chipInAmount && (
+                  <TagButton
+                    size="lg"
+                    text={`${chipInType === "fixed" ? "Fixed" : chipInType === "target" ? "Target" : "From"} - ${formatNaira(chipInAmount)}`}
+                    variant="light-purple"
+                    className="satoshi bold min-w-0 pointer-events-none px-2"
+                    leftImg={<Money3 size={12} variant="Bold" />}
+                  />
+                )}
+                {/* Guest count */}
+                {event?.guests && (
+                  <AvatarGroup
+                    size="md"
+                    src={goingPhotos}
+                    count={remainingCount}
+                  />
+                )}
+                {/* User response */}
+                {event?.userResponse && (
+                  <TagButton
+                    size="lg"
+                    text={event.userResponse}
+                    variant={responseColors[event.userResponse]}
+                    className="satoshi bold min-w-0 pointer-events-none px-2"
+                    leftImg={<TickCircle size={12} variant="Bold" />}
+                  />
+                )}
+              </div>
+              {/* Manage Event Button */}
+              {isHost && (
+                <Link
+                  to={`/manage-event/${event.slug}`}
+                  className="w-full inline-block mb-2.5"
+                >
+                  <Alert
+                    title="You have manage access"
+                    size="sm"
+                    option="outline"
+                    className="rounded-[100px]"
+                    button={
+                      <TagButton
+                        variant="purple"
+                        text="Manage"
+                        className="h-6 w-auto px-[6px] min-w-auto"
+                        rightImg={<ArrowRight2 size={12} />}
+                        size="sm"
+                      />
+                    }
+                  />
+                </Link>
+              )}
+              {event.userResponse ? (
+                <div className=" flex flex-col justify-between gap-6 items-start">
+                  <div className="flex flex-col items-center text-center satoshi gap-1">
+                    <div className="flex items-center gap-4">
+                      <p className="font-bold text-[#001010]">
+                        {event.userResponse === "going"
+                          ? "✅ You’re going!"
+                          : "👀 Not Sure Yet?"}
+                      </p>
+                      <div className="rounded-full border border-[#f9f9f9] pr-2 bg-[#E5E7E3] flex items-center gap-0.5 p-0.5">
+                        <Avatar size="xs" src={user.photo} />
+                        <p className="text-xs font-medium text-[#001010]">
+                          {user.name || user.fullName || user.email || "Guest"}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-[#8A9191] font-medium">
+                      {event.userResponse === "going"
+                        ? "We can’t wait to see you there! If your plans change, you can update your RSVP anytime."
+                        : "We’ll remind you as the date gets closer, just in case youdecide to come."}
+                    </p>
+                  </div>
+                  <div className="flex gap-6 items-center justify-center w-full">
+                    <TextButton
+                      text="Invite Friends"
+                      variant="tertiary"
+                      rightImg={<Send2 variant="Bold" />}
+                    />
+                    {event.userResponse !== "going" && (
+                      <TextButton
+                        text="Going"
+                        onClick={() => handleRespond("going")}
+                        state={isPending ? "loading" : "default"}
+                        disabled={isPending}
+                        rightImg={<TickCircle variant="Bold" />}
+                      />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-center w-full gap-2 py-4 bg-transparent">
+                  <ConfirmAttendance event={event} />
+                </div>
               )}
             </div>
           </div>
+        ) : (
+          <React.Fragment>
+            {/* Left content */}
+            <div className="w-full lg:w-[461px] items-center lg:items-start bg-[#f0f0f0] lg:fixed lg:top-[52px] lg:bottom-0 lg:left-0 lg:pl-20 z-20 flex flex-col py-8 px-8 gap-4 overflow-y-auto scrollbar-hide">
+              <div>
+                <TagButton
+                  text="Back"
+                  variant="tertiary"
+                  className="h-8 min-w-0 px-2 mb-4"
+                  leftImg={<ArrowLeft2 size={16} />}
+                  onClick={handleNavigateBack}
+                />
+              </div>
 
-          {event.userRole === "host" && (
-            <Alert
-              title="You have manage access to this event"
-              size='sm'
-              option='outline'
-              onClick={() => console.log("Action triggered!")}
-              button={<TagButton variant="purple" text='Manage' rightImg={<ArrowRight2 size={12} />} size='sm' className='border-0' />}
-            />
-          )}
-        </section>
+              <div>
+                <div className="md:size-[349px] size-full overflow-hidden rounded-3xl border-4 shadow-[0_20px_60px_rgba(0,0,0,0.12)] border-white flex-shrink-0">
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              {isHost && (
+                <div className="w-full">
+                  <Link
+                    to={`/manage-event/${event.slug}`}
+                    className="w-full inline-block"
+                  >
+                    <Alert
+                      title="You have manage access"
+                      size="sm"
+                      option="outline"
+                      className="mx-auto lg:mx-0 lg:max-w-none rounded-[100px] max-w-[380px]"
+                      button={
+                        <TagButton
+                          variant="purple"
+                          text="Manage"
+                          className="h-6 w-auto px-[6px] min-w-auto"
+                          rightImg={<ArrowRight2 size={12} />}
+                          size="sm"
+                        />
+                      }
+                    />
+                  </Link>
+                </div>
+              )}
 
-        <section className="w-full flex justify-center p-4 mt-auto bg-gradient-to-b from-[#E8E8E8]/0 to-[#E8E8E8]">
-          <div className="w-[513px] flex gap-2">
-            <ConfirmationButton variant="going" />
-            <ConfirmationButton variant="not-sure" onClick={() => console.log("clicked")} />
-          </div>
-        </section>
-      </main>
+              <div className="grid gap-1">
+                <span className="text-base text-[#B0B5B5] font-medium paytone">
+                  Hosted by
+                </span>
+                <div className="flex gap-1 items-center justify-between">
+                  <div className="flex gap-1 items-center">
+                    <Avatar size="xs" src={hostPhoto} />
+                    <div className="grid">
+                      <span className="text-base font-medium text-[#001010]">
+                        {hostName}
+                      </span>
+                      <span className="text-xs font-medium text-[#8A9191]">
+                        Host
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-1">
+                <span className="text-base text-[#B0B5B5] font-medium paytone">
+                  Attending
+                </span>
+                <div className="flex items-center gap-1">
+                  <AvatarGroup
+                    count={remainingCount}
+                    size="md"
+                    src={goingPhotos}
+                  />
+                  <TagButton
+                    leftImg={<TickCircle variant="Bold" />}
+                    className="min-w-0 px-2 pointer-events-none"
+                    text={goingGuests.length > 0 ? "Going" : "No RSVPs yet"}
+                    variant={goingGuests.length > 0 ? "green" : "outline"}
+                    size="lg"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Right content */}
+            <div className="w-full overflow-hidden  min-w-0 flex flex-col h-full  min-h-[calc(100vh-52px)] bg-white/80 relative border-l border-[#E5E7E3] lg:ml-[461px] lg:w-[calc(100%-461px)] rounded-l-2xl">
+              <section className="flex gap-6 flex-col py-6 px-10 pt-9 border-b lg:pr-20 border-[#E5E7E3] ">
+                <div className="flex gap-2 justify-between">
+                  <TagButton
+                    text={event.isPrivate ? "Private Event" : "Public Event"}
+                    variant="light-purple"
+                    size="lg"
+                    className="font-bold pointer-events-none satoshi"
+                  />
+                  <div className="flex gap-4">
+                    <TextButton
+                      rightImg={<Send2 variant="Bold" />}
+                      text="Share"
+                      className="min-w-0 px-2"
+                      variant="tertiary"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-4 flex-col">
+                  <h2
+                    className={`text-3xl font-normal ${event.font || "paytone"} text-[#001010]`}
+                  >
+                    {event.title || "No title provided"}
+                  </h2>
+                  {event.category.length > 0 && (
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {event.category.map((cat, index) => (
+                        <TagButton
+                          key={index}
+                          className={twMerge(
+                            "pointer-events-none satoshi",
+                            categories[cat] ? categories[cat] : "text-[#001010]"
+                          )}
+                          text={cat}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </section>
+              <div className="flex flex-col">
+                {(event.startDate ||
+                  event.location.state ||
+                  event.meetingURL ||
+                  event.dressCode) && (
+                  <div className="flex flex-col gap-3 px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
+                    {event.startDate && (
+                      <div className="flex gap-2 items-center">
+                        <IconButton
+                          icon={
+                            <Calendar1
+                              variant="Bold"
+                              className="size-4 sm:size-6"
+                            />
+                          }
+                          variant="tertiary"
+                          className="pointer-events-none sm:size-11 size-6"
+                        />
+                        <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                          <React.Fragment>
+                            <p className="text-[#001010] ">
+                              {format(
+                                new Date(event.startDate),
+                                "EEEE, MMMM d, yyyy"
+                              )}
+                            </p>
+                            <p className="text-[#8A9191]">
+                              {format(new Date(event.startDate), "h:mm a")}
+                            </p>
+                          </React.Fragment>
+                        </div>
+                      </div>
+                    )}
+                    {/* Location */}
+                    {event.location.state && (
+                      <div className="flex gap-2 items-center">
+                        <IconButton
+                          icon={
+                            <Location
+                              variant="Bold"
+                              className="size-4 sm:size-6"
+                            />
+                          }
+                          variant="tertiary"
+                          className="pointer-events-none sm:size-11 size-6"
+                        />
+                        <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                          <p className="text-[#001010] capitalize">
+                            {event.location.venue ||
+                              event.location.state ||
+                              event.location.city}
+                          </p>
+                          {event.location.venue && (
+                            <p className="text-[#8A9191] capitalize">
+                              {event.location.city
+                                ? `${event.location.city}, `
+                                : ""}
+                              {event.location.state}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    {/* Online event */}
+                    {event.meetingURL && (
+                      <div className="flex gap-2 items-center">
+                        <IconButton
+                          icon={
+                            <LinkCircle
+                              variant="Bold"
+                              className="size-4 sm:size-6"
+                            />
+                          }
+                          variant="tertiary"
+                          className="pointer-events-none sm:size-11 size-6"
+                        />
+                        <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                          <p className="text-[#001010]">Online Event</p>
+                          <p className="text-[#8A9191]">{event.meetingURL}</p>
+                        </div>
+                      </div>
+                    )}
+                    {/* Dress code */}
+                    {event.dressCode && (
+                      <div className="flex gap-2 items-center">
+                        <IconButton
+                          icon={
+                            <Colorfilter
+                              variant="Bold"
+                              className="size-4 sm:size-6"
+                            />
+                          }
+                          variant="tertiary"
+                          className="pointer-events-none sm:size-11 size-6"
+                        />
+                        <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                          <p className="text-[#001010]">Dress Code</p>
+                          <p className="text-[#8A9191] capitalize">
+                            {event.dressCode.type}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className="space-y-2 py-6 px-10 border-b border-[#E5E7E3] lg:pr-20">
+                  <h3 className="text-base font-medium text-[#8A9191] paytone">
+                    About event
+                  </h3>
+                  <p
+                    className={`text-[#001010] text-base font-medium leading-relaxed ${textExpanded ? "" : "line-clamp-3"}`}
+                  >
+                    {textExpanded
+                      ? event.description
+                      : truncatedDescription || "No description provided"}
+                  </p>
+                  {event.description &&
+                    event.description.length > descriptionLimit && (
+                      <button
+                        onClick={() => setTextExpanded(!textExpanded)}
+                        className="text-sm font-bold text-[#9E88DB]"
+                      >
+                        {textExpanded ? "Read less" : "Read more"}
+                      </button>
+                    )}
+                </div>
+                {event.chipInDetails && event.chipInDetails.amount && (
+                  <div className="space-y-2 py-6 px-10 lg:pr-20">
+                    <h3 className="text-base font-medium text-[#8A9191] paytone">
+                      Chip In
+                    </h3>
+                    {event.chipInDetails.chipInType === "target" && (
+                      <ProgressBar
+                        current={event.totalDonations}
+                        target={event.chipInDetails?.amount}
+                      />
+                    )}
+                    {event.chipInDetails.chipInType === "donation" && (
+                      <ProgressBar
+                        variant="minimum-amount"
+                        amount={event.chipInDetails?.amount}
+                      />
+                    )}
+                    {event.chipInDetails.chipInType === "fixed" && (
+                      <ProgressBar
+                        variant="amount"
+                        amount={event.chipInDetails?.amount}
+                      />
+                    )}
+                  </div>
+                )}
+                {event.location.coordinates && (
+                  <div className="py-6 px-10 lg:pr-20 flex flex-col border-b border-[#E5E7E3]">
+                    <h3 className="text-base font-medium mb-3 text-[#8A9191] paytone">
+                      Location
+                    </h3>
+                    <div className="grid mb-2">
+                      <span className="text-[#001010] text-base font-medium">
+                        {event.location.venue ||
+                          event.location.state ||
+                          event.location.city}
+                      </span>
+                      {event.location.venue && (
+                        <span className="text-[#8A9191] text-base font-medium">
+                          {event.location.city
+                            ? `${event.location.city}, `
+                            : ""}
+                          {event.location.state}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-[#8A9191]">
+                        Further directions
+                      </p>
+                      <div className="w-full rounded-2xl h-[335px] overflow-hidden mt-3 border border-[#E5E7E3]">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          style={{ border: 0 }}
+                          loading="lazy"
+                          allowFullScreen
+                          referrerPolicy="no-referrer-when-downgrade"
+                          src={`https://maps.google.com/maps?q=${encodeURIComponent(event.location.venue || event.location.state || event.location.city)}&ll=${event.location.coordinates.lat},${event.location.coordinates.lng}&z=15&output=embed`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-col py-6 pb-2 px-10 border-b border-[#E5E7E3] lg:pr-20">
+                  <h3 className="text-base font-medium text-[#8A9191] paytone">
+                    Going ({goingGuests.length})
+                  </h3>
+                  {goingGuests.length > 0 ? (
+                    <div className="flex overflow-x-auto pt-2 pl-3 -ml-3 pb-4 scrollbar-hide gap-4">
+                      {goingGuests.map((guest, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center justify-center gap-1 w-[112px] shrink-0 h-[90px] p-3 rounded-[12px] bg-[#FFFFFF] shadow-[0px_4px_16px_rgba(0,0,0,0.04)]"
+                        >
+                          <Avatar size="lg" src={guest.photo} />
+                          <span className="text-[#001010] text-[10px] font-medium text-center truncate w-full block">
+                            {guest.name
+                              ? guest.name
+                              : guest.fullName
+                                ? guest.fullName
+                                : guest.email
+                                  ? guest.email
+                                  : "Guest"}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-[#8A9191]">
+                      No attendees have RSVP'd yet.
+                    </p>
+                  )}
+                </div>
+                {event.userResponse ? (
+                  <div className="py-6 px-10 flex justify-between gap-6 items-start lg:pr-20">
+                    <div className="flex flex-col satoshi gap-1">
+                      <div className="flex items-center gap-4">
+                        <p className="font-bold text-[#001010]">
+                          {event.userResponse === "going"
+                            ? "✅ You’re going!"
+                            : "👀 Not Sure Yet?"}
+                        </p>
+                        <div className="rounded-full border border-[#f9f9f9] pr-2 bg-[#E5E7E3] flex items-center gap-0.5 p-0.5">
+                          <Avatar size="xs" src={user.photo} />
+                          <p className="text-xs font-medium text-[#001010]">
+                            {user.name ||
+                              user.fullName ||
+                              user.email ||
+                              "Guest"}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-[#8A9191] font-medium">
+                        {event.userResponse === "going"
+                          ? "We can’t wait to see you there! If your plans change, you can update your RSVP anytime."
+                          : "We’ll remind you as the date gets closer, just in case youdecide to come."}
+                      </p>
+                    </div>
+                    <div className="flex gap-6  items-center">
+                      <TextButton
+                        text="Invite Friends"
+                        variant="tertiary"
+                        rightImg={<Send2 variant="Bold" />}
+                      />
+                      {event.userResponse !== "going" && (
+                        <TextButton
+                          text="Going"
+                          onClick={() => handleRespond("going")}
+                          state={isPending ? "loading" : "default"}
+                          disabled={isPending}
+                          rightImg={<TickCircle variant="Bold" />}
+                        />
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex justify-end gap-3 px-10 pb-9 bg-gradient-to-b from-[#e8e8e8]/0 to-[#FFFFFF] pt-6 lg:pr-20">
+                    <ConfirmAttendance event={event} />
+                  </div>
+                )}
+              </div>
+            </div>
+          </React.Fragment>
+        )}
+      </div>
+      {/* Pay chip in modal */}
+      {event.chipInDetails && <PayChipInModal event={event} />}
     </div>
   );
-};
-
-export default EventDetails;
+}

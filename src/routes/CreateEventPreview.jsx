@@ -23,7 +23,7 @@ import {
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-const EventPreview = ({ event, setIsPreview, settings }) => {
+const CreateEventPreview = ({ event, setIsPreview, settings }) => {
   const { user } = useAuthStore();
 
   if (!event) {
@@ -53,9 +53,9 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
       <div className="sticky top-0 z-50">
         <EventTimerNav targetDate={event.startDate} />
       </div>
-      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
         {/* Left content */}
-        <div className="w-full md:w-[413px] items-start bg-[#f0f0f0] md:fixed md:top-[52px] md:bottom-0 md:left-0 z-20 flex flex-col py-8 px-8 gap-4 overflow-y-auto scrollbar-hide">
+        <div className="w-full lg:w-[461px] items-center lg:items-start bg-[#f0f0f0] lg:fixed lg:top-[52px] lg:bottom-0 lg:left-0 lg:pl-20 z-20 flex flex-col py-8 px-8 gap-4 overflow-y-auto scrollbar-hide">
           <div>
             <TagButton
               text="Back"
@@ -81,6 +81,7 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
                 title="You have manage access"
                 size="sm"
                 option="outline"
+                className="mx-auto lg:mx-0 lg:max-w-none rounded-[100px] max-w-[380px]"
                 button={
                   <TagButton
                     variant="purple"
@@ -131,8 +132,8 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
         </div>
 
         {/* Right content */}
-        <div className="w-full overflow-hidden  min-w-0 flex flex-col h-full  min-h-[calc(100vh-52px)] bg-white/80 relative border-l border-[#E5E7E3] md:ml-[413px] rounded-l-2xl">
-          <section className="flex gap-6 flex-col py-6 px-10 pt-9 border-b border-[#E5E7E3] ">
+        <div className="w-full overflow-hidden  min-w-0 flex flex-col h-full  min-h-[calc(100vh-52px)] bg-white/80 relative border-l border-[#E5E7E3] lg:ml-[461px] lg:w-[calc(100%-461px)] rounded-l-2xl">
+          <section className="flex gap-6 flex-col py-6 px-10 pt-9 border-b lg:pr-20 border-[#E5E7E3] ">
             <div className="flex gap-2 justify-between">
               <TagButton
                 text={event.isPrivate ? "Private Event" : "Public Event"}
@@ -171,12 +172,12 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
               )}
             </div>
           </section>
-          <div className="overflow-y-auto flex flex-col scrollbar-hide">
+          <div className="flex flex-col">
             {(event.startDate ||
               event.location.state ||
               event.meetingURL ||
               (settings.hasDressCode && event.dressCode)) && (
-              <div className="flex flex-col gap-3 px-10 py-6 border-b border-[#E5E7E3]">
+              <div className="flex flex-col gap-3 px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
                 {event.startDate && (
                   <div className="flex gap-2 items-center">
                     <IconButton
@@ -273,7 +274,7 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
                 )}
               </div>
             )}
-            <div className="space-y-2 py-6 px-10 border-b border-[#E5E7E3]">
+            <div className="space-y-2 py-6 px-10 border-b border-[#E5E7E3] lg:pr-20">
               <h3 className="text-base font-medium text-[#8A9191] paytone">
                 About event
               </h3>
@@ -297,7 +298,7 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
             {settings.hasChipIn &&
               event.chipInDetails &&
               event.chipInDetails.amount && (
-                <div className="space-y-2 py-6 px-8">
+                <div className="space-y-2 py-6 px-10 lg:pr-20">
                   <h3 className="text-base font-medium text-[#8A9191] paytone">
                     Chip In
                   </h3>
@@ -321,8 +322,8 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
                   )}
                 </div>
               )}
-            {event.location.state && (
-              <div className="py-6 px-8 flex flex-col border-b border-[#E5E7E3]">
+            {event.location.coordinates && (
+              <div className="py-6 px-10 lg:pr-20 flex flex-col border-b border-[#E5E7E3]">
                 <h3 className="text-base font-medium mb-3 text-[#8A9191] paytone">
                   Location
                 </h3>
@@ -360,7 +361,7 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
               </div>
             )}
 
-            <div className="flex flex-col py-6 pb-2 px-10 border-b border-[#E5E7E3]">
+            <div className="flex flex-col py-6 pb-2 px-10 border-b border-[#E5E7E3] lg:pr-20">
               <h3 className="text-base font-medium text-[#8A9191] paytone">
                 Going ({goingGuests.length})
               </h3>
@@ -390,12 +391,9 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
                 </p>
               )}
             </div>
-            <div className="flex justify-end gap-3 px-10 pb-9 bg-gradient-to-b from-[#e8e8e8]/0 to-[#FFFFFF] pt-6">
-              <ConfirmationButton
-                variant="not-sure"
-                className="max-w-[300px]"
-              />
-              <ConfirmationButton variant="going" className="max-w-[300px]" />
+            <div className="flex justify-end gap-3 px-10 pb-9 bg-gradient-to-b from-[#e8e8e8]/0 to-[#FFFFFF] pt-6 lg:pr-20">
+              <ConfirmationButton variant="not-sure" />
+              <ConfirmationButton variant="going" />
             </div>
           </div>
         </div>
@@ -404,4 +402,4 @@ const EventPreview = ({ event, setIsPreview, settings }) => {
   );
 };
 
-export default EventPreview;
+export default CreateEventPreview;

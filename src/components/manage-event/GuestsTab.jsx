@@ -12,7 +12,7 @@ import NoGuests from "./NoGuests";
 import TableSearch from "./TableSearch";
 import Modal from "../layout-components/Modal/Modal";
 
-function GuestsTab() {
+function GuestsTab({ isPaidEvent }) {
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -120,7 +120,7 @@ function GuestsTab() {
           <GuestsTableSkeleton rows={10} />
         ) : guests.length > 0 ? (
           <React.Fragment>
-            <GuestsTable guests={guests} />
+            <GuestsTable guests={guests} isPaidEvent={isPaidEvent} />
             <div className="w-full flex justify-between items-center">
               <div className="flex items-center gap-2.5 satoshi text-xs text-[#001010] font-medium">
                 {/* Going count */}

@@ -23,7 +23,8 @@ export default function SignUpForm({ onSuccess, setForm }) {
   // Modal context
   const { close } = useModalContext();
   // Auth store
-  const { setUser, setAccessToken, setLastFetchedProfile } = useAuthStore();
+  const { setUser, setAccessToken, setRefreshToken, setLastFetchedProfile } =
+    useAuthStore();
 
   const { mutate: signupMutate, isPending: loading } = useMutation({
     mutationFn: async signupData => {
@@ -31,6 +32,8 @@ export default function SignUpForm({ onSuccess, setForm }) {
       const signupResponse = await authApi.signup(signupData);
       // Store access token
       setAccessToken(signupResponse.accessToken);
+      // Store refresh token
+      setRefreshToken(signupResponse.refreshToken);
       // Fetch user profile
       const getProfileResponse = await authApi.getProfile();
       const user = getProfileResponse.user;

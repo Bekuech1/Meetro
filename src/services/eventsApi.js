@@ -42,4 +42,11 @@ export const eventsApi = {
     );
     return guestsResponse.data;
   },
+  confirmAttendance: async (eventId, responseStatus) => {
+    const responseData = await API.post(`/events/confirm-attendance`, {
+      eventId,
+      responseStatus,
+    });
+    return responseData.data;
+  },
 };

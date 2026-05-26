@@ -16,10 +16,15 @@ import { Calendar1, Location } from "iconsax-reactjs";
 import { FaFacebook, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router";
 import { twMerge } from "tailwind-merge";
+import EventDetailsModal from "@/components/layout-components/EventDetailsModal";
+import Modal from "@/components/layout-components/Modal/Modal";
 
 function Profile() {
   // Auth store
   const { user } = useAuthStore();
+
+  // State for active event in modal
+  const [activeEventId, setActiveEventId] = useState(null);
   // Filter state
   const [filter, setFilter] = useState("all");
   // Fetch past user events
@@ -220,7 +225,13 @@ function Profile() {
                   {filteredEvents.length > 0 ? (
                     <div className="flex flex-col w-full gap-2">
                       {filteredEvents.map((event, index) => (
-                        <EventItem key={index} event={event} />
+                        <Modal.Open
+                          onOpen={() => setActiveEventId(event._id)}
+                          key={index}
+                          opens={"event-details-modal"}
+                        >
+                          <EventItem event={event} />
+                        </Modal.Open>
                       ))}
                     </div>
                   ) : (
@@ -233,6 +244,8 @@ function Profile() {
         </div>
       </div>
       <BottomNav />
+      {/* Render event modal */}
+      {activeEventId && <EventDetailsModal eventId={activeEventId} />}
     </main>
   );
 }

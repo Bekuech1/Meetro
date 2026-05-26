@@ -1,6 +1,6 @@
 import TagButton from "../layout-components/Buttons/TagButton";
 import AvatarGroup from "../layout-components/AvatarGroup";
-import { formatNaira, timeAgo } from "@/lib/utils";
+import { formatNaira, responseColors, timeAgo } from "@/lib/utils";
 import { format } from "date-fns";
 import { Location, Money3, TickCircle } from "iconsax-reactjs";
 import { FaCircle } from "react-icons/fa6";
@@ -10,12 +10,6 @@ const statusColors = {
   upcoming: "light-cyan",
   "live now": "green",
   completed: "purple",
-};
-
-// Event response colors
-const responseColors = {
-  maybe: "purple",
-  going: "green",
 };
 
 function EventItem({ event, onClick }) {

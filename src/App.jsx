@@ -21,7 +21,7 @@ import LegalLayout from "./layouts/LegalLayout";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useRehydrateUser } from "./hooks/useRehydrateUser";
 import CreateEvent from "./routes/CreateEvent";
-import EventPreview from "./routes/EventPreview";
+import EventPreview from "./routes/CreateEventPreview";
 import Profile from "./routes/Profile";
 import Settings from "./routes/Settings";
 import EventDetails from "./routes/EventDetails";

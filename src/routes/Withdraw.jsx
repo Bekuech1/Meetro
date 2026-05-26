@@ -6,7 +6,7 @@ import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import WithdrawModal from "@/components/manage-event/WithdrawModal";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
 import { Bank, InfoCircle, RefreshCircle } from "iconsax-reactjs";
 import { paymentApi } from "@/services/paymentApi";
 import { useManageEventContext } from "@/layouts/ManageEventLayout";
@@ -62,6 +62,10 @@ function Withdraw() {
     }
     setActive("withdrawal-confirm");
   };
+
+  if (!loading && event && !event.chipInDetails) {
+    return <Navigate to={`/manage/${event.slug}`} replace />;
+  }
 
   return (
     <main className="bg-[#F0F0F0] h-full relative flex-1 flex flex-col pt-6 w-full pb-10">

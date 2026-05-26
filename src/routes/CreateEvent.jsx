@@ -43,7 +43,7 @@ import { twMerge } from "tailwind-merge";
 import { useAuthStore } from "@/stores/useAuthStore";
 import EventEntryCodeModal from "@/components/layout-components/Events/EventEntryCodeModal";
 import EventAttendeeLimitModal from "@/components/layout-components/Events/EventAttendeeLimitModal";
-import EventPreview from "./EventPreview";
+import CreateEventPreview from "@/routes/CreateEventPreview";
 
 function CreateEvent() {
   // User
@@ -398,7 +398,7 @@ function CreateEvent() {
   };
   if (isPreview) {
     return (
-      <EventPreview
+      <CreateEventPreview
         event={event}
         setIsPreview={setIsPreview}
         settings={settings}

@@ -3,7 +3,6 @@ import { twMerge } from "tailwind-merge";
 import { eventsApi } from "@/services/eventsApi";
 import { useQuery } from "@tanstack/react-query";
 import { groupEventsByDate } from "@/lib/utils";
-import { format } from "date-fns";
 import TagButton from "../layout-components/Buttons/TagButton";
 import NoEvents from "./NoEvents";
 import EventDate from "../layout-components/EventDate";
@@ -133,9 +132,8 @@ function EventsList() {
         )}
       </div>
 
-      {/* Render all event modals */}
-
-      <EventDetailsModal eventId={activeEventId} />
+      {/* Render event modal */}
+      {activeEventId && <EventDetailsModal eventId={activeEventId} />}
     </Modal>
   );
 }

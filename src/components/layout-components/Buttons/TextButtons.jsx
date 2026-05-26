@@ -113,7 +113,7 @@ const TextButton = ({
           />
         </div>
       ) : hasContent ? (
-        <div className={`w-fit flex items-center ${contentGap} h-fit`}>
+        <div className={`flex items-center ${contentGap} whitespace-nowrap`}>
           {/* Left icon */}
           {leftImg && (
             <React.Fragment>

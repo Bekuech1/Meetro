@@ -7,7 +7,7 @@ import { useLocation } from "react-router";
 
 function ManageEvent() {
   const location = useLocation();
-  const { tab } = useManageEventContext();
+  const { tab, event } = useManageEventContext();
 
   useEffect(() => {
     window.scrollTo({
@@ -21,7 +21,7 @@ function ManageEvent() {
       case "overview":
         return <OverviewTab />;
       case "guests":
-        return <GuestsTab />;
+        return <GuestsTab isPaidEvent={event.chipInDetails ? true : false} />;
       case "payouts":
         return <PayoutsTab />;
       default:
