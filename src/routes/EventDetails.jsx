@@ -5,17 +5,20 @@ import IconButton from "@/components/layout-components/Buttons/IconButton";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import ConfirmAttendance from "@/components/layout-components/Events/ConfirmAttendance";
+import EventCategories from "@/components/layout-components/Events/EventCategories";
 import PayChipInModal from "@/components/layout-components/Events/PayChipInModal";
 import EventTimerNav from "@/components/layout-components/EventTimerNav";
 import ProgressBar from "@/components/layout-components/ProgressBar";
 import { useConfirmAttendance } from "@/hooks/useConfirmAttendance";
 import { useShareEvent } from "@/hooks/useShareEvent";
-import { categories, responseColors } from "@/lib/utils";
+import { responseColors } from "@/lib/utils";
 import { eventsApi } from "@/services/eventsApi";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
+  ArrowDown,
+  ArrowDown2,
   ArrowLeft2,
   ArrowRight2,
   Calendar1,
@@ -27,7 +30,7 @@ import {
   Send2,
   TickCircle,
 } from "iconsax-reactjs";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Link,
   useLocation,
@@ -36,6 +39,104 @@ import {
   useSearchParams,
 } from "react-router";
 import { twMerge } from "tailwind-merge";
+
+const EventDetailsSkeleton = ({ isShared }) => (
+  <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
+    <div className="sticky top-0 z-50">
+      <EventTimerNav />
+    </div>
+    <div className="flex flex-1 flex-col overflow-hidden animate-pulse">
+      {isShared ? (
+        <div className="mx-auto max-w-[545px] w-full px-4 pb-40">
+          <div className="space-y-6 pt-6">
+            <div className="h-8 w-28 rounded-full bg-gray-200" />
+            <div className="h-4 w-40 rounded-full bg-gray-200" />
+            <div className="w-full h-[320px] rounded-3xl bg-gray-200" />
+            <div className="space-y-3">
+              <div className="h-4 w-28 rounded-full bg-gray-200" />
+              <div className="h-4 w-full max-w-[420px] rounded-full bg-gray-200" />
+              <div className="h-4 w-full max-w-[300px] rounded-full bg-gray-200" />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <div className="h-8 w-24 rounded-full bg-gray-200" />
+              <div className="h-8 w-20 rounded-full bg-gray-200" />
+              <div className="h-8 w-24 rounded-full bg-gray-200" />
+            </div>
+            <div className="h-28 rounded-3xl bg-gray-200" />
+            <div className="h-20 rounded-3xl bg-gray-200" />
+            <div className="h-32 rounded-3xl bg-gray-200" />
+          </div>
+        </div>
+      ) : (
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+          <div className="w-full lg:w-[461px] bg-[#f0f0f0] lg:fixed lg:top-[52px] lg:bottom-0 lg:left-0 lg:pl-20 z-20 flex flex-col py-8 px-8 gap-4 overflow-y-auto scrollbar-hide">
+            <div className="h-8 w-24 rounded-full bg-gray-200" />
+            <div className="w-full aspect-square rounded-3xl bg-gray-200" />
+            <div className="space-y-3">
+              <div className="h-4 w-32 rounded-full bg-gray-200" />
+              <div className="h-4 w-48 rounded-full bg-gray-200" />
+            </div>
+            <div className="space-y-3">
+              <div className="h-4 w-28 rounded-full bg-gray-200" />
+              <div className="h-4 w-24 rounded-full bg-gray-200" />
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-gray-200" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-40 rounded-full bg-gray-200" />
+                <div className="h-3 w-28 rounded-full bg-gray-200" />
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="h-4 w-24 rounded-full bg-gray-200" />
+              <div className="h-20 rounded-3xl bg-gray-200" />
+            </div>
+          </div>
+          <div className="w-full overflow-hidden min-w-0 flex flex-col h-full min-h-[calc(100vh-52px)] bg-white/80 relative border-l border-[#E5E7E3] lg:ml-[461px] lg:w-[calc(100%-461px)] rounded-l-2xl">
+            <section className="flex gap-6 flex-col py-6 px-10 pt-9 border-b lg:pr-20 border-[#E5E7E3]">
+              <div className="flex justify-between gap-2 items-center">
+                <div className="h-9 w-36 rounded-full bg-gray-200" />
+                <div className="h-8 w-20 rounded-full bg-gray-200" />
+              </div>
+              <div className="space-y-3">
+                <div className="h-10 w-full max-w-[520px] rounded-2xl bg-gray-200" />
+                <div className="flex flex-wrap gap-2">
+                  <div className="h-8 w-24 rounded-full bg-gray-200" />
+                  <div className="h-8 w-20 rounded-full bg-gray-200" />
+                </div>
+              </div>
+            </section>
+            <div className="overflow-y-auto flex flex-col min-h-0 scrollbar-hide pb-40">
+              <div className="space-y-4 px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
+                <div className="h-6 w-36 rounded-full bg-gray-200" />
+                <div className="h-4 w-full max-w-[520px] rounded-full bg-gray-200" />
+                <div className="h-4 w-full max-w-[360px] rounded-full bg-gray-200" />
+              </div>
+              <div className="space-y-4 px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
+                <div className="h-5 w-40 rounded-full bg-gray-200" />
+                <div className="h-20 rounded-3xl bg-gray-200" />
+              </div>
+              <div className="space-y-4 px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
+                <div className="h-5 w-28 rounded-full bg-gray-200" />
+                <div className="h-4 w-full rounded-full bg-gray-200" />
+                <div className="h-4 w-full rounded-full bg-gray-200" />
+                <div className="h-4 w-3/4 rounded-full bg-gray-200" />
+              </div>
+              <div className="space-y-4 px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
+                <div className="h-5 w-32 rounded-full bg-gray-200" />
+                <div className="h-40 rounded-3xl bg-gray-200" />
+              </div>
+              <div className="space-y-4 px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
+                <div className="h-5 w-24 rounded-full bg-gray-200" />
+                <div className="h-16 rounded-3xl bg-gray-200" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+);
 
 export default function EventDetails() {
   const { slug } = useParams();
@@ -119,8 +220,73 @@ export default function EventDetails() {
     }
   };
 
+  const handleMoreDetails = () => {
+    // navigate to the same page without the shared param
+    navigate(`/events/${event.slug}`, { replace: true });
+  };
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, [isShared]);
+
+  const sharedRef = useRef(null);
+
+  const isAtPageBottom = () => {
+    const doc = document.documentElement;
+    const scrollTop = window.scrollY || doc.scrollTop;
+    const clientHeight = window.innerHeight || doc.clientHeight;
+    const scrollHeight = doc.scrollHeight;
+    return scrollTop + clientHeight >= scrollHeight - 8;
+  };
+
+  const handleMoreScroll = e => {
+    // wheel event
+    if (e?.deltaY !== undefined) {
+      if (isAtPageBottom() && e.deltaY > 0) {
+        handleMoreDetails();
+      }
+      return;
+    }
+  };
+
+  useEffect(() => {
+    if (!isShared) return;
+
+    let touchStartY = null;
+
+    const onTouchStart = ev => {
+      touchStartY = ev.touches?.[0]?.clientY ?? null;
+    };
+
+    const onTouchMove = ev => {
+      if (touchStartY === null) return;
+      const currentY = ev.touches?.[0]?.clientY ?? 0;
+      const dy = touchStartY - currentY; // positive when swiping up
+      if (isAtPageBottom() && dy > 30) {
+        handleMoreDetails();
+        touchStartY = null;
+      }
+    };
+
+    window.addEventListener("wheel", handleMoreScroll, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+
+    return () => {
+      window.removeEventListener("wheel", handleMoreScroll);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [isShared, event]);
+
   // Loading and error states
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <EventDetailsSkeleton isShared={searchParams.get("shared") === "true"} />
+    );
   if (error) return <div>Error loading event details</div>;
   return (
     <div className="flex flex-col satoshi min-h-dvh bg-[#F0F0F0]">
@@ -129,58 +295,49 @@ export default function EventDetails() {
       </div>
       <div className="flex flex-1 flex-col overflow-hidden">
         {isShared ? (
-          <div className="mx-auto max-w-[545px] w-full px-4">
+          <div
+            ref={sharedRef}
+            className="mx-auto flex-1 max-w-[545px] flex flex-col w-full"
+          >
             {/* Top navigation */}
-            <div className="py-6 flex justify-between items-center">
+            <div className="px-4 pt-6 pb-4 sm:pb-6 flex justify-between items-center">
               <TagButton
-                onClick={handleNavigateBack}
                 text="Back"
                 variant="tertiary"
-                className="h-8 text-xs min-w-0 px-2"
+                className="h-9 text-sm sm:text-xs sm:h-8 min-w-0 px-2"
                 leftImg={<ArrowLeft2 size={16} />}
+                onClick={handleNavigateBack}
               />
 
               <div className="flex items-center gap-4">
                 <TextButton
                   rightImg={<Send2 variant="Bold" />}
                   text="Share"
-                  className="min-w-0 px-2 h-8 text-xs sm:h-8 sm:text-xs"
+                  className="h-9  text-sm sm:text-xs sm:h-8 min-w-0 px-2"
                   variant="tertiary"
                   onClick={handleShare}
                 />
-
-                <Link to={`/events/${event.slug}`}>
+                <Link to={`/events/${event.slug}`} className="hidden sm:flex">
                   <TextButton
                     rightImg={<Maximize1 variant="Bold" />}
                     text="More details"
-                    className="min-w-0 px-2 h-8 text-xs sm:h-8 sm:text-xs"
+                    className="min-w-0 px-2 flex h-8 text-xs sm:h-8 sm:text-xs"
                     variant="tertiary"
                   />
                 </Link>
               </div>
             </div>
             {/* Event details */}
-            <div className="flex flex-col items-center">
+            <div className="flex px-4 flex-col items-center">
               <h1 className={`text-2xl leading-8 ${event.font || "paytone"}`}>
                 {event.title}
               </h1>
-              {event.category.length > 0 && (
-                <div className="flex items-center gap-2 mt-4 flex-wrap">
-                  {event.category.map((cat, index) => (
-                    <TagButton
-                      key={index}
-                      className={twMerge(
-                        "pointer-events-none h-[22px] p-1 text-[10px] leading-3.5 satoshi",
-                        categories[cat] ? categories[cat] : "text-[#001010]"
-                      )}
-                      text={cat}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="mt-4">
+                <EventCategories eventCategories={event.category} isSmall />
+              </div>
               <div
                 className={twMerge(
-                  "max-w-[381px] my-6 w-full overflow-hidden rounded-3xl "
+                  "max-w-[309px] sm:max-w-[381px] my-4 sm:my-6 w-full overflow-hidden rounded-3xl"
                 )}
               >
                 <img
@@ -197,13 +354,13 @@ export default function EventDetails() {
                       <Calendar1
                         variant="Bold"
                         color="#866AD2"
-                        className="size-4 sm:size-6"
+                        className="size-6"
                       />
                     }
                     variant="tertiary"
-                    className="pointer-events-none sm:size-11 size-6"
+                    className="pointer-events-none size-11"
                   />
-                  <div className="flex flex-1  satoshi sm:text-base text-sm font-medium">
+                  <div className="flex flex-1  satoshi sm:text-base font-medium">
                     <React.Fragment>
                       <p className="text-[#001010] ">
                         {format(
@@ -219,7 +376,7 @@ export default function EventDetails() {
                 </div>
               )}
               {/* Event tags */}
-              <div className="flex-wrap items-center gap-1 mb-6 mt-2 flex">
+              <div className="flex-wrap items-center gap-1 mb-4 sm:mb-6 mt-2 flex">
                 {/* Location */}
                 {eventLocation && (
                   <TagButton
@@ -263,7 +420,7 @@ export default function EventDetails() {
               {isHost && (
                 <Link
                   to={`/manage-event/${event.slug}`}
-                  className="w-full inline-block mb-2.5"
+                  className="w-full hidden sm:inline-block mb-2.5"
                 >
                   <Alert
                     title="You have manage access"
@@ -283,7 +440,7 @@ export default function EventDetails() {
                 </Link>
               )}
               {event.userResponse ? (
-                <div className=" flex flex-col justify-between gap-6 pb-6 items-start">
+                <div className="flex flex-col justify-between gap-6 pb-4 items-start">
                   <div className="flex flex-col items-center text-center satoshi gap-1">
                     <div className="flex items-center gap-4">
                       <p className="font-bold text-[#001010]">
@@ -323,37 +480,69 @@ export default function EventDetails() {
                   </div>
                 </div>
               ) : (
-                <div className="flex justify-center w-full gap-2 py-4 bg-transparent">
+                <div className="flex justify-center w-full gap-2  pb-4 bg-transparent">
                   <ConfirmAttendance event={event} />
                 </div>
               )}
             </div>
+            {/* Tap more section */}
+            <Link
+              className="bg-transparent sm:hidden outline-0 border-0 flex flex-col justify-end flex-1"
+              to={`/events/${event.slug}`}
+            >
+              <div className="flex items-center flex-col gap-2 bg-white py-2 rounded-t-4xl">
+                <div className="text-[#8A9191] gap-2 flex justify-center items-center satoshi font-medium text-[10px] leading-3.5">
+                  Scroll or Tap for more <ArrowDown2 color="#001010" />
+                </div>
+                <div className="h-1 w-[109px] bg-[#f0f0f0] rounded-[8px]"></div>
+              </div>
+            </Link>
           </div>
         ) : (
           <React.Fragment>
             {/* Left content */}
-            <div className="w-full lg:w-[461px] items-center lg:items-start bg-[#f0f0f0] lg:fixed lg:top-[52px] lg:bottom-0 lg:left-0 lg:pl-20 z-20 flex flex-col py-8 px-8 gap-4 overflow-y-auto scrollbar-hide">
-              <div>
+            <div className="w-full lg:w-[461px] items-center lg:items-start bg-[#f0f0f0] lg:fixed lg:top-[52px] lg:bottom-0 lg:left-0 lg:pl-20 z-20 flex flex-col sm:py-8 py-4  px-4 sm:px-8 gap-4 overflow-y-auto scrollbar-hide">
+              <div className="w-full flex justify-between sm:justify-start items-center">
                 <TagButton
                   text="Back"
                   variant="tertiary"
-                  className="h-8 min-w-0 px-2 mb-4"
+                  className="h-9 text-sm sm:text-xs sm:h-8 min-w-0 px-2"
                   leftImg={<ArrowLeft2 size={16} />}
                   onClick={handleNavigateBack}
                 />
+                <TextButton
+                  rightImg={<Send2 variant="Bold" />}
+                  text="Share"
+                  className="h-9 sm:hidden text-sm sm:text-xs sm:h-8 min-w-0 px-2"
+                  variant="tertiary"
+                  onClick={handleShare}
+                />
               </div>
 
-              <div>
-                <div className="md:size-[349px] size-full overflow-hidden rounded-3xl border-4 shadow-[0_20px_60px_rgba(0,0,0,0.12)] border-white flex-shrink-0">
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover"
+              <div className="flex flex-col sm:items-center w-full gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="size-[37px] rounded-[8px] sm:size-[349px] overflow-hidden sm:rounded-3xl sm:border-4 shadow-[0_20px_60px_rgba(0,0,0,0.12)] sm:border-white flex-shrink-0">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h2
+                    className={` sm:hidden text-base sm:text-3xl font-normal ${event.font || "paytone"} text-[#001010]`}
+                  >
+                    {event.title || "No title provided"}
+                  </h2>
+                </div>
+                <div className="sm:hidden">
+                  <EventCategories
+                    isSmall={true}
+                    eventCategories={event.category}
                   />
                 </div>
               </div>
               {isHost && (
-                <div className="w-full">
+                <div className="w-full hidden sm:block">
                   <Link
                     to={`/manage-event/${event.slug}`}
                     className="w-full inline-block"
@@ -377,7 +566,7 @@ export default function EventDetails() {
                 </div>
               )}
 
-              <div className="grid gap-1">
+              <div className="hidden sm:grid gap-1">
                 <span className="text-base text-[#B0B5B5] font-medium paytone">
                   Hosted by
                 </span>
@@ -396,7 +585,7 @@ export default function EventDetails() {
                 </div>
               </div>
 
-              <div className="grid gap-1">
+              <div className="hidden sm:grid gap-1">
                 <span className="text-base text-[#B0B5B5] font-medium paytone">
                   Attending
                 </span>
@@ -418,8 +607,8 @@ export default function EventDetails() {
             </div>
 
             {/* Right content */}
-            <div className="w-full overflow-hidden  min-w-0 flex flex-col h-full  min-h-[calc(100vh-52px)] bg-white/80 relative border-l border-[#E5E7E3] lg:ml-[461px] lg:w-[calc(100%-461px)] rounded-l-2xl">
-              <section className="flex gap-6 flex-col py-6 px-10 pt-9 border-b lg:pr-20 border-[#E5E7E3] ">
+            <div className="w-full overflow-hidden  min-w-0 flex flex-col h-full  lg:min-h-[calc(100vh-52px)] bg-white/80 relative border-l border-[#E5E7E3] lg:ml-[461px] lg:w-[calc(100%-461px)] rounded-t-4xl lg:rounded-l-2xl lg:rounded-r-none">
+              <section className="hidden sm:flex gap-6 flex-col py-6 px-10 pt-9 border-b lg:pr-20 border-[#E5E7E3] ">
                 <div className="flex gap-2 justify-between">
                   <TagButton
                     text={event.isPrivate ? "Private Event" : "Public Event"}
@@ -431,7 +620,7 @@ export default function EventDetails() {
                     <TextButton
                       rightImg={<Send2 variant="Bold" />}
                       text="Share"
-                      className="min-w-0 px-2"
+                      className="h-8 min-w-0 px-2"
                       variant="tertiary"
                       onClick={handleShare}
                     />
@@ -443,41 +632,28 @@ export default function EventDetails() {
                   >
                     {event.title || "No title provided"}
                   </h2>
-                  {event.category.length > 0 && (
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {event.category.map((cat, index) => (
-                        <TagButton
-                          key={index}
-                          className={twMerge(
-                            "pointer-events-none satoshi",
-                            categories[cat] ? categories[cat] : "text-[#001010]"
-                          )}
-                          text={cat}
-                        />
-                      ))}
-                    </div>
-                  )}
+                  <EventCategories eventCategories={event.category} />
                 </div>
               </section>
+              {/* Top bar */}
+              <div className="sm:hidden flex justify-center items-center border-b border-[#E5E7E3] py-2">
+                <span className="w-[109px] h-1 bg-[#f0f0f0]"></span>
+              </div>
+
               <div className="flex flex-col">
                 {(event.startDate ||
                   event.location.state ||
                   event.meetingURL ||
                   event.dressCode) && (
-                  <div className="flex flex-col gap-3 px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
+                  <div className="flex flex-col gap-3 px-4 sm:px-10 py-6 border-b border-[#E5E7E3] lg:pr-20">
                     {event.startDate && (
                       <div className="flex gap-2 items-center">
                         <IconButton
-                          icon={
-                            <Calendar1
-                              variant="Bold"
-                              className="size-4 sm:size-6"
-                            />
-                          }
+                          icon={<Calendar1 variant="Bold" className="size-6" />}
                           variant="tertiary"
-                          className="pointer-events-none sm:size-11 size-6"
+                          className="pointer-events-none size-11"
                         />
-                        <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                        <div className="flex flex-1 flex-col satoshi text-base  font-medium">
                           <React.Fragment>
                             <p className="text-[#001010] ">
                               {format(
@@ -496,16 +672,11 @@ export default function EventDetails() {
                     {event.location.state && (
                       <div className="flex gap-2 items-center">
                         <IconButton
-                          icon={
-                            <Location
-                              variant="Bold"
-                              className="size-4 sm:size-6"
-                            />
-                          }
+                          icon={<Location variant="Bold" className="size-6" />}
                           variant="tertiary"
-                          className="pointer-events-none sm:size-11 size-6"
+                          className="pointer-events-none size-11"
                         />
-                        <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                        <div className="flex flex-1 flex-col satoshi text-base font-medium">
                           <p className="text-[#001010] capitalize">
                             {event.location.venue ||
                               event.location.state ||
@@ -527,15 +698,12 @@ export default function EventDetails() {
                       <div className="flex gap-2 items-center">
                         <IconButton
                           icon={
-                            <LinkCircle
-                              variant="Bold"
-                              className="size-4 sm:size-6"
-                            />
+                            <LinkCircle variant="Bold" className="size-6" />
                           }
                           variant="tertiary"
-                          className="pointer-events-none sm:size-11 size-6"
+                          className="pointer-events-none size-11"
                         />
-                        <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                        <div className="flex flex-1 flex-col satoshi text-base font-medium">
                           <p className="text-[#001010]">Online Event</p>
                           <p className="text-[#8A9191]">{event.meetingURL}</p>
                         </div>
@@ -546,15 +714,12 @@ export default function EventDetails() {
                       <div className="flex gap-2 items-center">
                         <IconButton
                           icon={
-                            <Colorfilter
-                              variant="Bold"
-                              className="size-4 sm:size-6"
-                            />
+                            <Colorfilter variant="Bold" className="size-6" />
                           }
                           variant="tertiary"
-                          className="pointer-events-none sm:size-11 size-6"
+                          className="pointer-events-none size-11"
                         />
-                        <div className="flex flex-1 flex-col satoshi sm:text-base text-sm font-medium">
+                        <div className="flex flex-1 flex-col satoshi text-base font-medium">
                           <p className="text-[#001010]">Dress Code</p>
                           <p className="text-[#8A9191] capitalize">
                             {event.dressCode.type}
@@ -564,7 +729,7 @@ export default function EventDetails() {
                     )}
                   </div>
                 )}
-                <div className="space-y-2 py-6 px-10 border-b border-[#E5E7E3] lg:pr-20">
+                <div className="space-y-2 py-6 px-4 sm:px-10 border-b border-[#E5E7E3] lg:pr-20">
                   <h3 className="text-base font-medium text-[#8A9191] paytone">
                     About event
                   </h3>
@@ -586,7 +751,7 @@ export default function EventDetails() {
                     )}
                 </div>
                 {event.chipInDetails && event.chipInDetails.amount && (
-                  <div className="space-y-2 py-6 px-10 lg:pr-20">
+                  <div className="space-y-2 border-b border-[#E5E7E3] py-6 px-4 sm:px-10 lg:pr-20">
                     <h3 className="text-base font-medium text-[#8A9191] paytone">
                       Chip In
                     </h3>
@@ -610,8 +775,26 @@ export default function EventDetails() {
                     )}
                   </div>
                 )}
+                <div className="sm:hidden py-6 px-4 border-b border-[#E5E7E3]">
+                  <h3 className="text-base font-medium mb-3 text-[#8A9191] paytone">
+                    Hosted by
+                  </h3>
+                  <div className="flex gap-1 items-center justify-between">
+                    <div className="flex gap-1 items-center">
+                      <Avatar size="xs" src={hostPhoto} />
+                      <div className="grid">
+                        <span className="text-base font-medium text-[#001010]">
+                          {hostName}
+                        </span>
+                        <span className="text-xs font-medium text-[#8A9191]">
+                          Host
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 {event.location.coordinates && (
-                  <div className="py-6 px-10 lg:pr-20 flex flex-col border-b border-[#E5E7E3]">
+                  <div className="py-6 px-4 sm:px-10 lg:pr-20 flex flex-col border-b border-[#E5E7E3]">
                     <h3 className="text-base font-medium mb-3 text-[#8A9191] paytone">
                       Location
                     </h3>
@@ -634,7 +817,7 @@ export default function EventDetails() {
                       <p className="text-sm font-bold text-[#8A9191]">
                         Further directions
                       </p>
-                      <div className="w-full rounded-2xl h-[335px] overflow-hidden mt-3 border border-[#E5E7E3]">
+                      <div className="w-full rounded-2xl h-[142px] sm:h-[335px] overflow-hidden mt-3 border border-[#E5E7E3]">
                         <iframe
                           width="100%"
                           height="100%"
@@ -649,7 +832,7 @@ export default function EventDetails() {
                   </div>
                 )}
 
-                <div className="flex flex-col py-6 pb-2 px-10 border-b border-[#E5E7E3] lg:pr-20">
+                <div className="flex flex-col py-6 pb-2 px-4 sm:px-10 border-b border-[#E5E7E3] lg:pr-20">
                   <h3 className="text-base font-medium text-[#8A9191] paytone">
                     Going ({goingGuests.length})
                   </h3>
@@ -680,9 +863,9 @@ export default function EventDetails() {
                   )}
                 </div>
                 {event.userResponse ? (
-                  <div className="py-6 px-10 flex justify-between gap-6 items-start lg:pr-20">
-                    <div className="flex flex-col satoshi gap-1">
-                      <div className="flex items-center gap-4">
+                  <div className="py-6 px-4 sm:px-10 flex flex-col md:flex-row justify-between gap-6 items-start lg:pr-20">
+                    <div className="flex flex-col text-center sm:text-left satoshi gap-1">
+                      <div className="flex justify-center sm:justify-start items-center gap-4">
                         <p className="font-bold text-[#001010]">
                           {event.userResponse === "going"
                             ? "✅ You’re going!"
@@ -704,7 +887,7 @@ export default function EventDetails() {
                           : "We’ll remind you as the date gets closer, just in case youdecide to come."}
                       </p>
                     </div>
-                    <div className="flex gap-6  items-center">
+                    <div className="flex w-full sm:w-auto gap-6 justify-center items-center sm:justify-start">
                       <TextButton
                         text="Invite Friends"
                         variant="tertiary"
@@ -723,9 +906,12 @@ export default function EventDetails() {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex justify-end gap-3 px-10 pb-9 bg-gradient-to-b from-[#e8e8e8]/0 to-[#FFFFFF] pt-6 lg:pr-20">
-                    <ConfirmAttendance event={event} />
-                  </div>
+                  <React.Fragment>
+                    <div className="pb-[104px] sm:pb-[120px]"></div>
+                    <div className="fixed bottom-0 left-0 w-full z-50 flex justify-center lg:justify-end gap-3 px-4 sm:px-10 py-4 sm:py-6 bg-gradient-to-b from-[#e8e8e8]/0 to-[#FFFFFF]/70 lg:pr-20 lg:left-[461px] lg:w-[calc(100%-461px)]">
+                      <ConfirmAttendance event={event} />
+                    </div>
+                  </React.Fragment>
                 )}
               </div>
             </div>

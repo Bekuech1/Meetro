@@ -37,7 +37,7 @@ const ConfirmationButton = ({
 
   const buttonClasses = [
     "paytone flex flex-col rounded-[60px] gap-2 justify-center items-center",
-    "px-1 py-3 h-fit min-h-20 w-full max-w-[252px] max-h-[72px] transition-all duration-200 ease-in-out",
+    "px-1 py-3  w-full max-w-[252px] h-[72px] transition-all duration-200 ease-in-out",
     "drop-shadow-[0px_4px_16px_rgba(0,0,0,0.06)]",
     config.colors[bgKey],
     config.colors.text,

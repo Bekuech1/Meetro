@@ -3,6 +3,7 @@ import Modal from "../layout-components/Modal/Modal";
 import Alert from "../layout-components/Alert";
 import TextButton from "../layout-components/Buttons/TextButtons";
 import LoadingSpinner from "../layout-components/LoadingSpinner";
+import { useState } from "react";
 import { useModalContext } from "../layout-components/Modal/ModalContext";
 import { Trash } from "iconsax-reactjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -14,9 +15,13 @@ export default function DeleteEventModal({ eventId, showAlert = false }) {
   const { close } = useModalContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   const { mutate: deleteEvent, isPending: loading } = useMutation({
-    mutationFn: () => eventsApi.deleteEvent(eventId),
+    mutationFn: () => {
+      setError(null);
+      eventsApi.deleteEvent(eventId);
+    },
     onSuccess: () => {
       // Close modal
       close();
@@ -30,7 +35,9 @@ export default function DeleteEventModal({ eventId, showAlert = false }) {
         navigate("/home");
       }, 300);
     },
-    onError: () => {},
+    onError: error => {
+      setError(error?.response?.data?.message || "Something went wrong.");
+    },
   });
   return (
     <Modal.Window name="delete-event" isCloseButtonDisabled={loading}>
@@ -49,6 +56,11 @@ export default function DeleteEventModal({ eventId, showAlert = false }) {
           All attendees will be notified, and the event will be removed from
           public view.
         </p>
+        {error && (
+          <div className="mt-4">
+            <Alert type="error" title={error} onClick={() => setError(null)} />
+          </div>
+        )}
         {showAlert && (
           <div className="mt-4">
             <Alert

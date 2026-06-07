@@ -5,6 +5,7 @@ import TagButton from "../layout-components/Buttons/TagButton";
 import TextButton from "../layout-components/Buttons/TextButtons";
 import NoTransactions from "./NoTransactions";
 import PayoutOverviewSkeleton from "./PayoutOverviewSkeleton";
+import Modal from "../layout-components/Modal/Modal";
 import PayoutsHistorySkeleton from "./PayoutsHistorySkeleton";
 import { ReceiveSquare2, TransmitSqaure2, ArrowRight2 } from "iconsax-reactjs";
 import React, { useState, useEffect } from "react";
@@ -13,7 +14,6 @@ import { useManageEventContext } from "@/layouts/ManageEventLayout";
 import { useQuery } from "@tanstack/react-query";
 import { paymentApi } from "@/services/paymentApi";
 import { useParams } from "react-router";
-import Modal from "../layout-components/Modal/Modal";
 
 function PayoutsTab() {
   const [page, setPage] = useState(1);
@@ -69,6 +69,8 @@ function PayoutsTab() {
     }
   };
 
+  const hasSearch = search.trim() !== "";
+
   const prevPage = () => {
     setPage(prev => Math.max(prev - 1, 1));
     // Scroll to top of table on page change
@@ -78,8 +80,8 @@ function PayoutsTab() {
     });
   };
 
-  const hasSearch = search !== "";
-  const transactions = data?.data || [];
+  const transactions = data?.data?.transactions ?? [];
+
   return (
     <div className="p-6 border w-full flex flex-col gap-y-8 border-white rounded-4xl bg-white/50">
       {/* Payouts overview */}

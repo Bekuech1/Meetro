@@ -190,7 +190,7 @@ function ManageEventHeader() {
                 )}
                 onClick={() => handleTabChange("guests")}
               />
-              {activeEvent?.chipInDetails && (
+              {(activeEvent?.chipInDetails || isLoading) && (
                 <TagButton
                   text="Payouts"
                   size="md"
