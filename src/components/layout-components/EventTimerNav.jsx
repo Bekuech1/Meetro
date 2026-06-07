@@ -5,8 +5,10 @@ import React, { useState, useEffect } from "react";
 export const DigitalTime = ({ time, unit }) => {
   return (
     <div className="digital-numbers flex justify-center items-center">
-      <h6 className="text-white font-normal text-xl">{time}</h6>
-      <span className="text-[#55695E] font-normal text-sm capitalize ml-1">
+      <h6 className="text-white min-w-6 sm:min-w-8 font-normal text-sm leading-8 sm:text-xl">
+        {time}
+      </h6>
+      <span className="text-[#55695E] font-normal text-[10px] leading-8 sm:text-sm capitalize">
         {unit}
       </span>
     </div>
@@ -50,23 +52,28 @@ const EventTimerNav = ({ targetDate, onClick }) => {
   const second = String(timeLeft.seconds).padStart(2, "0");
 
   return (
-    <nav className="bg-[#011F0F] w-full px-8 py-3 flex items-center gap-4 flex-shrink-0">
-      <img src="/Logo.svg" alt="Logo" className="size-6" onClick={onClick} />
-      <div className="w-full flex justify-end gap-4 items-center">
-        <span className="text-lg font-normal paytone text-[#55695E]">
+    <nav className="bg-[#011F0F] w-full px-4 sm:px-8 py-3 flex items-center gap-4 flex-shrink-0">
+      <img
+        src="/logosmall.svg"
+        alt="Logo"
+        className="w-[30px]"
+        onClick={onClick}
+      />
+      <div className="w-full flex justify-end gap-x-4 items-center flex-wrap">
+        <span className="text-xs sm:text-lg font-normal paytone text-[#55695E]">
           {targetDate && new Date(targetDate) > new Date()
             ? "Starts In"
             : "Started"}
         </span>
-        <div className="flex size-fit">
+        <div className="flex">
           <DigitalTime time={day} unit="d" />
-          <h6 className="text-white text-xl digital-numbers mx-1">:</h6>
+          <h6 className="text-white leading-8 sm:text-xl digital-numbers">:</h6>
           <DigitalTime time={hour} unit="h" />
-          <h6 className="text-white font-normal text-xl digital-numbers mx-1">
+          <h6 className="text-white leading-8 font-normal sm:text-xl digital-numbers">
             :
           </h6>
           <DigitalTime time={minute} unit="m" />
-          <h6 className="text-white font-normal text-xl digital-numbers mx-1">
+          <h6 className="text-white leading-8 font-normal sm:text-xl digital-numbers ">
             :
           </h6>
           <DigitalTime time={second} unit="s" />

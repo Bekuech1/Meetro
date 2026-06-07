@@ -1,3 +1,13 @@
+import Alert from "./Alert";
+import Avatar from "./Avatar";
+import AvatarGroup from "./AvatarGroup";
+import ConfirmationButton from "./Buttons/ConfirmationButton";
+import IconButton from "./Buttons/IconButton";
+import TagButton from "./Buttons/TagButton";
+import TextButton from "./Buttons/TextButtons";
+import EventTimerNav from "./EventTimerNav";
+import Modal from "./Modal/Modal";
+import ProgressBar from "./ProgressBar";
 import { categories, responseColors } from "@/lib/utils";
 import { eventsApi } from "@/services/eventsApi";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -18,16 +28,7 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { useModalContext } from "./Modal/ModalContext";
-import Alert from "./Alert";
-import Avatar from "./Avatar";
-import AvatarGroup from "./AvatarGroup";
-import ConfirmationButton from "./Buttons/ConfirmationButton";
-import IconButton from "./Buttons/IconButton";
-import TagButton from "./Buttons/TagButton";
-import TextButton from "./Buttons/TextButtons";
-import EventTimerNav from "./EventTimerNav";
-import Modal from "./Modal/Modal";
-import ProgressBar from "./ProgressBar";
+
 import { useShareEvent } from "@/hooks/useShareEvent";
 
 // ==========================================
