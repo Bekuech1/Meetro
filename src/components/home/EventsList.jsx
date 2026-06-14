@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { eventsApi } from "@/services/eventsApi";
 import { useQuery } from "@tanstack/react-query";
@@ -6,7 +6,7 @@ import { groupEventsByDate } from "@/lib/utils";
 import TagButton from "../layout-components/Buttons/TagButton";
 import NoEvents from "./NoEvents";
 import EventDate from "../layout-components/EventDate";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EventItem from "./EventItem";
 import EventItemsLoader from "./EventItemsLoader";
 import Modal from "../layout-components/Modal/Modal";
@@ -15,7 +15,17 @@ import EventDetailsModal from "../layout-components/EventDetailsModal";
 function EventsList() {
   // Get filter from URL search params
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 980);
   const filter = searchParams.get("filter") || "all";
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 980);
+    };
+    handleResize(); // Check initial screen size
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Handle tab change
   const handleTabChange = value => {
@@ -103,13 +113,21 @@ function EventsList() {
                       <div className="flex flex-col w-full gap-2">
                         {dateEvents.map((event, index) => {
                           return (
-                            <Modal.Open
-                              onOpen={() => setActiveEventId(event._id)}
-                              key={index}
-                              opens={"event-details-modal"}
-                            >
-                              <EventItem event={event} />
-                            </Modal.Open>
+                            <React.Fragment key={event._id}>
+                              {isMobileView ? (
+                                <Link to={`/events/${event.slug}`}>
+                                  <EventItem event={event} />
+                                </Link>
+                              ) : (
+                                <Modal.Open
+                                  onOpen={() => setActiveEventId(event._id)}
+                                  key={index}
+                                  opens={"event-details-modal"}
+                                >
+                                  <EventItem event={event} />
+                                </Modal.Open>
+                              )}
+                            </React.Fragment>
                           );
                         })}
                       </div>
@@ -133,7 +151,10 @@ function EventsList() {
       </div>
 
       {/* Render event modal */}
-      {activeEventId && <EventDetailsModal eventId={activeEventId} />}
+
+      {activeEventId && !isMobileView && (
+        <EventDetailsModal eventId={activeEventId} />
+      )}
     </Modal>
   );
 }
