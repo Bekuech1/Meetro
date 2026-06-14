@@ -1,116 +1,79 @@
-import { BrowserRouter, Routes, Route } from "react-router";
-import Authentication from "./routes/Onboarding/Authentication";
-import Signup from "./routes/Onboarding/Signup";
-import Homepage from "./routes/LandingPage/Homepage";
-import Signup2 from "./routes/Onboarding/Signup2";
-import Location from "./routes/Onboarding/Location";
-import Calender from "./routes/Onboarding/Calender";
-import Interest from "./routes/Onboarding/Interest";
-import Home from "./routes/home";
-import Login from "./routes/Onboarding/Login";
-import LoginForm from "./routes/Onboarding/LoginForm";
-import ReserveSpot from "./components/home/ReserveSpot";
-import HomepageLayout from "./layouts/HomepageLayout";
-import BlogPost from "./components/LandingPage/BlogPost";
-import Payment from "./components/home/Payment";
-import CreateEventsLayout from "./layouts/CreateEventsLayout";
-import CreateEvent from "./routes/CreateEvent";
-import UserProfile from "./routes/UserProfile";
-import Settings from "./routes/Settings";
 import ProtectedRoute from "./components/(appState)/ProtectedRoute";
-
-// import GoogleAuthCallback from "./components/Onboarding/GoogleAuthCallback";
-import { useRehydrateAuth } from "./lib/useRehydrateAuth";
+import BlogPost from "./components/landing-page/BlogPost";
+import DashboardLayout from "./layouts/DashboardLayout";
+import ManageEventLayout from "./layouts/ManageEventLayout";
+import ScrollTop from "./components/layout-components/ScrollTop";
+import MainLayout from "./layouts/MainLayout";
+import AboutUs from "./routes/landing-page/AboutUs";
+import BlogPage from "./routes/landing-page/BlogPage";
+import HowItWorks from "./routes/landing-page/HowItWorks";
+import Pricing from "./routes/landing-page/Pricing";
+import MyEvents from "./routes/MyEvents";
+import ResetPassword from "./routes/ResetPassword";
+import ManageEvent from "./routes/ManageEvent";
+import ManageEventHeader from "./components/manage-event/ManageEventHeader";
+import EditEvent from "./routes/EditEvent";
+import Withdraw from "./routes/Withdraw";
+import Privacy from "./routes/legal/Privacy";
+import Data from "./routes/legal/Data";
+import Terms from "./routes/legal/Terms";
+import LegalLayout from "./layouts/LegalLayout";
+import { BrowserRouter, Route, Routes } from "react-router";
+import { useRehydrateUser } from "./hooks/useRehydrateUser";
+import CreateEvent from "./routes/CreateEvent";
+import EventPreview from "./routes/CreateEventPreview";
+import Profile from "./routes/Profile";
+import Settings from "./routes/Settings";
 import EventDetails from "./routes/EventDetails";
-import ManageEventPage from "./routes/ManageEvent";
 
 function App() {
-  useRehydrateAuth(); // This hook is used to rehydrate the auth state from local storage or session storage
+  useRehydrateUser(); // Rehydrate user on app load
 
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-
-          {/* Blogs Route */}
-          <Route path="blog/:id" element={<BlogPost />} />
-
-          {/* Onboarding Routes */}
-          <Route path="/authentication" element={<Authentication />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<Signup2 />} />
-
-          {/* <Route path="/signup" element={<Signup />} /> */}
-          {/* <Route path="/signin" element={<Login />} /> */}
-
-          <Route path="/location" element={<Location />} />
-          <Route path="/calender" element={<Calender />} />
-          <Route path="/interest" element={<Interest />} />
-          {/* <Route
-            path="/google-auth-callback"
-            element={<GoogleAuthCallback />}
-          /> */}
-
-          {/* Profile Routes */}
+    <BrowserRouter>
+      <ScrollTop />
+      <Routes>
+        {/* Landing Page */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HowItWorks />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
+          <Route path="/about" element={<AboutUs />} />
+        </Route>
+        {/* Account Pages */}
+        <Route path="/events/:slug" element={<EventDetails />} />
+        {/* Legal Pages */}
+        <Route element={<LegalLayout />}>
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/data" element={<Data />} />
+          <Route path="/terms" element={<Terms />} />
+        </Route>
+        {/* Reset password */}
+        <Route path="/reset-password" element={<ResetPassword />} />
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/home" element={<MyEvents />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/event-preview" element={<EventPreview />} />
           <Route
-            path="/profile"
             element={
-              <ProtectedRoute>
-                <UserProfile />
-              </ProtectedRoute>
+              <ManageEventLayout>
+                <ManageEventHeader />
+              </ManageEventLayout>
             }
-          />
-          {/* <Route path="/settings" element={<Settings />} /> */}
-
-          {/* Homepage Route */}
-          <Route path="/home" element={<HomepageLayout />}>
-            <Route
-              index
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
+          >
+            <Route path="/edit-event/:slug" element={<EditEvent />} />
+            <Route path="/manage-event/:slug" element={<ManageEvent />} />
+            <Route path="/manage-event/:slug/withdraw" element={<Withdraw />} />
           </Route>
-
-          <Route path="/settings" element={<HomepageLayout />}>
-            <Route index element={<Settings />} />
-          </Route>
-
-          <Route path="/event/:eventId" element={<HomepageLayout />}>
-            <Route index element={<EventDetails />} />
-          </Route>
-
-          <Route path="/manage-event/:eventId" element={<HomepageLayout />}>
-            <Route
-              index
-              element={
-                <ProtectedRoute>
-                  <ManageEventPage />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-
-          {/* Test Routes */}
-          <Route path="/test" element={<Payment />} />
-
-          {/* Create Event Routes */}
-          <Route path="/create-event" element={<CreateEventsLayout />}>
-            <Route
-              index
-              element={
-                <ProtectedRoute>
-                  <CreateEvent />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

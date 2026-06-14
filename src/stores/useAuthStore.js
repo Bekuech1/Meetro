@@ -1,43 +1,26 @@
-// import { useNavigate } from "react-router";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export const useAuthStore = create(
-  
   persist(
-    (set) => ({
+    set => ({
       accessToken: null,
       refreshToken: null,
-      idToken: null,
       user: null,
-
-      setAccessToken: (accessToken) => set({ accessToken }),
-      setRefreshToken: (refreshToken) => set({ refreshToken }),
-      setIdToken: (idToken) => set({ idToken }),
-      setUser: (user) => set({ user }),
-
-      logout: () => {
-        set({
-          accessToken: null,
-          refreshToken: null,
-          idToken: null,
-          user: null,
-        });
-        // localStorage.removeItem("auth-storage"); // Clear localStorage
-        localStorage.clear(); // Clear all localStorage
-        // window.location.href = "/login"; // Redirect to login
-        // navigate("/login"); // Redirect to login
-      },
+      lastFetchedProfile: null,
+      setAccessToken: accessToken => set({ accessToken }),
+      setRefreshToken: refreshToken => set({ refreshToken }),
+      setUser: user => set({ user }),
+      setLastFetchedProfile: lastFetchedProfile => set({ lastFetchedProfile }),
     }),
     {
       name: "auth-storage", // LocalStorage key
-      partialize: (state) => ({
+      partialize: state => ({
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
-        idToken: state.idToken,
         user: state.user,
+        lastFetchedProfile: state.lastFetchedProfile,
       }),
-      // getStorage: () => sessionStorage
     }
   )
 );

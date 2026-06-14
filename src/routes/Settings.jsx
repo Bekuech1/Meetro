@@ -1,139 +1,157 @@
-import Account from "@/components/Settings/Account";
-import Payments from "@/components/Settings/Payments";
-import Preference from "@/components/Settings/Preference";
-import API from "@/lib/axios";
+import IconButton from "@/components/layout-components/Buttons/IconButton";
+import EditProfile from "@/components/settings/EditProfile";
+import Payments from "@/components/settings/Payments";
+import Preferences from "@/components/settings/Preferences";
+import { useDisableScroll } from "@/hooks/useDisableScroll";
+import { ArrowLeft2, Moneys, Setting4, User } from "iconsax-reactjs";
 import React, { useEffect, useState } from "react";
+import { useLocation, useSearchParams } from "react-router";
+import { twMerge } from "tailwind-merge";
 
-const Settings = () => {
-  const [activeTab, setActiveTab] = useState("accounts");
+function Settings() {
+  const location = useLocation();
+  // Get tab from URL search params
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get("tab") || "edit-profile";
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // State to hold account details
-  const [accountDetails, setAccountDetails] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    bio: "",
-    profilePictureKey: "",
-    state: "",
-  });
+  // Handle tab change by updating URL search params
+  const handleTabChange = value => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set("tab", value);
+    setSearchParams(newSearchParams);
+    setMobileMenuOpen(false);
+  };
+
+  const handleBackClick = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  useDisableScroll(mobileMenuOpen);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await API.get("/profile");
-        const { email, firstName, lastName, state, bio, profilePictureKey } =
-          response.data;
-        setAccountDetails({
-          email,
-          firstName,
-          lastName,
-          bio: bio || "",
-          profilePictureKey: profilePictureKey || "",
-          state,
-        });
-      } catch (error) {
-        console.error("Failed to fetch profile:", error);
-      }
-    };
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, [location]);
 
-    fetchProfile();
-  }, []);
-
-  const handleSaveChanges = async () => {
-    try {
-      if (activeTab === "accounts") {
-        await API.put("/profile", accountDetails);
-        console.log("Account details updated successfully");
-      } else if (activeTab === "preferences") {
-        // Handle preferences saving logic here
-        console.log("Preferences saved successfully");
-      }
-    } catch (err) {
-      console.error(err);
-      console.log("An error occured");
+  const renderTabContent = () => {
+    switch (tab) {
+      case "edit-profile":
+        return <EditProfile />;
+      case "preferences":
+        return <Preferences />;
+      case "payments":
+        return <Payments />;
+      default:
+        return <EditProfile />;
     }
   };
 
   return (
-    <div className="bg-[#F0F0F0] relative">
-      {/* background ellipses */}
-      <div className="absolute flex justify-between items-center w-full h-fit -top-[250px] bg-transparent">
-        {/* <!-- Left Ellipse --> */}
-        <div className="size-[345px] bg-[#AEFC40] rounded-full opacity-80 blur-[250px]"></div>
+    <main className="bg-[#F0F0F0] pb-10 h-full relative flex-1 flex flex-col w-full">
+      <div className="flex-1 satoshi">
+        <div className="max-w-[772px] min-h-full w-full mx-auto">
+          <div className="flex justify-between flex-col md:flex-row gap-y-6 gap-x-12  h-fit mt-4 md:mt-10">
+            {/* Settings tab */}
+            <div className="bg-white satoshi self-start hidden md:sticky md:top-28  text-[#001010] font-bold text-sm p-6 rounded-4xl  md:flex flex-col min-w-full md:min-w-[332px]">
+              <button
+                className={twMerge(
+                  "p-3 flex items-center gap-2",
+                  tab === "edit-profile" && "text-[#866AD2]"
+                )}
+                onClick={() => handleTabChange("edit-profile")}
+              >
+                <User size={20} variant="Bold" />
+                <span>Edit Profile</span>
+              </button>
+              <button
+                className={twMerge(
+                  "p-3 flex items-center gap-2",
+                  tab === "preferences" && "text-[#866AD2]"
+                )}
+                onClick={() => handleTabChange("preferences")}
+              >
+                <Setting4 size={20} variant="Bold" />
+                <span>Preferences</span>
+              </button>
+              <button
+                className={twMerge(
+                  "p-3 flex items-center gap-2",
+                  tab === "payments" && "text-[#866AD2]"
+                )}
+                onClick={() => handleTabChange("payments")}
+              >
+                <Moneys size={20} variant="Bold" />
+                <span>Payments</span>
+              </button>
+            </div>
+            {/* Active tab */}
 
-        {/* <!-- Middle Ellipse --> */}
-        <div className="size-[345px] bg-[#866AD2] rounded-full blur-[250px] opacity-80 mt-[100px]"></div>
+            <div className="flex-1">
+              <div className="relative">
+                <div
+                  onClick={handleBackClick}
+                  className="mb-6 md:hidden text-sm font-bold flex bg-transparent gap-2 items-center"
+                >
+                  <IconButton
+                    className="size-8"
+                    variant="tertiary"
+                    icon={<ArrowLeft2 size={16} />}
+                  />
+                  <span>Back</span>
+                </div>
+              </div>
 
-        {/* <!-- Right Ellipse --> */}
-        <div className="size-[345px] bg-[#077D8A] rounded-full blur-[250px] opacity-80"></div>
-      </div>
+              {/* Mobile Menu */}
+              {mobileMenuOpen && (
+                <div className="fixed md:hidden top-16 left-0 right-0 bottom-0 bg-[#F0F0F0] z-10 px-4 overflow-y-auto">
+                  <div className="flex justify-between items-center mb-6 mt-4">
+                    <h2 className="text-[18px] leading-7 paytone text-[#055962]">
+                      Settings
+                    </h2>
+                  </div>
 
-      <div className="relative z-10 w-full md:w-[680px] md:min-h-[700px] py-10 pb-12 mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-[17px] justify-between">
-          <h2 className="text-[30px] paytone text-[#055962]">Settings</h2>
+                  <div className="flex flex-col">
+                    <button
+                      className={
+                        "p-3 flex items-center gap-2 rounded-[8px] font-bold text-sm transition-colors text-[#001010] hover:bg-gray-100"
+                      }
+                      onClick={() => handleTabChange("edit-profile")}
+                    >
+                      <User size={20} variant="Bold" />
+                      <span>Edit Profile</span>
+                    </button>
+                    <button
+                      className={
+                        "p-3 flex items-center gap-2 rounded-[8px] font-bold text-sm transition-colors text-[#001010] hover:bg-gray-100"
+                      }
+                      onClick={() => handleTabChange("preferences")}
+                    >
+                      <Setting4 size={20} variant="Bold" />
+                      <span>Preferences</span>
+                    </button>
+                    <button
+                      className={
+                        "p-3 flex items-center gap-2 rounded-[8px] font-bold text-sm transition-colors text-[#001010] hover:bg-gray-100"
+                      }
+                      onClick={() => handleTabChange("payments")}
+                    >
+                      <Moneys size={20} variant="Bold" />
+                      <span>Payments</span>
+                    </button>
+                  </div>
+                </div>
+              )}
 
-          <div
-            style={{
-              boxShadow: "0px 4px 24px 0px rgba(0, 0, 0, 0.08)",
-              backdropFilter: "blur(16px)",
-            }}
-            className="flex p-[4px] rounded-[20px] bg-white lg:w-fit h-fit w-full"
-          >
-            <button
-              onClick={() => setActiveTab("accounts")}
-              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold leading-[14px] satoshi flex items-center py-2 px-2 cursor-pointer justify-center ${
-                activeTab === "accounts"
-                  ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
-                  : "text-[#010E1F]"
-              }`}
-            >
-              Accounts
-            </button>
-            {/* <button
-              onClick={() => setActiveTab("preferences")}
-              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi ${
-                activeTab === "preferences"
-                  ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
-                  : "text-[#010E1F]"
-              }`}>
-              Preferences
-            </button> */}
-            <button
-              onClick={() => setActiveTab("payments")}
-              className={`rounded-3xl w-full h-full transition-all text-[10px] font-bold satoshi flex items-center py-2 px-2 cursor-pointer justify-center ${
-                activeTab === "payments"
-                  ? "bg-[#BEFD66] shadow-sm text-[#010E1F]"
-                  : "text-[#010E1F]"
-              }`}
-            >
-              Payments
-            </button>
+              {renderTabContent()}
+            </div>
           </div>
         </div>
-
-        {/* content for each tab toggle */}
-        <div className="mt-8">
-          {activeTab === "accounts" && (
-            <Account form={accountDetails} setForm={setAccountDetails} />
-          )}
-
-          {activeTab === "preferences" && <Preference />}
-
-          {activeTab === "payments" && <Payments />}
-        </div>
-
-        {/* Save changes button */}
-        <div>
-          <button
-            className="text-[14px] paytone w-full py-3 bg-[#011F0F] text-[#AEFC40] rounded-[60px] mt-4"
-            onClick={handleSaveChanges}
-          >
-            Save changes
-          </button>
-        </div>
       </div>
-    </div>
+    </main>
   );
-};
+}
 
 export default Settings;

@@ -1,64 +1,97 @@
-import axios from "axios";
 import { useAuthStore } from "../stores/useAuthStore";
-import { isTokenExpired } from "@/utils/authUtils";
+import axios from "axios";
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 // ----- REQUEST INTERCEPTOR -----
 API.interceptors.request.use(
-  (config) => {
-    const { idToken, logout } = useAuthStore.getState(); // 👈 read from Zustand, not localStorage
-    if (idToken) {
-      if (isTokenExpired(idToken)) {
-        logout(); // If token is expired, logout
-        return Promise.reject(new axios.Cancel("Token expired, logging out"));
-      }
-      config.headers.Authorization = `Bearer ${idToken}`;
+  config => {
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
 
-// ----- TOKEN REFRESH LOGIC -----
+// ----- RESPONSE INTERCEPTOR -----
 let isRefreshing = false;
-let subscribers = [];
+let failedQueue = [];
 
-function subscribeTokenRefresh(cb) {
-  subscribers.push(cb);
-}
+// Helper function to process the failed requests queue
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+  failedQueue = [];
+};
 
-function onRefreshed(token) {
-  subscribers.forEach((cb) => cb(token));
-  subscribers = [];
-}
+// Helper function to logout user
+const handleLogout = async () => {
+  const { setAccessToken, setRefreshToken, setUser } = useAuthStore.getState();
+
+  // Logout API call
+  try {
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/auth/logout`,
+      {},
+      { withCredentials: true }
+    );
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
+
+  // Clear auth state and localStorage
+  setUser(null);
+  setAccessToken(null);
+  setRefreshToken(null);
+  localStorage.removeItem("auth-storage");
+
+  // Redirect to home page
+  //window.location.href = "/";
+};
 
 // ----- RESPONSE INTERCEPTOR -----
 API.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     const originalRequest = error.config;
-    const { refreshToken, logout, setAccessToken, setRefreshToken } = useAuthStore.getState();
+    const { setAccessToken, setRefreshToken, refreshToken } =
+      useAuthStore.getState();
 
+    // If unauthorized - Token has expired
     if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      refreshToken
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !originalRequest._retry
     ) {
       if (isRefreshing) {
-        return new Promise((resolve) => {
-          subscribeTokenRefresh((newToken) => {
-            originalRequest.headers.Authorization = `Bearer ${newToken}`;
-            resolve(API(originalRequest));
+        // Wait for the token to be refreshed
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(token => {
+            if (!token) {
+              // Token refresh failed, logout user
+              handleLogout();
+              return Promise.reject(error);
+            }
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return API(originalRequest);
+          })
+          .catch(err => {
+            handleLogout();
+            return Promise.reject(err);
           });
-        });
       }
 
       originalRequest._retry = true;
@@ -66,25 +99,40 @@ API.interceptors.response.use(
 
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/refresh`,
-          { refresh_token: refreshToken }
+          `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${refreshToken}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const newAccessToken = response.data.accessToken;
         const newRefreshToken = response.data.refreshToken;
 
-        // Update Zustand state (which also updates localStorage via persist)
+        if (!newAccessToken || !newRefreshToken) {
+          throw new Error("No access token or refresh token in response");
+        }
+
+        // Update Zustand state
         setAccessToken(newAccessToken);
         setRefreshToken(newRefreshToken);
 
-        API.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
-        onRefreshed(newAccessToken);
+        processQueue(null, newAccessToken);
 
+        // Retry the original request with the new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return API(originalRequest);
       } catch (err) {
-        logout();
-        window.location.href = "/login";
+        processQueue(err, null);
+
+        console.error("Token refresh failed:", err);
+
+        // Logout and redirect
+        await handleLogout();
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

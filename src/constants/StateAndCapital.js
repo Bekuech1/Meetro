@@ -1,4 +1,4 @@
-export const statesAndCapitals =  [
+export const statesAndCapitals = [
   { state: "Abia", capital: "Umuahia" },
   { state: "Adamawa", capital: "Yola" },
   { state: "Akwa Ibom", capital: "Uyo" },

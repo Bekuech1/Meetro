@@ -1,0 +1,147 @@
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+
+export default function Dropdown({
+  placeholder = "Select",
+  items,
+  className = "",
+  onSelect,
+  active,
+  onClose,
+  buttonRef,
+  closeOnOutsideClick = true,
+  modal = false,
+}) {
+  /* Dropdown ref */
+  const dropdownRef = useRef(null);
+  const [coords, setCoords] = useState(null);
+
+  useLayoutEffect(() => {
+    if (buttonRef?.current) {
+      const updatePosition = () => {
+        if (window.innerWidth < 640 && modal) {
+          setCoords(null);
+          return;
+        }
+        const rect = buttonRef.current.getBoundingClientRect();
+        setCoords({
+          top: rect.bottom,
+          left: rect.left,
+          width: rect.width,
+        });
+      };
+      
+      updatePosition();
+      
+      const onScroll = (e) => {
+        if (dropdownRef.current && dropdownRef.current.contains(e.target)) return;
+        onClose?.();
+      };
+      
+      window.addEventListener("resize", updatePosition);
+      document.addEventListener("scroll", onScroll, { capture: true, passive: true });
+      return () => {
+        window.removeEventListener("resize", updatePosition);
+        document.removeEventListener("scroll", onScroll, { capture: true });
+      };
+    }
+  }, [buttonRef, onClose, modal]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      const dropdownEl = dropdownRef.current;
+      const buttonEl = buttonRef?.current;
+      // Ignore if clicking inside dropdown or button (including children)
+      if (
+        dropdownEl?.contains(event.target) ||
+        buttonEl?.contains(event.target)
+      ) {
+        return;
+      }
+      // Close dropdown
+      onClose?.();
+    }
+    if (closeOnOutsideClick)
+      document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
+  if (!coords && window.innerWidth >= 640) return null;
+
+  return createPortal(
+    <div
+      ref={dropdownRef}
+      data-dropdown-portal="true"
+      className={`satoshi animate-in slide-in-from-bottom-20 ${modal ? "max-sm:rounded-t-[24px] max-sm:rounded-b-none max-sm:fixed max-sm:top-auto max-sm:bottom-0" : ""} sm:fixed sm:z-[170] z-[170] rounded-[8px] text-left w-full overflow-hidden ${className} shadow-[0px_10px_22px_rgba(45,77,108,0.15)] bg-white`}
+      style={coords ? { top: coords.top, left: coords.left, width: coords.width } : {}}
+    >
+      <div
+        className={`overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y ${modal ? "max-sm:max-h-[70vh] max-sm:p-0" : ""} p-1 pt-0 max-h-[188px]`}
+        style={{ WebkitOverflowScrolling: "touch" }}
+        onWheel={e => e.stopPropagation()}
+      >
+        {/* Placeholder */}
+        <div
+          className={`text-sm ${modal ? "max-sm:shadow-[inset_0_4px_24px_rgba(2,142,75,0.08)] max-sm:mb-[2px] max-sm:px-4 max-sm:py-3" : ""} sticky text-[#8A9191] mb-0 bg-white pt-3 p-2 font-bold top-0`}
+        >
+          {placeholder}
+        </div>
+        <div className={`${modal ? "max-sm:p-1" : ""}`}>
+          {/* Render options */}
+          {items.length > 0 ? (
+            items.map(opt => (
+              <div
+                key={opt.id}
+                onClick={() => onSelect(opt)}
+                className={`flex ${modal ? "max-sm:max-h-12 max-sm:py-3" : ""} items-center gap-2 px-2 py-2 max-h-9 rounded-[8px] cursor-pointer hover:bg-[#E5E7E3] ${
+                  active?.id === opt.id
+                    ? "bg-[#DAFEA7] hover:!bg-[#DAFEA7]"
+                    : ""
+                }`}
+              >
+                {/* Left icon */}
+                {opt.leftIcon && (
+                  <React.Fragment>
+                    {typeof opt.leftIcon === "string" ? (
+                      <img
+                        src={opt.leftIcon}
+                        alt="left-icon"
+                        className="size-4"
+                      />
+                    ) : (
+                      <span className="[&>svg]:size-4">{opt.leftIcon}</span>
+                    )}
+                  </React.Fragment>
+                )}
+                <span
+                  className={`${modal ? "max-sm:text-base max-sm:font-medium" : ""} text-sm flex-1 font-bold`}
+                >
+                  {opt.name}
+                </span>
+                {/* Right icon */}
+                {opt.rightIcon && (
+                  <React.Fragment>
+                    {typeof opt.rightIcon === "string" ? (
+                      <img
+                        src={opt.rightIcon}
+                        alt="right-icon"
+                        className="size-4"
+                      />
+                    ) : (
+                      <span className="[&>svg]:size-4">{opt.rightIcon}</span>
+                    )}
+                  </React.Fragment>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="p-2 text-sm text-gray-500">No results</div>
+          )}
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
