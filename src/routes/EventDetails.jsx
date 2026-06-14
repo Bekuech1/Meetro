@@ -17,7 +17,6 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
-  ArrowDown,
   ArrowDown2,
   ArrowLeft2,
   ArrowRight2,
@@ -141,7 +140,8 @@ const EventDetailsSkeleton = ({ isShared }) => (
 export default function EventDetails() {
   const { slug } = useParams();
   const { user } = useAuthStore();
-
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 640);
+  const [showMoreDetails, setShowMoreDetails] = useState(false);
   const [searchParams] = useSearchParams();
   const {
     data: event,
@@ -223,14 +223,24 @@ export default function EventDetails() {
   const handleMoreDetails = () => {
     // navigate to the same page without the shared param
     navigate(`/events/${event.slug}`, { replace: true });
+    setShowMoreDetails(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "instant",
-    });
-  }, [isShared]);
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 640);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Initial check
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const sharedRef = useRef(null);
 
@@ -243,17 +253,21 @@ export default function EventDetails() {
   };
 
   const handleMoreScroll = e => {
+    if (isMobileView && showMoreDetails) return;
     // wheel event
     if (e?.deltaY !== undefined) {
       if (isAtPageBottom() && e.deltaY > 0) {
         handleMoreDetails();
+        // Stop the scroll event from propagating further
+        e.preventDefault();
       }
       return;
     }
   };
 
+  // Handle swipe up gesture for mobile devices
   useEffect(() => {
-    if (!isShared) return;
+    if (!isMobileView || showMoreDetails) return;
 
     let touchStartY = null;
 
@@ -280,7 +294,7 @@ export default function EventDetails() {
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
     };
-  }, [isShared, event]);
+  }, [isMobileView, showMoreDetails, event]);
 
   // Loading and error states
   if (isLoading)
@@ -294,7 +308,7 @@ export default function EventDetails() {
         <EventTimerNav targetDate={event.startDate} />
       </div>
       <div className="flex flex-1 flex-col overflow-hidden">
-        {isShared ? (
+        {(isShared || isMobileView) && !showMoreDetails ? (
           <div
             ref={sharedRef}
             className="mx-auto flex-1 max-w-[545px] flex flex-col w-full"
@@ -486,9 +500,9 @@ export default function EventDetails() {
               )}
             </div>
             {/* Tap more section */}
-            <Link
+            <button
               className="bg-transparent sm:hidden outline-0 border-0 flex flex-col justify-end flex-1"
-              to={`/events/${event.slug}`}
+              onClick={handleMoreDetails}
             >
               <div className="flex items-center flex-col gap-2 bg-white py-2 rounded-t-4xl">
                 <div className="text-[#8A9191] gap-2 flex justify-center items-center satoshi font-medium text-[10px] leading-3.5">
@@ -496,7 +510,7 @@ export default function EventDetails() {
                 </div>
                 <div className="h-1 w-[109px] bg-[#f0f0f0] rounded-[8px]"></div>
               </div>
-            </Link>
+            </button>
           </div>
         ) : (
           <React.Fragment>
@@ -565,43 +579,44 @@ export default function EventDetails() {
                   </Link>
                 </div>
               )}
-
-              <div className="hidden sm:grid gap-1">
-                <span className="text-base text-[#B0B5B5] font-medium paytone">
-                  Hosted by
-                </span>
-                <div className="flex gap-1 items-center justify-between">
-                  <div className="flex gap-1 items-center">
-                    <Avatar size="xs" src={hostPhoto} />
-                    <div className="grid">
-                      <span className="text-base font-medium text-[#001010]">
-                        {hostName}
-                      </span>
-                      <span className="text-xs font-medium text-[#8A9191]">
-                        Host
-                      </span>
+              <div className="flex items-center lg:flex-col  gap-4">
+                <div className="hidden sm:grid gap-1">
+                  <span className="text-base text-[#B0B5B5] font-medium paytone">
+                    Hosted by
+                  </span>
+                  <div className="flex gap-1 items-center justify-between">
+                    <div className="flex gap-1 items-center">
+                      <Avatar size="xs" src={hostPhoto} />
+                      <div className="grid">
+                        <span className="text-base font-medium text-[#001010]">
+                          {hostName}
+                        </span>
+                        <span className="text-xs font-medium text-[#8A9191]">
+                          Host
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="hidden sm:grid gap-1">
-                <span className="text-base text-[#B0B5B5] font-medium paytone">
-                  Attending
-                </span>
-                <div className="flex items-center gap-1">
-                  <AvatarGroup
-                    count={remainingCount}
-                    size="md"
-                    src={goingPhotos}
-                  />
-                  <TagButton
-                    leftImg={<TickCircle variant="Bold" />}
-                    className="min-w-0 px-2 pointer-events-none"
-                    text={goingGuests.length > 0 ? "Going" : "No RSVPs yet"}
-                    variant={goingGuests.length > 0 ? "green" : "outline"}
-                    size="lg"
-                  />
+                <div className="hidden sm:grid gap-1">
+                  <span className="text-base text-[#B0B5B5] font-medium paytone">
+                    Attending
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <AvatarGroup
+                      count={remainingCount}
+                      size="md"
+                      src={goingPhotos}
+                    />
+                    <TagButton
+                      leftImg={<TickCircle variant="Bold" />}
+                      className="min-w-0 px-2 pointer-events-none"
+                      text={goingGuests.length > 0 ? "Going" : "No RSVPs yet"}
+                      variant={goingGuests.length > 0 ? "green" : "outline"}
+                      size="lg"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

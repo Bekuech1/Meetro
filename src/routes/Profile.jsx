@@ -7,7 +7,9 @@ import Avatar from "@/components/layout-components/Avatar";
 import IconButton from "@/components/layout-components/Buttons/IconButton";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
-import React, { useState } from "react";
+import EventDetailsModal from "@/components/layout-components/EventDetailsModal";
+import Modal from "@/components/layout-components/Modal/Modal";
+import React, { useEffect, useState } from "react";
 import { eventsApi } from "@/services/eventsApi";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
@@ -16,8 +18,6 @@ import { Calendar1, Location } from "iconsax-reactjs";
 import { FaFacebook, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router";
 import { twMerge } from "tailwind-merge";
-import EventDetailsModal from "@/components/layout-components/EventDetailsModal";
-import Modal from "@/components/layout-components/Modal/Modal";
 
 function Profile() {
   // Auth store
@@ -25,6 +25,7 @@ function Profile() {
 
   // State for active event in modal
   const [activeEventId, setActiveEventId] = useState(null);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 980);
   // Filter state
   const [filter, setFilter] = useState("all");
   // Fetch past user events
@@ -59,6 +60,15 @@ function Profile() {
     if (filter === "attended") return !isHost;
     return true; // "all"
   });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 980);
+    };
+    handleResize(); // Check initial screen size
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <main className="bg-[#F0F0F0] h-full relative flex-1 flex flex-col w-full">
@@ -225,13 +235,21 @@ function Profile() {
                   {filteredEvents.length > 0 ? (
                     <div className="flex flex-col w-full gap-2">
                       {filteredEvents.map((event, index) => (
-                        <Modal.Open
-                          onOpen={() => setActiveEventId(event._id)}
-                          key={index}
-                          opens={"event-details-modal"}
-                        >
-                          <EventItem event={event} />
-                        </Modal.Open>
+                        <React.Fragment key={event._id}>
+                          {isMobileView ? (
+                            <Link to={`/events/${event.slug}`}>
+                              <EventItem event={event} />
+                            </Link>
+                          ) : (
+                            <Modal.Open
+                              onOpen={() => setActiveEventId(event._id)}
+                              key={index}
+                              opens={"event-details-modal"}
+                            >
+                              <EventItem event={event} />
+                            </Modal.Open>
+                          )}
+                        </React.Fragment>
                       ))}
                     </div>
                   ) : (
