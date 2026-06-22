@@ -4,6 +4,7 @@ import IconButton from "@/components/layout-components/Buttons/IconButton";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
 import WithdrawModal from "@/components/manage-event/WithdrawModal";
+import UpdateBankModal from "@/components/layout-components/Events/UpdateBankModal";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Navigate, useParams } from "react-router";
@@ -11,6 +12,7 @@ import { Bank, InfoCircle, RefreshCircle } from "iconsax-reactjs";
 import { paymentApi } from "@/services/paymentApi";
 import { useManageEventContext } from "@/layouts/ManageEventLayout";
 import { useModalContext } from "@/components/layout-components/Modal/ModalContext";
+import Modal from "@/components/layout-components/Modal/Modal";
 
 function Withdraw() {
   const { slug: eventId } = useParams();
@@ -147,13 +149,15 @@ function Withdraw() {
                     <p className="text-xs sm:text-sm text-[#8A96A3] font-bold">
                       Withdrawing to
                     </p>
-                    <TagButton
-                      leftImg={<RefreshCircle size={12} />}
-                      text="Change Account"
-                      className="satoshi min-w-0 px-1 sm:hidden"
-                      size="sm"
-                      variant="light-purple"
-                    />
+                    <Modal.Open opens="update-bank">
+                      <TagButton
+                        leftImg={<RefreshCircle size={12} />}
+                        text="Change Account"
+                        className="satoshi min-w-0 px-1 sm:hidden"
+                        size="sm"
+                        variant="light-purple"
+                      />
+                    </Modal.Open>
                   </div>
                   <div className="px-2 py-3 border border-white rounded-[12px] flex items-center justify-between bg-[#F0F0F0]/90">
                     <div className="flex items-center gap-2">
@@ -181,13 +185,15 @@ function Withdraw() {
                       </div>
                     </div>
                     {/* Change account button for larger screens */}
-                    <TagButton
-                      leftImg={<RefreshCircle size={16} />}
-                      text="Change Account"
-                      className="satoshi min-w-0 px-2 hidden sm:inline-flex"
-                      size="lg"
-                      variant="light-purple"
-                    />
+                    <Modal.Open opens="update-bank">
+                      <TagButton
+                        leftImg={<RefreshCircle size={16} />}
+                        text="Change Account"
+                        className="satoshi min-w-0 px-2 hidden sm:inline-flex"
+                        size="lg"
+                        variant="light-purple"
+                      />
+                    </Modal.Open>
                   </div>
                 </div>
                 {/* Withdrawal amount */}
@@ -263,6 +269,10 @@ function Withdraw() {
           eventId: event?.id,
           ...bankDetails,
         }}
+      />
+      <UpdateBankModal
+        bankDetails={bankDetails}
+        onSave={data => setBankDetails(data)}
       />
     </main>
   );

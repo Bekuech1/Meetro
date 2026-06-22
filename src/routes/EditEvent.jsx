@@ -1,6 +1,7 @@
 import Alert from "@/components/layout-components/Alert";
 import TagButton from "@/components/layout-components/Buttons/TagButton";
 import TextButton from "@/components/layout-components/Buttons/TextButtons";
+import EventChipInModal from "@/components/layout-components/Events/EventChipInModal";
 import EventCohostsModal from "@/components/layout-components/Events/EventCohostsModal";
 import EventDateModal from "@/components/layout-components/Events/EventDateModal";
 import EventDescriptionModal from "@/components/layout-components/Events/EventDescriptionModal";
@@ -25,6 +26,7 @@ import {
   Category2,
   Colorfilter,
   Crown,
+  Gallery,
   Location,
   Timer1,
   Trash,
@@ -70,6 +72,7 @@ function EditEvent() {
         endDate: event.endDate || "",
         image: event.image || "",
         font: event.font || "paytone",
+        isPrivate: Boolean(event.isPrivate),
         location: {
           venue: event.location?.venue || "",
           state: event.location?.state || "",
@@ -204,6 +207,17 @@ function EditEvent() {
     ? editedEvent.description.length > 50
       ? editedEvent.description.slice(0, 50) + "..."
       : editedEvent.description
+    : "";
+
+  // Format chip in details for display
+  const chipInDetailsFormatted = event?.chipInDetails
+    ? event.chipInDetails?.chipInType === "fixed"
+      ? `Fixed - ₦${event.chipInDetails?.amount}`
+      : event.chipInDetails?.chipInType === "target"
+        ? `Target - ₦${event.chipInDetails?.amount}`
+        : event.chipInDetails?.chipInType === "donation"
+          ? `Flexible - ₦${event.chipInDetails?.amount}`
+          : ""
     : "";
 
   // Format cohosts for display in ListInput
@@ -515,6 +529,35 @@ function EditEvent() {
               />
             </Modal.Open>
           )}
+          {/* Event chip in */}
+          {settings?.hasChipIn && editedEvent.isPrivate && (
+            <Modal.Open opens="event-chip-in">
+              <ListInput
+                placeholder="Chip In"
+                content={chipInDetailsFormatted}
+                error={validation.chipIn}
+                leftIcon={<Gallery variant="Bold" />}
+                rightIcon={
+                  <button
+                    onClick={e => {
+                      e.stopPropagation();
+                      setEditedEvent(prev => ({
+                        ...prev,
+                        chipInDetails: initialChipInDetails,
+                      }));
+                      setSettings(prev => ({
+                        ...prev,
+                        hasChipIn: false,
+                      }));
+                      setValidation(prev => ({ ...prev, chipIn: "" }));
+                    }}
+                  >
+                    <Trash variant="Outline" size={16} />
+                  </button>
+                }
+              />
+            </Modal.Open>
+          )}
           {/* Optional fields based on settings */}
           {hasNoSettings && (
             <div className="flex items-center gap-x-4 gap-y-3">
@@ -531,19 +574,6 @@ function EditEvent() {
                   leftImg={<Add />}
                 />
               )}
-              {/* {!settings?.hasChipIn && (
-                <TagButton
-                  text="Chip In"
-                  leftImg={<Add />}
-                  className="satoshi"
-                  onClick={() => {
-                    setSettings(prev => ({
-                      ...prev,
-                      hasChipIn: !prev.hasChipIn,
-                    }));
-                  }}
-                />
-              )} */}
               {!settings?.hasCohosts && (
                 <TagButton
                   text="Cohosts"
@@ -672,6 +702,16 @@ To keep things neat for your guests, you can only make up to 3 major edits (like
           onSave={data => {
             setEditedEvent({ ...editedEvent, dressCode: data });
             setValidation(prev => ({ ...prev, dressCode: "" }));
+          }}
+        />
+      )}
+      {/* Event chip in modal */}
+      {settings.hasChipIn && editedEvent.isPrivate && (
+        <EventChipInModal
+          chipInData={editedEvent.chipInDetails}
+          onSave={data => {
+            setEditedEvent({ ...editedEvent, chipInDetails: data });
+            setValidation(prev => ({ ...prev, chipIn: "" }));
           }}
         />
       )}
