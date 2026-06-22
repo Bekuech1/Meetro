@@ -28,7 +28,7 @@ function Payments() {
   const [saveStatus, setSaveStatus] = useState("idle");
 
   const { mutateAsync: updateBankDetails } = useMutation({
-    mutationFn: data => paymentApi.updateBankDetails(data),
+    mutationFn: data => paymentApi.updateUserBankDetails(data),
     onMutate: () => setSaveStatus("saving"),
     onSuccess: data => {
       // Update user in auth store with new bank details
